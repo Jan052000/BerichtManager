@@ -31,6 +31,7 @@
 			this.btClose = new System.Windows.Forms.Button();
 			this.btConfirm = new System.Windows.Forms.Button();
 			this.rtInput = new System.Windows.Forms.RichTextBox();
+			this.btQuit = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -65,11 +66,23 @@
 			this.rtInput.TabIndex = 2;
 			this.rtInput.Text = "";
 			// 
+			// btQuit
+			// 
+			this.btQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btQuit.Location = new System.Drawing.Point(551, 415);
+			this.btQuit.Name = "btQuit";
+			this.btQuit.Size = new System.Drawing.Size(75, 23);
+			this.btQuit.TabIndex = 3;
+			this.btQuit.Text = "Quit Edit";
+			this.btQuit.UseVisualStyleBackColor = true;
+			this.btQuit.Click += new System.EventHandler(this.btQuit_Click);
+			// 
 			// EditForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btQuit);
 			this.Controls.Add(this.rtInput);
 			this.Controls.Add(this.btConfirm);
 			this.Controls.Add(this.btClose);
@@ -84,5 +97,6 @@
 		private System.Windows.Forms.Button btClose;
 		private System.Windows.Forms.Button btConfirm;
 		private System.Windows.Forms.RichTextBox rtInput;
+		private System.Windows.Forms.Button btQuit;
 	}
 }

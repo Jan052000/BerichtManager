@@ -78,7 +78,17 @@ namespace BerichtManager
 				}
 				else
 				{
-					((Word.FormField)enumerator.Current).Result = "-Keine-";
+					if (form.DialogResult == DialogResult.Abort)
+					{
+						doc.Save();
+						doc.Close();
+						wordApp.Quit();
+						return;
+					}
+					else
+					{
+						((Word.FormField)enumerator.Current).Result = "-Keine-";
+					}
 				}
 
 				//Enter work seminars
@@ -91,7 +101,17 @@ namespace BerichtManager
 				}
 				else
 				{
-					((Word.FormField)enumerator.Current).Result = "-Keine-";
+					if (form.DialogResult == DialogResult.Abort)
+					{
+						doc.Save();
+						doc.Close();
+						wordApp.Quit();
+						return;
+					}
+					else
+					{
+						((Word.FormField)enumerator.Current).Result = "-Keine-";
+					}
 				}
 
 				//Shool stuff
@@ -104,7 +124,17 @@ namespace BerichtManager
 				}
 				else
 				{
-					((Word.FormField)enumerator.Current).Result = "-Keine-";
+					if (form.DialogResult == DialogResult.Abort)
+					{
+						doc.Save();
+						doc.Close();
+						wordApp.Quit();
+						return;
+					}
+					else
+					{
+						((Word.FormField)enumerator.Current).Result = "-Keine-";
+					}
 				}
 
 				//Fridy of week
@@ -196,6 +226,16 @@ namespace BerichtManager
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
 					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+					}
 
 					//Enter week start and end
 					DateTime baseDate = DateTime.Today;
@@ -209,6 +249,16 @@ namespace BerichtManager
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
 					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+					}
 
 					enumerator.MoveNext();
 					form = new EditForm("Edit end of week", ((Word.FormField)enumerator.Current).Result, false);
@@ -216,6 +266,16 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
 					}
 
 					//Enter Year
@@ -225,6 +285,16 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
 					}
 
 					//Enter work field
@@ -237,7 +307,17 @@ namespace BerichtManager
 					}
 					else
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = form.Result;
+						}
 					}
 
 					//Enter work seminars
@@ -250,7 +330,17 @@ namespace BerichtManager
 					}
 					else
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = form.Result;
+						}
 					}
 
 					//Shool stuff
@@ -263,7 +353,17 @@ namespace BerichtManager
 					}
 					else
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = form.Result;
+						}
 					}
 
 					//Fridy of week
@@ -274,6 +374,16 @@ namespace BerichtManager
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
 					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+					}
 
 					//Sign date 2
 					enumerator.MoveNext();
@@ -282,6 +392,16 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
 					}
 
 					doc.Save();
@@ -329,6 +449,12 @@ namespace BerichtManager
 					wordApp.Visible = visible;
 					doc = wordApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 
+					if (doc.FormFields.Count != 9) 
+					{
+						MessageBox.Show("Invalid document (you will have to manually edit)");
+						return;
+					}
+
 					//Enter report nr.
 					var enumerator = doc.FormFields.GetEnumerator();
 					enumerator.MoveNext();
@@ -337,6 +463,16 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else 
+					{
+						if (form.DialogResult == DialogResult.Abort) 
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
 					}
 
 					//Enter week start and end
@@ -351,6 +487,16 @@ namespace BerichtManager
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
 					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+					}
 
 					enumerator.MoveNext();
 					form = new EditForm("Edit end of week", ((Word.FormField)enumerator.Current).Result, false);
@@ -358,6 +504,16 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
 					}
 
 					//Enter Year
@@ -367,6 +523,16 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
 					}
 
 					//Enter work field
@@ -379,7 +545,17 @@ namespace BerichtManager
 					}
 					else
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = form.Result;
+						}
 					}
 
 					//Enter work seminars
@@ -392,7 +568,17 @@ namespace BerichtManager
 					}
 					else
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = form.Result;
+						}
 					}
 
 					//Shool stuff
@@ -405,7 +591,17 @@ namespace BerichtManager
 					}
 					else
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+						else 
+						{
+							((Word.FormField)enumerator.Current).Result = form.Result;
+						}
 					}
 
 					//Fridy of week
@@ -416,6 +612,16 @@ namespace BerichtManager
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
 					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
+					}
 
 					//Sign date 2
 					enumerator.MoveNext();
@@ -424,6 +630,16 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Save();
+							doc.Close();
+							wordApp.Quit();
+							return;
+						}
 					}
 
 					doc.Save();

@@ -46,5 +46,10 @@ namespace BerichtManager.AddForm
 			DialogResult = DialogResult.OK;
 			Close();
 		}
+
+		private void btQuit_Click(object sender, EventArgs e)
+		{
+			DialogResult = DialogResult.Abort;
+		}
 	}
 }
