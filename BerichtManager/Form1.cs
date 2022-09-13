@@ -38,127 +38,157 @@ namespace BerichtManager
 
 		private void CreateDocument(object templatePath) 
 		{
-			object missing = Missing.Value;
-			Word.Document doc = null;
-
-			if (File.Exists((string)templatePath))
+			try 
 			{
-				/*Word.Application */
-				wordApp = new Word.Application();
-				wordApp.Visible = visible;
-				doc = wordApp.Documents.Add(ref templatePath);
+				object missing = Missing.Value;
+				Word.Document doc = null;
 
-				//Enter report nr.
-				var enumerator = doc.FormFields.GetEnumerator();
-				enumerator.MoveNext();
-				//((Word.FormField)enumerator.Current).Range.Text = handler.LoadNumber();
-				((Word.FormField)enumerator.Current).Result = handler.LoadNumber();
-
-				//Enter week start and end
-				DateTime baseDate = DateTime.Today;
-				var today = baseDate;
-				var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-				var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-				enumerator.MoveNext();
-				((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
-				enumerator.MoveNext();
-				((Word.FormField)enumerator.Current).Result = thisWeekEnd.ToString("dd.MM.yyyy");
-
-				//Enter Year
-				enumerator.MoveNext();
-				((Word.FormField)enumerator.Current).Result = today.Year.ToString();
-
-				//Enter work field
-				EditForm form = new EditForm("Betriebliche Tätigkeiten", "", false);
-				enumerator.MoveNext();
-				form.ShowDialog();
-				if (form.DialogResult == DialogResult.OK)
+				if (File.Exists((string)templatePath))
 				{
-					((Word.FormField)enumerator.Current).Result = form.Result;
-				}
-				else
-				{
-					if (form.DialogResult == DialogResult.Abort)
+					/*Word.Application */
+					wordApp = new Word.Application();
+					wordApp.Visible = visible;
+					doc = wordApp.Documents.Add(ref templatePath);
+
+					//Enter report nr.
+					var enumerator = doc.FormFields.GetEnumerator();
+					enumerator.MoveNext();
+					//((Word.FormField)enumerator.Current).Range.Text = handler.LoadNumber();
+					((Word.FormField)enumerator.Current).Result = handler.LoadNumber();
+
+					//Enter week start and end
+					DateTime baseDate = DateTime.Today;
+					var today = baseDate;
+					var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+					var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = thisWeekEnd.ToString("dd.MM.yyyy");
+
+					//Enter Year
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = today.Year.ToString();
+
+					//Enter work field
+					EditForm form = new EditForm("Betriebliche Tätigkeiten", "", false);
+					enumerator.MoveNext();
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
 					{
-						doc.Save();
-						doc.Close();
-						wordApp.Quit();
-						return;
+						((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
-						((Word.FormField)enumerator.Current).Result = "-Keine-";
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+							wordApp.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = "-Keine-";
+						}
 					}
-				}
 
-				//Enter work seminars
-				form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false);
-				enumerator.MoveNext();
-				form.ShowDialog();
-				if (form.DialogResult == DialogResult.OK)
-				{
-					((Word.FormField)enumerator.Current).Result = form.Result;
-				}
-				else
-				{
-					if (form.DialogResult == DialogResult.Abort)
+					//Enter work seminars
+					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false);
+					enumerator.MoveNext();
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
 					{
-						doc.Save();
-						doc.Close();
-						wordApp.Quit();
-						return;
+						((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
-						((Word.FormField)enumerator.Current).Result = "-Keine-";
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+							wordApp.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = "-Keine-";
+						}
 					}
-				}
 
-				//Shool stuff
-				form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true);
-				enumerator.MoveNext();
-				form.ShowDialog();
-				if (form.DialogResult == DialogResult.OK)
-				{
-					((Word.FormField)enumerator.Current).Result = form.Result;
-				}
-				else
-				{
-					if (form.DialogResult == DialogResult.Abort)
+					//Shool stuff
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true);
+					enumerator.MoveNext();
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
 					{
-						doc.Save();
-						doc.Close();
-						wordApp.Quit();
-						return;
+						((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
-						((Word.FormField)enumerator.Current).Result = "-Keine-";
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+							wordApp.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = "-Keine-";
+						}
 					}
+
+					//Fridy of week
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
+
+					//Sign date 2
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
+
+					Directory.CreateDirectory(Path.GetFullPath(Environment.CurrentDirectory + "\\..") + "\\" + today.Year);
+					string path = Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx";
+					doc.SaveAs2(path);
+					//doc.SaveAs2(path, Word.WdSaveFormat.wdFormatDocument, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, true);
+					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber((i + 1).ToString());
+					handler.EditActive(path);
+
+					doc.Close();
+					wordApp.Quit();
+
 				}
-
-				//Fridy of week
-				enumerator.MoveNext();
-				((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
-
-				//Sign date 2
-				enumerator.MoveNext();
-				((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
-
-				Directory.CreateDirectory(Path.GetFullPath(Environment.CurrentDirectory + "\\..") + "\\" + today.Year);
-				string path = Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx";
-				doc.SaveAs2(path);
-				//doc.SaveAs2(path, Word.WdSaveFormat.wdFormatDocument, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, true);
-				if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber((i + 1).ToString());
-				handler.EditActive(path);
-
-				doc.Close();
-				wordApp.Quit();
-
+				else
+				{
+					MessageBox.Show(handler.LoadPath() + " was not found was it moved or deleted?");
+				}
 			}
-			else 
+			catch (Exception ex)
 			{
-				MessageBox.Show(handler.LoadPath() + " was not found was it moved or deleted?");
+
+				if (doc != null)
+				{
+					doc.Close();
+				}
+				if (wordApp != null)
+				{
+					wordApp.Quit();
+				}
+				MessageBox.Show("an unexpected problem occured this progam will now close!");
+				Close();
+				/*if (ex.HResult == -2147023174)
+				{
+					MessageBox.Show("an unexpected problem occured this progam will now close!");
+					Close();
+				}*/
+			}
+			finally
+			{
+				if (doc != null)
+				{
+					doc.Close();
+				}
+				if (wordApp != null)
+				{
+					wordApp.Quit();
+				}
 			}
 		}
 
@@ -414,12 +444,29 @@ namespace BerichtManager
 					MessageBox.Show(handler.LoadActive() + "not found was it deleted or moved?");
 				}
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
-				if (ex.HResult == -2147023174) 
+
+				if (doc != null)
 				{
-					MessageBox.Show("an unexpected problem occured this progam will now close!");
-					Close();
+					doc.Close();
+				}
+				if (wordApp != null)
+				{
+					wordApp.Quit();
+				}
+				MessageBox.Show("an unexpected problem occured this progam will now close!");
+				Close();
+			}
+			finally 
+			{
+				if (doc != null)
+				{
+					doc.Close();
+				}
+				if (wordApp != null)
+				{
+					wordApp.Quit();
 				}
 			}
 		}
@@ -654,10 +701,27 @@ namespace BerichtManager
 			}
 			catch (Exception ex)
 			{
-				if (ex.HResult == -2147023174)
+
+				if (doc != null)
 				{
-					MessageBox.Show("an unexpected problem occured this progam will now close!");
-					Close();
+					doc.Close();
+				}
+				if (wordApp != null)
+				{
+					wordApp.Quit();
+				}
+				MessageBox.Show("an unexpected problem occured this progam will now close!");
+				Close();
+			}
+			finally
+			{
+				if (doc != null)
+				{
+					doc.Close();
+				}
+				if (wordApp != null)
+				{
+					wordApp.Quit();
 				}
 			}
 		}
