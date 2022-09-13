@@ -317,7 +317,129 @@ namespace BerichtManager
 
 		private void btEditExisting_Click(object sender, EventArgs e)
 		{
+			try
+			{
+				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
+				{
+					wordApp = new Word.Application();
+					wordApp.Visible = visible;
+					doc = wordApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 
+					//Enter report nr.
+					var enumerator = doc.FormFields.GetEnumerator();
+					enumerator.MoveNext();
+					EditForm form = new EditForm("Edit report nr.", ((Word.FormField)enumerator.Current).Result, false);
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+
+					//Enter week start and end
+					DateTime baseDate = DateTime.Today;
+					var today = baseDate;
+					var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+					var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+					enumerator.MoveNext();
+					form = new EditForm("Edit start of week", ((Word.FormField)enumerator.Current).Result, false);
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+
+					enumerator.MoveNext();
+					form = new EditForm("Edit end of week", ((Word.FormField)enumerator.Current).Result, false);
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+
+					//Enter Year
+					enumerator.MoveNext();
+					form = new EditForm("Edit year", ((Word.FormField)enumerator.Current).Result, false);
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+
+					//Enter work field
+					enumerator.MoveNext();
+					form = new EditForm("Betriebliche Tätigkeiten", ((Word.FormField)enumerator.Current).Result, false);
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+
+					//Enter work seminars
+					enumerator.MoveNext();
+					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", ((Word.FormField)enumerator.Current).Result, false);
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+
+					//Shool stuff
+					enumerator.MoveNext();
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", ((Word.FormField)enumerator.Current).Result, false);
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+					else
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+
+					//Fridy of week
+					enumerator.MoveNext();
+					form = new EditForm("Edit signdate (you)", ((Word.FormField)enumerator.Current).Result, false);
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+
+					//Sign date 2
+					enumerator.MoveNext();
+					form = new EditForm("Edit signdate (not you)", ((Word.FormField)enumerator.Current).Result, false);
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						((Word.FormField)enumerator.Current).Result = form.Result;
+					}
+
+					doc.Save();
+
+					doc.Close();
+					wordApp.Quit();
+				}
+				else
+				{
+					MessageBox.Show(handler.LoadActive() + "not found was it deleted or moved?");
+				}
+			}
+			catch (Exception ex)
+			{
+				if (ex.HResult == -2147023174)
+				{
+					MessageBox.Show("an unexpected problem occured this progam will now close!");
+					Close();
+				}
+			}
 		}
 
 		private void btDelete_Click(object sender, EventArgs e)
