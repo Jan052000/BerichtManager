@@ -317,6 +317,10 @@ namespace BerichtManager
 
 		private void btEditExisting_Click(object sender, EventArgs e)
 		{
+			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx") 
+			{
+				MessageBox.Show("You may only edit Documents(*.docx) files");
+			}
 			try
 			{
 				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
