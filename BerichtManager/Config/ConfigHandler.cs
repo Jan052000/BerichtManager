@@ -14,6 +14,7 @@ namespace BerichtManager.Config
 	public class ConfigHandler
 	{
 		private string path = Environment.CurrentDirectory + "\\Config";
+		public bool loginAborted = false;
 		//private string path = Environment.CurrentDirectory + "\\Config\\Config.json";
 		//private string path = ".\\..\\..\\Config\\Config.json";
 		public ConfigHandler() 
@@ -57,6 +58,14 @@ namespace BerichtManager.Config
 				if (!config.ContainsKey("Active")) 
 				{
 					config.Add(new JProperty("Active", ""));
+				}
+				if (!config.ContainsKey("Username")) 
+				{
+					config.Add(new JProperty("Username", ""));
+				}
+				if (!config.ContainsKey("Password")) 
+				{
+					config.Add(new JProperty("Password", ""));
 				}
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 			}
@@ -186,6 +195,87 @@ namespace BerichtManager.Config
 				MessageBox.Show("Config bei: " + Path.GetFullPath(path + "\\Config.json") + " erstellt");
 			}
 			return "";
+		}
+
+		public string LoadUsername() 
+		{
+			if (File.Exists(path + "\\Config.json"))
+			{
+				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+				return config.GetValue("Username").ToString();
+			}
+			return "";
+		}
+
+		public void SaveUsername(string username) 
+		{
+			if (File.Exists(path + "\\Config.json")) 
+			{
+				JObject userObject = new JObject(new JProperty("Username", username));
+				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+
+				JToken token = config.First;
+				for (int i = 0; i < config.Count; i++)
+				{
+					if (((JProperty)token).Name != "Username")
+					{
+						userObject.Add((JProperty)token);
+					}
+					token = token.Next;
+				}
+
+				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(userObject, Formatting.Indented));
+			}
+		}
+
+		public string LoadPassword() 
+		{
+			if (File.Exists(path + "\\Config.json"))
+			{
+				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+				return UserHandler.DecodePassword(config.GetValue("Password").ToString());
+			}
+			return "";
+		}
+
+		public void SavePassword(string password) 
+		{
+			if (File.Exists(path + "\\Config.json"))
+			{
+				JObject userObject = new JObject(new JProperty("Password", UserHandler.EncodePassword(password)));
+				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+
+				JToken token = config.First;
+				for (int i = 0; i < config.Count; i++)
+				{
+					if (((JProperty)token).Name != "Password")
+					{
+						userObject.Add((JProperty)token);
+					}
+					token = token.Next;
+				}
+
+				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(userObject, Formatting.Indented));
+			}
+		}
+
+		public bool doLogin() 
+		{
+			Login form = new Login();
+			form.ShowDialog();
+			if (form.DialogResult == DialogResult.OK)
+			{
+				if (File.Exists(path + "\\Config.json"))
+				{
+					if (!string.IsNullOrEmpty(form.Username) && !string.IsNullOrEmpty(form.Password))
+					{
+						SaveUsername(form.Username);
+						SavePassword(form.Password);
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 }

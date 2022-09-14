@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BerichtManager.Config;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace BerichtManager.AddForm
 	{
 
 		string jsonstring = File.ReadAllText(@"E:\Berufsschule\Python\Test\stundenplantest.json");
+		ConfigHandler configHandler = new ConfigHandler();
 		public Client()
 		{
 			InitializeComponent();
@@ -34,7 +36,16 @@ namespace BerichtManager.AddForm
 			List<string> classes = new List<string>();
 			HttpClient client = new HttpClient();
 			//Generate Headers and Login
-			HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=Username&j_password=Password").Result;
+			//HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=Username&j_password=Password").Result;
+			if (string.IsNullOrEmpty(configHandler.LoadUsername()) || string.IsNullOrEmpty(configHandler.LoadPassword())) 
+			{
+				if (!configHandler.doLogin()) 
+				{
+					MessageBox.Show("You need to login to automatically enter classes");
+					return classes;
+				}
+			}
+			HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 
 			//Obtain Api Key
 			string apiKey = client.GetAsync("https://borys.webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;

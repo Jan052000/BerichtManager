@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace BerichtManager.AddForm
@@ -16,7 +17,9 @@ namespace BerichtManager.AddForm
 				//https://borys.webuntis.com/WebUntis/?school=pictorus-bk#/basic/login
 				//https://webuntis.com/
 				Client client = new Client();
-				client.getClassesFromWebUntis().ForEach((c) => 
+				List<string> classes = client.getClassesFromWebUntis();
+				if (classes.Count == 0) MessageBox.Show("Login failed(wrong login details or api down?)");
+				classes.ForEach((c) => 
 				{
 					rtInput.Text += "-" + c + ":\n";
 				});
