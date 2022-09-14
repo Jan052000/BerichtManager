@@ -808,5 +808,9 @@ namespace BerichtManager
 			}
 		}
 
+		private void btLogin_Click(object sender, EventArgs e)
+		{
+			handler.doLogin();
+		}
 	}
 }

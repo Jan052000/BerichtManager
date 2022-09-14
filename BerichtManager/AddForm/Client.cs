@@ -1,4 +1,5 @@
 ﻿using BerichtManager.Config;
+using BerichtManager.ResponseClasses;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -54,12 +55,14 @@ namespace BerichtManager.AddForm
 
 			//Guarantee complete Header
 			responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
+			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result);
 
 			//Request Timetable for the week
 			DateTime baseDate = DateTime.Today;
 			string date = baseDate.ToString("yyyy-MM-dd");
 			//Stundenplan api https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=2022-09-09&formatId=2
-			responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=" + date + "&formatId=2").Result;
+			//responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=" + date + "&formatId=2").Result;
+			responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
 			string jsonResponse = responseMessage.Content.ReadAsStringAsync().Result;
 
 			//Deserialize Root from response
