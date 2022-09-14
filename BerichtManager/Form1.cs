@@ -6,6 +6,7 @@ using System.Reflection;
 using BerichtManager.Config;
 using BerichtManager.AddForm;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace BerichtManager
 {
@@ -22,6 +23,12 @@ namespace BerichtManager
 			InitializeComponent();
 			handler = new ConfigHandler();
 
+			UpdateTree();
+		}
+
+		private void UpdateTree() 
+		{
+			tvReports.Nodes.Clear();
 			tvReports.Nodes.Add(CreateDirectoryNode(info));
 		}
 
@@ -486,32 +493,56 @@ namespace BerichtManager
 
 		private void btPrint_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show("Not yet implemented");
-			return;
-			Word.Application printApp = null;
+			/*MessageBox.Show("Not yet implemented");
+			return;*/
 			if (tvReports.SelectedNode == null) 
 			{
-				MessageBox.Show("No report selected");
+				MessageBox.Show("Nothing selected");
 				return;
 			}
-			if (File.Exists(Path.GetFullPath(".\\..\\.." + tvReports.SelectedNode.FullPath))) 
+			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx")
 			{
-				try
+				MessageBox.Show("You may only print Documents(*.docx) files");
+			}
+			PrintDialog printDialog = new PrintDialog();
+			if (printDialog.ShowDialog() == DialogResult.OK)
+			{
+				Word.Application printApp = null;
+				if (tvReports.SelectedNode == null)
 				{
-					printApp = new Word.Application();
-					printApp.Documents.Open(Path.GetFullPath(".\\..\\.." + tvReports.SelectedNode.FullPath), Missing.Value, true).PrintOut(true);
-					printApp.Documents.Close();
-					printApp.Quit(false);
+					MessageBox.Show("No report selected");
+					return;
 				}
-				catch (Exception ex) 
+				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
 				{
+					if (!Directory.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\.\\." + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt")) 
+					{
+						Directory.CreateDirectory(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt");
+					}
 					try
 					{
-						printApp.Quit(false);	
+						printApp = new Word.Application();
+						printApp.Visible = visible;
+						Word.Document document = printApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), ReadOnly: true);
+						document.PrintOut(Background: false);
+						printApp.Documents.Close();
+						printApp.Quit(false);
+						File.Move(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), 
+							Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt\\" + Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+						UpdateTree();
 					}
-					catch (Exception exx) 
+					catch (Exception ex)
 					{
-						
+						Console.Write(ex.Message);
+						Console.Write("\n" + ex.StackTrace);
+						try
+						{
+							printApp.Quit(false);
+						}
+						catch (Exception exx)
+						{
+
+						}
 					}
 				}
 			}
