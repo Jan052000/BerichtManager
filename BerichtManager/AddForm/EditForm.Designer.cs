@@ -57,6 +57,7 @@
 			// 
 			// rtInput
 			// 
+			this.rtInput.AcceptsTab = true;
 			this.rtInput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -65,6 +66,7 @@
 			this.rtInput.Size = new System.Drawing.Size(776, 397);
 			this.rtInput.TabIndex = 2;
 			this.rtInput.Text = "";
+			this.rtInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.rtInput_KeyPress);
 			// 
 			// btQuit
 			// 

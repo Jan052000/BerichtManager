@@ -10,6 +10,7 @@ namespace BerichtManager.AddForm
 		{
 			InitializeComponent();
 			this.Text = title;
+			rtInput.Multiline = true;
 			if (school)
 			{
 				//https://borys.webuntis.com/WebUntis/?school=pictorus-bk#/basic/login
@@ -50,6 +51,14 @@ namespace BerichtManager.AddForm
 		private void btQuit_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Abort;
+		}
+
+		private void rtInput_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar == 13) 
+			{
+				
+			}
 		}
 	}
 }

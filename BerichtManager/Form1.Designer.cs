@@ -38,6 +38,7 @@
 			this.btEditExisting = new System.Windows.Forms.Button();
 			this.btDelete = new System.Windows.Forms.Button();
 			this.btPrint = new System.Windows.Forms.Button();
+			this.btPrintAll = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -113,15 +114,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tvReports.Location = new System.Drawing.Point(12, 12);
 			this.tvReports.Name = "tvReports";
-			this.tvReports.Size = new System.Drawing.Size(695, 397);
+			this.tvReports.Size = new System.Drawing.Size(686, 397);
 			this.tvReports.TabIndex = 6;
 			// 
 			// btEditExisting
 			// 
 			this.btEditExisting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btEditExisting.Location = new System.Drawing.Point(713, 12);
+			this.btEditExisting.Location = new System.Drawing.Point(704, 12);
 			this.btEditExisting.Name = "btEditExisting";
-			this.btEditExisting.Size = new System.Drawing.Size(75, 23);
+			this.btEditExisting.Size = new System.Drawing.Size(84, 23);
 			this.btEditExisting.TabIndex = 7;
 			this.btEditExisting.Text = "Edit";
 			this.btEditExisting.UseVisualStyleBackColor = true;
@@ -130,9 +131,9 @@
 			// btDelete
 			// 
 			this.btDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btDelete.Location = new System.Drawing.Point(713, 70);
+			this.btDelete.Location = new System.Drawing.Point(704, 99);
 			this.btDelete.Name = "btDelete";
-			this.btDelete.Size = new System.Drawing.Size(75, 23);
+			this.btDelete.Size = new System.Drawing.Size(84, 23);
 			this.btDelete.TabIndex = 8;
 			this.btDelete.Text = "Delete";
 			this.btDelete.UseVisualStyleBackColor = true;
@@ -140,19 +141,31 @@
 			// 
 			// btPrint
 			// 
-			this.btPrint.Location = new System.Drawing.Point(713, 41);
+			this.btPrint.Location = new System.Drawing.Point(704, 41);
 			this.btPrint.Name = "btPrint";
-			this.btPrint.Size = new System.Drawing.Size(75, 23);
+			this.btPrint.Size = new System.Drawing.Size(84, 23);
 			this.btPrint.TabIndex = 9;
-			this.btPrint.Text = "Print";
+			this.btPrint.Text = "Print Selected";
 			this.btPrint.UseVisualStyleBackColor = true;
 			this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
+			// 
+			// btPrintAll
+			// 
+			this.btPrintAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btPrintAll.Location = new System.Drawing.Point(704, 70);
+			this.btPrintAll.Name = "btPrintAll";
+			this.btPrintAll.Size = new System.Drawing.Size(84, 23);
+			this.btPrintAll.TabIndex = 10;
+			this.btPrintAll.Text = "Print All";
+			this.btPrintAll.UseVisualStyleBackColor = true;
+			this.btPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
 			// 
 			// FormManager
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btPrintAll);
 			this.Controls.Add(this.btPrint);
 			this.Controls.Add(this.btDelete);
 			this.Controls.Add(this.btEditExisting);
@@ -181,6 +194,7 @@
 		private System.Windows.Forms.Button btEditExisting;
 		private System.Windows.Forms.Button btDelete;
 		private System.Windows.Forms.Button btPrint;
+		private System.Windows.Forms.Button btPrintAll;
 	}
 }
 
