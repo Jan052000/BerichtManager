@@ -7,6 +7,7 @@ using BerichtManager.Config;
 using BerichtManager.AddForm;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace BerichtManager
 {
@@ -515,7 +516,7 @@ namespace BerichtManager
 				}
 				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
 				{
-					if (!Directory.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\.\\." + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt")) 
+					if (!Directory.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt")) 
 					{
 						Directory.CreateDirectory(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt");
 					}
@@ -550,11 +551,78 @@ namespace BerichtManager
 
 		private void btPrintAll_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show("Not yet implemented");
-			if (tvReports.SelectedNode == null)
+			/*MessageBox.Show("Not yet implemented");
+			return;*/
+			if (Directory.Exists(Path.GetFullPath(".\\.."))) 
 			{
-				MessageBox.Show("No report selected");
-				return;
+				Dictionary<string, List<string>> unPrintedFiles = new Dictionary<string, List<string>>();
+				foreach (string dirName in Directory.GetDirectories(Path.GetFullPath(".\\.."))) 
+				{
+					foreach (string file in Directory.GetFiles(dirName)) 
+					{
+						if (Path.GetExtension(file) == ".docx") 
+						{
+							if (!Directory.Exists(dirName + "\\Gedruckt"))
+							{
+								Directory.CreateDirectory(dirName + "\\Gedruckt");
+							}
+							if (!unPrintedFiles.ContainsKey(dirName))
+							{
+								unPrintedFiles.Add(dirName, new List<string>());
+							}
+							unPrintedFiles[dirName].Add(file);
+						}
+					}
+				}
+
+				PrintDialog printDialog = new PrintDialog();
+				if (printDialog.ShowDialog() == DialogResult.OK)
+				{
+					Word.Application printApp = null;
+					if (unPrintedFiles.Count == 0)
+					{
+						MessageBox.Show("No unprinted reports found");
+						return;
+					}
+					try
+					{
+						printApp = new Word.Application();
+						printApp.Visible = visible;
+						foreach (string key in unPrintedFiles.Keys) 
+						{
+							unPrintedFiles[key].ForEach((f) => 
+							{
+								printApp.Documents.Open(FileName: f, ReadOnly: true);
+							});
+						}
+						printApp.PrintOut(Background: false);
+						printApp.Documents.Close();
+						printApp.Quit(false);
+
+						foreach (string key in unPrintedFiles.Keys) 
+						{
+							unPrintedFiles[key].ForEach((f) => 
+							{
+								File.Move(f, key + "\\Gedruckt\\" + Path.GetFileName(f));
+							});
+						}
+						UpdateTree();
+					}
+					catch (Exception ex)
+					{
+						Console.Write(ex.Message);
+						Console.Write("\n" + ex.StackTrace);
+						try
+						{
+							printApp.Quit(false);
+						}
+						catch (Exception exx)
+						{
+
+						}
+					}
+
+				}
 			}
 		}
 
