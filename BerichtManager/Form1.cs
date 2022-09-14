@@ -87,7 +87,6 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							MessageBox.Show(wordApp.Version);
 							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 							wordApp.Quit();
 							return;
@@ -490,6 +489,11 @@ namespace BerichtManager
 			MessageBox.Show("Not yet implemented");
 			return;
 			Word.Application printApp = null;
+			if (tvReports.SelectedNode == null) 
+			{
+				MessageBox.Show("No report selected");
+				return;
+			}
 			if (File.Exists(Path.GetFullPath(".\\..\\.." + tvReports.SelectedNode.FullPath))) 
 			{
 				try
@@ -515,11 +519,21 @@ namespace BerichtManager
 
 		private void btPrintAll_Click(object sender, EventArgs e)
 		{
-
+			MessageBox.Show("Not yet implemented");
+			if (tvReports.SelectedNode == null)
+			{
+				MessageBox.Show("No report selected");
+				return;
+			}
 		}
 
 		private void btEditExisting_Click(object sender, EventArgs e)
 		{
+			if (tvReports.SelectedNode == null)
+			{
+				MessageBox.Show("No report selected");
+				return;
+			}
 			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx") 
 			{
 				MessageBox.Show("You may only edit Documents(*.docx) files");
@@ -625,7 +639,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
-						MessageBox.Show(form.Result);
 					}
 					else
 					{
@@ -768,11 +781,16 @@ namespace BerichtManager
 
 		private void btDelete_Click(object sender, EventArgs e)
 		{
+			if (tvReports.SelectedNode == null)
+			{
+				MessageBox.Show("No report selected");
+				return;
+			}
 			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes) 
 			{
 				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
 				{
-					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) == ".docx")
+					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)).StartsWith("~$"))
 					{
 						File.Delete(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 						tvReports.Nodes.Remove(tvReports.SelectedNode);
