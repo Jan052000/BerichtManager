@@ -168,7 +168,7 @@ namespace BerichtManager
 
 					doc.Close();
 					wordApp.Quit();
-
+					UpdateTree();
 				}
 				else
 				{
@@ -901,13 +901,16 @@ namespace BerichtManager
 					{
 						if (Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath) == handler.LoadActive())
 						{
-							if (int.TryParse(handler.LoadNumber(), out int number))
+							if (tvReports.SelectedNode.Text.Substring(15, ("" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()) 
 							{
-								handler.EditNumber("" + (number - 1));
-							}
-							else
-							{
-								MessageBox.Show("Could not reset current number of report");
+								if (int.TryParse(handler.LoadNumber(), out int number))
+								{
+									handler.EditNumber("" + (number - 1));
+								}
+								else
+								{
+									MessageBox.Show("Could not reset current number of report");
+								}
 							}
 						}
 						File.Delete(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
