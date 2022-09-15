@@ -891,6 +891,9 @@ namespace BerichtManager
 				{
 					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)).StartsWith("~$"))
 					{
+						if (Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath) == handler.LoadActive())
+							if (int.TryParse(handler.LoadNumber(), out int number))
+								handler.EditNumber("" + (number - 1));
 						File.Delete(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 						tvReports.Nodes.Remove(tvReports.SelectedNode);
 						MessageBox.Show("File deleted successfully");
