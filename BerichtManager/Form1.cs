@@ -245,7 +245,14 @@ namespace BerichtManager
 			form.ShowDialog();
 			if (form.DialogResult == DialogResult.OK)
 			{
-				handler.EditNumber(form.Result);
+				if (int.TryParse(form.Result, out int i))
+				{
+					handler.EditNumber(form.Result);
+				}
+				else 
+				{
+					MessageBox.Show("Entered value is not a number, the report number was thus not set");
+				}
 			}
 		}
 
