@@ -142,6 +142,7 @@
 			// 
 			// btPrint
 			// 
+			this.btPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btPrint.Location = new System.Drawing.Point(704, 41);
 			this.btPrint.Name = "btPrint";
 			this.btPrint.Size = new System.Drawing.Size(84, 23);
@@ -189,6 +190,7 @@
 			this.Controls.Add(this.btCreate);
 			this.Controls.Add(this.btSetTemplate);
 			this.Controls.Add(this.btClose);
+			this.MinimumSize = new System.Drawing.Size(524, 0);
 			this.Name = "FormManager";
 			this.Text = "Bericht Manager";
 			this.ResumeLayout(false);

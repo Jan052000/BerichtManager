@@ -55,13 +55,5 @@ namespace BerichtManager.AddForm
 		{
 			DialogResult = DialogResult.Abort;
 		}
-
-		private void rtInput_KeyPress(object sender, KeyPressEventArgs e)
-		{
-			if (e.KeyChar == 13) 
-			{
-				
-			}
-		}
 	}
 }
