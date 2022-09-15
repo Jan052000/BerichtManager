@@ -63,9 +63,34 @@ namespace BerichtManager
 					wordApp.Visible = visible;
 					doc = wordApp.Documents.Add(ref templatePath);
 
-					//Enter report nr.
+					if (doc.FormFields.Count != 10)
+					{
+						MessageBox.Show("Invalid template");
+						doc.Close(SaveChanges: false);
+						wordApp.Quit();
+						return;
+					}
+
+					EditForm form;
+					//Fill name
 					var enumerator = doc.FormFields.GetEnumerator();
 					enumerator.MoveNext();
+					if (!string.IsNullOrEmpty(handler.LoadName()))
+					{
+						((Word.FormField)enumerator.Current).Result = handler.LoadName();
+					}
+					else 
+					{
+						form = new EditForm("Enter your name", "Name Vorname", false);
+						if (form.ShowDialog() == DialogResult.OK) 
+						{
+							handler.SaveName(form.Result);
+							((Word.FormField)enumerator.Current).Result = handler.LoadName();
+						}
+					}
+					enumerator.MoveNext();
+
+					//Enter report nr.
 					//((Word.FormField)enumerator.Current).Range.Text = handler.LoadNumber();
 					((Word.FormField)enumerator.Current).Result = handler.LoadNumber();
 
@@ -84,7 +109,7 @@ namespace BerichtManager
 					((Word.FormField)enumerator.Current).Result = today.Year.ToString();
 
 					//Enter work field
-					EditForm form = new EditForm("Betriebliche Tätigkeiten", "", false);
+					form = new EditForm("Betriebliche Tätigkeiten", "", false);
 					enumerator.MoveNext();
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -266,10 +291,35 @@ namespace BerichtManager
 					wordApp.Visible = visible;
 					doc = wordApp.Documents.Open(handler.LoadActive());
 
-					//Enter report nr.
+					if (doc.FormFields.Count != 10)
+					{
+						MessageBox.Show("Invalid document (you will have to manually edit)");
+						doc.Close(SaveChanges: false);
+						wordApp.Quit();
+						return;
+					}
+
+					EditForm form;
+					//Fill Name
 					var enumerator = doc.FormFields.GetEnumerator();
 					enumerator.MoveNext();
-					EditForm form = new EditForm("Edit report nr.", ((Word.FormField)enumerator.Current).Result, false);
+					if (!string.IsNullOrEmpty(handler.LoadName()))
+					{
+						((Word.FormField)enumerator.Current).Result = handler.LoadName();
+					}
+					else
+					{
+						form = new EditForm("Enter your name", "Name Vorname", false);
+						if (form.ShowDialog() == DialogResult.OK)
+						{
+							handler.SaveName(form.Result);
+							((Word.FormField)enumerator.Current).Result = handler.LoadName();
+						}
+					}
+					enumerator.MoveNext();
+
+					//Enter report nr.
+					form = new EditForm("Edit report nr.", ((Word.FormField)enumerator.Current).Result, false);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -660,16 +710,35 @@ namespace BerichtManager
 					wordApp.Visible = visible;
 					doc = wordApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 
-					if (doc.FormFields.Count != 9) 
+					if (doc.FormFields.Count != 10) 
 					{
 						MessageBox.Show("Invalid document (you will have to manually edit)");
+						doc.Close(SaveChanges: false);
+						wordApp.Quit();
 						return;
 					}
 
-					//Enter report nr.
+					EditForm form;
+					//Fill Name
 					var enumerator = doc.FormFields.GetEnumerator();
 					enumerator.MoveNext();
-					EditForm form = new EditForm("Edit report nr.", ((Word.FormField)enumerator.Current).Result, false);
+					if (!string.IsNullOrEmpty(handler.LoadName()))
+					{
+						((Word.FormField)enumerator.Current).Result = handler.LoadName();
+					}
+					else
+					{
+						form = new EditForm("Enter your name", "Name Vorname", false);
+						if (form.ShowDialog() == DialogResult.OK)
+						{
+							handler.SaveName(form.Result);
+							((Word.FormField)enumerator.Current).Result = handler.LoadName();
+						}
+					}
+					enumerator.MoveNext();
+
+					//Enter report nr.
+					form = new EditForm("Edit report nr.", ((Word.FormField)enumerator.Current).Result, false);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -939,6 +1008,19 @@ namespace BerichtManager
 		private void btLogin_Click(object sender, EventArgs e)
 		{
 			handler.doLogin();
+		}
+
+		private void btEditName_Click(object sender, EventArgs e)
+		{
+			EditForm form = new EditForm("Enter your name", "Name Vorname", false);
+			if (form.ShowDialog() == DialogResult.OK)
+			{
+				if (form.Result != "Name Vorname") 
+				{
+					handler.SaveName(form.Result);
+				}
+			}
+
 		}
 	}
 }

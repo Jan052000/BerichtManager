@@ -67,6 +67,18 @@ namespace BerichtManager.Config
 				{
 					config.Add(new JProperty("Password", ""));
 				}
+				if (!config.ContainsKey("Name")) 
+				{
+					EditForm form = new EditForm("Enter your name", "Name Vorname", false);
+					if (form.ShowDialog() == DialogResult.OK)
+					{
+						config.Add(new JProperty("Name", form.Result));
+					}
+					else 
+					{
+						config.Add(new JProperty("Name", ""));
+					}
+				}
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 			}
 			//Directory.CreateDirectory(path);
@@ -276,6 +288,37 @@ namespace BerichtManager.Config
 				}
 			}
 			return false;
+		}
+
+		public string LoadName() 
+		{
+			if (File.Exists(path + "\\Config.json")) 
+			{
+				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+				return config.GetValue("Name").ToString();
+			}
+			return "";
+		}
+
+		public void SaveName(string name) 
+		{
+			if (File.Exists(path + "\\Config.json")) 
+			{
+				JObject nameObject = new JObject(new JProperty("Name", name));
+				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+
+				JToken token = config.First;
+				for (int i = 0; i < config.Count; i++)
+				{
+					if (((JProperty)token).Name != "Password")
+					{
+						nameObject.Add((JProperty)token);
+					}
+					token = token.Next;
+				}
+
+				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(nameObject, Formatting.Indented));
+			}
 		}
 	}
 }

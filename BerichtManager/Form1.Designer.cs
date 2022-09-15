@@ -40,6 +40,7 @@
 			this.btPrint = new System.Windows.Forms.Button();
 			this.btPrintAll = new System.Windows.Forms.Button();
 			this.btLogin = new System.Windows.Forms.Button();
+			this.btEditName = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -173,11 +174,23 @@
 			this.btLogin.UseVisualStyleBackColor = true;
 			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
 			// 
+			// btEditName
+			// 
+			this.btEditName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btEditName.Location = new System.Drawing.Point(304, 415);
+			this.btEditName.Name = "btEditName";
+			this.btEditName.Size = new System.Drawing.Size(75, 23);
+			this.btEditName.TabIndex = 12;
+			this.btEditName.Text = "Edit Name";
+			this.btEditName.UseVisualStyleBackColor = true;
+			this.btEditName.Click += new System.EventHandler(this.btEditName_Click);
+			// 
 			// FormManager
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btEditName);
 			this.Controls.Add(this.btLogin);
 			this.Controls.Add(this.btPrintAll);
 			this.Controls.Add(this.btPrint);
@@ -190,7 +203,7 @@
 			this.Controls.Add(this.btCreate);
 			this.Controls.Add(this.btSetTemplate);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(524, 0);
+			this.MinimumSize = new System.Drawing.Size(524, 39);
 			this.Name = "FormManager";
 			this.Text = "Bericht Manager";
 			this.ResumeLayout(false);
@@ -211,6 +224,7 @@
 		private System.Windows.Forms.Button btPrint;
 		private System.Windows.Forms.Button btPrintAll;
 		private System.Windows.Forms.Button btLogin;
+		private System.Windows.Forms.Button btEditName;
 	}
 }
 
