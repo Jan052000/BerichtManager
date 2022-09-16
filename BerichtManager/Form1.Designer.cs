@@ -57,7 +57,7 @@
 			// btSetTemplate
 			// 
 			this.btSetTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSetTemplate.Location = new System.Drawing.Point(628, 415);
+			this.btSetTemplate.Location = new System.Drawing.Point(547, 415);
 			this.btSetTemplate.Name = "btSetTemplate";
 			this.btSetTemplate.Size = new System.Drawing.Size(79, 23);
 			this.btSetTemplate.TabIndex = 1;
@@ -68,7 +68,7 @@
 			// btCreate
 			// 
 			this.btCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btCreate.Location = new System.Drawing.Point(466, 415);
+			this.btCreate.Location = new System.Drawing.Point(632, 415);
 			this.btCreate.Name = "btCreate";
 			this.btCreate.Size = new System.Drawing.Size(75, 23);
 			this.btCreate.TabIndex = 2;
@@ -79,7 +79,7 @@
 			// btSetNumber
 			// 
 			this.btSetNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSetNumber.Location = new System.Drawing.Point(547, 415);
+			this.btSetNumber.Location = new System.Drawing.Point(466, 415);
 			this.btSetNumber.Name = "btSetNumber";
 			this.btSetNumber.Size = new System.Drawing.Size(75, 23);
 			this.btSetNumber.TabIndex = 3;
@@ -100,6 +100,8 @@
 			// 
 			// button1
 			// 
+			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.button1.Enabled = false;
 			this.button1.Location = new System.Drawing.Point(203, 415);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 23);
@@ -203,7 +205,7 @@
 			this.Controls.Add(this.btCreate);
 			this.Controls.Add(this.btSetTemplate);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(524, 39);
+			this.MinimumSize = new System.Drawing.Size(605, 202);
 			this.Name = "FormManager";
 			this.Text = "Bericht Manager";
 			this.ResumeLayout(false);

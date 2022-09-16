@@ -34,6 +34,7 @@
 			this.laPassword = new System.Windows.Forms.Label();
 			this.btClose = new System.Windows.Forms.Button();
 			this.btLogin = new System.Windows.Forms.Button();
+			this.laLogin = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// laUsername
@@ -94,11 +95,23 @@
 			this.btLogin.UseVisualStyleBackColor = true;
 			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
 			// 
+			// laLogin
+			// 
+			this.laLogin.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.laLogin.AutoSize = true;
+			this.laLogin.Location = new System.Drawing.Point(220, 9);
+			this.laLogin.Name = "laLogin";
+			this.laLogin.Size = new System.Drawing.Size(93, 13);
+			this.laLogin.TabIndex = 6;
+			this.laLogin.Text = "Login to Webuntis";
+			// 
 			// Login
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(531, 225);
+			this.Controls.Add(this.laLogin);
 			this.Controls.Add(this.btLogin);
 			this.Controls.Add(this.btClose);
 			this.Controls.Add(this.laPassword);
@@ -120,5 +133,6 @@
 		private System.Windows.Forms.Label laPassword;
 		private System.Windows.Forms.Button btClose;
 		private System.Windows.Forms.Button btLogin;
+		private System.Windows.Forms.Label laLogin;
 	}
 }

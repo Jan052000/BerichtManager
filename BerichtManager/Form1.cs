@@ -545,8 +545,7 @@ namespace BerichtManager
 
 		private void btTest_Click(object sender, EventArgs e)
 		{
-			Client form = new Client();
-			form.ShowDialog();
+			MessageBox.Show(this.Height.ToString());
 		}
 
 		private void btPrint_Click(object sender, EventArgs e)
