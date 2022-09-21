@@ -6,7 +6,6 @@ using System.Reflection;
 using BerichtManager.Config;
 using BerichtManager.AddForm;
 using System.Globalization;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace BerichtManager
@@ -17,13 +16,12 @@ namespace BerichtManager
 		Word.Application wordApp = null;
 		ConfigHandler handler;
 		DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
-		private bool visible = true;
+		private bool visible = false;
 
 		public FormManager()
 		{
 			InitializeComponent();
 			handler = new ConfigHandler();
-
 			UpdateTree();
 		}
 
@@ -47,6 +45,7 @@ namespace BerichtManager
 		private void FillText(Word.Application app, Word.FormField field, string text) 
 		{
 			field.Select();
+			field.Range.Paragraphs.TabStops.Add(14);
 			app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
 			app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
 			if (text.Length > 254)
@@ -59,7 +58,7 @@ namespace BerichtManager
 			}
 			else 
 			{
-				field.Result = text;
+				field.Result = text.Replace("\n", "\v");
 			}
 		}
 
@@ -234,16 +233,16 @@ namespace BerichtManager
 				if (ex.HResult == -2147023174)
 				{
 					MessageBox.Show("an unexpected problem occured this progam will now close!");
-					try
-					{
-						wordApp.Quit(false);
-					}
-					catch (Exception exx)
-					{
-
-					}
-					Close();
 				}
+				try
+				{
+					wordApp.Quit(false);
+				}
+				catch (Exception exx)
+				{
+
+				}
+				Close();
 			}
 			/*finally
 			{
@@ -471,7 +470,7 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -533,20 +532,25 @@ namespace BerichtManager
 			}
 			catch (Exception ex)
 			{
-
-				if (ex.HResult == -2147023174)
+				switch (ex.HResult) 
 				{
-					MessageBox.Show("an unexpected problem occured this progam will now close!");
-					try
-					{
-						wordApp.Quit(false);
-					}
-					catch (Exception exx) 
-					{
-						
-					}
-					Close();
+					case -2147023174:
+						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						break;
+					case -2146823679:
+						MessageBox.Show("Word closed unexpectedly");
+						break;
+
 				}
+				try
+				{
+					wordApp.Quit(false);
+				}
+				catch (Exception exx)
+				{
+
+				}
+				Close();
 			}
 			/*finally 
 			{
@@ -572,12 +576,13 @@ namespace BerichtManager
 			return;*/
 			if (tvReports.SelectedNode == null) 
 			{
-				MessageBox.Show("Nothing selected");
+				MessageBox.Show("No report selected");
 				return;
 			}
 			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx")
 			{
 				MessageBox.Show("You may only print Documents(*.docx) files");
+				return;
 			}
 			DirectoryInfo printed = new DirectoryInfo(Path.GetDirectoryName(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)));
 			if (printed.Name == "Gedruckt") 
@@ -591,11 +596,6 @@ namespace BerichtManager
 			if (printDialog.ShowDialog() == DialogResult.OK)
 			{
 				Word.Application printApp = null;
-				if (tvReports.SelectedNode == null)
-				{
-					MessageBox.Show("No report selected");
-					return;
-				}
 				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
 				{
 					if (!Directory.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt")) 
@@ -947,16 +947,16 @@ namespace BerichtManager
 				if (ex.HResult == -2147023174)
 				{
 					MessageBox.Show("an unexpected problem occured this progam will now close!");
-					try
-					{
-						wordApp.Quit(false);
-					}
-					catch (Exception exx)
-					{
-
-					}
-					Close();
 				}
+				try
+				{
+					wordApp.Quit(false);
+				}
+				catch (Exception exx)
+				{
+
+				}
+				Close();
 			}
 			/*finally
 			{
@@ -1030,6 +1030,11 @@ namespace BerichtManager
 				}
 			}
 
+		}
+
+		private void cbVisible_CheckedChanged(object sender, EventArgs e)
+		{
+			visible = cbVisible.Checked;
 		}
 	}
 }

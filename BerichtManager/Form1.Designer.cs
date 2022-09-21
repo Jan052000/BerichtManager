@@ -41,6 +41,7 @@
 			this.btPrintAll = new System.Windows.Forms.Button();
 			this.btLogin = new System.Windows.Forms.Button();
 			this.btEditName = new System.Windows.Forms.Button();
+			this.cbVisible = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -187,11 +188,24 @@
 			this.btEditName.UseVisualStyleBackColor = true;
 			this.btEditName.Click += new System.EventHandler(this.btEditName_Click);
 			// 
+			// cbVisible
+			// 
+			this.cbVisible.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.cbVisible.AutoSize = true;
+			this.cbVisible.Location = new System.Drawing.Point(93, 419);
+			this.cbVisible.Name = "cbVisible";
+			this.cbVisible.Size = new System.Drawing.Size(90, 17);
+			this.cbVisible.TabIndex = 13;
+			this.cbVisible.Text = "Word visible?";
+			this.cbVisible.UseVisualStyleBackColor = true;
+			this.cbVisible.CheckedChanged += new System.EventHandler(this.cbVisible_CheckedChanged);
+			// 
 			// FormManager
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.cbVisible);
 			this.Controls.Add(this.btEditName);
 			this.Controls.Add(this.btLogin);
 			this.Controls.Add(this.btPrintAll);
@@ -205,10 +219,11 @@
 			this.Controls.Add(this.btCreate);
 			this.Controls.Add(this.btSetTemplate);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(605, 202);
+			this.MinimumSize = new System.Drawing.Size(695, 202);
 			this.Name = "FormManager";
 			this.Text = "Bericht Manager";
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -227,6 +242,7 @@
 		private System.Windows.Forms.Button btPrintAll;
 		private System.Windows.Forms.Button btLogin;
 		private System.Windows.Forms.Button btEditName;
+		private System.Windows.Forms.CheckBox cbVisible;
 	}
 }
 
