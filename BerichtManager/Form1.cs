@@ -610,8 +610,11 @@ namespace BerichtManager
 						document.PrintOut(Background: false);
 						printApp.Documents.Close();
 						printApp.Quit(false);
-						File.Move(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), 
+						if (printed.Name != "Gedruckt") 
+						{
+							File.Move(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath),
 							Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt\\" + Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+						}
 						UpdateTree();
 					}
 					catch (Exception ex)
