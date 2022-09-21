@@ -32,6 +32,9 @@
 			this.btConfirm = new System.Windows.Forms.Button();
 			this.rtInput = new System.Windows.Forms.RichTextBox();
 			this.btQuit = new System.Windows.Forms.Button();
+			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
+			this.cbFontFamily = new System.Windows.Forms.ComboBox();
+			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -79,17 +82,42 @@
 			this.btQuit.UseVisualStyleBackColor = true;
 			this.btQuit.Click += new System.EventHandler(this.btQuit_Click);
 			// 
+			// nudFontSize
+			// 
+			this.nudFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.nudFontSize.DecimalPlaces = 2;
+			this.nudFontSize.Location = new System.Drawing.Point(498, 415);
+			this.nudFontSize.Name = "nudFontSize";
+			this.nudFontSize.Size = new System.Drawing.Size(47, 20);
+			this.nudFontSize.TabIndex = 5;
+			this.nudFontSize.ValueChanged += new System.EventHandler(this.nudFontSize_ValueChanged);
+			// 
+			// cbFontFamily
+			// 
+			this.cbFontFamily.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.cbFontFamily.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cbFontFamily.FormattingEnabled = true;
+			this.cbFontFamily.Location = new System.Drawing.Point(12, 415);
+			this.cbFontFamily.Name = "cbFontFamily";
+			this.cbFontFamily.Size = new System.Drawing.Size(480, 21);
+			this.cbFontFamily.TabIndex = 6;
+			this.cbFontFamily.SelectedValueChanged += new System.EventHandler(this.cbFontFamily_SelectedValueChanged);
+			// 
 			// EditForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.cbFontFamily);
+			this.Controls.Add(this.nudFontSize);
 			this.Controls.Add(this.btQuit);
 			this.Controls.Add(this.rtInput);
 			this.Controls.Add(this.btConfirm);
 			this.Controls.Add(this.btClose);
 			this.Name = "EditForm";
 			this.Text = "EditForm";
+			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -100,5 +128,7 @@
 		private System.Windows.Forms.Button btConfirm;
 		private System.Windows.Forms.RichTextBox rtInput;
 		private System.Windows.Forms.Button btQuit;
+		private System.Windows.Forms.NumericUpDown nudFontSize;
+		private System.Windows.Forms.ComboBox cbFontFamily;
 	}
 }

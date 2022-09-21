@@ -45,7 +45,11 @@ namespace BerichtManager
 		private void FillText(Word.Application app, Word.FormField field, string text) 
 		{
 			field.Select();
-			field.Range.Paragraphs.TabStops.Add(14);
+			var temp = field.Range.Paragraphs.TabStops.Count;
+			for (int i = 1; i < 6; i++) 
+			{
+				field.Range.Paragraphs.TabStops.Add(i * 14);
+			}
 			app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
 			app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
 			if (text.Length > 254)
