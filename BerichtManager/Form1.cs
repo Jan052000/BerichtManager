@@ -360,8 +360,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -384,8 +383,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -403,8 +401,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -423,8 +420,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -443,8 +439,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -463,8 +458,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -483,8 +477,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -503,8 +496,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -523,8 +515,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -777,8 +768,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort) 
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -801,8 +791,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -820,8 +809,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -840,8 +828,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -860,8 +847,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -880,8 +866,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -900,8 +885,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -920,8 +904,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
@@ -940,8 +923,7 @@ namespace BerichtManager
 					{
 						if (form.DialogResult == DialogResult.Abort)
 						{
-							doc.Save();
-							doc.Close();
+							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
 						}
