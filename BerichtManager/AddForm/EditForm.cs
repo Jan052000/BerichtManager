@@ -12,6 +12,12 @@ namespace BerichtManager.AddForm
 			InitializeComponent();
 			this.Text = title;
 			rtInput.Multiline = true;
+			List<int> tabstops = new List<int>();
+			for (int i = 1; i * 14 < rtInput.Size.Width && tabstops.Count < 32; i++) 
+			{
+				tabstops.Add(i * 14);
+			}
+			rtInput.SelectionTabs = tabstops.ToArray();
 			if (school)
 			{
 				//https://borys.webuntis.com/WebUntis/?school=pictorus-bk#/basic/login
