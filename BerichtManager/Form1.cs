@@ -17,7 +17,7 @@ namespace BerichtManager
 		Word.Application wordApp = null;
 		ConfigHandler handler;
 		DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
-		private bool visible = false;
+		private bool visible = true;
 
 		public FormManager()
 		{
@@ -42,6 +42,25 @@ namespace BerichtManager
 			foreach (var file in directoryInfo.GetFiles())
 				directoryNode.Nodes.Add(new TreeNode(file.Name));
 			return directoryNode;
+		}
+
+		private void FillText(Word.Application app, Word.FormField field, string text) 
+		{
+			field.Select();
+			app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
+			app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
+			if (text.Length > 254)
+			{
+				field.Result = "";
+				app.Selection.Text = text.Replace("\n", "\v").Substring(0, 200);
+				field.Result = field.Result.Trim() + " ";
+				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
+				app.Selection.TypeText(text.Substring(201));
+			}
+			else 
+			{
+				field.Result = text;
+			}
 		}
 
 		private void CreateDocument(object templatePath) 
@@ -114,7 +133,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -136,7 +156,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -158,7 +179,15 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						/*((Word.FormField)enumerator.Current).Select();
+						wordApp.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
+						wordApp.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
+						wordApp.Selection.Text = form.Result.Replace("\n", "\v").Substring(0, 200);
+						((Word.FormField)enumerator.Current).Result = ((Word.FormField)enumerator.Current).Result.Trim() + " ";
+						wordApp.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
+						wordApp.Selection.TypeText(form.Result.Substring(201));*/
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -187,7 +216,7 @@ namespace BerichtManager
 					string path = Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx";
 					doc.SaveAs2(path);
 					//doc.SaveAs2(path, Word.WdSaveFormat.wdFormatDocument, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, true);
-					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber((i + 1).ToString());
+					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
 					handler.EditActive(path);
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
 
@@ -305,7 +334,8 @@ namespace BerichtManager
 					enumerator.MoveNext();
 					if (!string.IsNullOrEmpty(handler.LoadName()))
 					{
-						((Word.FormField)enumerator.Current).Result = handler.LoadName();
+						FillText(wordApp, (Word.FormField)enumerator.Current, handler.LoadName());
+						//((Word.FormField)enumerator.Current).Result = handler.LoadName();
 					}
 					else
 					{
@@ -323,7 +353,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -346,7 +377,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -364,7 +396,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -383,7 +416,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -402,7 +436,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -412,10 +447,6 @@ namespace BerichtManager
 							doc.Close();
 							wordApp.Quit();
 							return;
-						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 						}
 					}
 
@@ -425,7 +456,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -435,10 +467,6 @@ namespace BerichtManager
 							doc.Close();
 							wordApp.Quit();
 							return;
-						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 						}
 					}
 
@@ -448,7 +476,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -459,10 +488,6 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
-						}
 					}
 
 					//Fridy of week
@@ -471,7 +496,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -490,7 +516,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -545,7 +572,7 @@ namespace BerichtManager
 
 		private void btTest_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show(this.Height.ToString());
+			
 		}
 
 		private void btPrint_Click(object sender, EventArgs e)
@@ -723,7 +750,8 @@ namespace BerichtManager
 					enumerator.MoveNext();
 					if (!string.IsNullOrEmpty(handler.LoadName()))
 					{
-						((Word.FormField)enumerator.Current).Result = handler.LoadName();
+						FillText(wordApp, (Word.FormField)enumerator.Current, handler.LoadName());
+						//((Word.FormField)enumerator.Current).Result = handler.LoadName();
 					}
 					else
 					{
@@ -731,7 +759,8 @@ namespace BerichtManager
 						if (form.ShowDialog() == DialogResult.OK)
 						{
 							handler.SaveName(form.Result);
-							((Word.FormField)enumerator.Current).Result = handler.LoadName();
+							FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+							//((Word.FormField)enumerator.Current).Result = handler.LoadName();
 						}
 					}
 					enumerator.MoveNext();
@@ -741,7 +770,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else 
 					{
@@ -764,7 +794,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -782,7 +813,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -801,7 +833,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -820,7 +853,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -830,11 +864,6 @@ namespace BerichtManager
 							doc.Close();
 							wordApp.Quit();
 							return;
-						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
-							((Word.FormField)enumerator.Current).Range.AutoFormat();
 						}
 					}
 
@@ -844,7 +873,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -854,10 +884,6 @@ namespace BerichtManager
 							doc.Close();
 							wordApp.Quit();
 							return;
-						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 						}
 					}
 
@@ -867,7 +893,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -878,10 +905,6 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
-						else 
-						{
-							((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
-						}
 					}
 
 					//Fridy of week
@@ -890,7 +913,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -909,7 +933,8 @@ namespace BerichtManager
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						((Word.FormField)enumerator.Current).Result = form.Result;
+						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{

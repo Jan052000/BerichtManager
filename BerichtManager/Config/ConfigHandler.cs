@@ -2,8 +2,10 @@
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 using System.Windows.Forms;
 using BerichtManager.AddForm;
+using System.Collections.Generic;
 
 namespace BerichtManager.Config
 {
@@ -11,8 +13,6 @@ namespace BerichtManager.Config
 	{
 		private string path = Environment.CurrentDirectory + "\\Config";
 		public bool loginAborted = false;
-		//private string path = Environment.CurrentDirectory + "\\Config\\Config.json";
-		//private string path = ".\\..\\..\\Config\\Config.json";
 		public ConfigHandler() 
 		{
 			if (!File.Exists(path + "\\Config.json")) 
@@ -82,7 +82,6 @@ namespace BerichtManager.Config
 
 		public string LoadPath() 
 		{
-			string template = "";
 			if (File.Exists(path + "\\Config.json"))
 			{
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
@@ -94,7 +93,7 @@ namespace BerichtManager.Config
 				MessageBox.Show("Config bei: " + Path.GetFullPath(path + "\\Config.json") + " erstellt");
 			}
 
-			return template;
+			return "";
 		}
 
 		public string LoadNumber() 
@@ -315,6 +314,25 @@ namespace BerichtManager.Config
 
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(nameObject, Formatting.Indented));
 			}
+		}
+
+		public bool ConfigExists() 
+		{
+			if (File.Exists(path + "\\Config.json"))
+			{
+				return true;
+			}
+			else 
+			{
+				return false;
+			}
+		}
+
+		private void SortConfig() 
+		{
+			List<JProperty> jProperties = new List<JProperty>();
+			JObject jobject = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+			var test = jobject.Children<JProperty>().OrderBy(p => p.Name);
 		}
 	}
 }
