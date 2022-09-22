@@ -34,6 +34,7 @@
 			this.btQuit = new System.Windows.Forms.Button();
 			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
 			this.cbFontFamily = new System.Windows.Forms.ComboBox();
+			this.cbEditorFont = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -98,27 +99,42 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.cbFontFamily.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cbFontFamily.FormattingEnabled = true;
-			this.cbFontFamily.Location = new System.Drawing.Point(12, 415);
+			this.cbFontFamily.Location = new System.Drawing.Point(95, 415);
 			this.cbFontFamily.Name = "cbFontFamily";
-			this.cbFontFamily.Size = new System.Drawing.Size(480, 21);
+			this.cbFontFamily.Size = new System.Drawing.Size(397, 21);
 			this.cbFontFamily.TabIndex = 6;
 			this.cbFontFamily.SelectedValueChanged += new System.EventHandler(this.cbFontFamily_SelectedValueChanged);
+			// 
+			// cbEditorFont
+			// 
+			this.cbEditorFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.cbEditorFont.AutoSize = true;
+			this.cbEditorFont.Location = new System.Drawing.Point(12, 417);
+			this.cbEditorFont.Name = "cbEditorFont";
+			this.cbEditorFont.Size = new System.Drawing.Size(77, 17);
+			this.cbEditorFont.TabIndex = 7;
+			this.cbEditorFont.Text = "Editor Font";
+			this.cbEditorFont.UseVisualStyleBackColor = true;
+			this.cbEditorFont.CheckedChanged += new System.EventHandler(this.cbEditorFont_CheckedChanged);
 			// 
 			// EditForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.cbEditorFont);
 			this.Controls.Add(this.cbFontFamily);
 			this.Controls.Add(this.nudFontSize);
 			this.Controls.Add(this.btQuit);
 			this.Controls.Add(this.rtInput);
 			this.Controls.Add(this.btConfirm);
 			this.Controls.Add(this.btClose);
+			this.MinimumSize = new System.Drawing.Size(610, 39);
 			this.Name = "EditForm";
 			this.Text = "EditForm";
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -130,5 +146,6 @@
 		private System.Windows.Forms.Button btQuit;
 		private System.Windows.Forms.NumericUpDown nudFontSize;
 		private System.Windows.Forms.ComboBox cbFontFamily;
+		private System.Windows.Forms.CheckBox cbEditorFont;
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
+using System.IO;
 using System.Windows.Forms;
 
 namespace BerichtManager.AddForm
@@ -12,13 +13,17 @@ namespace BerichtManager.AddForm
 		public EditForm(string title, string text, bool school)
 		{
 			InitializeComponent();
+			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
 			rtInput.Multiline = true;
 			nudFontSize.Text = rtInput.Font.Size.ToString();
-			foreach (FontFamily family in (new InstalledFontCollection()).Families) 
+			/*if (cbFontFamily.Visible) 
 			{
-				cbFontFamily.Items.Add(family.Name);
-			}
+				foreach (FontFamily family in (new InstalledFontCollection()).Families)
+				{
+					cbFontFamily.Items.Add(family.Name);
+				}
+			}*/
 			List<int> tabstops = new List<int>();
 			for (int i = 1; i * 14 < rtInput.Size.Width && tabstops.Count < 32; i++) 
 			{
@@ -82,7 +87,24 @@ namespace BerichtManager.AddForm
 
 		private void cbFontFamily_SelectedValueChanged(object sender, EventArgs e)
 		{
-			rtInput.Font = new Font(cbFontFamily.Text, rtInput.Font.Size);
+			if (cbEditorFont.Checked) 
+			{
+				rtInput.Font = new Font(cbFontFamily.Text, rtInput.Font.Size);
+			}
+		}
+
+		private void cbEditorFont_CheckedChanged(object sender, EventArgs e)
+		{
+			if (cbEditorFont.Checked)
+			{
+				if (cbFontFamily.Items.Count == 0)
+				{
+					foreach (FontFamily family in (new InstalledFontCollection()).Families)
+					{
+						cbFontFamily.Items.Add(family.Name);
+					}
+				}
+			}
 		}
 	}
 }

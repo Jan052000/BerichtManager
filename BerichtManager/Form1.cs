@@ -7,6 +7,7 @@ using BerichtManager.Config;
 using BerichtManager.AddForm;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace BerichtManager
 {
@@ -21,6 +22,7 @@ namespace BerichtManager
 		public FormManager()
 		{
 			InitializeComponent();
+			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			handler = new ConfigHandler();
 			UpdateTree();
 		}

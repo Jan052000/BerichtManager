@@ -97,7 +97,7 @@
 			// 
 			// laLogin
 			// 
-			this.laLogin.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.laLogin.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.laLogin.AutoSize = true;
 			this.laLogin.Location = new System.Drawing.Point(220, 9);
@@ -118,6 +118,7 @@
 			this.Controls.Add(this.tbPassword);
 			this.Controls.Add(this.tbUsername);
 			this.Controls.Add(this.laUsername);
+			this.MinimumSize = new System.Drawing.Size(333, 166);
 			this.Name = "Login";
 			this.Text = "Login";
 			this.ResumeLayout(false);
