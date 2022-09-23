@@ -388,6 +388,40 @@ namespace BerichtManager.Config
 			}
 		}
 
+		public void SaveGeneric<T>(T toSave, string key) 
+		{
+			if (ConfigExists()) 
+			{
+				JObject obj = new JObject(new JProperty(key, toSave));
+				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+
+				JToken token = config.First;
+				for (int i = 0; i < config.Count; i++)
+				{
+					if (((JProperty)token).Name != key)
+					{
+						obj.Add((JProperty)token);
+					}
+					token = token.Next;
+				}
+
+				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(obj, Formatting.Indented));
+			}
+		}
+
+		public T LoadGeneric<T>(string key) 
+		{
+			if (ConfigExists()) 
+			{
+				JObject obj = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+				if (obj.ContainsKey(key)) 
+				{
+					return obj.Value<T>(key);
+				}
+			}
+			throw new DataNotFoundException();
+		}
+
 		public bool ConfigExists() 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -405,6 +439,13 @@ namespace BerichtManager.Config
 			List<JProperty> jProperties = new List<JProperty>();
 			JObject jobject = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
 			var test = jobject.Children<JProperty>().OrderBy(p => p.Name);
+		}
+	}
+
+	public class DataNotFoundException : Exception 
+	{
+		public DataNotFoundException() : base("Key and / or Value not found")
+		{
 		}
 	}
 }

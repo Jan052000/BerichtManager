@@ -583,6 +583,7 @@ namespace BerichtManager
 						MessageBox.Show("Word closed unexpectedly");
 						break;
 					case -2146822750:
+						//Document is only one page long
 						doc.Save();
 						doc.Close();
 						wordApp.Quit();
@@ -602,7 +603,18 @@ namespace BerichtManager
 
 		private void btTest_Click(object sender, EventArgs e)
 		{
-			
+			try
+			{
+				handler.LoadGeneric<float>("Name");
+			}
+			catch (DataNotFoundException ex)
+			{
+
+			}
+			catch (FormatException ex) 
+			{
+				
+			}
 		}
 
 		private void btPrint_Click(object sender, EventArgs e)
