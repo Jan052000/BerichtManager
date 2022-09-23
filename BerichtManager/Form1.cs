@@ -274,7 +274,7 @@ namespace BerichtManager
 				{
 					wordApp.Quit(false);
 				}
-				catch (Exception exx)
+				catch
 				{
 
 				}
@@ -592,7 +592,7 @@ namespace BerichtManager
 				{
 					wordApp.Quit(false);
 				}
-				catch (Exception exx)
+				catch
 				{
 
 				}
@@ -660,7 +660,7 @@ namespace BerichtManager
 						{
 							printApp.Quit(false);
 						}
-						catch (Exception exx)
+						catch
 						{
 
 						}
@@ -736,7 +736,7 @@ namespace BerichtManager
 						{
 							printApp.Quit(false);
 						}
-						catch (Exception exx)
+						catch
 						{
 
 						}
@@ -998,7 +998,7 @@ namespace BerichtManager
 				{
 					wordApp.Quit(false);
 				}
-				catch (Exception exx)
+				catch
 				{
 
 				}

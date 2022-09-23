@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -14,8 +13,6 @@ namespace BerichtManager.AddForm
 {
 	public partial class Client : Form
 	{
-
-		string jsonstring = File.ReadAllText(@"E:\Berufsschule\Python\Test\stundenplantest.json");
 		ConfigHandler configHandler = new ConfigHandler();
 		public Client()
 		{

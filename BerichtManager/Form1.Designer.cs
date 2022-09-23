@@ -47,9 +47,9 @@
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(713, 415);
+			this.btClose.Location = new System.Drawing.Point(704, 415);
 			this.btClose.Name = "btClose";
-			this.btClose.Size = new System.Drawing.Size(75, 23);
+			this.btClose.Size = new System.Drawing.Size(84, 23);
 			this.btClose.TabIndex = 0;
 			this.btClose.Text = "Close";
 			this.btClose.UseVisualStyleBackColor = true;
@@ -58,7 +58,7 @@
 			// btSetTemplate
 			// 
 			this.btSetTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSetTemplate.Location = new System.Drawing.Point(547, 415);
+			this.btSetTemplate.Location = new System.Drawing.Point(619, 415);
 			this.btSetTemplate.Name = "btSetTemplate";
 			this.btSetTemplate.Size = new System.Drawing.Size(79, 23);
 			this.btSetTemplate.TabIndex = 1;
@@ -68,10 +68,10 @@
 			// 
 			// btCreate
 			// 
-			this.btCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btCreate.Location = new System.Drawing.Point(632, 415);
+			this.btCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btCreate.Location = new System.Drawing.Point(704, 12);
 			this.btCreate.Name = "btCreate";
-			this.btCreate.Size = new System.Drawing.Size(75, 23);
+			this.btCreate.Size = new System.Drawing.Size(84, 23);
 			this.btCreate.TabIndex = 2;
 			this.btCreate.Text = "Create";
 			this.btCreate.UseVisualStyleBackColor = true;
@@ -80,7 +80,7 @@
 			// btSetNumber
 			// 
 			this.btSetNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSetNumber.Location = new System.Drawing.Point(466, 415);
+			this.btSetNumber.Location = new System.Drawing.Point(538, 415);
 			this.btSetNumber.Name = "btSetNumber";
 			this.btSetNumber.Size = new System.Drawing.Size(75, 23);
 			this.btSetNumber.TabIndex = 3;
@@ -90,10 +90,10 @@
 			// 
 			// btEdit
 			// 
-			this.btEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btEdit.Location = new System.Drawing.Point(385, 415);
+			this.btEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btEdit.Location = new System.Drawing.Point(704, 41);
 			this.btEdit.Name = "btEdit";
-			this.btEdit.Size = new System.Drawing.Size(75, 23);
+			this.btEdit.Size = new System.Drawing.Size(84, 23);
 			this.btEdit.TabIndex = 4;
 			this.btEdit.Text = "Edit Latest";
 			this.btEdit.UseVisualStyleBackColor = true;
@@ -125,7 +125,7 @@
 			// btEditExisting
 			// 
 			this.btEditExisting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btEditExisting.Location = new System.Drawing.Point(704, 12);
+			this.btEditExisting.Location = new System.Drawing.Point(704, 70);
 			this.btEditExisting.Name = "btEditExisting";
 			this.btEditExisting.Size = new System.Drawing.Size(84, 23);
 			this.btEditExisting.TabIndex = 7;
@@ -147,7 +147,7 @@
 			// btPrint
 			// 
 			this.btPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btPrint.Location = new System.Drawing.Point(704, 41);
+			this.btPrint.Location = new System.Drawing.Point(704, 157);
 			this.btPrint.Name = "btPrint";
 			this.btPrint.Size = new System.Drawing.Size(84, 23);
 			this.btPrint.TabIndex = 9;
@@ -158,7 +158,7 @@
 			// btPrintAll
 			// 
 			this.btPrintAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btPrintAll.Location = new System.Drawing.Point(704, 70);
+			this.btPrintAll.Location = new System.Drawing.Point(704, 128);
 			this.btPrintAll.Name = "btPrintAll";
 			this.btPrintAll.Size = new System.Drawing.Size(84, 23);
 			this.btPrintAll.TabIndex = 10;
@@ -180,7 +180,7 @@
 			// btEditName
 			// 
 			this.btEditName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btEditName.Location = new System.Drawing.Point(304, 415);
+			this.btEditName.Location = new System.Drawing.Point(457, 415);
 			this.btEditName.Name = "btEditName";
 			this.btEditName.Size = new System.Drawing.Size(75, 23);
 			this.btEditName.TabIndex = 12;
@@ -219,7 +219,7 @@
 			this.Controls.Add(this.btCreate);
 			this.Controls.Add(this.btSetTemplate);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(695, 202);
+			this.MinimumSize = new System.Drawing.Size(545, 260);
 			this.Name = "FormManager";
 			this.Text = "Bericht Manager";
 			this.ResumeLayout(false);
