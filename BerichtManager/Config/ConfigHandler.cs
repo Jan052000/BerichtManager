@@ -19,7 +19,8 @@ namespace BerichtManager.Config
 			{
 				Directory.CreateDirectory(path);
 				File.Create(path + "\\Config.json").Close();
-				JObject config = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "0"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""), new JProperty("Name", ""));
+				JObject config = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "0"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
+					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25));
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 			}
 			else 
@@ -74,6 +75,14 @@ namespace BerichtManager.Config
 					{
 						config.Add(new JProperty("Name", ""));
 					}
+				}
+				if (!config.ContainsKey("Font")) 
+				{
+					config.Add(new JProperty("Font", "Arial"));
+				}
+				if (!config.ContainsKey("EditorFontSize")) 
+				{
+					config.Add(new JProperty("EditorFontSize", 8.25f));
 				}
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 			}
@@ -313,6 +322,69 @@ namespace BerichtManager.Config
 				}
 
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(nameObject, Formatting.Indented));
+			}
+		}
+
+		public string LoadFont() 
+		{
+			if (File.Exists(path + "\\Config.json")) 
+			{
+				return JObject.Parse(File.ReadAllText(path + "\\Config.json")).GetValue("Font").ToString();
+			}
+			return "Arial";
+		}
+
+		public void SaveFont(string fontName) 
+		{
+			if (File.Exists(path + "\\Config.json")) 
+			{
+				JObject fontObject = new JObject(new JProperty("Font", fontName));
+				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+
+				JToken token = config.First;
+				for (int i = 0; i < config.Count; i++)
+				{
+					if (((JProperty)token).Name != "Font")
+					{
+						fontObject.Add((JProperty)token);
+					}
+					token = token.Next;
+				}
+
+				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(fontObject, Formatting.Indented));
+			}
+		}
+
+		public float LoadEditorFontSize() 
+		{
+			if (ConfigExists()) 
+			{
+				if (float.TryParse(JObject.Parse(File.ReadAllText(path + "\\Config.json")).GetValue("EditorFontSize").ToString(), out float size))
+				{
+					return size;
+				}
+			}
+			return 8.25f;
+		}
+
+		public void SaveEditorFontSize(float size) 
+		{
+			if (ConfigExists()) 
+			{
+				JObject sizeObject = new JObject(new JProperty("EditorFontSize", size));
+				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+
+				JToken token = config.First;
+				for (int i = 0; i < config.Count; i++)
+				{
+					if (((JProperty)token).Name != "EditorFontSize")
+					{
+						sizeObject.Add((JProperty)token);
+					}
+					token = token.Next;
+				}
+
+				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(sizeObject, Formatting.Indented));
 			}
 		}
 

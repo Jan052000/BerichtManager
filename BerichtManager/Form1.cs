@@ -68,6 +68,16 @@ namespace BerichtManager
 			}
 		}
 
+		private void SetFontInDoc(Word.Document doc, Word.Application app) 
+		{
+			doc.Content.Select();
+			if (app.Selection.Font.Name != handler.LoadFont()) 
+			{
+				app.Selection.Font.Name = handler.LoadFont();
+				MessageBox.Show("Changed report Font to: " + handler.LoadFont(), "Font changed!");
+			}
+		}
+
 		private void CreateDocument(object templatePath) 
 		{
 			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx")) 
@@ -224,6 +234,8 @@ namespace BerichtManager
 					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
 					handler.EditActive(path);
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
+
+					SetFontInDoc(doc, wordApp);
 
 					doc.Close();
 					wordApp.Quit();
@@ -526,8 +538,9 @@ namespace BerichtManager
 						}
 					}
 
-					doc.Save();
+					SetFontInDoc(doc, wordApp);
 
+					doc.Save();
 					doc.Close();
 					wordApp.Quit();
 				}
@@ -938,8 +951,9 @@ namespace BerichtManager
 						}
 					}
 
-					doc.Save();
+					SetFontInDoc(doc, wordApp);
 
+					doc.Save();
 					doc.Close();
 					wordApp.Quit();
 				}
