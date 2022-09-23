@@ -76,6 +76,14 @@ namespace BerichtManager
 				app.Selection.Font.Name = handler.LoadFont();
 				MessageBox.Show("Changed report Font to: " + handler.LoadFont(), "Font changed!");
 			}
+			try
+			{
+				doc.FitToPages();
+			}
+			catch 
+			{
+				
+			}
 		}
 
 		private void CreateDocument(object templatePath) 
@@ -248,6 +256,32 @@ namespace BerichtManager
 			}
 			catch (Exception ex)
 			{
+				switch (ex.HResult)
+				{
+					case -2147023174:
+						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						break;
+					case -2146823679:
+						MessageBox.Show("Word closed unexpectedly");
+						break;
+					case -2146822750:
+						doc.Save();
+						doc.Close();
+						wordApp.Quit();
+						break;
+				}
+				try
+				{
+					wordApp.Quit(false);
+				}
+				catch (Exception exx)
+				{
+
+				}
+				Close();
+			}
+			/*catch (Exception ex)
+			{
 				if (ex.HResult == -2147023174)
 				{
 					MessageBox.Show("an unexpected problem occured this progam will now close!");
@@ -261,17 +295,6 @@ namespace BerichtManager
 
 				}
 				Close();
-			}
-			/*finally
-			{
-				if (doc != null)
-				{
-					doc.Close();
-				}
-				if (wordApp != null)
-				{
-					wordApp.Quit();
-				}
 			}*/
 		}
 
@@ -488,7 +511,7 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
+						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -559,7 +582,11 @@ namespace BerichtManager
 					case -2146823679:
 						MessageBox.Show("Word closed unexpectedly");
 						break;
-
+					case -2146822750:
+						doc.Save();
+						doc.Close();
+						wordApp.Quit();
+						break;
 				}
 				try
 				{
@@ -571,17 +598,6 @@ namespace BerichtManager
 				}
 				Close();
 			}
-			/*finally 
-			{
-				if (doc != null)
-				{
-					doc.Close();
-				}
-				if (wordApp != null)
-				{
-					wordApp.Quit();
-				}
-			}*/
 		}
 
 		private void btTest_Click(object sender, EventArgs e)
@@ -964,6 +980,32 @@ namespace BerichtManager
 			}
 			catch (Exception ex)
 			{
+				switch (ex.HResult)
+				{
+					case -2147023174:
+						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						break;
+					case -2146823679:
+						MessageBox.Show("Word closed unexpectedly");
+						break;
+					case -2146822750:
+						doc.Save();
+						doc.Close();
+						wordApp.Quit();
+						break;
+				}
+				try
+				{
+					wordApp.Quit(false);
+				}
+				catch (Exception exx)
+				{
+
+				}
+				Close();
+			}
+			/*catch (Exception ex)
+			{
 				if (ex.HResult == -2147023174)
 				{
 					MessageBox.Show("an unexpected problem occured this progam will now close!");
@@ -977,18 +1019,8 @@ namespace BerichtManager
 
 				}
 				Close();
-			}
-			/*finally
-			{
-				if (doc != null)
-				{
-					doc.Close();
-				}
-				if (wordApp != null)
-				{
-					wordApp.Quit();
-				}
 			}*/
+		
 		}
 
 		private void btDelete_Click(object sender, EventArgs e)
