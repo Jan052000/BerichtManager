@@ -1063,7 +1063,14 @@ namespace BerichtManager
 				}
 				else 
 				{
-					MessageBox.Show("File not Found (was it moved or deleted?)");
+					if (Directory.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
+					{
+						MessageBox.Show("You may only delete Documents(*.docx) files");
+					}
+					else
+					{
+						MessageBox.Show("File not Found (was it moved or deleted?)");
+					}
 				}
 			}
 		}
