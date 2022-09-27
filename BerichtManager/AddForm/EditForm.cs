@@ -45,7 +45,14 @@ namespace BerichtManager.AddForm
 				if (classes.Count == 0) MessageBox.Show("Login failed(wrong login details or api down?)");
 				classes.ForEach((c) => 
 				{
-					rtInput.Text += "-" + c + ":\n";
+					if (c.Contains("\n\t-Ausgefallen"))
+					{
+						rtInput.Text += c.Replace("\n\t-Ausgefallen", ":\n\t-Ausgefallen\n");
+					}
+					else 
+					{
+						rtInput.Text += "-" + c + ":\n";
+					}
 				});
 			}
 			else 

@@ -603,18 +603,8 @@ namespace BerichtManager
 
 		private void btTest_Click(object sender, EventArgs e)
 		{
-			try
-			{
-				handler.LoadGeneric<float>("Name");
-			}
-			catch (DataNotFoundException ex)
-			{
-
-			}
-			catch (FormatException ex) 
-			{
-				
-			}
+			Client form = new Client();
+			form.ShowDialog();
 		}
 
 		private void btPrint_Click(object sender, EventArgs e)

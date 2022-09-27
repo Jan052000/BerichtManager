@@ -357,19 +357,21 @@ namespace BerichtManager.Config
 
 		public float LoadEditorFontSize() 
 		{
-			if (ConfigExists()) 
+			return LoadGeneric<float>("EditorFontSize");
+			/*if (ConfigExists()) 
 			{
 				if (float.TryParse(JObject.Parse(File.ReadAllText(path + "\\Config.json")).GetValue("EditorFontSize").ToString(), out float size))
 				{
 					return size;
 				}
 			}
-			return 8.25f;
+			return 8.25f;*/
 		}
 
 		public void SaveEditorFontSize(float size) 
 		{
-			if (ConfigExists()) 
+			SaveGeneric<float>(size, "EditorFontSize");
+			/*if (ConfigExists()) 
 			{
 				JObject sizeObject = new JObject(new JProperty("EditorFontSize", size));
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
@@ -385,10 +387,10 @@ namespace BerichtManager.Config
 				}
 
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(sizeObject, Formatting.Indented));
-			}
+			}*/
 		}
 
-		public void SaveGeneric<T>(T toSave, string key) 
+		private void SaveGeneric<T>(T toSave, string key) 
 		{
 			if (ConfigExists()) 
 			{
@@ -409,7 +411,7 @@ namespace BerichtManager.Config
 			}
 		}
 
-		public T LoadGeneric<T>(string key) 
+		private T LoadGeneric<T>(string key) 
 		{
 			if (ConfigExists()) 
 			{

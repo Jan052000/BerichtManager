@@ -64,6 +64,7 @@ namespace BerichtManager.AddForm
 
 			//Register ClassIds to be had that week
 			List<int> classids = new List<int>();
+			Dictionary<int, bool> cancelled = new Dictionary<int, bool>();
 			classkeys.ForEach((k) =>
 			{
 				testRoot.result.data.elementPeriods[k].ForEach((en) =>
@@ -73,6 +74,16 @@ namespace BerichtManager.AddForm
 						if (id.type == 3)
 						{
 							classids.Add(id.id);
+
+							//Chack for cancellation
+							if (en.@is.cancelled == true)
+							{
+								cancelled.Add(id.id, true);
+							}
+							else
+							{
+								cancelled.Add(id.id, false);
+							}
 						}
 					});
 				});
@@ -83,7 +94,14 @@ namespace BerichtManager.AddForm
 			{
 				if (element.type == 3 && classids.Contains(element.id))
 				{
-					classes.Add(element.name);
+					if (cancelled[element.id])
+					{
+						classes.Add(element.name + "\n\t-Ausgefallen");
+					}
+					else 
+					{
+						classes.Add(element.name);
+					}
 				}
 			});
 
@@ -94,6 +112,7 @@ namespace BerichtManager.AddForm
 
 		private void btTest_Click(object sender, EventArgs e)
 		{
+			List<string> test = getClassesFromWebUntis();
 			//https://borys.webuntis.com/WebUntis/?school=pictorus-bk#/basic/login
 			//https://webuntis.com/
 
@@ -216,6 +235,7 @@ namespace BerichtManager.AddForm
 		public bool standard { get; set; }
 		[JsonProperty("event")]
 		public bool @event { get; set; }
+		public bool? cancelled { get; set; }
 	}
 
 	[Serializable]
