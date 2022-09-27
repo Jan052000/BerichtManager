@@ -96,11 +96,22 @@ namespace BerichtManager.AddForm
 				{
 					if (cancelled[element.id])
 					{
-						classes.Add(element.name + "\n\t-Ausgefallen");
+						if (!classes.Contains(element.name))
+						{
+							classes.Add(element.name + "\n\t-Ausgefallen");
+						}
 					}
 					else 
 					{
-						classes.Add(element.name);
+						if (classes.Contains(element.name + "\n\t-Ausgefallen"))
+						{
+							classes.Remove(element.name + "\n\t-Ausgefallen");
+							classes.Add(element.name);
+						}
+						else 
+						{
+							classes.Add(element.name);
+						}
 					}
 				}
 			});

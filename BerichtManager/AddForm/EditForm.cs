@@ -51,7 +51,7 @@ namespace BerichtManager.AddForm
 					}
 					else 
 					{
-						rtInput.Text += "-" + c + ":\n";
+						rtInput.Text += "-" + c + ":\n\t-\n";
 					}
 				});
 			}
