@@ -31,7 +31,6 @@ namespace BerichtManager.AddForm
 
 			//Generate Headers and Login
 
-			//HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=Username&j_password=Password").Result;
 			if (string.IsNullOrEmpty(configHandler.LoadUsername()) || string.IsNullOrEmpty(configHandler.LoadPassword())) 
 			{
 				if (!configHandler.doLogin()) 
@@ -54,8 +53,8 @@ namespace BerichtManager.AddForm
 			//Request Timetable for the week
 			DateTime baseDate = DateTime.Today;
 			string date = baseDate.ToString("yyyy-MM-dd");
-			//Stundenplan api https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=2022-09-09&formatId=2
-			//responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=" + date + "&formatId=2").Result;
+
+			//Stundenplan api https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=2022-09-28&formatId=2
 			responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
 			string jsonResponse = responseMessage.Content.ReadAsStringAsync().Result;
 
@@ -118,9 +117,51 @@ namespace BerichtManager.AddForm
 				}
 			});
 
+			//Check for Holidays if list empty
+			if (classes.Count == 0) 
+			{
+				DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+				DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+				if (int.TryParse(thisWeekStart.ToString("yyyyMMdd"), out int weekStart)) { }
+				if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
+
+				Holidays holidays = GetHolidays();
+				holidays.result.ForEach((holiday) => 
+				{
+					bool isInWeek = (holiday.startDate >= weekStart && holiday.endDate <= weekEnd);
+					bool isStarting = (holiday.startDate >= weekStart && holiday.startDate <= weekEnd);
+					bool isEnding = (holiday.endDate >= weekStart && holiday.endDate <= weekEnd);
+					bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
+					if (isInWeek || isStarting || isEnding || weekInEvent) 
+					{
+						classes.Add(holiday.longName);
+					}
+				});	
+			}
+
 			classes.Sort();
 			client.Dispose();
 			return classes;
+		}
+
+		private Holidays GetHolidays() 
+		{
+			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
+			HttpClient client = new HttpClient();
+
+			var trash = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
+			//https://borys.webuntis.com/WebUntis/jsonrpc.do
+			var response = client.GetAsync("https://borys.webuntis.com/WebUntis/jsonrpc.do").Result;
+			var id = response.Headers.GetValues("requestId");
+
+			JObject cont = new JObject(new JProperty("id", id.ToString()), new JProperty("method", "getHolidays"), new JProperty("jsonrpc", "2.0"));
+
+			HttpContent content = new StringContent(cont.ToString());
+			client.DefaultRequestHeaders.Add("Accept", "application/json");
+			var response1 = client.PostAsync("https://borys.webuntis.com/WebUntis/jsonrpc.do", content).Result;
+			//string temp = response1.Content.ReadAsStringAsync().Result;
+			//Holidays holidays = JsonConvert.DeserializeObject<Holidays>(temp);
+			return JsonConvert.DeserializeObject<Holidays>(response1.Content.ReadAsStringAsync().Result);
 		}
 
 		private void btTest_Click(object sender, EventArgs e)

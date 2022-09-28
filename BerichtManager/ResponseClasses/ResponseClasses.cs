@@ -86,4 +86,22 @@ namespace BerichtManager.ResponseClasses
 		public List<string> roles { get; set; }
 		public List<object> students { get; set; }
 	}
+
+	[Serializable]
+	public class Holidays 
+	{
+		public string jsonrpc { get; set; }
+		public string id { get; set; }
+		public List<HolidayEntrys> result { get; set; }
+	}
+
+	[Serializable]
+	public class HolidayEntrys 
+	{
+		public int id { get; set; }
+		public string name { get; set; }
+		public string longName { get; set; }
+		public int startDate { get; set; }
+		public int endDate { get; set; }
+	}
 }

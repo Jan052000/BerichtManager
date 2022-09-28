@@ -42,20 +42,20 @@ namespace BerichtManager.AddForm
 				//https://webuntis.com/
 				Client client = new Client();
 				List<string> classes = client.getClassesFromWebUntis();
-				if (classes.Count == 0) MessageBox.Show("Login failed(wrong login details or api down?)");
-				classes.ForEach((c) => 
+				classes.ForEach((c) =>
 				{
 					if (c.Contains("\n\t-Ausgefallen"))
 					{
 						rtInput.Text += c.Replace("\n\t-Ausgefallen", ":\n\t-Ausgefallen\n");
 					}
-					else 
+					else
 					{
 						rtInput.Text += "-" + c + ":\n\t-\n";
 					}
 				});
+
 			}
-			else 
+			else
 			{
 				rtInput.Text = text;
 			}

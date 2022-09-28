@@ -265,6 +265,7 @@ namespace BerichtManager
 						MessageBox.Show("Word closed unexpectedly");
 						break;
 					case -2146822750:
+						//Document already fit on page
 						doc.Save();
 						doc.Close();
 						wordApp.Quit();
@@ -991,6 +992,7 @@ namespace BerichtManager
 						MessageBox.Show("Word closed unexpectedly");
 						break;
 					case -2146822750:
+						//Document already fit on page
 						doc.Save();
 						doc.Close();
 						wordApp.Quit();
