@@ -27,12 +27,22 @@ namespace BerichtManager
 			UpdateTree();
 		}
 
+		/**
+		 *<summary>Fills the TreeView of the main form with nodes of the upper directory</summary> 
+		*/
 		private void UpdateTree() 
 		{
 			tvReports.Nodes.Clear();
 			tvReports.Nodes.Add(CreateDirectoryNode(info));
 		}
 
+		/**
+		 * <summary>
+		 * Generates TreeNodes from files and directorys contained in the upper directory
+		 * </summary>
+		 * <param name="directoryInfo">The target directory</param>
+		 * <returns>A Treenode containing the files and folders in <c>directoryInfo</c></returns>
+		*/
 		//https://stackoverflow.com/questions/6239544/populate-treeview-with-file-system-directory-structure
 		private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
 		{
@@ -44,6 +54,14 @@ namespace BerichtManager
 			return directoryNode;
 		}
 
+		/**
+		 * <summary>
+		 * Fills a WordInterop TextField with text
+		 * </summary>
+		 * <param name="app">The Word Application containing the documents with FormFields to fill</param>
+		 * <param name="field">The FormField to fill with Text</param>
+		 * <param name="text">The Text to Fill</param>
+		*/
 		private void FillText(Word.Application app, Word.FormField field, string text) 
 		{
 			field.Select();
@@ -68,6 +86,13 @@ namespace BerichtManager
 			}
 		}
 
+		/**
+		 * <summary>
+		 * Sets the global font in a document
+		 * </summary>
+		 * <param name="app">The Wordapp containing the document</param>
+		 * <param name="doc">The Document which needs a font change</param>
+		*/
 		private void SetFontInDoc(Word.Document doc, Word.Application app) 
 		{
 			doc.Content.Select();
@@ -86,6 +111,12 @@ namespace BerichtManager
 			}
 		}
 
+		/**
+		 * <summary>
+		 * Creates a new Word document from a given template
+		 * </summary>
+		 * <param name="templatePath">The full path to the template to be used</param>
+		*/
 		private void CreateDocument(object templatePath) 
 		{
 			try 
@@ -289,12 +320,20 @@ namespace BerichtManager
 			}*/
 		}
 
-		//Used for creating missing reports
+		/**
+		 * <summary>
+		 * Creates a new Word document from a given template for a given time.
+		 * Useful for creating reports in bulk due to the Wordapp not being closed
+		 * </summary>
+		 * <param name="templatePath">The full path of the template to be used</param>
+		 * <param name="baseDate">The date of the report to be created</param>
+		 * <param name="app">The Wordapp that will create the document</param>
+		 * <param name="vacation">If you missed reports due to vacation</param>
+		*/
 		private void CreateDocument(object templatePath, DateTime baseDate, Word.Application app, bool vacation = false)
 		{
 			try
 			{
-				object missing = Missing.Value;
 				Word.Document doc = null;
 
 				if (File.Exists((string)templatePath))
@@ -518,6 +557,12 @@ namespace BerichtManager
 			MessageBox.Show("Muster auf: "+ Path.GetFullPath(dialog.FileName) + " gesetzt");
 		}
 
+		/**
+		 * <summary>
+		 * Used for detecting missing reports and initiating their creation
+		 * </summary>
+		 * 
+		*/
 		private void CreateMissing(bool vacation = false) 
 		{
 			CultureInfo culture = new CultureInfo("de-DE");
@@ -536,7 +581,7 @@ namespace BerichtManager
 				int reportNr = handler.LoadLastReportKW();
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					//Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
 				}
 			}
@@ -553,8 +598,8 @@ namespace BerichtManager
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
+					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
 				}
 				/*
 				//Generate reports from last year
