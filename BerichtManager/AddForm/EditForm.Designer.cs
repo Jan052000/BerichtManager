@@ -35,6 +35,7 @@
 			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
 			this.cbFontFamily = new System.Windows.Forms.ComboBox();
 			this.cbEditorFont = new System.Windows.Forms.CheckBox();
+			this.btSaveAndQuit = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -52,7 +53,7 @@
 			// btConfirm
 			// 
 			this.btConfirm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btConfirm.Location = new System.Drawing.Point(632, 415);
+			this.btConfirm.Location = new System.Drawing.Point(551, 415);
 			this.btConfirm.Name = "btConfirm";
 			this.btConfirm.Size = new System.Drawing.Size(75, 23);
 			this.btConfirm.TabIndex = 1;
@@ -75,11 +76,11 @@
 			// btQuit
 			// 
 			this.btQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btQuit.Location = new System.Drawing.Point(551, 415);
+			this.btQuit.Location = new System.Drawing.Point(632, 415);
 			this.btQuit.Name = "btQuit";
 			this.btQuit.Size = new System.Drawing.Size(75, 23);
 			this.btQuit.TabIndex = 3;
-			this.btQuit.Text = "Quit Edit";
+			this.btQuit.Text = "Cancel Edit";
 			this.btQuit.UseVisualStyleBackColor = true;
 			this.btQuit.Click += new System.EventHandler(this.btQuit_Click);
 			// 
@@ -87,7 +88,7 @@
 			// 
 			this.nudFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.nudFontSize.DecimalPlaces = 2;
-			this.nudFontSize.Location = new System.Drawing.Point(498, 415);
+			this.nudFontSize.Location = new System.Drawing.Point(407, 415);
 			this.nudFontSize.Name = "nudFontSize";
 			this.nudFontSize.Size = new System.Drawing.Size(47, 20);
 			this.nudFontSize.TabIndex = 5;
@@ -101,7 +102,7 @@
 			this.cbFontFamily.FormattingEnabled = true;
 			this.cbFontFamily.Location = new System.Drawing.Point(95, 415);
 			this.cbFontFamily.Name = "cbFontFamily";
-			this.cbFontFamily.Size = new System.Drawing.Size(397, 21);
+			this.cbFontFamily.Size = new System.Drawing.Size(306, 21);
 			this.cbFontFamily.TabIndex = 6;
 			this.cbFontFamily.SelectedValueChanged += new System.EventHandler(this.cbFontFamily_SelectedValueChanged);
 			// 
@@ -117,11 +118,23 @@
 			this.cbEditorFont.UseVisualStyleBackColor = true;
 			this.cbEditorFont.CheckedChanged += new System.EventHandler(this.cbEditorFont_CheckedChanged);
 			// 
+			// btSaveAndQuit
+			// 
+			this.btSaveAndQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btSaveAndQuit.Location = new System.Drawing.Point(460, 415);
+			this.btSaveAndQuit.Name = "btSaveAndQuit";
+			this.btSaveAndQuit.Size = new System.Drawing.Size(85, 23);
+			this.btSaveAndQuit.TabIndex = 8;
+			this.btSaveAndQuit.Text = "Save and Quit";
+			this.btSaveAndQuit.UseVisualStyleBackColor = true;
+			this.btSaveAndQuit.Click += new System.EventHandler(this.btSaveAndQuit_Click);
+			// 
 			// EditForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btSaveAndQuit);
 			this.Controls.Add(this.cbEditorFont);
 			this.Controls.Add(this.cbFontFamily);
 			this.Controls.Add(this.nudFontSize);
@@ -129,7 +142,7 @@
 			this.Controls.Add(this.rtInput);
 			this.Controls.Add(this.btConfirm);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(610, 39);
+			this.MinimumSize = new System.Drawing.Size(698, 39);
 			this.Name = "EditForm";
 			this.Text = "EditForm";
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).EndInit();
@@ -147,5 +160,6 @@
 		private System.Windows.Forms.NumericUpDown nudFontSize;
 		private System.Windows.Forms.ComboBox cbFontFamily;
 		private System.Windows.Forms.CheckBox cbEditorFont;
+		private System.Windows.Forms.Button btSaveAndQuit;
 	}
 }

@@ -155,6 +155,11 @@ namespace BerichtManager
 							handler.SaveName(form.Result);
 							((Word.FormField)enumerator.Current).Result = handler.LoadName();
 						}
+						else
+						{
+							MessageBox.Show("Cannot proceed without a name!", "Name required!");
+							return;
+						}
 					}
 					enumerator.MoveNext();
 
@@ -177,7 +182,7 @@ namespace BerichtManager
 					((Word.FormField)enumerator.Current).Result = today.Year.ToString();
 
 					//Enter work field
-					form = new EditForm("Betriebliche Tätigkeiten", "", false);
+					form = new EditForm("Betriebliche Tätigkeiten", "", false, isCreate: true);
 					enumerator.MoveNext();
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -200,7 +205,7 @@ namespace BerichtManager
 					}
 
 					//Enter work seminars
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false);
+					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false, isCreate: true);
 					enumerator.MoveNext();
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -223,7 +228,7 @@ namespace BerichtManager
 					}
 
 					//Shool stuff
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true);
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true, isCreate: true);
 					enumerator.MoveNext();
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -367,6 +372,11 @@ namespace BerichtManager
 							handler.SaveName(form.Result);
 							((Word.FormField)enumerator.Current).Result = handler.LoadName();
 						}
+						else
+						{
+							MessageBox.Show("Cannot proceed without a name!", "Name required!");
+							return;
+						}
 					}
 					enumerator.MoveNext();
 
@@ -394,7 +404,7 @@ namespace BerichtManager
 					}
 					else 
 					{
-						form = new EditForm("Betriebliche Tätigkeiten", "", false);
+						form = new EditForm("Betriebliche Tätigkeiten", "", false, isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -423,7 +433,7 @@ namespace BerichtManager
 					}
 					else 
 					{
-						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false);
+						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false, isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -447,7 +457,7 @@ namespace BerichtManager
 					//Shool stuff
 					//form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true);
 					enumerator.MoveNext();
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", "");
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", "", isCreate: true);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -706,6 +716,11 @@ namespace BerichtManager
 							handler.SaveName(form.Result);
 							((Word.FormField)enumerator.Current).Result = handler.LoadName();
 						}
+						else 
+						{
+							MessageBox.Show("Cannot proceed without a name!", "Name required!");
+							return;
+						}
 					}
 					enumerator.MoveNext();
 
@@ -724,6 +739,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else 
+						{
+							if (form.DialogResult == DialogResult.Ignore) 
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 
@@ -748,6 +774,17 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
+						}
 					}
 
 					enumerator.MoveNext();
@@ -765,6 +802,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 
@@ -785,6 +833,17 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
+						}
 					}
 
 					//Enter work field
@@ -803,6 +862,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 
@@ -823,6 +893,17 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
+						}
 					}
 
 					//Shool stuff
@@ -841,6 +922,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 
@@ -861,6 +953,17 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
+						}
 					}
 
 					//Sign date 2
@@ -879,6 +982,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 
@@ -1117,6 +1231,11 @@ namespace BerichtManager
 							FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
 							//((Word.FormField)enumerator.Current).Result = handler.LoadName();
 						}
+						else
+						{
+							MessageBox.Show("Cannot proceed without a name!", "Name required!");
+							return;
+						}
 					}
 					enumerator.MoveNext();
 
@@ -1135,6 +1254,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 
@@ -1159,6 +1289,17 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
+						}
 					}
 
 					enumerator.MoveNext();
@@ -1176,6 +1317,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 
@@ -1196,6 +1348,17 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
+						}
 					}
 
 					//Enter work field
@@ -1214,6 +1377,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 
@@ -1234,6 +1408,17 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
+						}
 					}
 
 					//Shool stuff
@@ -1252,6 +1437,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 
@@ -1272,6 +1468,17 @@ namespace BerichtManager
 							wordApp.Quit();
 							return;
 						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
+						}
 					}
 
 					//Sign date 2
@@ -1290,6 +1497,17 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
 							return;
+						}
+						else
+						{
+							if (form.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
+								doc.Save();
+								doc.Close();
+								wordApp.Quit();
+								return;
+							}
 						}
 					}
 

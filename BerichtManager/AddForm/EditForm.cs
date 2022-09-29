@@ -13,7 +13,7 @@ namespace BerichtManager.AddForm
 		public string Result { get; set; }
 		ConfigHandler handler = new ConfigHandler();
 
-		public EditForm(string title, string text, bool school = false)
+		public EditForm(string title, string text, bool school = false, bool isCreate = false)
 		{
 			InitializeComponent();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
@@ -58,6 +58,10 @@ namespace BerichtManager.AddForm
 			else
 			{
 				rtInput.Text = text;
+			}
+			if (isCreate) 
+			{
+				btSaveAndQuit.Enabled = false;
 			}
 		}
 
@@ -147,6 +151,21 @@ namespace BerichtManager.AddForm
 				cbFontFamily.Text = "Arial";
 				cbFontFamily.Enabled = false;
 			}
+		}
+
+		private void btSaveAndQuit_Click(object sender, EventArgs e)
+		{
+			if (string.IsNullOrEmpty(rtInput.Text))
+			{
+				Result = "-Keine-";
+			}
+			else
+			{
+				Result = rtInput.Text;
+			}
+			ChangeFont();
+			DialogResult = DialogResult.Ignore;
+			Close();
 		}
 	}
 }
