@@ -290,7 +290,7 @@ namespace BerichtManager
 		}
 
 		//Used for creating missing reports
-		private void CreateDocument(object templatePath, DateTime baseDate, Word.Application app)
+		private void CreateDocument(object templatePath, DateTime baseDate, Word.Application app, bool vacation = false)
 		{
 			try
 			{
@@ -348,53 +348,67 @@ namespace BerichtManager
 					((Word.FormField)enumerator.Current).Result = today.Year.ToString();
 
 					//Enter work field
-					form = new EditForm("Betriebliche Tätigkeiten", "", false);
 					enumerator.MoveNext();
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
+					if (vacation)
 					{
-						FillText(app, (Word.FormField)enumerator.Current, form.Result);
+						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 					}
-					else
+					else 
 					{
-						if (form.DialogResult == DialogResult.Abort)
+						form = new EditForm("Betriebliche Tätigkeiten", "", false);
+						form.ShowDialog();
+						if (form.DialogResult == DialogResult.OK)
 						{
-							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-							//app.Quit();
-							return;
+							FillText(app, (Word.FormField)enumerator.Current, form.Result);
 						}
 						else
 						{
-							((Word.FormField)enumerator.Current).Result = "-Keine-";
+							if (form.DialogResult == DialogResult.Abort)
+							{
+								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+								//app.Quit();
+								return;
+							}
+							else
+							{
+								((Word.FormField)enumerator.Current).Result = "-Keine-";
+							}
 						}
 					}
 
 					//Enter work seminars
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false);
 					enumerator.MoveNext();
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
+					if (vacation)
 					{
-						FillText(app, (Word.FormField)enumerator.Current, form.Result);
+						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 					}
-					else
+					else 
 					{
-						if (form.DialogResult == DialogResult.Abort)
+						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false);
+						form.ShowDialog();
+						if (form.DialogResult == DialogResult.OK)
 						{
-							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-							//app.Quit();
-							return;
+							FillText(app, (Word.FormField)enumerator.Current, form.Result);
 						}
 						else
 						{
-							((Word.FormField)enumerator.Current).Result = "-Keine-";
+							if (form.DialogResult == DialogResult.Abort)
+							{
+								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+								//app.Quit();
+								return;
+							}
+							else
+							{
+								((Word.FormField)enumerator.Current).Result = "-Keine-";
+							}
 						}
 					}
 
 					//Shool stuff
 					//form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true);
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", "");
 					enumerator.MoveNext();
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", "");
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -504,6 +518,68 @@ namespace BerichtManager
 			MessageBox.Show("Muster auf: "+ Path.GetFullPath(dialog.FileName) + " gesetzt");
 		}
 
+		private void CreateMissing(bool vacation = false) 
+		{
+			CultureInfo culture = new CultureInfo("de-DE");
+			DateTimeFormatInfo dfi = culture.DateTimeFormat;
+			DateTime date1 = new DateTime(DateTime.Today.Year, 12, 31);
+
+			Calendar cal = dfi.Calendar;
+			int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+
+			DateTime today = DateTime.Today;
+			Word.Application multipleApp = new Word.Application();
+			multipleApp.Visible = visible;
+			if (handler.LoadLastReportKW() < weekOfYear)
+			{
+				//Missing reports in current year
+				int reportNr = handler.LoadLastReportKW();
+				for (int i = 1; i < weekOfYear - reportNr; i++)
+				{
+					Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
+				}
+			}
+			else
+			{
+				//Missing missing reports over multiple years
+				int nrOfWeeksLastYear = culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+				int weekOfCurrentYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+
+				int reportNr = handler.LoadLastReportKW();
+				DateTime endOfLastYear = new DateTime(DateTime.Today.Year - 1, 12, 31);
+
+				int repeats = nrOfWeeksLastYear - reportNr + weekOfCurrentYear;
+				//Generate reports for missing reports over 2 years
+				for (int i = 1; i < repeats; i++)
+				{
+					Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
+				}
+				/*
+				//Generate reports from last year
+				for (int i = 0; i < nrOfWeeksLastYear - reportNr; i++) 
+				{
+					Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(endOfLastYear.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+				}
+
+				//Generate missing reports for this year
+				for (int i = 1; i < weekOfCurrentYear - 1; i++) 
+				{
+					Console.WriteLine("Created report for week of new year " + culture.Calendar.GetWeekOfYear(/*DateTime.Today*//*date1.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+				}*/
+			}
+			try
+			{
+				multipleApp.Quit();
+			}
+			catch
+			{
+
+			}
+			return;
+		}
+
 		private void btCreate_Click(object sender, EventArgs e)
 		{
 			CultureInfo culture = new CultureInfo("de-DE");
@@ -511,63 +587,17 @@ namespace BerichtManager
 			//if (handler.LoadLastReportKW() != culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)) 
 			if (handler.LoadLastReportKW() < culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)
 			{
-				DateTimeFormatInfo dfi = culture.DateTimeFormat;
-				DateTime date1 = new DateTime(DateTime.Today.Year, 12, 31);
-
-				Calendar cal = dfi.Calendar;
-				int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-
-				DateTime today = DateTime.Today;
-				Word.Application multipleApp = new Word.Application();
-				multipleApp.Visible = visible;
-				if (handler.LoadLastReportKW() < weekOfYear)
+				if (MessageBox.Show("You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-					//Missing reports in current year
-					int reportNr = handler.LoadLastReportKW();
-					for (int i = 1; i < weekOfYear - reportNr; i++)
-					{
-						Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-						//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp);
-					}
+					CreateMissing(vacation: true);
 				}
 				else 
 				{
-					//Missing missing reports over multiple years
-					int nrOfWeeksLastYear = culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
-					int weekOfCurrentYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-
-					int reportNr = handler.LoadLastReportKW();
-					DateTime endOfLastYear = new DateTime(DateTime.Today.Year - 1, 12, 31);
-
-					int repeats = nrOfWeeksLastYear - reportNr + weekOfCurrentYear;
-					//Generate reports for missing reports over 2 years
-					for (int i = 1; i < repeats; i++) 
+					if (MessageBox.Show("Do you want to create empty reports then?", "Create?", MessageBoxButtons.YesNo) == DialogResult.Yes) 
 					{
-						Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-						//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp);
+						CreateMissing();
 					}
-					/*
-					//Generate reports from last year
-					for (int i = 0; i < nrOfWeeksLastYear - reportNr; i++) 
-					{
-						Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(endOfLastYear.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					}
-
-					//Generate missing reports for this year
-					for (int i = 1; i < weekOfCurrentYear - 1; i++) 
-					{
-						Console.WriteLine("Created report for week of new year " + culture.Calendar.GetWeekOfYear(/*DateTime.Today*//*date1.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					}*/
 				}
-				try
-				{
-					multipleApp.Quit();
-				}
-				catch 
-				{
-					
-				}
-				return;
 			}
 
 			//Check if report for this week was already created
