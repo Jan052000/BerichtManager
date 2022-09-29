@@ -88,11 +88,6 @@ namespace BerichtManager
 
 		private void CreateDocument(object templatePath) 
 		{
-			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx")) 
-			{
-				MessageBox.Show("A report has already been created for this week");
-				return;
-			}
 			try 
 			{
 				object missing = Missing.Value;
@@ -203,14 +198,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						/*((Word.FormField)enumerator.Current).Select();
-						wordApp.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
-						wordApp.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
-						wordApp.Selection.Text = form.Result.Replace("\n", "\v").Substring(0, 200);
-						((Word.FormField)enumerator.Current).Result = ((Word.FormField)enumerator.Current).Result.Trim() + " ";
-						wordApp.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
-						wordApp.Selection.TypeText(form.Result.Substring(201));*/
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -237,13 +224,13 @@ namespace BerichtManager
 
 					Directory.CreateDirectory(Path.GetFullPath(Environment.CurrentDirectory + "\\..") + "\\" + today.Year);
 					string path = Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx";
-					doc.SaveAs2(path);
-					//doc.SaveAs2(path, Word.WdSaveFormat.wdFormatDocument, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, true);
+					SetFontInDoc(doc, wordApp);
+					doc.SaveAs2(FileName: path);
+					
 					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
 					handler.EditActive(path);
+					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
-
-					SetFontInDoc(doc, wordApp);
 
 					doc.Close();
 					wordApp.Quit();
@@ -269,6 +256,9 @@ namespace BerichtManager
 						doc.Save();
 						doc.Close();
 						wordApp.Quit();
+						break;
+					default:
+						MessageBox.Show(ex.StackTrace);
 						break;
 				}
 				try
@@ -297,6 +287,191 @@ namespace BerichtManager
 				}
 				Close();
 			}*/
+		}
+
+		//Used for creating missing reports
+		private void CreateDocument(object templatePath, DateTime baseDate, Word.Application app)
+		{
+			try
+			{
+				object missing = Missing.Value;
+				Word.Document doc = null;
+
+				if (File.Exists((string)templatePath))
+				{
+					/*Word.Application */
+					app = new Word.Application();
+					app.Visible = visible;
+					doc = app.Documents.Add(ref templatePath);
+
+					if (doc.FormFields.Count != 10)
+					{
+						MessageBox.Show("Invalid template");
+						doc.Close(SaveChanges: false);
+						app.Quit(SaveChanges: false);
+						return;
+					}
+
+					EditForm form;
+					//Fill name
+					var enumerator = doc.FormFields.GetEnumerator();
+					enumerator.MoveNext();
+					if (!string.IsNullOrEmpty(handler.LoadName()))
+					{
+						((Word.FormField)enumerator.Current).Result = handler.LoadName();
+					}
+					else
+					{
+						form = new EditForm("Enter your name", "Name Vorname", false);
+						if (form.ShowDialog() == DialogResult.OK)
+						{
+							handler.SaveName(form.Result);
+							((Word.FormField)enumerator.Current).Result = handler.LoadName();
+						}
+					}
+					enumerator.MoveNext();
+
+					//Enter report nr.
+					((Word.FormField)enumerator.Current).Result = handler.LoadNumber();
+
+					//Enter week start and end
+					var today = baseDate;
+					var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+					var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = thisWeekEnd.ToString("dd.MM.yyyy");
+
+					//Enter Year
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = today.Year.ToString();
+
+					//Enter work field
+					form = new EditForm("Betriebliche Tätigkeiten", "", false);
+					enumerator.MoveNext();
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						FillText(app, (Word.FormField)enumerator.Current, form.Result);
+					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+							//app.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = "-Keine-";
+						}
+					}
+
+					//Enter work seminars
+					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false);
+					enumerator.MoveNext();
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						FillText(app, (Word.FormField)enumerator.Current, form.Result);
+					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+							//app.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = "-Keine-";
+						}
+					}
+
+					//Shool stuff
+					//form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true);
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", "");
+					enumerator.MoveNext();
+					form.ShowDialog();
+					if (form.DialogResult == DialogResult.OK)
+					{
+						FillText(app, (Word.FormField)enumerator.Current, form.Result);
+					}
+					else
+					{
+						if (form.DialogResult == DialogResult.Abort)
+						{
+							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+							//app.Quit();
+							return;
+						}
+						else
+						{
+							((Word.FormField)enumerator.Current).Result = "-Keine-";
+						}
+					}
+
+					//Fridy of week
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
+
+					//Sign date 2
+					enumerator.MoveNext();
+					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
+
+
+					Directory.CreateDirectory(Path.GetFullPath(Environment.CurrentDirectory + "\\..") + "\\" + today.Year);
+					string path = Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx";
+					SetFontInDoc(doc, app);
+					doc.SaveAs2(FileName: path);
+
+					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
+					handler.EditActive(path);
+					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
+
+					doc.Close();
+					//app.Quit();
+					UpdateTree();
+				}
+				else
+				{
+					MessageBox.Show(handler.LoadPath() + " was not found was it moved or deleted?");
+				}
+			}
+			catch (Exception ex)
+			{
+				switch (ex.HResult)
+				{
+					case -2147023174:
+						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						break;
+					case -2146823679:
+						MessageBox.Show("Word closed unexpectedly");
+						break;
+					case -2146822750:
+						//Document already fit on page
+						doc.Save();
+						doc.Close();
+						//app.Quit();
+						break;
+					default:
+						MessageBox.Show(ex.StackTrace);
+						break;
+				}
+				/*try
+				{
+					app.Quit(false);
+				}
+				catch
+				{
+
+				}*/
+				Close();
+			}
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -331,6 +506,76 @@ namespace BerichtManager
 
 		private void btCreate_Click(object sender, EventArgs e)
 		{
+			CultureInfo culture = new CultureInfo("de-DE");
+			//Check if report for last week was created
+			//if (handler.LoadLastReportKW() != culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)) 
+			if (handler.LoadLastReportKW() < culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)
+			{
+				DateTimeFormatInfo dfi = culture.DateTimeFormat;
+				DateTime date1 = new DateTime(DateTime.Today.Year, 12, 31);
+
+				Calendar cal = dfi.Calendar;
+				int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+
+				DateTime today = DateTime.Today;
+				Word.Application multipleApp = new Word.Application();
+				multipleApp.Visible = visible;
+				if (handler.LoadLastReportKW() < weekOfYear)
+				{
+					//Missing reports in current year
+					int reportNr = handler.LoadLastReportKW();
+					for (int i = 1; i < weekOfYear - reportNr; i++)
+					{
+						Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+						//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp);
+					}
+				}
+				else 
+				{
+					//Missing missing reports over multiple years
+					int nrOfWeeksLastYear = culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+					int weekOfCurrentYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+
+					int reportNr = handler.LoadLastReportKW();
+					DateTime endOfLastYear = new DateTime(DateTime.Today.Year - 1, 12, 31);
+
+					int repeats = nrOfWeeksLastYear - reportNr + weekOfCurrentYear;
+					//Generate reports for missing reports over 2 years
+					for (int i = 1; i < repeats; i++) 
+					{
+						Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+						//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp);
+					}
+					/*
+					//Generate reports from last year
+					for (int i = 0; i < nrOfWeeksLastYear - reportNr; i++) 
+					{
+						Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(endOfLastYear.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					}
+
+					//Generate missing reports for this year
+					for (int i = 1; i < weekOfCurrentYear - 1; i++) 
+					{
+						Console.WriteLine("Created report for week of new year " + culture.Calendar.GetWeekOfYear(/*DateTime.Today*//*date1.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					}*/
+				}
+				try
+				{
+					multipleApp.Quit();
+				}
+				catch 
+				{
+					
+				}
+				return;
+			}
+
+			//Check if report for this week was already created
+			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx"))
+			{
+				MessageBox.Show("A report has already been created for this week");
+				return;
+			}
 			CreateDocument(handler.LoadPath());
 		}
 
@@ -588,6 +833,9 @@ namespace BerichtManager
 						doc.Save();
 						doc.Close();
 						wordApp.Quit();
+						break;
+					default:
+						MessageBox.Show(ex.StackTrace);
 						break;
 				}
 				try
@@ -996,6 +1244,9 @@ namespace BerichtManager
 						doc.Save();
 						doc.Close();
 						wordApp.Quit();
+						break;
+					default:
+						MessageBox.Show(ex.StackTrace);
 						break;
 				}
 				try

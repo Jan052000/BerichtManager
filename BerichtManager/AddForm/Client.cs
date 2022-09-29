@@ -159,8 +159,6 @@ namespace BerichtManager.AddForm
 			HttpContent content = new StringContent(cont.ToString());
 			client.DefaultRequestHeaders.Add("Accept", "application/json");
 			var response1 = client.PostAsync("https://borys.webuntis.com/WebUntis/jsonrpc.do", content).Result;
-			//string temp = response1.Content.ReadAsStringAsync().Result;
-			//Holidays holidays = JsonConvert.DeserializeObject<Holidays>(temp);
 			return JsonConvert.DeserializeObject<Holidays>(response1.Content.ReadAsStringAsync().Result);
 		}
 

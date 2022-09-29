@@ -20,7 +20,7 @@ namespace BerichtManager.Config
 				Directory.CreateDirectory(path);
 				File.Create(path + "\\Config.json").Close();
 				JObject config = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "0"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
-					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25));
+					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25), new JProperty("LastReportWeekOfYear", 0));
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 			}
 			else 
@@ -83,6 +83,10 @@ namespace BerichtManager.Config
 				if (!config.ContainsKey("EditorFontSize")) 
 				{
 					config.Add(new JProperty("EditorFontSize", 8.25f));
+				}
+				if (!config.ContainsKey("LastReportWeekOfYear")) 
+				{
+					config.Add(new JProperty("LastReportWeekOfYear", 0));
 				}
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 			}
@@ -388,6 +392,16 @@ namespace BerichtManager.Config
 
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(sizeObject, Formatting.Indented));
 			}*/
+		}
+
+		public int LoadLastReportKW() 
+		{
+			return LoadGeneric<int>("LastReportWeekOfYear");
+		}
+
+		public void SaveLastReportKW(int kw) 
+		{
+			SaveGeneric<int>(kw, "LastReportWeekOfYear");
 		}
 
 		private void SaveGeneric<T>(T toSave, string key) 

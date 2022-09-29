@@ -13,7 +13,7 @@ namespace BerichtManager.AddForm
 		public string Result { get; set; }
 		ConfigHandler handler = new ConfigHandler();
 
-		public EditForm(string title, string text, bool school)
+		public EditForm(string title, string text, bool school = false)
 		{
 			InitializeComponent();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
