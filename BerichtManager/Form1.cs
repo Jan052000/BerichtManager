@@ -339,8 +339,8 @@ namespace BerichtManager
 				if (File.Exists((string)templatePath))
 				{
 					/*Word.Application */
-					app = new Word.Application();
-					app.Visible = visible;
+					//app = new Word.Application();
+					//app.Visible = visible;
 					doc = app.Documents.Add(ref templatePath);
 
 					if (doc.FormFields.Count != 10)
@@ -616,7 +616,7 @@ namespace BerichtManager
 			}
 			try
 			{
-				multipleApp.Quit();
+				multipleApp.Quit(SaveChanges: false);
 			}
 			catch
 			{
