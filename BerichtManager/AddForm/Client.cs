@@ -14,9 +14,11 @@ namespace BerichtManager.AddForm
 	public partial class Client : Form
 	{
 		ConfigHandler configHandler = new ConfigHandler();
+		public bool hasVacationOrHoliday { get; set; }
 		public Client()
 		{
 			InitializeComponent();
+			hasVacationOrHoliday = false;
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -135,6 +137,7 @@ namespace BerichtManager.AddForm
 					if (isInWeek || isStarting || isEnding || weekInEvent) 
 					{
 						classes.Add(holiday.longName);
+						hasVacationOrHoliday = true;
 					}
 				});	
 			}

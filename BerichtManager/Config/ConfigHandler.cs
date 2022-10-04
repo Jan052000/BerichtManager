@@ -19,7 +19,7 @@ namespace BerichtManager.Config
 			{
 				Directory.CreateDirectory(path);
 				File.Create(path + "\\Config.json").Close();
-				JObject config = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "0"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
+				JObject config = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
 					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25), new JProperty("LastReportWeekOfYear", 0));
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 			}

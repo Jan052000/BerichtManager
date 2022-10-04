@@ -11,7 +11,7 @@ namespace BerichtManager.AddForm
 	public partial class EditForm : Form
 	{
 		public string Result { get; set; }
-		ConfigHandler handler = new ConfigHandler();
+		private ConfigHandler handler = new ConfigHandler();
 
 		public EditForm(string title, string text, bool school = false, bool isCreate = false)
 		{

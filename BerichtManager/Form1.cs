@@ -591,8 +591,8 @@ namespace BerichtManager
 				int reportNr = handler.LoadLastReportKW();
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					//Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
+					Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
 				}
 			}
 			else
@@ -608,8 +608,8 @@ namespace BerichtManager
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
+					Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
 				}
 				/*
 				//Generate reports from last year
@@ -638,19 +638,22 @@ namespace BerichtManager
 		private void btCreate_Click(object sender, EventArgs e)
 		{
 			CultureInfo culture = new CultureInfo("de-DE");
-			//Check if report for last week was created
-			//if (handler.LoadLastReportKW() != culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)) 
-			if (handler.LoadLastReportKW() < culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)
+			//Check if a report was created
+			if (handler.LoadLastReportKW() > 0)
 			{
-				if (MessageBox.Show("You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				//Check if report for last week was created
+				if (handler.LoadLastReportKW() < culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)
 				{
-					CreateMissing(vacation: true);
-				}
-				else 
-				{
-					if (MessageBox.Show("Do you want to create empty reports then?", "Create?", MessageBoxButtons.YesNo) == DialogResult.Yes) 
+					if (MessageBox.Show("You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
-						CreateMissing();
+						CreateMissing(vacation: true);
+					}
+					else
+					{
+						if (MessageBox.Show("Do you want to create empty reports then?", "Create?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						{
+							CreateMissing();
+						}
 					}
 				}
 			}
