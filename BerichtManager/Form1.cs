@@ -591,8 +591,8 @@ namespace BerichtManager
 				int reportNr = handler.LoadLastReportKW();
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
+					//Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
 				}
 			}
 			else
@@ -608,8 +608,8 @@ namespace BerichtManager
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					//CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
+					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
 				}
 				/*
 				//Generate reports from last year
