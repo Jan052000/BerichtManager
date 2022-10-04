@@ -44,14 +44,15 @@ namespace BerichtManager.AddForm
 				List<string> classes = client.getClassesFromWebUntis();
 				classes.ForEach((c) =>
 				{
-					if (c.Contains("\n\t-Ausgefallen"))
+					rtInput.Text += c;
+					/*if (c.Contains("\n\t-Ausgefallen"))
 					{
 						rtInput.Text += c.Replace("\n\t-Ausgefallen", ":\n\t-Ausgefallen\n");
 					}
 					else
 					{
 						rtInput.Text += "-" + c + ":\n\t-\n";
-					}
+					}*/
 				});
 
 			}

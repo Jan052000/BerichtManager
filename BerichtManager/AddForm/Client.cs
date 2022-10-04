@@ -99,21 +99,21 @@ namespace BerichtManager.AddForm
 				{
 					if (cancelled[element.id])
 					{
-						if (!classes.Contains(element.name))
+						if (!classes.Contains("-" + element.name + "\n\t-"))
 						{
-							classes.Add(element.name + "\n\t-Ausgefallen");
+							classes.Add("-" + element.name + "\n\t-Ausgefallen\n");
 						}
 					}
 					else 
 					{
-						if (classes.Contains(element.name + "\n\t-Ausgefallen"))
+						if (classes.Contains("-" + element.name + "\n\t-Ausgefallen\n"))
 						{
-							classes.Remove(element.name + "\n\t-Ausgefallen");
-							classes.Add(element.name);
+							classes.Remove("-" + element.name + "\n\t-Ausgefallen\n");
+							classes.Add("-" + element.name + "\n\t-");
 						}
 						else 
 						{
-							classes.Add(element.name);
+							classes.Add("-" + element.name + "\n\t-");
 						}
 					}
 				}
@@ -136,7 +136,7 @@ namespace BerichtManager.AddForm
 					bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
 					if (isInWeek || isStarting || isEnding || weekInEvent) 
 					{
-						classes.Add(holiday.longName);
+						classes.Add("-" + holiday.longName + "\n");
 						hasVacationOrHoliday = true;
 					}
 				});	
