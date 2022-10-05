@@ -13,10 +13,10 @@ namespace BerichtManager
 {
 	public partial class FormManager : Form
 	{
-		Word.Document doc = null;
-		Word.Application wordApp = null;
-		ConfigHandler handler;
-		DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
+		private Word.Document doc = null;
+		private Word.Application wordApp = null;
+		private ConfigHandler handler;
+		private DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
 		private bool visible = false;
 
 		public FormManager()
@@ -25,6 +25,10 @@ namespace BerichtManager
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			handler = new ConfigHandler();
 			UpdateTree();
+			if (handler.LoadActive() == "") 
+			{
+				btEdit.Enabled = false;
+			}
 		}
 
 		/**

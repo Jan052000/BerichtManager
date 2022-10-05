@@ -99,7 +99,7 @@ namespace BerichtManager.AddForm
 				{
 					if (cancelled[element.id])
 					{
-						if (!classes.Contains("-" + element.name + "\n\t-"))
+						if (!classes.Contains("-" + element.name + "\n\t-\n"))
 						{
 							classes.Add("-" + element.name + "\n\t-Ausgefallen\n");
 						}
@@ -109,11 +109,11 @@ namespace BerichtManager.AddForm
 						if (classes.Contains("-" + element.name + "\n\t-Ausgefallen\n"))
 						{
 							classes.Remove("-" + element.name + "\n\t-Ausgefallen\n");
-							classes.Add("-" + element.name + "\n\t-");
+							classes.Add("-" + element.name + "\n\t-\n");
 						}
 						else 
 						{
-							classes.Add("-" + element.name + "\n\t-");
+							classes.Add("-" + element.name + "\n\t-\n");
 						}
 					}
 				}
