@@ -155,7 +155,7 @@ namespace BerichtManager
 					}
 					else 
 					{
-						form = new EditForm("Enter your name", "Name Vorname", false);
+						form = new EditForm("Enter your name", text: "Name Vorname");
 						if (form.ShowDialog() == DialogResult.OK) 
 						{
 							handler.SaveName(form.Result);
@@ -188,7 +188,7 @@ namespace BerichtManager
 					((Word.FormField)enumerator.Current).Result = today.Year.ToString();
 
 					//Enter work field
-					form = new EditForm("Betriebliche Tätigkeiten", "", false, isCreate: true);
+					form = new EditForm("Betriebliche Tätigkeiten", isCreate: true);
 					enumerator.MoveNext();
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -211,7 +211,7 @@ namespace BerichtManager
 					}
 
 					//Enter work seminars
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "-Keine-", false, isCreate: true);
+					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", text: "-Keine-", isCreate: true);
 					enumerator.MoveNext();
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -234,7 +234,7 @@ namespace BerichtManager
 					}
 
 					//Shool stuff
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true, isCreate: true);
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", text: "", school: true, isCreate: true);
 					enumerator.MoveNext();
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -372,7 +372,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Enter your name", "Name Vorname", false);
+						form = new EditForm("Enter your name", text: "Name Vorname");
 						if (form.ShowDialog() == DialogResult.OK)
 						{
 							handler.SaveName(form.Result);
@@ -410,7 +410,7 @@ namespace BerichtManager
 					}
 					else 
 					{
-						form = new EditForm("Betriebliche Tätigkeiten", "", false, isCreate: true);
+						form = new EditForm("Betriebliche Tätigkeiten", isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -439,7 +439,7 @@ namespace BerichtManager
 					}
 					else 
 					{
-						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "-Keine-", false, isCreate: true);
+						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", text: "-Keine-", isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -463,7 +463,7 @@ namespace BerichtManager
 					//Shool stuff
 					//form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true);
 					enumerator.MoveNext();
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", client.getHolidaysForDate(baseDate), isCreate: true);
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", text: client.getHolidaysForDate(baseDate), isCreate: true);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -675,7 +675,7 @@ namespace BerichtManager
 
 		private void btSetNumber_Click(object sender, EventArgs e)
 		{
-			EditForm form = new EditForm("Edit Number of Report", "", false);
+			EditForm form = new EditForm("Edit Number of Report");
 			form.ShowDialog();
 			if (form.DialogResult == DialogResult.OK)
 			{
@@ -719,7 +719,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Enter your name", "Name Vorname", false);
+						form = new EditForm("Enter your name", text: "Name Vorname");
 						if (form.ShowDialog() == DialogResult.OK)
 						{
 							handler.SaveName(form.Result);
@@ -734,7 +734,7 @@ namespace BerichtManager
 					enumerator.MoveNext();
 
 					//Enter report nr.
-					form = new EditForm("Edit report nr.", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit report nr.", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -768,7 +768,7 @@ namespace BerichtManager
 					var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
 					var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 					enumerator.MoveNext();
-					form = new EditForm("Edit start of week", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit start of week", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -797,7 +797,7 @@ namespace BerichtManager
 					}
 
 					enumerator.MoveNext();
-					form = new EditForm("Edit end of week", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit end of week", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -827,7 +827,7 @@ namespace BerichtManager
 
 					//Enter Year
 					enumerator.MoveNext();
-					form = new EditForm("Edit year", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit year", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -857,7 +857,7 @@ namespace BerichtManager
 
 					//Enter work field
 					enumerator.MoveNext();
-					form = new EditForm("Betriebliche Tätigkeiten", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Betriebliche Tätigkeiten", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -887,7 +887,7 @@ namespace BerichtManager
 
 					//Enter work seminars
 					enumerator.MoveNext();
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -917,7 +917,7 @@ namespace BerichtManager
 
 					//Shool stuff
 					enumerator.MoveNext();
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -947,7 +947,7 @@ namespace BerichtManager
 
 					//Fridy of week
 					enumerator.MoveNext();
-					form = new EditForm("Edit signdate (you)", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit signdate (you)", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -977,7 +977,7 @@ namespace BerichtManager
 
 					//Sign date 2
 					enumerator.MoveNext();
-					form = new EditForm("Edit signdate (not you)", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit signdate (not you)", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1246,7 +1246,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Enter your name", "Name Vorname", false);
+						form = new EditForm("Enter your name", text: "Name Vorname");
 						if (form.ShowDialog() == DialogResult.OK)
 						{
 							handler.SaveName(form.Result);
@@ -1262,7 +1262,7 @@ namespace BerichtManager
 					enumerator.MoveNext();
 
 					//Enter report nr.
-					form = new EditForm("Edit report nr.", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit report nr.", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1296,7 +1296,7 @@ namespace BerichtManager
 					var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
 					var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 					enumerator.MoveNext();
-					form = new EditForm("Edit start of week", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit start of week", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1325,7 +1325,7 @@ namespace BerichtManager
 					}
 
 					enumerator.MoveNext();
-					form = new EditForm("Edit end of week", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit end of week", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1355,7 +1355,7 @@ namespace BerichtManager
 
 					//Enter Year
 					enumerator.MoveNext();
-					form = new EditForm("Edit year", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit year", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1385,7 +1385,7 @@ namespace BerichtManager
 
 					//Enter work field
 					enumerator.MoveNext();
-					form = new EditForm("Betriebliche Tätigkeiten", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Betriebliche Tätigkeiten", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1415,7 +1415,7 @@ namespace BerichtManager
 
 					//Enter work seminars
 					enumerator.MoveNext();
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1445,7 +1445,7 @@ namespace BerichtManager
 
 					//Shool stuff
 					enumerator.MoveNext();
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1475,7 +1475,7 @@ namespace BerichtManager
 
 					//Fridy of week
 					enumerator.MoveNext();
-					form = new EditForm("Edit signdate (you)", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit signdate (you)", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1505,7 +1505,7 @@ namespace BerichtManager
 
 					//Sign date 2
 					enumerator.MoveNext();
-					form = new EditForm("Edit signdate (not you)", ((Word.FormField)enumerator.Current).Result, false);
+					form = new EditForm("Edit signdate (not you)", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1650,7 +1650,7 @@ namespace BerichtManager
 
 		private void btEditName_Click(object sender, EventArgs e)
 		{
-			EditForm form = new EditForm("Enter your name", "Name Vorname", false);
+			EditForm form = new EditForm("Enter your name", text: "Name Vorname");
 			if (form.ShowDialog() == DialogResult.OK)
 			{
 				if (form.Result != "Name Vorname") 
