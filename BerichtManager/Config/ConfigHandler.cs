@@ -454,7 +454,7 @@ namespace BerichtManager.Config
 		*/
 		public void SaveEditorFontSize(float size) 
 		{
-			SaveGeneric<float>(size, "EditorFontSize");
+			SaveGeneric<float>("EditorFontSize", size);
 			/*if (ConfigExists()) 
 			{
 				JObject sizeObject = new JObject(new JProperty("EditorFontSize", size));
@@ -491,10 +491,16 @@ namespace BerichtManager.Config
 		*/
 		public void SaveLastReportKW(int kw) 
 		{
-			SaveGeneric<int>(kw, "LastReportWeekOfYear");
+			SaveGeneric<int>("LastReportWeekOfYear", kw);
 		}
 
-		private void SaveGeneric<T>(T toSave, string key) 
+		/**
+		<summary>
+		Only implement
+		Sets the specified key and value in the config
+		</summary> 
+		*/
+		private void SaveGeneric<T>(string key, T toSave) 
 		{
 			if (ConfigExists()) 
 			{
@@ -515,6 +521,12 @@ namespace BerichtManager.Config
 			}
 		}
 
+		/**
+		<summary>
+		Only implement
+		Loads the value for the specified key
+		</summary> 
+		*/
 		private T LoadGeneric<T>(string key) 
 		{
 			if (ConfigExists()) 

@@ -63,6 +63,7 @@ namespace BerichtManager.AddForm
 			if (isCreate) 
 			{
 				btSaveAndQuit.Enabled = false;
+				btQuit.Text = "Cancel";
 			}
 		}
 

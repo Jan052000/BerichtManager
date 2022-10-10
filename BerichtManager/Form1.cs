@@ -209,7 +209,7 @@ namespace BerichtManager
 					}
 
 					//Enter work seminars
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false, isCreate: true);
+					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "-Keine-", false, isCreate: true);
 					enumerator.MoveNext();
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -437,7 +437,7 @@ namespace BerichtManager
 					}
 					else 
 					{
-						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "", false, isCreate: true);
+						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", "-Keine-", false, isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
