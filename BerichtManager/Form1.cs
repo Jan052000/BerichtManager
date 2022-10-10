@@ -1142,6 +1142,17 @@ namespace BerichtManager
 					}
 				}
 
+				foreach (string key in unPrintedFiles.Keys) 
+				{
+					if (unPrintedFiles[key].Contains(handler.LoadActive())) 
+					{
+						if (MessageBox.Show("Do you want to also print the last created report?\n(" + handler.LoadActive() + ")", "Print last created?", MessageBoxButtons.YesNo) != DialogResult.Yes) 
+						{
+							unPrintedFiles[key].Remove(handler.LoadActive());
+						}
+					}
+				}
+
 				PrintDialog printDialog = new PrintDialog();
 				if (printDialog.ShowDialog() == DialogResult.OK)
 				{

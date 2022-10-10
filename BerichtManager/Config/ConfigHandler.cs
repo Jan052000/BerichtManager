@@ -93,6 +93,11 @@ namespace BerichtManager.Config
 			//Directory.CreateDirectory(path);
 		}
 
+		/**
+		<summary>
+		Loads the path to the template
+		</summary> 
+		*/
 		public string LoadPath() 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -109,6 +114,11 @@ namespace BerichtManager.Config
 			return "";
 		}
 
+		/**
+		<summary>
+		Loads the number of the next
+		</summary> 
+		*/
 		public string LoadNumber() 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -124,6 +134,11 @@ namespace BerichtManager.Config
 			return "-1";
 		}
 
+		/**
+		<summary>
+		Sets the template path
+		</summary> 
+		*/
 		public void Save(string templateFilePath) 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -150,6 +165,11 @@ namespace BerichtManager.Config
 			}
 		}
 
+		/**
+		<summary>
+		Sets the number of the next report
+		</summary> 
+		*/
 		public void EditNumber(string number) 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -176,6 +196,11 @@ namespace BerichtManager.Config
 			}
 		}
 
+		/**
+		<summary>
+		Sets the last active document path
+		</summary> 
+		*/
 		public void EditActive(string activeDocument) 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -202,6 +227,11 @@ namespace BerichtManager.Config
 			}
 		}
 
+		/**
+		<summary>
+		Loads the last active document path
+		</summary> 
+		*/
 		public string LoadActive() 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -217,6 +247,11 @@ namespace BerichtManager.Config
 			return "";
 		}
 
+		/**
+		<summary>
+		Loads the username for webuntis
+		</summary> 
+		*/
 		public string LoadUsername() 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -227,6 +262,11 @@ namespace BerichtManager.Config
 			return "";
 		}
 
+		/**
+		<summary>
+		Sets the username for webuntis
+		</summary> 
+		*/
 		public void SaveUsername(string username) 
 		{
 			if (File.Exists(path + "\\Config.json")) 
@@ -248,6 +288,11 @@ namespace BerichtManager.Config
 			}
 		}
 
+		/**
+		<summary>
+		Loads the password for Webuntis
+		</summary> 
+		*/
 		public string LoadPassword() 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -258,6 +303,11 @@ namespace BerichtManager.Config
 			return "";
 		}
 
+		/**
+		<summary>
+		Sets the password for Webuntis
+		</summary> 
+		*/
 		public void SavePassword(string password) 
 		{
 			if (File.Exists(path + "\\Config.json"))
@@ -298,6 +348,11 @@ namespace BerichtManager.Config
 			return false;
 		}
 
+		/**
+		<summary>
+		Loads the name of the person
+		</summary> 
+		*/
 		public string LoadName() 
 		{
 			if (File.Exists(path + "\\Config.json")) 
@@ -308,6 +363,11 @@ namespace BerichtManager.Config
 			return "";
 		}
 
+		/**
+		<summary>
+		Sets the name of the person
+		</summary> 
+		*/
 		public void SaveName(string name) 
 		{
 			if (File.Exists(path + "\\Config.json")) 
@@ -329,6 +389,11 @@ namespace BerichtManager.Config
 			}
 		}
 
+		/**
+		<summary>
+		Loads the font
+		</summary> 
+		*/
 		public string LoadFont() 
 		{
 			if (File.Exists(path + "\\Config.json")) 
@@ -338,6 +403,11 @@ namespace BerichtManager.Config
 			return "Arial";
 		}
 
+		/**
+		<summary>
+		Sets the font
+		</summary> 
+		*/
 		public void SaveFont(string fontName) 
 		{
 			if (File.Exists(path + "\\Config.json")) 
@@ -359,6 +429,11 @@ namespace BerichtManager.Config
 			}
 		}
 
+		/**
+		<summary>
+		Loads the fontsize
+		</summary> 
+		*/
 		public float LoadEditorFontSize() 
 		{
 			return LoadGeneric<float>("EditorFontSize");
@@ -372,6 +447,11 @@ namespace BerichtManager.Config
 			return 8.25f;*/
 		}
 
+		/**
+		<summary>
+		Sets the fontsize
+		</summary> 
+		*/
 		public void SaveEditorFontSize(float size) 
 		{
 			SaveGeneric<float>(size, "EditorFontSize");
@@ -394,11 +474,21 @@ namespace BerichtManager.Config
 			}*/
 		}
 
+		/**
+		<summary>
+		Loads the weeknumber of the last report that was created
+		</summary> 
+		*/
 		public int LoadLastReportKW() 
 		{
 			return LoadGeneric<int>("LastReportWeekOfYear");
 		}
 
+		/**
+		<summary>
+		Sets the weeknumber of the last report that was created
+		</summary> 
+		*/
 		public void SaveLastReportKW(int kw) 
 		{
 			SaveGeneric<int>(kw, "LastReportWeekOfYear");
