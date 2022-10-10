@@ -53,7 +53,7 @@
 			// btConfirm
 			// 
 			this.btConfirm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btConfirm.Location = new System.Drawing.Point(551, 415);
+			this.btConfirm.Location = new System.Drawing.Point(460, 415);
 			this.btConfirm.Name = "btConfirm";
 			this.btConfirm.Size = new System.Drawing.Size(75, 23);
 			this.btConfirm.TabIndex = 1;
@@ -80,7 +80,7 @@
 			this.btQuit.Name = "btQuit";
 			this.btQuit.Size = new System.Drawing.Size(75, 23);
 			this.btQuit.TabIndex = 3;
-			this.btQuit.Text = "Cancel Edit";
+			this.btQuit.Text = "Quit Edit";
 			this.btQuit.UseVisualStyleBackColor = true;
 			this.btQuit.Click += new System.EventHandler(this.btQuit_Click);
 			// 
@@ -121,7 +121,7 @@
 			// btSaveAndQuit
 			// 
 			this.btSaveAndQuit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSaveAndQuit.Location = new System.Drawing.Point(460, 415);
+			this.btSaveAndQuit.Location = new System.Drawing.Point(541, 415);
 			this.btSaveAndQuit.Name = "btSaveAndQuit";
 			this.btSaveAndQuit.Size = new System.Drawing.Size(85, 23);
 			this.btSaveAndQuit.TabIndex = 8;

@@ -165,6 +165,30 @@ namespace BerichtManager.AddForm
 			return JsonConvert.DeserializeObject<Holidays>(response1.Content.ReadAsStringAsync().Result);
 		}
 
+		public string getHolidaysForDate(DateTime time) 
+		{
+			string str = "";
+			DateTime thisWeekStart = time.AddDays(-(int)time.DayOfWeek + 1);
+			DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+			if (int.TryParse(thisWeekStart.ToString("yyyyMMdd"), out int weekStart)) { }
+			if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
+
+			Holidays holidays = GetHolidays();
+			holidays.result.ForEach((holiday) =>
+			{
+				bool isInWeek = (holiday.startDate >= weekStart && holiday.endDate <= weekEnd);
+				bool isStarting = (holiday.startDate >= weekStart && holiday.startDate <= weekEnd);
+				bool isEnding = (holiday.endDate >= weekStart && holiday.endDate <= weekEnd);
+				bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
+				if (isInWeek || isStarting || isEnding || weekInEvent)
+				{
+					str +=  "-" + holiday.longName + "\n";
+					hasVacationOrHoliday = true;
+				}
+			});
+			return str;
+		}
+
 		private void btTest_Click(object sender, EventArgs e)
 		{
 			List<string> test = getClassesFromWebUntis();

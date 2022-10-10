@@ -16,6 +16,7 @@ namespace BerichtManager
 		private Word.Document doc = null;
 		private Word.Application wordApp = null;
 		private ConfigHandler handler;
+		private Client client;
 		private DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
 		private bool visible = false;
 
@@ -24,6 +25,7 @@ namespace BerichtManager
 			InitializeComponent();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			handler = new ConfigHandler();
+			client = new Client();
 			UpdateTree();
 			if (handler.LoadActive() == "") 
 			{
@@ -461,7 +463,7 @@ namespace BerichtManager
 					//Shool stuff
 					//form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true);
 					enumerator.MoveNext();
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", "", isCreate: true);
+					form = new EditForm("Berufsschule (Unterrichtsthemen)", client.getHolidaysForDate(baseDate), isCreate: true);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -1142,17 +1144,6 @@ namespace BerichtManager
 					}
 				}
 
-				foreach (string key in unPrintedFiles.Keys) 
-				{
-					if (unPrintedFiles[key].Contains(handler.LoadActive())) 
-					{
-						if (MessageBox.Show("Do you want to also print the last created report?\n(" + handler.LoadActive() + ")", "Print last created?", MessageBoxButtons.YesNo) != DialogResult.Yes) 
-						{
-							unPrintedFiles[key].Remove(handler.LoadActive());
-						}
-					}
-				}
-
 				PrintDialog printDialog = new PrintDialog();
 				if (printDialog.ShowDialog() == DialogResult.OK)
 				{
@@ -1161,6 +1152,19 @@ namespace BerichtManager
 					{
 						MessageBox.Show("No unprinted reports found");
 						return;
+					}
+					else 
+					{
+						foreach (string key in unPrintedFiles.Keys)
+						{
+							if (unPrintedFiles[key].Contains(handler.LoadActive()))
+							{
+								if (MessageBox.Show("Do you want to also print the last created report?\n(" + handler.LoadActive() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
+								{
+									unPrintedFiles[key].Remove(handler.LoadActive());
+								}
+							}
+						}
 					}
 					try
 					{
