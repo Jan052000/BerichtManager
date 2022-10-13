@@ -104,7 +104,8 @@ namespace BerichtManager.Config
 		*/
 		public string LoadPath() 
 		{
-			if (File.Exists(path + "\\Config.json"))
+			return LoadGeneric<string>("TemplatePath");
+			/*if (File.Exists(path + "\\Config.json"))
 			{
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
 				return config.GetValue("TemplatePath").ToString();
@@ -115,7 +116,7 @@ namespace BerichtManager.Config
 				MessageBox.Show("Config bei: " + Path.GetFullPath(path + "\\Config.json") + " erstellt");
 			}
 
-			return "";
+			return "";*/
 		}
 
 		/**
@@ -125,7 +126,8 @@ namespace BerichtManager.Config
 		*/
 		public string LoadNumber() 
 		{
-			if (File.Exists(path + "\\Config.json"))
+			return LoadGeneric<string>("ReportNR");
+			/*if (File.Exists(path + "\\Config.json"))
 			{
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
 				return config.GetValue("ReportNR").ToString();
@@ -135,7 +137,7 @@ namespace BerichtManager.Config
 				File.Create(path + "\\Config.json").Close();
 				MessageBox.Show("Config bei: " + Path.GetFullPath(path + "\\Config.json") + " erstellt");
 			}
-			return "-1";
+			return "-1";*/
 		}
 
 		/**
@@ -145,7 +147,8 @@ namespace BerichtManager.Config
 		*/
 		public void Save(string templateFilePath) 
 		{
-			if (File.Exists(path + "\\Config.json"))
+			SaveGeneric<string>("TemplatePath", templateFilePath);
+			/*if (File.Exists(path + "\\Config.json"))
 			{
 				JObject template = new JObject(new JProperty("TemplatePath", templateFilePath));
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
@@ -166,7 +169,7 @@ namespace BerichtManager.Config
 			{
 				File.Create(path).Close();
 				MessageBox.Show("Config bei: " + Path.GetFullPath(path) + " erstellt");
-			}
+			}*/
 		}
 
 		/**
@@ -176,7 +179,8 @@ namespace BerichtManager.Config
 		*/
 		public void EditNumber(string number) 
 		{
-			if (File.Exists(path + "\\Config.json"))
+			SaveGeneric<string>("ReportNR", number);
+			/*if (File.Exists(path + "\\Config.json"))
 			{
 				JObject template = new JObject(new JProperty("ReportNR", number));
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
@@ -197,7 +201,7 @@ namespace BerichtManager.Config
 			{
 				File.Create(path).Close();
 				MessageBox.Show("Config bei: " + Path.GetFullPath(path) + " erstellt");
-			}
+			}*/
 		}
 
 		/**
@@ -207,7 +211,8 @@ namespace BerichtManager.Config
 		*/
 		public void EditActive(string activeDocument) 
 		{
-			if (File.Exists(path + "\\Config.json"))
+			SaveGeneric<string>("Active", activeDocument);
+			/*if (File.Exists(path + "\\Config.json"))
 			{
 				JObject template = new JObject(new JProperty("Active", activeDocument));
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
@@ -228,7 +233,7 @@ namespace BerichtManager.Config
 			{
 				File.Create(path).Close();
 				MessageBox.Show("Config bei: " + Path.GetFullPath(path) + " erstellt");
-			}
+			}*/
 		}
 
 		/**
@@ -238,7 +243,8 @@ namespace BerichtManager.Config
 		*/
 		public string LoadActive() 
 		{
-			if (File.Exists(path + "\\Config.json"))
+			return LoadGeneric<string>("Active");
+			/*if (File.Exists(path + "\\Config.json"))
 			{
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
 				return config.GetValue("Active").ToString();
@@ -248,7 +254,7 @@ namespace BerichtManager.Config
 				File.Create(path + "\\Config.json").Close();
 				MessageBox.Show("Config bei: " + Path.GetFullPath(path + "\\Config.json") + " erstellt");
 			}
-			return "";
+			return "";*/
 		}
 
 		/**
@@ -258,12 +264,13 @@ namespace BerichtManager.Config
 		*/
 		public string LoadUsername() 
 		{
-			if (File.Exists(path + "\\Config.json"))
+			return LoadGeneric<string>("Username");
+			/*if (File.Exists(path + "\\Config.json"))
 			{
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
 				return config.GetValue("Username").ToString();
 			}
-			return "";
+			return "";*/
 		}
 
 		/**
@@ -273,7 +280,8 @@ namespace BerichtManager.Config
 		*/
 		public void SaveUsername(string username) 
 		{
-			if (File.Exists(path + "\\Config.json")) 
+			SaveGeneric<string>("Username", username);
+			/*if (File.Exists(path + "\\Config.json")) 
 			{
 				JObject userObject = new JObject(new JProperty("Username", username));
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
@@ -289,7 +297,7 @@ namespace BerichtManager.Config
 				}
 
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(userObject, Formatting.Indented));
-			}
+			}*/
 		}
 
 		/**
@@ -314,7 +322,8 @@ namespace BerichtManager.Config
 		*/
 		public void SavePassword(string password) 
 		{
-			if (File.Exists(path + "\\Config.json"))
+			SaveGeneric<string>("Password", UserHandler.EncodePassword(password));
+			/*if (File.Exists(path + "\\Config.json"))
 			{
 				JObject userObject = new JObject(new JProperty("Password", UserHandler.EncodePassword(password)));
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
@@ -330,7 +339,7 @@ namespace BerichtManager.Config
 				}
 
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(userObject, Formatting.Indented));
-			}
+			}*/
 		}
 
 		public User doLogin() 
@@ -380,7 +389,8 @@ namespace BerichtManager.Config
 		*/
 		public void SaveName(string name) 
 		{
-			if (File.Exists(path + "\\Config.json")) 
+			SaveGeneric<string>("Name", name);
+			/*if (File.Exists(path + "\\Config.json")) 
 			{
 				JObject nameObject = new JObject(new JProperty("Name", name));
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
@@ -396,7 +406,7 @@ namespace BerichtManager.Config
 				}
 
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(nameObject, Formatting.Indented));
-			}
+			}*/
 		}
 
 		/**
@@ -420,7 +430,8 @@ namespace BerichtManager.Config
 		*/
 		public void SaveFont(string fontName) 
 		{
-			if (File.Exists(path + "\\Config.json")) 
+			SaveGeneric<string>("Font", fontName);
+			/*if (File.Exists(path + "\\Config.json")) 
 			{
 				JObject fontObject = new JObject(new JProperty("Font", fontName));
 				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
@@ -436,7 +447,7 @@ namespace BerichtManager.Config
 				}
 
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(fontObject, Formatting.Indented));
-			}
+			}*/
 		}
 
 		/**
@@ -465,23 +476,6 @@ namespace BerichtManager.Config
 		public void SaveEditorFontSize(float size) 
 		{
 			SaveGeneric<float>("EditorFontSize", size);
-			/*if (ConfigExists()) 
-			{
-				JObject sizeObject = new JObject(new JProperty("EditorFontSize", size));
-				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
-
-				JToken token = config.First;
-				for (int i = 0; i < config.Count; i++)
-				{
-					if (((JProperty)token).Name != "EditorFontSize")
-					{
-						sizeObject.Add((JProperty)token);
-					}
-					token = token.Next;
-				}
-
-				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(sizeObject, Formatting.Indented));
-			}*/
 		}
 
 		/**
@@ -567,14 +561,7 @@ namespace BerichtManager.Config
 
 		public bool ConfigExists() 
 		{
-			if (File.Exists(path + "\\Config.json"))
-			{
-				return true;
-			}
-			else 
-			{
-				return false;
-			}
+			return File.Exists(path + "\\Config.json");
 		}
 
 		private void SortConfig() 
