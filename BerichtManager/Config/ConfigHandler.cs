@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -11,7 +11,7 @@ namespace BerichtManager.Config
 {
 	public class ConfigHandler
 	{
-		private string path = Environment.CurrentDirectory + "\\Config";
+		private readonly string path = Environment.CurrentDirectory + "\\Config";
 		public bool loginAborted = false;
 		public ConfigHandler() 
 		{
@@ -508,6 +508,11 @@ namespace BerichtManager.Config
 			return LoadGeneric<bool>("StayLoggedIn");
 		}
 
+		/**
+		<summary>
+		Sets if the user wanted to stay logged in
+		</summary> 
+		*/
 		public void StayLoggedIn(bool stayLoggedIn) 
 		{
 			SaveGeneric<bool>("StayLoggedIn", stayLoggedIn);

@@ -170,7 +170,6 @@ namespace BerichtManager
 					enumerator.MoveNext();
 
 					//Enter report nr.
-					//((Word.FormField)enumerator.Current).Range.Text = handler.LoadNumber();
 					((Word.FormField)enumerator.Current).Result = handler.LoadNumber();
 
 					//Enter week start and end
@@ -194,7 +193,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -217,7 +215,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -313,22 +310,6 @@ namespace BerichtManager
 				}
 				Close();
 			}
-			/*catch (Exception ex)
-			{
-				if (ex.HResult == -2147023174)
-				{
-					MessageBox.Show("an unexpected problem occured this progam will now close!");
-				}
-				try
-				{
-					wordApp.Quit(false);
-				}
-				catch (Exception exx)
-				{
-
-				}
-				Close();
-			}*/
 		}
 
 		/**
@@ -461,7 +442,6 @@ namespace BerichtManager
 					}
 
 					//Shool stuff
-					//form = new EditForm("Berufsschule (Unterrichtsthemen)", "", true);
 					enumerator.MoveNext();
 					form = new EditForm("Berufsschule (Unterrichtsthemen)", text: client.getHolidaysForDate(baseDate), isCreate: true);
 					form.ShowDialog();
@@ -617,18 +597,6 @@ namespace BerichtManager
 					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
 				}
-				/*
-				//Generate reports from last year
-				for (int i = 0; i < nrOfWeeksLastYear - reportNr; i++) 
-				{
-					Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(endOfLastYear.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-				}
-
-				//Generate missing reports for this year
-				for (int i = 1; i < weekOfCurrentYear - 1; i++) 
-				{
-					Console.WriteLine("Created report for week of new year " + culture.Calendar.GetWeekOfYear(/*DateTime.Today*//*date1.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-				}*/
 			}
 			try
 			{
@@ -715,7 +683,6 @@ namespace BerichtManager
 					if (!string.IsNullOrEmpty(handler.LoadName()))
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, handler.LoadName());
-						//((Word.FormField)enumerator.Current).Result = handler.LoadName();
 					}
 					else
 					{
@@ -739,7 +706,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -773,7 +739,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -802,7 +767,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -832,7 +796,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -862,7 +825,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -892,7 +854,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -922,7 +883,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -952,7 +912,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -982,7 +941,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -1056,8 +1014,6 @@ namespace BerichtManager
 
 		private void btPrint_Click(object sender, EventArgs e)
 		{
-			/*MessageBox.Show("Not yet implemented");
-			return;*/
 			if (tvReports.SelectedNode == null) 
 			{
 				MessageBox.Show("No report selected");
@@ -1120,8 +1076,6 @@ namespace BerichtManager
 
 		private void btPrintAll_Click(object sender, EventArgs e)
 		{
-			/*MessageBox.Show("Not yet implemented");
-			return;*/
 			if (Directory.Exists(Path.GetFullPath(".\\.."))) 
 			{
 				Dictionary<string, List<string>> unPrintedFiles = new Dictionary<string, List<string>>();
@@ -1242,7 +1196,6 @@ namespace BerichtManager
 					if (!string.IsNullOrEmpty(handler.LoadName()))
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, handler.LoadName());
-						//((Word.FormField)enumerator.Current).Result = handler.LoadName();
 					}
 					else
 					{
@@ -1251,7 +1204,6 @@ namespace BerichtManager
 						{
 							handler.SaveName(form.Result);
 							FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-							//((Word.FormField)enumerator.Current).Result = handler.LoadName();
 						}
 						else
 						{
@@ -1267,7 +1219,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else 
 					{
@@ -1301,7 +1252,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -1330,7 +1280,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -1360,7 +1309,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -1390,7 +1338,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -1420,7 +1367,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -1450,7 +1396,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result.Replace("\n", "\v");
 					}
 					else
 					{
@@ -1480,7 +1425,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -1510,7 +1454,6 @@ namespace BerichtManager
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						//((Word.FormField)enumerator.Current).Result = form.Result;
 					}
 					else
 					{
@@ -1574,23 +1517,6 @@ namespace BerichtManager
 				}
 				Close();
 			}
-			/*catch (Exception ex)
-			{
-				if (ex.HResult == -2147023174)
-				{
-					MessageBox.Show("an unexpected problem occured this progam will now close!");
-				}
-				try
-				{
-					wordApp.Quit(false);
-				}
-				catch (Exception exx)
-				{
-
-				}
-				Close();
-			}*/
-		
 		}
 
 		private void btDelete_Click(object sender, EventArgs e)

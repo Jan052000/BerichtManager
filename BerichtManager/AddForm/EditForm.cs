@@ -19,7 +19,6 @@ namespace BerichtManager.AddForm
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
 			rtInput.Multiline = true;
-			//rtInput.Font = new Font("Arial", rtInput.Font.Size);
 			nudFontSize.Value = (decimal)handler.LoadEditorFontSize();
 			foreach (FontFamily family in (new InstalledFontCollection()).Families)
 			{
@@ -45,14 +44,6 @@ namespace BerichtManager.AddForm
 				classes.ForEach((c) =>
 				{
 					rtInput.Text += c;
-					/*if (c.Contains("\n\t-Ausgefallen"))
-					{
-						rtInput.Text += c.Replace("\n\t-Ausgefallen", ":\n\t-Ausgefallen\n");
-					}
-					else
-					{
-						rtInput.Text += "-" + c + ":\n\t-\n";
-					}*/
 				});
 
 			}
