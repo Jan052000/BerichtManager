@@ -52,7 +52,7 @@ namespace BerichtManager
 		//https://stackoverflow.com/questions/6239544/populate-treeview-with-file-system-directory-structure
 		private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
 		{
-			var directoryNode = new TreeNode(directoryInfo.Name);
+			TreeNode directoryNode = new TreeNode(directoryInfo.Name);
 			foreach (var directory in directoryInfo.GetDirectories())
 				directoryNode.Nodes.Add(CreateDirectoryNode(directory));
 			foreach (var file in directoryInfo.GetFiles())
@@ -71,7 +71,7 @@ namespace BerichtManager
 		private void FillText(Word.Application app, Word.FormField field, string text) 
 		{
 			field.Select();
-			var temp = field.Range.Paragraphs.TabStops.Count;
+			int temp = field.Range.Paragraphs.TabStops.Count;
 			for (int i = 1; i < 6; i++) 
 			{
 				field.Range.Paragraphs.TabStops.Add(i * 14);
@@ -175,9 +175,9 @@ namespace BerichtManager
 
 					//Enter week start and end
 					DateTime baseDate = DateTime.Today;
-					var today = baseDate;
-					var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-					var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+					DateTime today = baseDate;
+					DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+					DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 					enumerator.MoveNext();
 					((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
 					enumerator.MoveNext();
@@ -390,9 +390,9 @@ namespace BerichtManager
 					((Word.FormField)enumerator.Current).Result = handler.LoadNumber();
 
 					//Enter week start and end
-					var today = baseDate;
-					var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-					var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+					DateTime today = baseDate;
+					DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+					DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 					enumerator.MoveNext();
 					((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
 					enumerator.MoveNext();
@@ -710,7 +710,7 @@ namespace BerichtManager
 
 					EditForm form;
 					//Fill Name
-					var enumerator = doc.FormFields.GetEnumerator();
+					System.Collections.IEnumerator enumerator = doc.FormFields.GetEnumerator();
 					enumerator.MoveNext();
 					if (!string.IsNullOrEmpty(handler.LoadName()))
 					{
@@ -764,9 +764,9 @@ namespace BerichtManager
 
 					//Enter week start and end
 					DateTime baseDate = DateTime.Today;
-					var today = baseDate;
-					var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-					var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+					DateTime today = baseDate;
+					DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+					DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 					enumerator.MoveNext();
 					form = new EditForm("Edit start of week", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
@@ -1237,7 +1237,7 @@ namespace BerichtManager
 
 					EditForm form;
 					//Fill Name
-					var enumerator = doc.FormFields.GetEnumerator();
+					System.Collections.IEnumerator enumerator = doc.FormFields.GetEnumerator();
 					enumerator.MoveNext();
 					if (!string.IsNullOrEmpty(handler.LoadName()))
 					{
@@ -1292,9 +1292,9 @@ namespace BerichtManager
 
 					//Enter week start and end
 					DateTime baseDate = DateTime.Today;
-					var today = baseDate;
-					var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-					var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+					DateTime today = baseDate;
+					DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+					DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 					enumerator.MoveNext();
 					form = new EditForm("Edit start of week", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
