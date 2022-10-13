@@ -20,7 +20,7 @@ namespace BerichtManager.Config
 				Directory.CreateDirectory(path);
 				File.Create(path + "\\Config.json").Close();
 				JObject config = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
-					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25), new JProperty("LastReportWeekOfYear", 0));
+					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25), new JProperty("LastReportWeekOfYear", 0), new JProperty("StayLoggedIn", false));
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 			}
 			else 
@@ -87,6 +87,10 @@ namespace BerichtManager.Config
 				if (!config.ContainsKey("LastReportWeekOfYear")) 
 				{
 					config.Add(new JProperty("LastReportWeekOfYear", 0));
+				}
+				if (!config.ContainsKey("StayLoggedIn")) 
+				{
+					config.Add(new JProperty("StayLoggedIn", false));	
 				}
 				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
 			}
@@ -329,23 +333,29 @@ namespace BerichtManager.Config
 			}
 		}
 
-		public bool doLogin() 
+		public User doLogin() 
 		{
 			Login form = new Login();
 			form.ShowDialog();
 			if (form.DialogResult == DialogResult.OK)
 			{
-				if (File.Exists(path + "\\Config.json"))
-				{
-					if (!string.IsNullOrEmpty(form.Username) && !string.IsNullOrEmpty(form.Password))
+				//if (!string.IsNullOrEmpty(form.Username) && !string.IsNullOrEmpty(form.Password))
+				//{
+					if (form.KeepLoggedIn)
 					{
 						SaveUsername(form.Username);
 						SavePassword(form.Password);
-						return true;
 					}
-				}
+					else
+					{
+						SaveUsername("");
+						SavePassword("");
+					}
+					StayLoggedIn(form.KeepLoggedIn);
+					return new User(username: form.Username, password: form.Password);
+				//}
 			}
-			return false;
+			return new User();
 		}
 
 		/**
@@ -496,6 +506,21 @@ namespace BerichtManager.Config
 
 		/**
 		<summary>
+		Gets the boolean if the User wanted to stay logged in
+		</summary>
+		*/
+		public bool StayLoggedIn() 
+		{
+			return LoadGeneric<bool>("StayLoggedIn");
+		}
+
+		public void StayLoggedIn(bool stayLoggedIn) 
+		{
+			SaveGeneric<bool>("StayLoggedIn", stayLoggedIn);
+		}
+
+		/**
+		<summary>
 		Only implement
 		Sets the specified key and value in the config
 		</summary> 
@@ -557,6 +582,17 @@ namespace BerichtManager.Config
 			List<JProperty> jProperties = new List<JProperty>();
 			JObject jobject = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
 			var test = jobject.Children<JProperty>().OrderBy(p => p.Name);
+		}
+	}
+
+	public class User 
+	{
+		public string Username { get; set; }
+		public string Password { get; set; }
+		public User(string username = "", string password = "") 
+		{
+			Username = username;
+			Password = password;
 		}
 	}
 

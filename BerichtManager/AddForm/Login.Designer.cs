@@ -35,6 +35,7 @@
 			this.btClose = new System.Windows.Forms.Button();
 			this.btLogin = new System.Windows.Forms.Button();
 			this.laLogin = new System.Windows.Forms.Label();
+			this.cbKeepLogin = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// laUsername
@@ -106,11 +107,22 @@
 			this.laLogin.TabIndex = 6;
 			this.laLogin.Text = "Login to Webuntis";
 			// 
+			// cbKeepLogin
+			// 
+			this.cbKeepLogin.AutoSize = true;
+			this.cbKeepLogin.Location = new System.Drawing.Point(89, 93);
+			this.cbKeepLogin.Name = "cbKeepLogin";
+			this.cbKeepLogin.Size = new System.Drawing.Size(93, 17);
+			this.cbKeepLogin.TabIndex = 7;
+			this.cbKeepLogin.Text = "Stay logged in";
+			this.cbKeepLogin.UseVisualStyleBackColor = true;
+			// 
 			// Login
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(531, 225);
+			this.Controls.Add(this.cbKeepLogin);
 			this.Controls.Add(this.laLogin);
 			this.Controls.Add(this.btLogin);
 			this.Controls.Add(this.btClose);
@@ -118,7 +130,7 @@
 			this.Controls.Add(this.tbPassword);
 			this.Controls.Add(this.tbUsername);
 			this.Controls.Add(this.laUsername);
-			this.MinimumSize = new System.Drawing.Size(333, 166);
+			this.MinimumSize = new System.Drawing.Size(333, 186);
 			this.Name = "Login";
 			this.Text = "Login";
 			this.ResumeLayout(false);
@@ -135,5 +147,6 @@
 		private System.Windows.Forms.Button btClose;
 		private System.Windows.Forms.Button btLogin;
 		private System.Windows.Forms.Label laLogin;
+		private System.Windows.Forms.CheckBox cbKeepLogin;
 	}
 }

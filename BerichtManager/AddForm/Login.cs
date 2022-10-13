@@ -9,6 +9,7 @@ namespace BerichtManager.AddForm
 	{
 		public string Username;
 		public string Password;
+		public bool KeepLoggedIn;
 		public Login()
 		{
 			InitializeComponent();
@@ -25,6 +26,7 @@ namespace BerichtManager.AddForm
 		{
 			Username = tbUsername.Text;
 			Password = tbPassword.Text;
+			KeepLoggedIn = cbKeepLogin.Checked;
 			DialogResult = DialogResult.OK;
 			Close();
 		}
