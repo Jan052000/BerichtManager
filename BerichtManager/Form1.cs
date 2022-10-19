@@ -323,7 +323,7 @@ namespace BerichtManager
 		 * <param name="app">The Wordapp that will create the document</param>
 		 * <param name="vacation">If you missed reports due to vacation</param>
 		*/
-		private void CreateDocument(object templatePath, DateTime baseDate, Word.Application app, bool vacation = false)
+		private void CreateDocument(object templatePath, DateTime baseDate, Word.Application app, bool vacation = false, int reportDifference = 0)
 		{
 			try
 			{
@@ -369,7 +369,10 @@ namespace BerichtManager
 					enumerator.MoveNext();
 
 					//Enter report nr.
-					((Word.FormField)enumerator.Current).Result = handler.LoadNumber();
+					if (int.TryParse(handler.LoadNumber(), out int number)) 
+					{
+						FillText(app, ((Word.FormField)enumerator.Current), (number + reportDifference).ToString());
+					}
 
 					//Enter week start and end
 					DateTime today = baseDate;
@@ -478,7 +481,7 @@ namespace BerichtManager
 					SetFontInDoc(doc, app);
 					doc.SaveAs2(FileName: path);
 
-					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
+					//if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
 					handler.EditActive(path);
 					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					btEdit.Enabled = true;
@@ -580,8 +583,9 @@ namespace BerichtManager
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
 					//Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
+					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation, reportDifference: weekOfYear - reportNr -  i - 1);
 				}
+				handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
 			}
 			else
 			{
@@ -597,7 +601,7 @@ namespace BerichtManager
 				for (int i = 1; i < repeats; i++)
 				{
 					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation);
+					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation, reportDifference: weekOfYear - reportNr - i);
 				}
 			}
 			try
