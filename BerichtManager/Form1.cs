@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
@@ -665,350 +665,7 @@ namespace BerichtManager
 
 		private void btEdit_Click(object sender, EventArgs e)
 		{
-			try
-			{
-				if (File.Exists(handler.LoadActive()))
-				{
-					wordApp = new Word.Application();
-					wordApp.Visible = visible;
-					doc = wordApp.Documents.Open(handler.LoadActive());
-
-					if (doc.FormFields.Count != 10)
-					{
-						MessageBox.Show("Invalid document (you will have to manually edit)");
-						doc.Close(SaveChanges: false);
-						wordApp.Quit();
-						return;
-					}
-
-					EditForm form;
-					//Fill Name
-					System.Collections.IEnumerator enumerator = doc.FormFields.GetEnumerator();
-					enumerator.MoveNext();
-					if (!string.IsNullOrEmpty(handler.LoadName()))
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, handler.LoadName());
-					}
-					else
-					{
-						form = new EditForm("Enter your name", text: "Name Vorname");
-						if (form.ShowDialog() == DialogResult.OK)
-						{
-							handler.SaveName(form.Result);
-							((Word.FormField)enumerator.Current).Result = handler.LoadName();
-						}
-						else 
-						{
-							MessageBox.Show("Cannot proceed without a name!", "Name required!");
-							return;
-						}
-					}
-					enumerator.MoveNext();
-
-					//Enter report nr.
-					form = new EditForm("Edit report nr.", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else 
-						{
-							if (form.DialogResult == DialogResult.Ignore) 
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Enter week start and end
-					DateTime baseDate = DateTime.Today;
-					DateTime today = baseDate;
-					DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-					DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-					enumerator.MoveNext();
-					form = new EditForm("Edit start of week", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					enumerator.MoveNext();
-					form = new EditForm("Edit end of week", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Enter Year
-					enumerator.MoveNext();
-					form = new EditForm("Edit year", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Enter work field
-					enumerator.MoveNext();
-					form = new EditForm("Betriebliche Tätigkeiten", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Enter work seminars
-					enumerator.MoveNext();
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Shool stuff
-					enumerator.MoveNext();
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Fridy of week
-					enumerator.MoveNext();
-					form = new EditForm("Edit signdate (you)", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Sign date 2
-					enumerator.MoveNext();
-					form = new EditForm("Edit signdate (not you)", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					SetFontInDoc(doc, wordApp);
-
-					doc.Save();
-					doc.Close();
-					wordApp.Quit();
-				}
-				else
-				{
-					MessageBox.Show(handler.LoadActive() + "not found was it deleted or moved?");
-				}
-			}
-			catch (Exception ex)
-			{
-				switch (ex.HResult) 
-				{
-					case -2147023174:
-						MessageBox.Show("an unexpected problem occured this progam will now close!");
-						break;
-					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly");
-						break;
-					case -2146822750:
-						//Document is only one page long
-						doc.Save();
-						doc.Close();
-						wordApp.Quit();
-						break;
-					default:
-						MessageBox.Show(ex.StackTrace);
-						break;
-				}
-				try
-				{
-					wordApp.Quit(false);
-				}
-				catch
-				{
-
-				}
-				Close();
-			}
+			Edit(handler.LoadActive());
 		}
 
 		private void btTest_Click(object sender, EventArgs e)
@@ -1178,15 +835,91 @@ namespace BerichtManager
 			{
 				MessageBox.Show("You may only edit Documents(*.docx) files");
 			}
-			try
+			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+		}
+
+		private void btDelete_Click(object sender, EventArgs e)
+		{
+			if (tvReports.SelectedNode == null)
+			{
+				MessageBox.Show("No report selected");
+				return;
+			}
+			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes) 
 			{
 				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
 				{
+					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)).StartsWith("~$"))
+					{
+						if (Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath) == handler.LoadActive())
+						{
+							if (tvReports.SelectedNode.Text.Substring(15, ("" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()) 
+							{
+								if (int.TryParse(handler.LoadNumber(), out int number))
+								{
+									handler.EditNumber("" + (number - 1));
+								}
+								else
+								{
+									MessageBox.Show("Could not reset current number of report");
+								}
+							}
+						}
+						File.Delete(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+						tvReports.Nodes.Remove(tvReports.SelectedNode);
+						MessageBox.Show("File deleted successfully");
+					}
+					else 
+					{
+						MessageBox.Show("You may only delete Documents(*.docx) or their temporary files");
+					}
+				}
+				else 
+				{
+					MessageBox.Show("File not Found (was it moved or deleted?)");
+				}
+			}
+		}
+
+		private void btLogin_Click(object sender, EventArgs e)
+		{
+			handler.doLogin();
+		}
+
+		private void btEditName_Click(object sender, EventArgs e)
+		{
+			EditForm form = new EditForm("Enter your name", text: "Name Vorname");
+			if (form.ShowDialog() == DialogResult.OK)
+			{
+				if (form.Result != "Name Vorname") 
+				{
+					handler.SaveName(form.Result);
+				}
+			}
+
+		}
+
+		private void cbVisible_CheckedChanged(object sender, EventArgs e)
+		{
+			visible = cbVisible.Checked;
+		}
+		
+		/**
+		<summary>
+		Method for editing a Word document
+		</summary> 
+		*/
+		private void Edit(string path) 
+		{
+			try
+			{
+				if (File.Exists(path))
+				{
 					wordApp = new Word.Application();
 					wordApp.Visible = visible;
-					doc = wordApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+					doc = wordApp.Documents.Open(path);
 
-					if (doc.FormFields.Count != 10) 
+					if (doc.FormFields.Count != 10)
 					{
 						MessageBox.Show("Invalid document (you will have to manually edit)");
 						doc.Close(SaveChanges: false);
@@ -1225,9 +958,9 @@ namespace BerichtManager
 					{
 						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
 					}
-					else 
+					else
 					{
-						if (form.DialogResult == DialogResult.Abort) 
+						if (form.DialogResult == DialogResult.Abort)
 						{
 							doc.Close(SaveChanges: false);
 							wordApp.Quit();
@@ -1247,10 +980,6 @@ namespace BerichtManager
 					}
 
 					//Enter week start and end
-					DateTime baseDate = DateTime.Today;
-					DateTime today = baseDate;
-					DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-					DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 					enumerator.MoveNext();
 					form = new EditForm("Edit start of week", text: ((Word.FormField)enumerator.Current).Result);
 					form.ShowDialog();
@@ -1489,7 +1218,7 @@ namespace BerichtManager
 				}
 				else
 				{
-					MessageBox.Show(handler.LoadActive() + "not found was it deleted or moved?");
+					MessageBox.Show(path + "not found was it deleted or moved?");
 				}
 			}
 			catch (Exception ex)
@@ -1503,7 +1232,7 @@ namespace BerichtManager
 						MessageBox.Show("Word closed unexpectedly");
 						break;
 					case -2146822750:
-						//Document already fit on page
+						//Document is only one page long
 						doc.Save();
 						doc.Close();
 						wordApp.Quit();
@@ -1522,72 +1251,6 @@ namespace BerichtManager
 				}
 				Close();
 			}
-		}
-
-		private void btDelete_Click(object sender, EventArgs e)
-		{
-			if (tvReports.SelectedNode == null)
-			{
-				MessageBox.Show("No report selected");
-				return;
-			}
-			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes) 
-			{
-				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
-				{
-					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)).StartsWith("~$"))
-					{
-						if (Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath) == handler.LoadActive())
-						{
-							if (tvReports.SelectedNode.Text.Substring(15, ("" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()) 
-							{
-								if (int.TryParse(handler.LoadNumber(), out int number))
-								{
-									handler.EditNumber("" + (number - 1));
-								}
-								else
-								{
-									MessageBox.Show("Could not reset current number of report");
-								}
-							}
-						}
-						File.Delete(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
-						tvReports.Nodes.Remove(tvReports.SelectedNode);
-						MessageBox.Show("File deleted successfully");
-					}
-					else 
-					{
-						MessageBox.Show("You may only delete Documents(*.docx) or their temporary files");
-					}
-				}
-				else 
-				{
-					MessageBox.Show("File not Found (was it moved or deleted?)");
-				}
-			}
-		}
-
-		private void btLogin_Click(object sender, EventArgs e)
-		{
-			handler.doLogin();
-		}
-
-		private void btEditName_Click(object sender, EventArgs e)
-		{
-			EditForm form = new EditForm("Enter your name", text: "Name Vorname");
-			if (form.ShowDialog() == DialogResult.OK)
-			{
-				if (form.Result != "Name Vorname") 
-				{
-					handler.SaveName(form.Result);
-				}
-			}
-
-		}
-
-		private void cbVisible_CheckedChanged(object sender, EventArgs e)
-		{
-			visible = cbVisible.Checked;
 		}
 	}
 }
