@@ -96,14 +96,24 @@ namespace BerichtManager.AddForm
 						{
 							classids.Add(id.id);
 
-							//Chack for cancellation
+							//Check for cancellation
 							if (en.@is.cancelled == true)
 							{
-								cancelled.Add(id.id, true);
+								if (!cancelled.Keys.Contains(id.id))
+								{
+									cancelled.Add(id.id, true);
+								}
 							}
 							else
 							{
-								cancelled.Add(id.id, false);
+								if (cancelled.Keys.Contains(id.id))
+								{
+									cancelled[id.id] = false;
+								}
+								else 
+								{
+									cancelled.Add(id.id, false);
+								}
 							}
 						}
 					});
