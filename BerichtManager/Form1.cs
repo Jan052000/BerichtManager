@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
@@ -1250,6 +1250,14 @@ namespace BerichtManager
 
 				}
 				Close();
+			}
+		}
+
+		private void tvReports_DoubleClick(object sender, EventArgs e)
+		{
+			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) == ".docx")
+			{
+				Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 			}
 		}
 	}

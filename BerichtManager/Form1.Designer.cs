@@ -121,6 +121,7 @@
 			this.tvReports.Name = "tvReports";
 			this.tvReports.Size = new System.Drawing.Size(686, 397);
 			this.tvReports.TabIndex = 6;
+			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
 			// 
 			// btEditExisting
 			// 
