@@ -927,285 +927,44 @@ namespace BerichtManager
 						return;
 					}
 
-					EditForm form;
-					//Fill Name
-					System.Collections.IEnumerator enumerator = doc.FormFields.GetEnumerator();
-					enumerator.MoveNext();
-					if (!string.IsNullOrEmpty(handler.LoadName()))
+					SelectEditFrom selectEdit = new SelectEditFrom();
+					if (selectEdit.ShowDialog() == DialogResult.OK) 
 					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, handler.LoadName());
-					}
-					else
-					{
-						form = new EditForm("Enter your name", text: "Name Vorname");
-						if (form.ShowDialog() == DialogResult.OK)
+						System.Collections.IEnumerator enumerator = doc.FormFields.GetEnumerator();
+						EditForm edit;
+						foreach(EditState si in selectEdit.SelectedItems) 
 						{
-							handler.SaveName(form.Result);
-							FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-						}
-						else
-						{
-							MessageBox.Show("Cannot proceed without a name!", "Name required!");
-							return;
-						}
-					}
-					enumerator.MoveNext();
-
-					//Enter report nr.
-					form = new EditForm("Edit report nr.", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
+							if (enumerator.MoveNext()) 
 							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Enter week start and end
-					enumerator.MoveNext();
-					form = new EditForm("Edit start of week", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					enumerator.MoveNext();
-					form = new EditForm("Edit end of week", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Enter Year
-					enumerator.MoveNext();
-					form = new EditForm("Edit year", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Enter work field
-					enumerator.MoveNext();
-					form = new EditForm("Betriebliche Tätigkeiten", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Enter work seminars
-					enumerator.MoveNext();
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Shool stuff
-					enumerator.MoveNext();
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Fridy of week
-					enumerator.MoveNext();
-					form = new EditForm("Edit signdate (you)", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
-							}
-						}
-					}
-
-					//Sign date 2
-					enumerator.MoveNext();
-					form = new EditForm("Edit signdate (not you)", text: ((Word.FormField)enumerator.Current).Result);
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(SaveChanges: false);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							if (form.DialogResult == DialogResult.Ignore)
-							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-								doc.Save();
-								doc.Close();
-								wordApp.Quit();
-								return;
+								if (si.ShouldEdit)
+								{
+									edit = new EditForm(si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
+									edit.ShowDialog();
+									if (edit.DialogResult == DialogResult.OK)
+									{
+										FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
+									}
+									else
+									{
+										if (edit.DialogResult == DialogResult.Abort)
+										{
+											doc.Close(SaveChanges: false);
+											wordApp.Quit();
+											break;
+										}
+										else
+										{
+											if (edit.DialogResult == DialogResult.Ignore)
+											{
+												FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
+												doc.Save();
+												doc.Close();
+												wordApp.Quit();
+												break;
+											}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -1239,6 +998,7 @@ namespace BerichtManager
 						break;
 					default:
 						MessageBox.Show(ex.StackTrace);
+						Console.Write(ex.StackTrace);
 						break;
 				}
 				try
