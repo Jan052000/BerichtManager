@@ -269,6 +269,7 @@ namespace BerichtManager
 					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
 					handler.EditActive(path);
 					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					btEdit.Enabled = true;
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
 
 					doc.Close();
@@ -480,6 +481,7 @@ namespace BerichtManager
 					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
 					handler.EditActive(path);
 					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					btEdit.Enabled = true;
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
 
 					doc.Close();
@@ -606,7 +608,6 @@ namespace BerichtManager
 			{
 
 			}
-			return;
 		}
 
 		private void btCreate_Click(object sender, EventArgs e)
