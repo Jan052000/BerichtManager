@@ -40,7 +40,7 @@ namespace BerichtManager.AddForm
 				//https://borys.webuntis.com/WebUntis/?school=pictorus-bk#/basic/login
 				//https://webuntis.com/
 				Client client = new Client();
-				List<string> classes = client.getClassesFromWebUntis();
+				List<string> classes = client.GetClassesFromWebUntis();
 				classes.ForEach((c) =>
 				{
 					rtInput.Text += c;

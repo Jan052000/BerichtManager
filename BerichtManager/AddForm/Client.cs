@@ -13,12 +13,12 @@ namespace BerichtManager.AddForm
 {
 	public partial class Client : Form
 	{
-		ConfigHandler configHandler = new ConfigHandler();
-		public bool hasVacationOrHoliday { get; set; }
+		private ConfigHandler configHandler = new ConfigHandler();
+		public bool HasVacationOrHoliday { get; set; }
 		public Client()
 		{
 			InitializeComponent();
-			hasVacationOrHoliday = false;
+			HasVacationOrHoliday = false;
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -26,7 +26,7 @@ namespace BerichtManager.AddForm
 			Close();
 		}
 
-		public List<string> getClassesFromWebUntis() 
+		public List<string> GetClassesFromWebUntis() 
 		{
 			List<string> classes = new List<string>();
 			HttpClient client = new HttpClient();
@@ -51,14 +51,6 @@ namespace BerichtManager.AddForm
 					responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + user.Username + "&j_password=" + user.Password).Result;
 				}
 			}
-			/*if (string.IsNullOrEmpty(configHandler.LoadUsername()) || string.IsNullOrEmpty(configHandler.LoadPassword())) 
-			{
-				if (!configHandler.doLogin())
-				{
-					MessageBox.Show("You need to login to automatically enter classes");
-					return classes;
-				}
-			}*/
 			//HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 
 			//Obtain Api Key
@@ -165,7 +157,7 @@ namespace BerichtManager.AddForm
 					if (isInWeek || isStarting || isEnding || weekInEvent) 
 					{
 						classes.Add("-" + holiday.longName + "\n");
-						hasVacationOrHoliday = true;
+						HasVacationOrHoliday = true;
 					}
 				});	
 			}
@@ -234,7 +226,7 @@ namespace BerichtManager.AddForm
 				if (isInWeek || isStarting || isEnding || weekInEvent)
 				{
 					str +=  "-" + holiday.longName + "\n";
-					hasVacationOrHoliday = true;
+					HasVacationOrHoliday = true;
 				}
 			});
 			return str;
@@ -242,7 +234,7 @@ namespace BerichtManager.AddForm
 
 		private void btTest_Click(object sender, EventArgs e)
 		{
-			List<string> test = getClassesFromWebUntis();
+			List<string> test = GetClassesFromWebUntis();
 		}
 	}
 

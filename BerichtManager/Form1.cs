@@ -71,7 +71,6 @@ namespace BerichtManager
 		private void FillText(Word.Application app, Word.FormField field, string text) 
 		{
 			field.Select();
-			int temp = field.Range.Paragraphs.TabStops.Count;
 			for (int i = 1; i < 6; i++) 
 			{
 				field.Range.Paragraphs.TabStops.Add(i * 14);
@@ -132,7 +131,7 @@ namespace BerichtManager
 
 				if (File.Exists((string)templatePath))
 				{
-					/*Word.Application */
+					//Word.Application
 					wordApp = new Word.Application();
 					wordApp.Visible = visible;
 					doc = wordApp.Documents.Add(ref templatePath);
@@ -331,9 +330,6 @@ namespace BerichtManager
 
 				if (File.Exists((string)templatePath))
 				{
-					/*Word.Application */
-					//app = new Word.Application();
-					//app.Visible = visible;
 					doc = app.Documents.Add(ref templatePath);
 
 					if (doc.FormFields.Count != 10)
@@ -406,7 +402,6 @@ namespace BerichtManager
 							if (form.DialogResult == DialogResult.Abort)
 							{
 								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-								//app.Quit();
 								return;
 							}
 							else
@@ -435,7 +430,6 @@ namespace BerichtManager
 							if (form.DialogResult == DialogResult.Abort)
 							{
 								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-								//app.Quit();
 								return;
 							}
 							else
@@ -458,7 +452,6 @@ namespace BerichtManager
 						if (form.DialogResult == DialogResult.Abort)
 						{
 							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-							//app.Quit();
 							return;
 						}
 						else
@@ -481,14 +474,12 @@ namespace BerichtManager
 					SetFontInDoc(doc, app);
 					doc.SaveAs2(FileName: path);
 
-					//if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
 					handler.EditActive(path);
 					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					btEdit.Enabled = true;
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
 
 					doc.Close();
-					//app.Quit();
 					UpdateTree();
 				}
 				else
@@ -510,20 +501,11 @@ namespace BerichtManager
 						//Document already fit on page
 						doc.Save();
 						doc.Close();
-						//app.Quit();
 						break;
 					default:
 						MessageBox.Show(ex.StackTrace);
 						break;
 				}
-				/*try
-				{
-					app.Quit(false);
-				}
-				catch
-				{
-
-				}*/
 				Close();
 			}
 		}
