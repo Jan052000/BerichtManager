@@ -1552,19 +1552,12 @@ namespace BerichtManager
 					}
 					else 
 					{
-						MessageBox.Show("You may only delete Documents(*.docx) files");
+						MessageBox.Show("You may only delete Documents(*.docx) or their temporary files");
 					}
 				}
 				else 
 				{
-					if (Directory.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
-					{
-						MessageBox.Show("You may only delete Documents(*.docx) files");
-					}
-					else
-					{
-						MessageBox.Show("File not Found (was it moved or deleted?)");
-					}
+					MessageBox.Show("File not Found (was it moved or deleted?)");
 				}
 			}
 		}
