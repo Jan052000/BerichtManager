@@ -56,7 +56,14 @@ namespace BerichtManager.AddForm
 			//Obtain Api Key
 			string apiKey = client.GetAsync("https://borys.webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
 			if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
+			{
 				client.DefaultRequestHeaders.Authorization = authorize;
+			}
+			else 
+			{
+				MessageBox.Show("There was an error while logging in(if you just entered your login info you should check if they are correct)");
+				return new List<string>();
+			}
 
 			//Guarantee complete Header
 			responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
