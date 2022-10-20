@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
@@ -126,7 +126,6 @@ namespace BerichtManager
 		{
 			try 
 			{
-				object missing = Missing.Value;
 				Word.Document doc = null;
 
 				if (File.Exists((string)templatePath))
@@ -315,22 +314,23 @@ namespace BerichtManager
 		/**
 		 * <summary>
 		 * Creates a new Word document from a given template for a given time.
-		 * Useful for creating reports in bulk due to the Wordapp not being closed
 		 * </summary>
 		 * <param name="templatePath">The full path of the template to be used</param>
 		 * <param name="baseDate">The date of the report to be created</param>
-		 * <param name="app">The Wordapp that will create the document</param>
+		 * <param name="app">The Wordapp that is used to create the document</param>
 		 * <param name="vacation">If you missed reports due to vacation</param>
+		 * <param name="reportDifference">The reportnumber difference between the report to create and the would be current report number</param>
+		 * <param name="isSingle">Used to tell the method that this is a regular create job</param>
 		*/
-		private void CreateDocument(object templatePath, DateTime baseDate, Word.Application app, bool vacation = false, int reportDifference = 0)
+		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application app, bool vacation = false, int reportDifference = 0, bool isSingle = false)
 		{
 			try
 			{
 				Word.Document doc = null;
 
-				if (File.Exists((string)templatePath))
+				if (File.Exists(templatePath))
 				{
-					doc = app.Documents.Add(ref templatePath);
+					doc = app.Documents.Add(Template: templatePath);
 
 					if (doc.FormFields.Count != 10)
 					{
@@ -441,7 +441,14 @@ namespace BerichtManager
 
 					//Shool stuff
 					enumerator.MoveNext();
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", text: client.getHolidaysForDate(baseDate), isCreate: true);
+					if (isSingle)
+					{
+						form = new EditForm("Berufsschule (Unterrichtsthemen)", school: true, isCreate: true);
+					}
+					else 
+					{
+						form = new EditForm("Berufsschule (Unterrichtsthemen)", text: client.getHolidaysForDate(baseDate), isCreate: true);
+					}
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -474,13 +481,31 @@ namespace BerichtManager
 					SetFontInDoc(doc, app);
 					doc.SaveAs2(FileName: path);
 
+					if (isSingle)
+					{
+						if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
+						handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					}
+
 					handler.EditActive(path);
-					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					btEdit.Enabled = true;
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
 
 					doc.Close();
 					UpdateTree();
+
+					//If single report close app
+					if (isSingle) 
+					{
+						try
+						{
+							app.Quit(SaveChanges: false);
+						}
+						catch 
+						{
+							
+						}
+					}
 				}
 				else
 				{
@@ -504,6 +529,14 @@ namespace BerichtManager
 						break;
 					default:
 						MessageBox.Show(ex.StackTrace);
+						try
+						{
+							wordApp.Quit(false);
+						}
+						catch
+						{
+
+						}
 						break;
 				}
 				Close();
@@ -568,6 +601,7 @@ namespace BerichtManager
 					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation, reportDifference: weekOfYear - reportNr -  i - 1);
 				}
 				handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
+				handler.SaveLastReportKW(weekOfYear - 1);
 			}
 			else
 			{
@@ -586,6 +620,7 @@ namespace BerichtManager
 					CreateDocument(handler.LoadPath(), today.AddDays(i * (-7)), multipleApp, vacation: vacation, reportDifference: weekOfYear - reportNr - i - 1);
 				}
 				handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
+				handler.SaveLastReportKW(weekOfYear - 1);
 			}
 			try
 			{
@@ -626,7 +661,8 @@ namespace BerichtManager
 				MessageBox.Show("A report has already been created for this week");
 				return;
 			}
-			CreateDocument(handler.LoadPath());
+			CreateDocument(handler.LoadPath(), baseDate: DateTime.Now, new Word.Application { Visible = visible}, isSingle: true);
+			//CreateDocument(handler.LoadPath());
 		}
 
 		private void btSetNumber_Click(object sender, EventArgs e)
