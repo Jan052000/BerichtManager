@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
@@ -583,8 +583,9 @@ namespace BerichtManager
 				for (int i = 1; i < repeats; i++)
 				{
 					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation, reportDifference: weekOfYear - reportNr - i);
+					CreateDocument(handler.LoadPath(), today.AddDays(i * (-7)), multipleApp, vacation: vacation, reportDifference: weekOfYear - reportNr - i - 1);
 				}
+				handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
 			}
 			try
 			{
