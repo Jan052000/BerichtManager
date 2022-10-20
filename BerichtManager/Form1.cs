@@ -481,12 +481,8 @@ namespace BerichtManager
 					SetFontInDoc(doc, app);
 					doc.SaveAs2(FileName: path);
 
-					if (isSingle)
-					{
-						if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
-						handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					}
-
+					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
+					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					handler.EditActive(path);
 					btEdit.Enabled = true;
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
@@ -587,21 +583,22 @@ namespace BerichtManager
 
 			Calendar cal = dfi.Calendar;
 			int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			int reportNr = handler.LoadLastReportKW();
 
-			DateTime today = DateTime.Today;
 			Word.Application multipleApp = new Word.Application();
 			multipleApp.Visible = visible;
+
 			if (handler.LoadLastReportKW() < weekOfYear)
 			{
 				//Missing reports in current year
-				int reportNr = handler.LoadLastReportKW();
+				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					//Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays( i * (-7)), multipleApp, vacation: vacation, reportDifference: weekOfYear - reportNr -  i - 1);
+					//Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					CreateDocument(handler.LoadPath(), today.AddDays( i * 7), multipleApp, vacation: vacation/*, reportDifference: weekOfYear - reportNr -  i - 1*/);
 				}
-				handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
-				handler.SaveLastReportKW(weekOfYear - 1);
+				//handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
+				//handler.SaveLastReportKW(weekOfYear - 1);
 			}
 			else
 			{
@@ -609,18 +606,20 @@ namespace BerichtManager
 				int nrOfWeeksLastYear = culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
 				int weekOfCurrentYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 
-				int reportNr = handler.LoadLastReportKW();
 				DateTime endOfLastYear = new DateTime(DateTime.Today.Year - 1, 12, 31);
 
 				int repeats = nrOfWeeksLastYear - reportNr + weekOfCurrentYear;
+
+				DateTime today = DateTime.Today.AddDays(-(repeats * 7));
+
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (-7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays(i * (-7)), multipleApp, vacation: vacation, reportDifference: weekOfYear - reportNr - i - 1);
+					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					CreateDocument(handler.LoadPath(), today.AddDays(i * 7), multipleApp, vacation: vacation/*, reportDifference: weekOfYear - reportNr - i - 1*/);
 				}
-				handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
-				handler.SaveLastReportKW(weekOfYear - 1);
+				//handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
+				//handler.SaveLastReportKW(weekOfYear - 1);
 			}
 			try
 			{
