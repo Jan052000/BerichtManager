@@ -931,8 +931,6 @@ namespace BerichtManager
 									{
 										if (edit.DialogResult == DialogResult.Abort)
 										{
-											doc.Close(SaveChanges: false);
-											wordApp.Quit();
 											break;
 										}
 										else
@@ -940,9 +938,6 @@ namespace BerichtManager
 											if (edit.DialogResult == DialogResult.Ignore)
 											{
 												FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
-												doc.Save();
-												doc.Close();
-												wordApp.Quit();
 												break;
 											}
 										}
