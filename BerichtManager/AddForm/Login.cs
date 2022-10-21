@@ -30,5 +30,17 @@ namespace BerichtManager.AddForm
 			DialogResult = DialogResult.OK;
 			Close();
 		}
+
+		private void cbShowPassword_CheckedChanged(object sender, EventArgs e)
+		{
+			if (cbShowPassword.Checked)
+			{
+				tbPassword.UseSystemPasswordChar = false;
+			}
+			else 
+			{
+				tbPassword.UseSystemPasswordChar = true;
+			}
+		}
 	}
 }

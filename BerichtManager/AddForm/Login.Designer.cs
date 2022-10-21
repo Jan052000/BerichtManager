@@ -36,6 +36,7 @@
 			this.btLogin = new System.Windows.Forms.Button();
 			this.laLogin = new System.Windows.Forms.Label();
 			this.cbKeepLogin = new System.Windows.Forms.CheckBox();
+			this.cbShowPassword = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// laUsername
@@ -64,6 +65,7 @@
 			this.tbPassword.Name = "tbPassword";
 			this.tbPassword.Size = new System.Drawing.Size(411, 20);
 			this.tbPassword.TabIndex = 2;
+			this.tbPassword.UseSystemPasswordChar = true;
 			// 
 			// laPassword
 			// 
@@ -117,11 +119,24 @@
 			this.cbKeepLogin.Text = "Stay logged in";
 			this.cbKeepLogin.UseVisualStyleBackColor = true;
 			// 
+			// cbShowPassword
+			// 
+			this.cbShowPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.cbShowPassword.AutoSize = true;
+			this.cbShowPassword.Location = new System.Drawing.Point(398, 93);
+			this.cbShowPassword.Name = "cbShowPassword";
+			this.cbShowPassword.Size = new System.Drawing.Size(102, 17);
+			this.cbShowPassword.TabIndex = 8;
+			this.cbShowPassword.Text = "Show Password";
+			this.cbShowPassword.UseVisualStyleBackColor = true;
+			this.cbShowPassword.CheckedChanged += new System.EventHandler(this.cbShowPassword_CheckedChanged);
+			// 
 			// Login
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(531, 225);
+			this.Controls.Add(this.cbShowPassword);
 			this.Controls.Add(this.cbKeepLogin);
 			this.Controls.Add(this.laLogin);
 			this.Controls.Add(this.btLogin);
@@ -148,5 +163,6 @@
 		private System.Windows.Forms.Button btLogin;
 		private System.Windows.Forms.Label laLogin;
 		private System.Windows.Forms.CheckBox cbKeepLogin;
+		private System.Windows.Forms.CheckBox cbShowPassword;
 	}
 }
