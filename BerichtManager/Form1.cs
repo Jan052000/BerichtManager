@@ -808,11 +808,11 @@ namespace BerichtManager
 						{
 							unPrintedFiles[key].ForEach((f) => 
 							{
-								printApp.Documents.Open(FileName: f, ReadOnly: true);
+								Word.Document document = printApp.Documents.Open(FileName: f, ReadOnly: true);
+								document.PrintOut(Background: false);
+								printApp.Documents.Close();
 							});
 						}
-						printApp.PrintOut(Background: false);
-						printApp.Documents.Close();
 						printApp.Quit(false);
 
 						foreach (string key in unPrintedFiles.Keys) 
