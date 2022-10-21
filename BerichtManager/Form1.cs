@@ -655,7 +655,8 @@ namespace BerichtManager
 			}
 
 			//Check if report for this week was already created
-			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx"))
+			int currentWeek = new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
 			{
 				MessageBox.Show("A report has already been created for this week");
 				return;
