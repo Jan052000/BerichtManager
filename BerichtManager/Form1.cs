@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
@@ -402,6 +402,8 @@ namespace BerichtManager
 							if (form.DialogResult == DialogResult.Abort)
 							{
 								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+								if (isSingle)
+									app.Quit(SaveChanges: false);
 								return;
 							}
 							else
@@ -430,6 +432,8 @@ namespace BerichtManager
 							if (form.DialogResult == DialogResult.Abort)
 							{
 								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+								if (isSingle)
+									app.Quit(SaveChanges: false);
 								return;
 							}
 							else
@@ -459,6 +463,8 @@ namespace BerichtManager
 						if (form.DialogResult == DialogResult.Abort)
 						{
 							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+							if (isSingle)
+								app.Quit(SaveChanges: false);
 							return;
 						}
 						else
