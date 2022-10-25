@@ -371,8 +371,8 @@ namespace BerichtManager
 					}
 
 					//Enter week start and end
-					DateTime today = baseDate;
-					DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
+					DateTime today = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day);
+					DateTime thisWeekStart = today.AddDays(-(int)baseDate.DayOfWeek + 1);
 					DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 					enumerator.MoveNext();
 					((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
