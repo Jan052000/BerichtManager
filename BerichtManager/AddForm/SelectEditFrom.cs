@@ -39,7 +39,7 @@ namespace BerichtManager.AddForm
 
 		private void cbChecked_Changed(object sender, EventArgs e) 
 		{
-			if (((System.Windows.Forms.CheckBox)sender).Checked)
+			if (((CheckBox)sender).Checked)
 			{
 				Count++;
 			}

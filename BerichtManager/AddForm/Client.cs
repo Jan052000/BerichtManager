@@ -61,7 +61,7 @@ namespace BerichtManager.AddForm
 			}
 			else 
 			{
-				MessageBox.Show("There was an error while logging in(if you just entered your login info you should check if they are correct)");
+				MessageBox.Show("There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
 				return new List<string>();
 			}
 

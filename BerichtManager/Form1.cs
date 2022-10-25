@@ -2,12 +2,12 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
-using System.Reflection;
 using BerichtManager.Config;
 using BerichtManager.AddForm;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Collections;
 
 namespace BerichtManager
 {
@@ -118,201 +118,6 @@ namespace BerichtManager
 
 		/**
 		 * <summary>
-		 * Creates a new Word document from a given template
-		 * </summary>
-		 * <param name="templatePath">The full path to the template to be used</param>
-		*/
-		private void CreateDocument(object templatePath) 
-		{
-			try 
-			{
-				Word.Document doc = null;
-
-				if (File.Exists((string)templatePath))
-				{
-					//Word.Application
-					wordApp = new Word.Application();
-					wordApp.Visible = visible;
-					doc = wordApp.Documents.Add(ref templatePath);
-
-					if (doc.FormFields.Count != 10)
-					{
-						MessageBox.Show("Invalid template");
-						doc.Close(SaveChanges: false);
-						wordApp.Quit();
-						return;
-					}
-
-					EditForm form;
-					//Fill name
-					var enumerator = doc.FormFields.GetEnumerator();
-					enumerator.MoveNext();
-					if (!string.IsNullOrEmpty(handler.LoadName()))
-					{
-						((Word.FormField)enumerator.Current).Result = handler.LoadName();
-					}
-					else 
-					{
-						form = new EditForm("Enter your name", text: "Name Vorname");
-						if (form.ShowDialog() == DialogResult.OK) 
-						{
-							handler.SaveName(form.Result);
-							((Word.FormField)enumerator.Current).Result = handler.LoadName();
-						}
-						else
-						{
-							MessageBox.Show("Cannot proceed without a name!", "Name required!");
-							return;
-						}
-					}
-					enumerator.MoveNext();
-
-					//Enter report nr.
-					((Word.FormField)enumerator.Current).Result = handler.LoadNumber();
-
-					//Enter week start and end
-					DateTime baseDate = DateTime.Today;
-					DateTime today = baseDate;
-					DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-					DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-					enumerator.MoveNext();
-					((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
-					enumerator.MoveNext();
-					((Word.FormField)enumerator.Current).Result = thisWeekEnd.ToString("dd.MM.yyyy");
-
-					//Enter Year
-					enumerator.MoveNext();
-					((Word.FormField)enumerator.Current).Result = today.Year.ToString();
-
-					//Enter work field
-					form = new EditForm("Betriebliche Tätigkeiten", isCreate: true);
-					enumerator.MoveNext();
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = "-Keine-";
-						}
-					}
-
-					//Enter work seminars
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", text: "-Keine-", isCreate: true);
-					enumerator.MoveNext();
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = "-Keine-";
-						}
-					}
-
-					//Shool stuff
-					form = new EditForm("Berufsschule (Unterrichtsthemen)", text: "", school: true, isCreate: true);
-					enumerator.MoveNext();
-					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
-					{
-						FillText(wordApp, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
-							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-							wordApp.Quit();
-							return;
-						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = "-Keine-";
-						}
-					}
-
-					//Fridy of week
-					enumerator.MoveNext();
-					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
-
-					//Sign date 2
-					enumerator.MoveNext();
-					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
-					
-
-					Directory.CreateDirectory(Path.GetFullPath(Environment.CurrentDirectory + "\\..") + "\\" + today.Year);
-					string path = Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx";
-					SetFontInDoc(doc, wordApp);
-					doc.SaveAs2(FileName: path);
-					
-					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
-					handler.EditActive(path);
-					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					btEdit.Enabled = true;
-					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
-
-					doc.Close();
-					wordApp.Quit();
-					UpdateTree();
-				}
-				else
-				{
-					MessageBox.Show(handler.LoadPath() + " was not found was it moved or deleted?");
-				}
-			}
-			catch (Exception ex)
-			{
-				switch (ex.HResult)
-				{
-					case -2147023174:
-						MessageBox.Show("an unexpected problem occured this progam will now close!");
-						break;
-					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly");
-						break;
-					case -2146822750:
-						//Document already fit on page
-						doc.Save();
-						doc.Close();
-						wordApp.Quit();
-						break;
-					default:
-						MessageBox.Show(ex.StackTrace);
-						break;
-				}
-				try
-				{
-					wordApp.Quit(false);
-				}
-				catch
-				{
-
-				}
-				Close();
-			}
-		}
-
-		/**
-		 * <summary>
 		 * Creates a new Word document from a given template for a given time.
 		 * </summary>
 		 * <param name="templatePath">The full path of the template to be used</param>
@@ -342,7 +147,7 @@ namespace BerichtManager
 
 					EditForm form;
 					//Fill name
-					var enumerator = doc.FormFields.GetEnumerator();
+					IEnumerator enumerator = doc.FormFields.GetEnumerator();
 					enumerator.MoveNext();
 					if (!string.IsNullOrEmpty(handler.LoadName()))
 					{
@@ -601,10 +406,8 @@ namespace BerichtManager
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
 					//Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays( i * 7), multipleApp, vacation: vacation/*, reportDifference: weekOfYear - reportNr -  i - 1*/);
+					CreateDocument(handler.LoadPath(), today.AddDays( i * 7), multipleApp, vacation: vacation);
 				}
-				//handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
-				//handler.SaveLastReportKW(weekOfYear - 1);
 			}
 			else
 			{
@@ -622,10 +425,8 @@ namespace BerichtManager
 				for (int i = 1; i < repeats; i++)
 				{
 					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays(i * 7), multipleApp, vacation: vacation/*, reportDifference: weekOfYear - reportNr - i - 1*/);
+					CreateDocument(handler.LoadPath(), today.AddDays(i * 7), multipleApp, vacation: vacation);
 				}
-				//handler.EditNumber((int.Parse(handler.LoadNumber()) + weekOfYear - reportNr - 1).ToString());
-				//handler.SaveLastReportKW(weekOfYear - 1);
 			}
 			try
 			{
@@ -667,8 +468,7 @@ namespace BerichtManager
 				MessageBox.Show("A report has already been created for this week");
 				return;
 			}
-			CreateDocument(handler.LoadPath(), baseDate: DateTime.Now, new Word.Application { Visible = visible}, isSingle: true);
-			//CreateDocument(handler.LoadPath());
+			CreateDocument(handler.LoadPath(), baseDate: DateTime.Today, new Word.Application { Visible = visible}, isSingle: true);
 		}
 
 		private void btSetNumber_Click(object sender, EventArgs e)
@@ -891,7 +691,8 @@ namespace BerichtManager
 							}
 						}
 						File.Delete(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
-						tvReports.Nodes.Remove(tvReports.SelectedNode);
+						//tvReports.Nodes.Remove(tvReports.SelectedNode);
+						UpdateTree();
 						MessageBox.Show("File deleted successfully");
 					}
 					else 
@@ -955,7 +756,7 @@ namespace BerichtManager
 					SelectEditFrom selectEdit = new SelectEditFrom();
 					if (selectEdit.ShowDialog() == DialogResult.OK) 
 					{
-						System.Collections.IEnumerator enumerator = doc.FormFields.GetEnumerator();
+						IEnumerator enumerator = doc.FormFields.GetEnumerator();
 						EditForm edit;
 						foreach(EditState si in selectEdit.SelectedItems) 
 						{
