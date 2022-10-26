@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.btClose = new System.Windows.Forms.Button();
 			this.btSetTemplate = new System.Windows.Forms.Button();
 			this.btCreate = new System.Windows.Forms.Button();
@@ -42,6 +43,11 @@
 			this.btLogin = new System.Windows.Forms.Button();
 			this.btEditName = new System.Windows.Forms.Button();
 			this.cbVisible = new System.Windows.Forms.CheckBox();
+			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
+			this.miEdit = new System.Windows.Forms.ToolStripMenuItem();
+			this.miPrint = new System.Windows.Forms.ToolStripMenuItem();
+			this.toRightClickMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -121,6 +127,7 @@
 			this.tvReports.Name = "tvReports";
 			this.tvReports.Size = new System.Drawing.Size(686, 397);
 			this.tvReports.TabIndex = 6;
+			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
 			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
 			// 
 			// btEditExisting
@@ -201,6 +208,34 @@
 			this.cbVisible.UseVisualStyleBackColor = true;
 			this.cbVisible.CheckedChanged += new System.EventHandler(this.cbVisible_CheckedChanged);
 			// 
+			// toRightClickMenu
+			// 
+			this.toRightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miDelete,
+            this.miEdit,
+            this.miPrint});
+			this.toRightClickMenu.Name = "contextMenuStrip1";
+			this.toRightClickMenu.Size = new System.Drawing.Size(181, 92);
+			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
+			// 
+			// miDelete
+			// 
+			this.miDelete.Name = "miDelete";
+			this.miDelete.Size = new System.Drawing.Size(180, 22);
+			this.miDelete.Text = "Delete";
+			// 
+			// miEdit
+			// 
+			this.miEdit.Name = "miEdit";
+			this.miEdit.Size = new System.Drawing.Size(180, 22);
+			this.miEdit.Text = "Edit";
+			// 
+			// miPrint
+			// 
+			this.miPrint.Name = "miPrint";
+			this.miPrint.Size = new System.Drawing.Size(180, 22);
+			this.miPrint.Text = "Print";
+			// 
 			// FormManager
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -223,6 +258,7 @@
 			this.MinimumSize = new System.Drawing.Size(545, 260);
 			this.Name = "FormManager";
 			this.Text = "Bericht Manager";
+			this.toRightClickMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -244,6 +280,10 @@
 		private System.Windows.Forms.Button btLogin;
 		private System.Windows.Forms.Button btEditName;
 		private System.Windows.Forms.CheckBox cbVisible;
+		private System.Windows.Forms.ContextMenuStrip toRightClickMenu;
+		private System.Windows.Forms.ToolStripMenuItem miDelete;
+		private System.Windows.Forms.ToolStripMenuItem miEdit;
+		private System.Windows.Forms.ToolStripMenuItem miPrint;
 	}
 }
 

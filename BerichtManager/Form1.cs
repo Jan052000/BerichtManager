@@ -56,7 +56,7 @@ namespace BerichtManager
 			foreach (var directory in directoryInfo.GetDirectories())
 				directoryNode.Nodes.Add(CreateDirectoryNode(directory));
 			foreach (var file in directoryInfo.GetFiles())
-				directoryNode.Nodes.Add(new TreeNode(file.Name));
+				directoryNode.Nodes.Add(new TreeNode(file.Name) { ContextMenuStrip = toRightClickMenu});
 			return directoryNode;
 		}
 
@@ -506,7 +506,8 @@ namespace BerichtManager
 				MessageBox.Show("No report selected");
 				return;
 			}
-			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx")
+			PrintDocument(tvReports.SelectedNode.FullPath);
+			/*if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx")
 			{
 				MessageBox.Show("You may only print Documents(*.docx) files");
 				return;
@@ -558,7 +559,7 @@ namespace BerichtManager
 						}
 					}
 				}
-			}
+			}*/
 		}
 
 		private void btPrintAll_Click(object sender, EventArgs e)
@@ -670,7 +671,8 @@ namespace BerichtManager
 				MessageBox.Show("No report selected");
 				return;
 			}
-			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes) 
+			DeleteDocument(tvReports.SelectedNode.FullPath);
+			/*if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes) 
 			{
 				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
 				{
@@ -704,7 +706,7 @@ namespace BerichtManager
 				{
 					MessageBox.Show("File not Found (was it moved or deleted?)");
 				}
-			}
+			}*/
 		}
 
 		private void btLogin_Click(object sender, EventArgs e)
@@ -732,10 +734,11 @@ namespace BerichtManager
 		
 		/**
 		<summary>
-		Method for editing a Word document
+		Method for editing a Word document at a path relative to the working directory
 		</summary> 
+		<param name="path">The path relative to the working directory</param>
 		*/
-		private void Edit(string path) 
+		public void Edit(string path) 
 		{
 			try
 			{
@@ -834,11 +837,166 @@ namespace BerichtManager
 			}
 		}
 
+		/**
+		<summary>
+		Method for printing a document contained at a path relative to the working directory
+		</summary> 
+		<param name="path">The path relative to the working directory</param>
+		*/
+		private void PrintDocument(string path)
+		{
+			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + path)) != ".docx")
+			{
+				MessageBox.Show("You may only print Documents(*.docx) files");
+				return;
+			}
+			DirectoryInfo printed = new DirectoryInfo(Path.GetDirectoryName(Path.GetFullPath(".\\..\\..\\" + path)));
+			if (printed.Name == "Gedruckt")
+			{
+				if (MessageBox.Show("Report was already printed do you want to print it again?", "Reprint?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				{
+					return;
+				}
+			}
+			PrintDialog printDialog = new PrintDialog();
+			if (printDialog.ShowDialog() == DialogResult.OK)
+			{
+				Word.Application printApp = null;
+				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + path)))
+				{
+					if (!Directory.Exists(Path.GetFullPath(".\\..\\..\\" + path).Substring(0, Path.GetFullPath(".\\..\\..\\" + path).Length - Path.GetFileName(".\\..\\..\\" + path).Length) + "\\Gedruckt"))
+					{
+						Directory.CreateDirectory(Path.GetFullPath(".\\..\\..\\" + path).Substring(0, Path.GetFullPath(".\\..\\..\\" + path).Length - Path.GetFileName(".\\..\\..\\" + path).Length) + "\\Gedruckt");
+					}
+					try
+					{
+						printApp = new Word.Application();
+						printApp.Visible = visible;
+						Word.Document document = printApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + path), ReadOnly: true);
+						document.PrintOut(Background: false);
+						printApp.Documents.Close();
+						printApp.Quit(false);
+						if (printed.Name != "Gedruckt")
+						{
+							File.Move(Path.GetFullPath(".\\..\\..\\" + path),
+							Path.GetFullPath(".\\..\\..\\" + path).Substring(0, Path.GetFullPath(".\\..\\..\\" + path).Length - Path.GetFileName(".\\..\\..\\" + path).Length) + "\\Gedruckt\\" + Path.GetFileName(".\\..\\..\\" + path));
+							UpdateTree();
+						}
+					}
+					catch (Exception ex)
+					{
+						Console.Write(ex.Message);
+						Console.Write("\n" + ex.StackTrace);
+						try
+						{
+							printApp.Quit(false);
+						}
+						catch
+						{
+
+						}
+					}
+				}
+			}
+		}
+
+		/**
+		<summary>
+		Method for deleting a file with a path relative to the working directory
+		</summary> 
+		<param name="path">The path relative to the working directory</param>
+		*/
+		private void DeleteDocument(string path)
+		{
+			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + path)))
+				{
+					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + path)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + path)).StartsWith("~$"))
+					{
+						if (Path.GetFullPath(".\\..\\..\\" + path) == handler.LoadActive())
+						{
+							string[] split = path.Split('\\');
+							if (split[split.Length - 1].Substring(15, ("" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString())
+							{
+								if (int.TryParse(handler.LoadNumber(), out int number))
+								{
+									handler.EditNumber("" + (number - 1));
+								}
+								else
+								{
+									MessageBox.Show("Could not reset current number of report");
+								}
+							}
+						}
+						File.Delete(Path.GetFullPath(".\\..\\..\\" + path));
+						UpdateTree();
+						MessageBox.Show("File deleted successfully");
+					}
+					else
+					{
+						MessageBox.Show("You may only delete Documents(*.docx) or their temporary files");
+					}
+				}
+				else
+				{
+					MessageBox.Show("File not Found (was it moved or deleted?)");
+				}
+			}
+		}
+
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
+			if (tvReports.SelectedNode == null)
+				return;
 			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) == ".docx")
 			{
 				Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+			}
+		}
+
+		private void tvReports_Click(object sender, EventArgs e)
+		{
+			if (((MouseEventArgs)e).Button == MouseButtons.Right) 
+			{
+				tvReports.SelectedNode = tvReports.GetNodeAt(((MouseEventArgs)e).X, ((MouseEventArgs)e).Y);
+			}
+		}
+
+		private void miDelete_Click(object sender, EventArgs e)
+		{
+			DeleteDocument(tvReports.SelectedNode.FullPath);
+		}
+
+		private void miEdit_Click(object sender, EventArgs e)
+		{
+			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+		}
+
+		private void miPrint_Click(object sender, EventArgs e)
+		{
+			PrintDocument(tvReports.SelectedNode.FullPath);
+		}
+
+		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			e.Cancel = true;
+			((ContextMenuStrip)sender).Items.Clear();
+			if (tvReports.SelectedNode.Text.EndsWith(".docx"))
+			{
+				e.Cancel = false;
+				if (!tvReports.SelectedNode.Text.StartsWith("~$"))
+				{
+					ToolStripMenuItem miEdit = new ToolStripMenuItem("Edit");
+					miEdit.Click += new EventHandler(miEdit_Click);
+					((ContextMenuStrip)sender).Items.Add(miEdit);
+					ToolStripMenuItem miPrint = new ToolStripMenuItem("Print");
+					miPrint.Click += new EventHandler(miPrint_Click);
+					((ContextMenuStrip)sender).Items.Add(miPrint);
+				}
+				ToolStripMenuItem miDelete = new ToolStripMenuItem("Delete");
+				miDelete.Click += new EventHandler(miDelete_Click);
+				((ContextMenuStrip)sender).Items.Add(miDelete);
 			}
 		}
 	}
