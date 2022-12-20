@@ -1,4 +1,4 @@
-﻿using BerichtManager.Config;
+using BerichtManager.Config;
 using BerichtManager.ResponseClasses;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -200,6 +200,17 @@ namespace BerichtManager.AddForm
 				{
 					responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + user.Username + "&j_password=" + user.Password).Result;
 				}
+			}
+
+			//Obtain Api Key
+			string apiKey = client.GetAsync("https://borys.webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
+			if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
+			{
+				client.DefaultRequestHeaders.Authorization = authorize;
+			}
+			else
+			{
+				MessageBox.Show("There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
 			}
 
 			//var trash = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
