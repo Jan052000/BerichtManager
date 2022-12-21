@@ -223,18 +223,21 @@
 			this.miDelete.Name = "miDelete";
 			this.miDelete.Size = new System.Drawing.Size(180, 22);
 			this.miDelete.Text = "Delete";
+			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
 			// 
 			// miEdit
 			// 
 			this.miEdit.Name = "miEdit";
 			this.miEdit.Size = new System.Drawing.Size(180, 22);
 			this.miEdit.Text = "Edit";
+			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
 			// 
 			// miPrint
 			// 
 			this.miPrint.Name = "miPrint";
 			this.miPrint.Size = new System.Drawing.Size(180, 22);
 			this.miPrint.Text = "Print";
+			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
 			// 
 			// FormManager
 			// 
