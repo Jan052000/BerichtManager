@@ -31,6 +31,7 @@ namespace BerichtManager
 			{
 				btEdit.Enabled = false;
 			}
+			tvReports.ContextMenuStrip = toRightClickMenu;
 		}
 
 		/**
@@ -56,7 +57,7 @@ namespace BerichtManager
 			foreach (var directory in directoryInfo.GetDirectories())
 				directoryNode.Nodes.Add(CreateDirectoryNode(directory));
 			foreach (var file in directoryInfo.GetFiles())
-				directoryNode.Nodes.Add(new TreeNode(file.Name) { ContextMenuStrip = toRightClickMenu});
+				directoryNode.Nodes.Add(new TreeNode(file.Name));
 			return directoryNode;
 		}
 
