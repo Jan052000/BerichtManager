@@ -982,23 +982,39 @@ namespace BerichtManager
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			e.Cancel = true;
+			//((ContextMenuStrip)sender).Items.Clear();
+			if (tvReports.SelectedNode.Text.EndsWith(".docx"))
+			{
+				e.Cancel = false;
+				miEdit.Enabled = true;
+				miPrint.Enabled = true;
+				miDelete.Enabled = true;
+				if (tvReports.SelectedNode.Text.StartsWith("~$"))
+				{
+					miEdit.Enabled = false;
+					miPrint.Enabled = false;
+				}
+			}
+			/*
+			 e.Cancel = true;
 			((ContextMenuStrip)sender).Items.Clear();
 			if (tvReports.SelectedNode.Text.EndsWith(".docx"))
 			{
 				e.Cancel = false;
 				if (!tvReports.SelectedNode.Text.StartsWith("~$"))
 				{
-					ToolStripMenuItem miEdit = new ToolStripMenuItem("Edit");
-					miEdit.Click += new EventHandler(miEdit_Click);
+					//ToolStripMenuItem miEdit = new ToolStripMenuItem("Edit");
+					//miEdit.Click += new EventHandler(miEdit_Click);
 					((ContextMenuStrip)sender).Items.Add(miEdit);
-					ToolStripMenuItem miPrint = new ToolStripMenuItem("Print");
-					miPrint.Click += new EventHandler(miPrint_Click);
+					//ToolStripMenuItem miPrint = new ToolStripMenuItem("Print");
+					//miPrint.Click += new EventHandler(miPrint_Click);
 					((ContextMenuStrip)sender).Items.Add(miPrint);
 				}
-				ToolStripMenuItem miDelete = new ToolStripMenuItem("Delete");
-				miDelete.Click += new EventHandler(miDelete_Click);
+				//ToolStripMenuItem miDelete = new ToolStripMenuItem("Delete");
+				//miDelete.Click += new EventHandler(miDelete_Click);
 				((ContextMenuStrip)sender).Items.Add(miDelete);
 			}
+			 */
 		}
 	}
 }
