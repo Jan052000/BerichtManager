@@ -31,7 +31,7 @@ namespace BerichtManager
 			{
 				btEdit.Enabled = false;
 			}
-			tvReports.ContextMenuStrip = toRightClickMenu;
+			//tvReports.ContextMenuStrip = toRightClickMenu;
 		}
 
 		/**

@@ -123,6 +123,7 @@
 			this.tvReports.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
 			this.tvReports.Location = new System.Drawing.Point(12, 12);
 			this.tvReports.Name = "tvReports";
 			this.tvReports.Size = new System.Drawing.Size(686, 397);
@@ -215,27 +216,27 @@
             this.miEdit,
             this.miPrint});
 			this.toRightClickMenu.Name = "contextMenuStrip1";
-			this.toRightClickMenu.Size = new System.Drawing.Size(181, 92);
+			this.toRightClickMenu.Size = new System.Drawing.Size(108, 70);
 			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
 			// 
 			// miDelete
 			// 
 			this.miDelete.Name = "miDelete";
-			this.miDelete.Size = new System.Drawing.Size(180, 22);
+			this.miDelete.Size = new System.Drawing.Size(107, 22);
 			this.miDelete.Text = "Delete";
 			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
 			// 
 			// miEdit
 			// 
 			this.miEdit.Name = "miEdit";
-			this.miEdit.Size = new System.Drawing.Size(180, 22);
+			this.miEdit.Size = new System.Drawing.Size(107, 22);
 			this.miEdit.Text = "Edit";
 			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
 			// 
 			// miPrint
 			// 
 			this.miPrint.Name = "miPrint";
-			this.miPrint.Size = new System.Drawing.Size(180, 22);
+			this.miPrint.Size = new System.Drawing.Size(107, 22);
 			this.miPrint.Text = "Print";
 			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
 			// 
