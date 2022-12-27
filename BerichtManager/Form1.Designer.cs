@@ -18,7 +18,10 @@
 				components.Dispose();
 				try
 				{
-					this.wordApp.Quit(SaveChanges: false);
+					if (this.wordApp != null) 
+					{
+						this.wordApp.Quit(SaveChanges: false);
+					}
 				}
 				catch 
 				{
