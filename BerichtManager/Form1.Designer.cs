@@ -16,6 +16,14 @@
 			if (disposing && (components != null))
 			{
 				components.Dispose();
+				try
+				{
+					this.wordApp.Quit(SaveChanges: false);
+				}
+				catch 
+				{
+					
+				}
 			}
 			base.Dispose(disposing);
 		}

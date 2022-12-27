@@ -339,7 +339,7 @@ namespace BerichtManager
 						MessageBox.Show(ex.StackTrace);
 						try
 						{
-							wordApp.Quit(false);
+							app.Quit(false);
 						}
 						catch
 						{
@@ -397,8 +397,10 @@ namespace BerichtManager
 			int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			int reportNr = handler.LoadLastReportKW();
 
-			Word.Application multipleApp = new Word.Application();
-			multipleApp.Visible = visible;
+			//Word.Application multipleApp = new Word.Application();
+			//multipleApp.Visible = visible;
+			wordApp = new Word.Application();
+			wordApp.Visible = visible;
 
 			if (handler.LoadLastReportKW() < weekOfYear)
 			{
@@ -407,7 +409,7 @@ namespace BerichtManager
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
 					//Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays( i * 7), multipleApp, vacation: vacation);
+					CreateDocument(handler.LoadPath(), today.AddDays( i * 7), wordApp/*multipleApp*/, vacation: vacation);
 				}
 			}
 			else
@@ -426,12 +428,13 @@ namespace BerichtManager
 				for (int i = 1; i < repeats; i++)
 				{
 					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays(i * 7), multipleApp, vacation: vacation);
+					CreateDocument(handler.LoadPath(), today.AddDays(i * 7), wordApp/*multipleApp*/, vacation: vacation);
 				}
 			}
 			try
 			{
-				multipleApp.Quit(SaveChanges: false);
+				//multipleApp.Quit(SaveChanges: false);
+				wordApp.Quit(SaveChanges: false);
 			}
 			catch
 			{
@@ -469,7 +472,9 @@ namespace BerichtManager
 				MessageBox.Show("A report has already been created for this week");
 				return;
 			}
-			CreateDocument(handler.LoadPath(), baseDate: DateTime.Today, new Word.Application { Visible = visible}, isSingle: true);
+			wordApp = new Word.Application();
+			wordApp.Visible = visible;
+			CreateDocument(handler.LoadPath(), baseDate: DateTime.Today, wordApp/*new Word.Application { Visible = visible}*/, isSingle: true);
 		}
 
 		private void btSetNumber_Click(object sender, EventArgs e)
@@ -590,7 +595,7 @@ namespace BerichtManager
 				PrintDialog printDialog = new PrintDialog();
 				if (printDialog.ShowDialog() == DialogResult.OK)
 				{
-					Word.Application printApp = null;
+					//Word.Application printApp = null;
 					if (unPrintedFiles.Count == 0)
 					{
 						MessageBox.Show("No unprinted reports found");
@@ -611,18 +616,23 @@ namespace BerichtManager
 					}
 					try
 					{
-						printApp = new Word.Application();
-						printApp.Visible = visible;
+						//printApp = new Word.Application();
+						//printApp.Visible = visible;
+						wordApp = new Word.Application();
+						wordApp.Visible = visible;
 						foreach (string key in unPrintedFiles.Keys) 
 						{
 							unPrintedFiles[key].ForEach((f) => 
 							{
-								Word.Document document = printApp.Documents.Open(FileName: f, ReadOnly: true);
+								//Word.Document document = printApp.Documents.Open(FileName: f, ReadOnly: true);
+								//document.PrintOut(Background: false);
+								//printApp.Documents.Close();
+								Word.Document document = wordApp.Documents.Open(FileName: f, ReadOnly: true);
 								document.PrintOut(Background: false);
-								printApp.Documents.Close();
+								wordApp.Documents.Close();
 							});
 						}
-						printApp.Quit(false);
+						//printApp.Quit(false);
 
 						foreach (string key in unPrintedFiles.Keys) 
 						{
@@ -639,7 +649,8 @@ namespace BerichtManager
 						Console.Write("\n" + ex.StackTrace);
 						try
 						{
-							printApp.Quit(false);
+							//printApp.Quit(false);
+							wordApp.Quit(false);
 						}
 						catch
 						{
@@ -862,7 +873,7 @@ namespace BerichtManager
 			PrintDialog printDialog = new PrintDialog();
 			if (printDialog.ShowDialog() == DialogResult.OK)
 			{
-				Word.Application printApp = null;
+				//Word.Application printApp = null;
 				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + path)))
 				{
 					if (!Directory.Exists(Path.GetFullPath(".\\..\\..\\" + path).Substring(0, Path.GetFullPath(".\\..\\..\\" + path).Length - Path.GetFileName(".\\..\\..\\" + path).Length) + "\\Gedruckt"))
@@ -871,12 +882,18 @@ namespace BerichtManager
 					}
 					try
 					{
-						printApp = new Word.Application();
-						printApp.Visible = visible;
-						Word.Document document = printApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + path), ReadOnly: true);
+						//printApp = new Word.Application();
+						//printApp.Visible = visible;
+						//Word.Document document = printApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + path), ReadOnly: true);
+						//document.PrintOut(Background: false);
+						//printApp.Documents.Close();
+						//printApp.Quit(false);
+						wordApp = new Word.Application();
+						wordApp.Visible = visible;
+						Word.Document document = wordApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + path), ReadOnly: true);
 						document.PrintOut(Background: false);
-						printApp.Documents.Close();
-						printApp.Quit(false);
+						wordApp.Documents.Close();
+						wordApp.Quit(false);
 						if (printed.Name != "Gedruckt")
 						{
 							File.Move(Path.GetFullPath(".\\..\\..\\" + path),
@@ -890,7 +907,8 @@ namespace BerichtManager
 						Console.Write("\n" + ex.StackTrace);
 						try
 						{
-							printApp.Quit(false);
+							//printApp.Quit(false);
+							wordApp.Quit(false);
 						}
 						catch
 						{
