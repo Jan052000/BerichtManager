@@ -633,6 +633,7 @@ namespace BerichtManager
 							});
 						}
 						//printApp.Quit(false);
+						wordApp.Quit(SaveChanges: false);
 
 						foreach (string key in unPrintedFiles.Keys) 
 						{
