@@ -11,7 +11,8 @@ namespace BerichtManager.AddForm
 	public partial class EditForm : Form
 	{
 		public string Result { get; set; }
-		private ConfigHandler handler = new ConfigHandler();
+		private readonly ConfigHandler handler = new ConfigHandler();
+		private readonly Client client = new Client();
 
 		public EditForm(string title, string text = "", bool school = false, bool isCreate = false)
 		{
@@ -39,7 +40,6 @@ namespace BerichtManager.AddForm
 			{
 				//https://borys.webuntis.com/WebUntis/?school=pictorus-bk#/basic/login
 				//https://webuntis.com/
-				Client client = new Client();
 				List<string> classes = client.GetClassesFromWebUntis();
 				classes.ForEach((c) =>
 				{

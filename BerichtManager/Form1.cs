@@ -15,17 +15,17 @@ namespace BerichtManager
 	{
 		private Word.Document doc = null;
 		private Word.Application wordApp = null;
-		private ConfigHandler handler;
-		private Client client;
-		private DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
+		private readonly ConfigHandler handler = new ConfigHandler();
+		private readonly Client client = new Client();
+		private readonly DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
 		private bool visible = false;
 
 		public FormManager()
 		{
 			InitializeComponent();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
-			handler = new ConfigHandler();
-			client = new Client();
+			//handler = new ConfigHandler();
+			//client = new Client();
 			UpdateTree();
 			if (handler.LoadActive() == "") 
 			{

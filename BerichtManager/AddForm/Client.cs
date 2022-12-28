@@ -13,7 +13,7 @@ namespace BerichtManager.AddForm
 {
 	public partial class Client : Form
 	{
-		private ConfigHandler configHandler = new ConfigHandler();
+		private readonly ConfigHandler configHandler = new ConfigHandler();
 		public bool HasVacationOrHoliday { get; set; }
 		public Client()
 		{
