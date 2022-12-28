@@ -30,7 +30,7 @@ namespace BerichtManager
 				{
 					Directory.CreateDirectory(logFolder);
 				}
-				File.WriteAllText(logFolder + "\\" + errorDate + ".txt", e.Message
+				File.WriteAllText(logFolder + "\\" + errorDate + ".txt", e.Message + " : " + e.HResult
 					+ "\n" + e.StackTrace.ToString());
 				MessageBox.Show("An unexpected error has occurred and the program has crashed a crash-log has been created at: " + logFolder + "\\" + errorDate + ".txt", "Application has crashed", MessageBoxButtons.OK);
 			}

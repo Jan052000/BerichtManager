@@ -335,7 +335,11 @@ namespace BerichtManager
 						doc.Save();
 						doc.Close();
 						break;
+					case -2146233088:
+						MessageBox.Show("Connection refused by remotehost");
+						break;
 					default:
+						HelperClasses.Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						try
 						{
@@ -347,7 +351,6 @@ namespace BerichtManager
 						}
 						break;
 				}
-				Close();
 			}
 		}
 
@@ -646,8 +649,11 @@ namespace BerichtManager
 					}
 					catch (Exception ex)
 					{
-						Console.Write(ex.Message);
-						Console.Write("\n" + ex.StackTrace);
+						HelperClasses.Logger.LogError(ex);
+						MessageBox.Show(ex.StackTrace);
+						Console.Write(ex.StackTrace);
+						//Console.Write(ex.Message);
+						//Console.Write("\n" + ex.StackTrace);
 						try
 						{
 							//printApp.Quit(false);
@@ -833,7 +839,11 @@ namespace BerichtManager
 						doc.Close();
 						wordApp.Quit();
 						break;
+					case -2146233088:
+						MessageBox.Show("Connection refused by remotehost");
+						break;
 					default:
+						HelperClasses.Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
@@ -846,7 +856,6 @@ namespace BerichtManager
 				{
 
 				}
-				Close();
 			}
 		}
 
@@ -904,8 +913,11 @@ namespace BerichtManager
 					}
 					catch (Exception ex)
 					{
-						Console.Write(ex.Message);
-						Console.Write("\n" + ex.StackTrace);
+						HelperClasses.Logger.LogError(ex);
+						MessageBox.Show(ex.StackTrace);
+						Console.Write(ex.StackTrace);
+						//Console.Write(ex.Message);
+						//Console.Write("\n" + ex.StackTrace);
 						try
 						{
 							//printApp.Quit(false);
