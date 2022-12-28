@@ -361,7 +361,7 @@ namespace BerichtManager
 				}
 				if (wordApp != null) 
 				{
-					wordApp.Quit();
+					wordApp.Quit(SaveChanges: false);
 				}
 				Close();
 			}
