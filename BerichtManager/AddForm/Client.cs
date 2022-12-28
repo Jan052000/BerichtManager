@@ -289,6 +289,8 @@ namespace BerichtManager.AddForm
 		[JsonProperty("event")]
 		public bool @event { get; set; }
 		public bool? cancelled { get; set; }
+		public bool? shift { get; set; }
+		public bool? roomSubstitution { get; set; }
 	}
 
 	[Serializable]
