@@ -19,6 +19,7 @@ namespace BerichtManager
 		private readonly Client client = new Client();
 		private readonly DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
 		private bool visible = false;
+		private readonly CultureInfo culture = new CultureInfo("de-DE");
 
 		public FormManager()
 		{
@@ -136,6 +137,7 @@ namespace BerichtManager
 
 				if (File.Exists(templatePath))
 				{
+					int weekOfYear = culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 					doc = app.Documents.Add(Template: templatePath);
 
 					if (doc.FormFields.Count != 10)
@@ -197,7 +199,7 @@ namespace BerichtManager
 					}
 					else 
 					{
-						form = new EditForm("Betriebliche Tätigkeiten", isCreate: true);
+						form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -227,7 +229,7 @@ namespace BerichtManager
 					}
 					else 
 					{
-						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen", text: "-Keine-", isCreate: true);
+						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: "-Keine-", isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -253,11 +255,11 @@ namespace BerichtManager
 					enumerator.MoveNext();
 					if (isSingle)
 					{
-						form = new EditForm("Berufsschule (Unterrichtsthemen)", school: true, isCreate: true);
+						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", school: true, isCreate: true);
 					}
 					else 
 					{
-						form = new EditForm("Berufsschule (Unterrichtsthemen)", text: client.getHolidaysForDate(baseDate), isCreate: true);
+						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", text: client.getHolidaysForDate(baseDate), isCreate: true);
 					}
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -289,15 +291,15 @@ namespace BerichtManager
 
 
 					Directory.CreateDirectory(Path.GetFullPath(Environment.CurrentDirectory + "\\..") + "\\" + today.Year);
-					string path = Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx";
+					string path = Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + weekOfYear + ".docx";
 					SetFontInDoc(doc, app);
 					doc.SaveAs2(FileName: path);
 
 					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
-					handler.SaveLastReportKW(new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					handler.SaveLastReportKW(culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					handler.EditActive(path);
 					btEdit.Enabled = true;
-					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) + ".docx");
+					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + weekOfYear + ".docx");
 
 					doc.Close();
 					UpdateTree();
@@ -392,7 +394,6 @@ namespace BerichtManager
 		*/
 		private void CreateMissing(bool vacation = false) 
 		{
-			CultureInfo culture = new CultureInfo("de-DE");
 			DateTimeFormatInfo dfi = culture.DateTimeFormat;
 			DateTime date1 = new DateTime(DateTime.Today.Year, 12, 31);
 
@@ -447,7 +448,6 @@ namespace BerichtManager
 
 		private void btCreate_Click(object sender, EventArgs e)
 		{
-			CultureInfo culture = new CultureInfo("de-DE");
 			//Check if a report was created
 			if (handler.LoadLastReportKW() > 0)
 			{
@@ -469,7 +469,7 @@ namespace BerichtManager
 			}
 
 			//Check if report for this week was already created
-			int currentWeek = new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			int currentWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
 			{
 				MessageBox.Show("A report has already been created for this week");
@@ -504,8 +504,8 @@ namespace BerichtManager
 
 		private void btTest_Click(object sender, EventArgs e)
 		{
-			Client form = new Client();
-			form.ShowDialog();
+			//Client form = new Client();
+			//form.ShowDialog();
 		}
 
 		private void btPrint_Click(object sender, EventArgs e)
@@ -699,7 +699,7 @@ namespace BerichtManager
 					{
 						if (Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath) == handler.LoadActive())
 						{
-							if (tvReports.SelectedNode.Text.Substring(15, ("" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()) 
+							if (tvReports.SelectedNode.Text.Substring(15, ("" + culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()) 
 							{
 								if (int.TryParse(handler.LoadNumber(), out int number))
 								{
@@ -949,7 +949,7 @@ namespace BerichtManager
 						if (Path.GetFullPath(".\\..\\..\\" + path) == handler.LoadActive())
 						{
 							string[] split = path.Split('\\');
-							if (split[split.Length - 1].Substring(15, ("" + new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString())
+							if (split[split.Length - 1].Substring(15, ("" + culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString())
 							{
 								if (int.TryParse(handler.LoadNumber(), out int number))
 								{
