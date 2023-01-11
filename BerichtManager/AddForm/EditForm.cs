@@ -40,11 +40,19 @@ namespace BerichtManager.AddForm
 			{
 				//https://borys.webuntis.com/WebUntis/?school=pictorus-bk#/basic/login
 				//https://webuntis.com/
-				List<string> classes = client.GetClassesFromWebUntis();
-				classes.ForEach((c) =>
+				try
 				{
-					rtInput.Text += c;
-				});
+					List<string> classes = client.GetClassesFromWebUntis();
+					classes.ForEach((c) =>
+					{
+						rtInput.Text += c;
+					});
+				}
+				catch (AggregateException e)
+				{
+					MessageBox.Show("Unable to process classes from web\n(try to cancel the creation process and start again)");
+					HelperClasses.Logger.LogError(e);
+				}
 
 			}
 			else
