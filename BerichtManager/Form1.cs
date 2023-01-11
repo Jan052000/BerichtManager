@@ -452,7 +452,7 @@ namespace BerichtManager
 			if (handler.LoadLastReportKW() > 0)
 			{
 				//Check if report for last week was created
-				if (handler.LoadLastReportKW() < culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)
+				if (handler.LoadLastReportKW() > culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)
 				{
 					if (MessageBox.Show("You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
