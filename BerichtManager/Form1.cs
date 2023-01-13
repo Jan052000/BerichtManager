@@ -940,11 +940,16 @@ namespace BerichtManager
 		*/
 		private void DeleteDocument(string path)
 		{
+			if (File.GetAttributes(Path.GetFullPath(".\\..\\..\\" + path)) == FileAttributes.Directory)
+			{
+				MessageBox.Show("You may not delete folders using the manager");
+				return;
+			}
 			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + path)))
 				{
-					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + path)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + path)).StartsWith("~$"))
+					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + path)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + path)).StartsWith("~$") || (path.Contains("Logs") && path.EndsWith(".txt")))
 					{
 						if (Path.GetFullPath(".\\..\\..\\" + path) == handler.LoadActive())
 						{
@@ -1012,15 +1017,23 @@ namespace BerichtManager
 
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
 		{
+			bool isInLogs = false;
 			e.Cancel = true;
+			if (tvReports.SelectedNode.Parent != null) 
+			{
+				if (tvReports.SelectedNode.Parent.Text == "Logs")
+				{
+					isInLogs = true;
+				}
+			}
 			//((ContextMenuStrip)sender).Items.Clear();
-			if (tvReports.SelectedNode.Text.EndsWith(".docx"))
+			if (tvReports.SelectedNode.Text.EndsWith(".docx") || isInLogs)
 			{
 				e.Cancel = false;
 				miEdit.Enabled = true;
 				miPrint.Enabled = true;
 				miDelete.Enabled = true;
-				if (tvReports.SelectedNode.Text.StartsWith("~$"))
+				if (tvReports.SelectedNode.Text.StartsWith("~$") || isInLogs)
 				{
 					miEdit.Enabled = false;
 					miPrint.Enabled = false;
