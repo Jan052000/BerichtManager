@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -86,7 +86,7 @@ namespace BerichtManager.Config
 				}
 				if (!config.ContainsKey("LastReportWeekOfYear")) 
 				{
-					config.Add(new JProperty("LastReportWeekOfYear", 0));
+					config.Add(new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1));
 				}
 				if (!config.ContainsKey("StayLoggedIn")) 
 				{
