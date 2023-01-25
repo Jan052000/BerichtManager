@@ -11,13 +11,14 @@ namespace BerichtManager.OptionsMenu
 	{
 		private readonly string path = Environment.CurrentDirectory + "\\Config";
 		private readonly string configName = "UserOptions.json";
-		private JObject configObject;
+		private readonly JObject configObject;
 
 		public OptionConfigHandler()
 		{
 			if (!ConfigExists())
 			{
 				configObject = new JObject(new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"));
+				File.WriteAllText(path + "\\" + configName, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else 
 			{
