@@ -76,6 +76,7 @@
 			this.tbCustomPrefix.Name = "tbCustomPrefix";
 			this.tbCustomPrefix.Size = new System.Drawing.Size(776, 20);
 			this.tbCustomPrefix.TabIndex = 3;
+			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.tbCustomPrefix_TextChanged);
 			// 
 			// OptionMenu
 			// 
