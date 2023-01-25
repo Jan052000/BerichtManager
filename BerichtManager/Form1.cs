@@ -449,11 +449,19 @@ namespace BerichtManager
 
 		private void btCreate_Click(object sender, EventArgs e)
 		{
+			//Check if report for this week was already created
+			int currentWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))// || handler.LoadLastReportKW() == currentWeek)
+			{
+				MessageBox.Show("A report has already been created for this week");
+				return;
+			}
 			//Check if a report was created
 			if (handler.LoadLastReportKW() > 0)
 			{
 				//Check if report for last week was created
-				if (handler.LoadLastReportKW() > culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)
+				//if (handler.LoadLastReportKW() > culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)
+				if (getDistanceToToday() > 1)
 				{
 					if (MessageBox.Show("You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
@@ -469,16 +477,26 @@ namespace BerichtManager
 				}
 			}
 
-			//Check if report for this week was already created
-			int currentWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
-			{
-				MessageBox.Show("A report has already been created for this week");
-				return;
-			}
 			wordApp = new Word.Application();
 			wordApp.Visible = visible;
 			CreateDocument(handler.LoadPath(), baseDate: DateTime.Today, wordApp/*new Word.Application { Visible = visible}*/, isSingle: true);
+		}
+
+		private int getDistanceToToday() 
+		{
+			int lastReportKW = handler.LoadLastReportKW();
+			int todaysWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			//Both weeks are in the same year
+			if (lastReportKW <= todaysWeek)
+			{
+				return todaysWeek - lastReportKW;
+			}
+			//Both weeks are in different years
+			else 
+			{
+				int lastWeekOfLastYear = culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				return lastWeekOfLastYear - lastReportKW + todaysWeek;
+			}
 		}
 
 		private void btSetNumber_Click(object sender, EventArgs e)
