@@ -120,27 +120,54 @@ namespace BerichtManager.AddForm
 			});
 
 			//Crosscheck ClassIds to Coursenames
+			OptionsMenu.OptionConfigHandler options = new OptionsMenu.OptionConfigHandler();
+			bool useUserPrefix = options.UseUserPrefix();
 			testRoot.result.data.elements.ForEach((element) =>
 			{
 				if (element.type == 3 && classids.Contains(element.id))
 				{
-					if (cancelled[element.id])
+					if (useUserPrefix)
 					{
-						if (!classes.Contains("-" + element.name + "\n\t-\n"))
+						if (cancelled[element.id])
 						{
-							classes.Add("-" + element.name + "\n\t-Ausgefallen\n");
+							if (!classes.Contains(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "\n"))
+							{
+								classes.Add(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "Ausgefallen\n");
+							}
+						}
+						else
+						{
+							if (classes.Contains(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "Ausgefallen\n"))
+							{
+								classes.Remove(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "Ausgefallen\n");
+								classes.Add(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "\n");
+							}
+							else
+							{
+								classes.Add(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "\n");
+							}
 						}
 					}
-					else 
+					else
 					{
-						if (classes.Contains("-" + element.name + "\n\t-Ausgefallen\n"))
+						if (cancelled[element.id])
 						{
-							classes.Remove("-" + element.name + "\n\t-Ausgefallen\n");
-							classes.Add("-" + element.name + "\n\t-\n");
+							if (!classes.Contains("-" + element.name + "\n\t-\n"))
+							{
+								classes.Add("-" + element.name + "\n\t-Ausgefallen\n");
+							}
 						}
-						else 
+						else
 						{
-							classes.Add("-" + element.name + "\n\t-\n");
+							if (classes.Contains("-" + element.name + "\n\t-Ausgefallen\n"))
+							{
+								classes.Remove("-" + element.name + "\n\t-Ausgefallen\n");
+								classes.Add("-" + element.name + "\n\t-\n");
+							}
+							else
+							{
+								classes.Add("-" + element.name + "\n\t-\n");
+							}
 						}
 					}
 				}
