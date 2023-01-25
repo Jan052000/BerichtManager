@@ -17,7 +17,7 @@ namespace BerichtManager.OptionsMenu
 		{
 			if (!ConfigExists())
 			{
-				configObject = new JObject(new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", ""));
+				configObject = new JObject(new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"));
 			}
 			else 
 			{
