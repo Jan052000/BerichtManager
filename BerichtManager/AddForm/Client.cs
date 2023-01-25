@@ -230,14 +230,17 @@ namespace BerichtManager.AddForm
 			}
 
 			//Obtain Api Key
-			string apiKey = client.GetAsync("https://borys.webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
-			if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
+			if (client.DefaultRequestHeaders.Authorization == null) 
 			{
-				client.DefaultRequestHeaders.Authorization = authorize;
-			}
-			else
-			{
-				MessageBox.Show("There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+				string apiKey = client.GetAsync("https://borys.webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
+				if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
+				{
+					client.DefaultRequestHeaders.Authorization = authorize;
+				}
+				else
+				{
+					MessageBox.Show("There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+				}
 			}
 
 			//var trash = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
