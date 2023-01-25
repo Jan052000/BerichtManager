@@ -37,7 +37,7 @@
 		/// Erforderliche Methode für die Designerunterstützung.
 		/// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
 		/// </summary>
-		private void InitializeComponent()
+		private void InitializeComponent() 
 		{
 			this.components = new System.ComponentModel.Container();
 			this.btClose = new System.Windows.Forms.Button();
@@ -47,6 +47,10 @@
 			this.btEdit = new System.Windows.Forms.Button();
 			this.button1 = new System.Windows.Forms.Button();
 			this.tvReports = new System.Windows.Forms.TreeView();
+			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
+			this.miEdit = new System.Windows.Forms.ToolStripMenuItem();
+			this.miPrint = new System.Windows.Forms.ToolStripMenuItem();
 			this.btEditExisting = new System.Windows.Forms.Button();
 			this.btDelete = new System.Windows.Forms.Button();
 			this.btPrint = new System.Windows.Forms.Button();
@@ -54,15 +58,12 @@
 			this.btLogin = new System.Windows.Forms.Button();
 			this.btEditName = new System.Windows.Forms.Button();
 			this.cbVisible = new System.Windows.Forms.CheckBox();
-			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
-			this.miEdit = new System.Windows.Forms.ToolStripMenuItem();
-			this.miPrint = new System.Windows.Forms.ToolStripMenuItem();
+			this.btOptions = new System.Windows.Forms.Button();
 			this.toRightClickMenu.SuspendLayout();
 			this.SuspendLayout();
-			// 
+			//
 			// btClose
-			// 
+			//
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btClose.Location = new System.Drawing.Point(704, 415);
 			this.btClose.Name = "btClose";
@@ -71,9 +72,9 @@
 			this.btClose.Text = "Close";
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
-			// 
+			//
 			// btSetTemplate
-			// 
+			//
 			this.btSetTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btSetTemplate.Location = new System.Drawing.Point(619, 415);
 			this.btSetTemplate.Name = "btSetTemplate";
@@ -82,9 +83,9 @@
 			this.btSetTemplate.Text = "Set Template";
 			this.btSetTemplate.UseVisualStyleBackColor = true;
 			this.btSetTemplate.Click += new System.EventHandler(this.btSetTemplate_Click);
-			// 
+			//
 			// btCreate
-			// 
+			//
 			this.btCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btCreate.Location = new System.Drawing.Point(704, 12);
 			this.btCreate.Name = "btCreate";
@@ -93,9 +94,9 @@
 			this.btCreate.Text = "Create";
 			this.btCreate.UseVisualStyleBackColor = true;
 			this.btCreate.Click += new System.EventHandler(this.btCreate_Click);
-			// 
+			//
 			// btSetNumber
-			// 
+			//
 			this.btSetNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btSetNumber.Location = new System.Drawing.Point(538, 415);
 			this.btSetNumber.Name = "btSetNumber";
@@ -104,9 +105,9 @@
 			this.btSetNumber.Text = "Set Number";
 			this.btSetNumber.UseVisualStyleBackColor = true;
 			this.btSetNumber.Click += new System.EventHandler(this.btSetNumber_Click);
-			// 
+			//
 			// btEdit
-			// 
+			//
 			this.btEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btEdit.Location = new System.Drawing.Point(704, 41);
 			this.btEdit.Name = "btEdit";
@@ -115,9 +116,9 @@
 			this.btEdit.Text = "Edit Latest";
 			this.btEdit.UseVisualStyleBackColor = true;
 			this.btEdit.Click += new System.EventHandler(this.btEdit_Click);
-			// 
+			//
 			// button1
-			// 
+			//
 			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.button1.Enabled = false;
 			this.button1.Location = new System.Drawing.Point(203, 415);
@@ -128,12 +129,12 @@
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Visible = false;
 			this.button1.Click += new System.EventHandler(this.btTest_Click);
-			// 
+			//
 			// tvReports
-			// 
-			this.tvReports.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			//
+			this.tvReports.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)  
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
 			this.tvReports.Location = new System.Drawing.Point(12, 12);
 			this.tvReports.Name = "tvReports";
@@ -141,9 +142,40 @@
 			this.tvReports.TabIndex = 6;
 			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
 			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
-			// 
+			//
+			// toRightClickMenu
+			//
+			this.toRightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.miDelete,
+			this.miEdit,
+			this.miPrint});
+			this.toRightClickMenu.Name = "contextMenuStrip1";
+			this.toRightClickMenu.Size = new System.Drawing.Size(108, 70);
+			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
+			//
+			// miDelete
+			//
+			this.miDelete.Name = "miDelete";
+			this.miDelete.Size = new System.Drawing.Size(107, 22);
+			this.miDelete.Text = "Delete";
+			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
+			//
+			// miEdit
+			//
+			this.miEdit.Name = "miEdit";
+			this.miEdit.Size = new System.Drawing.Size(107, 22);
+			this.miEdit.Text = "Edit";
+			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
+			//
+			// miPrint
+			//
+			this.miPrint.Name = "miPrint";
+			this.miPrint.Size = new System.Drawing.Size(107, 22);
+			this.miPrint.Text = "Print";
+			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
+			//
 			// btEditExisting
-			// 
+			//
 			this.btEditExisting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btEditExisting.Location = new System.Drawing.Point(704, 70);
 			this.btEditExisting.Name = "btEditExisting";
@@ -152,9 +184,9 @@
 			this.btEditExisting.Text = "Edit";
 			this.btEditExisting.UseVisualStyleBackColor = true;
 			this.btEditExisting.Click += new System.EventHandler(this.btEditExisting_Click);
-			// 
+			//
 			// btDelete
-			// 
+			//
 			this.btDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btDelete.Location = new System.Drawing.Point(704, 99);
 			this.btDelete.Name = "btDelete";
@@ -163,9 +195,9 @@
 			this.btDelete.Text = "Delete";
 			this.btDelete.UseVisualStyleBackColor = true;
 			this.btDelete.Click += new System.EventHandler(this.btDelete_Click);
-			// 
+			//
 			// btPrint
-			// 
+			//
 			this.btPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btPrint.Location = new System.Drawing.Point(704, 157);
 			this.btPrint.Name = "btPrint";
@@ -174,9 +206,9 @@
 			this.btPrint.Text = "Print Selected";
 			this.btPrint.UseVisualStyleBackColor = true;
 			this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
-			// 
+			//
 			// btPrintAll
-			// 
+			//
 			this.btPrintAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btPrintAll.Location = new System.Drawing.Point(704, 128);
 			this.btPrintAll.Name = "btPrintAll";
@@ -185,9 +217,9 @@
 			this.btPrintAll.Text = "Print All";
 			this.btPrintAll.UseVisualStyleBackColor = true;
 			this.btPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
-			// 
+			//
 			// btLogin
-			// 
+			//
 			this.btLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btLogin.Location = new System.Drawing.Point(12, 415);
 			this.btLogin.Name = "btLogin";
@@ -196,9 +228,9 @@
 			this.btLogin.Text = "Login";
 			this.btLogin.UseVisualStyleBackColor = true;
 			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
-			// 
+			//
 			// btEditName
-			// 
+			//
 			this.btEditName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btEditName.Location = new System.Drawing.Point(457, 415);
 			this.btEditName.Name = "btEditName";
@@ -207,9 +239,9 @@
 			this.btEditName.Text = "Edit Name";
 			this.btEditName.UseVisualStyleBackColor = true;
 			this.btEditName.Click += new System.EventHandler(this.btEditName_Click);
-			// 
+			//
 			// cbVisible
-			// 
+			//
 			this.cbVisible.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.cbVisible.AutoSize = true;
 			this.cbVisible.Location = new System.Drawing.Point(93, 419);
@@ -219,43 +251,24 @@
 			this.cbVisible.Text = "Word visible?";
 			this.cbVisible.UseVisualStyleBackColor = true;
 			this.cbVisible.CheckedChanged += new System.EventHandler(this.cbVisible_CheckedChanged);
-			// 
-			// toRightClickMenu
-			// 
-			this.toRightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miDelete,
-            this.miEdit,
-            this.miPrint});
-			this.toRightClickMenu.Name = "contextMenuStrip1";
-			this.toRightClickMenu.Size = new System.Drawing.Size(108, 70);
-			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
-			// 
-			// miDelete
-			// 
-			this.miDelete.Name = "miDelete";
-			this.miDelete.Size = new System.Drawing.Size(107, 22);
-			this.miDelete.Text = "Delete";
-			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
-			// 
-			// miEdit
-			// 
-			this.miEdit.Name = "miEdit";
-			this.miEdit.Size = new System.Drawing.Size(107, 22);
-			this.miEdit.Text = "Edit";
-			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
-			// 
-			// miPrint
-			// 
-			this.miPrint.Name = "miPrint";
-			this.miPrint.Size = new System.Drawing.Size(107, 22);
-			this.miPrint.Text = "Print";
-			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
-			// 
+			//
+			// btOptions
+			//
+			this.btOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btOptions.Location = new System.Drawing.Point(704, 386);
+			this.btOptions.Name = "btOptions";
+			this.btOptions.Size = new System.Drawing.Size(84, 23);
+			this.btOptions.TabIndex = 14;
+			this.btOptions.Text = "Options";
+			this.btOptions.UseVisualStyleBackColor = true;
+			this.btOptions.Click += new System.EventHandler(this.btOptions_Click);
+			//
 			// FormManager
-			// 
+			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btOptions);
 			this.Controls.Add(this.cbVisible);
 			this.Controls.Add(this.btEditName);
 			this.Controls.Add(this.btLogin);
@@ -270,7 +283,7 @@
 			this.Controls.Add(this.btCreate);
 			this.Controls.Add(this.btSetTemplate);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(545, 260);
+			this.MinimumSize = new System.Drawing.Size(545, 289);
 			this.Name = "FormManager";
 			this.Text = "Bericht Manager";
 			this.toRightClickMenu.ResumeLayout(false);
@@ -299,6 +312,7 @@
 		private System.Windows.Forms.ToolStripMenuItem miDelete;
 		private System.Windows.Forms.ToolStripMenuItem miEdit;
 		private System.Windows.Forms.ToolStripMenuItem miPrint;
+		private System.Windows.Forms.Button btOptions;
 	}
 }
 

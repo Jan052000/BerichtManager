@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Collections;
+using BerichtManager.OptionsMenu;
 
 namespace BerichtManager
 {
@@ -1059,6 +1060,12 @@ namespace BerichtManager
 				((ContextMenuStrip)sender).Items.Add(miDelete);
 			}
 			 */
+		}
+
+		private void btOptions_Click(object sender, EventArgs e)
+		{
+			Form optionsForm = new OptionMenu();
+			optionsForm.ShowDialog();
 		}
 	}
 }
