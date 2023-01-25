@@ -21,6 +21,7 @@ namespace BerichtManager.OptionsMenu
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			Dirty = false;
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
+			tbCustomPrefix.Text = configHandler.GetCustomPrefix();
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
