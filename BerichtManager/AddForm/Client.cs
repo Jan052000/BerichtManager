@@ -14,11 +14,17 @@ namespace BerichtManager.AddForm
 	public partial class Client : Form
 	{
 		private readonly ConfigHandler configHandler = new ConfigHandler();
-		public bool HasVacationOrHoliday { get; set; }
+		private readonly OptionsMenu.OptionConfigHandler options = new OptionsMenu.OptionConfigHandler();
+		private readonly string server;
+		private readonly string schoolName;
+		//public bool HasVacationOrHoliday { get; set; }
 		public Client()
 		{
 			InitializeComponent();
-			HasVacationOrHoliday = false;
+			//HasVacationOrHoliday = false;
+			//Get school and server
+			schoolName = options.GetSchoolName();
+			server = options.GetWebUntisServer();
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -28,6 +34,11 @@ namespace BerichtManager.AddForm
 
 		public List<string> GetClassesFromWebUntis() 
 		{
+			if (!options.UseWebUntis())
+			{
+				return new List<string>();
+			}
+
 			List<string> classes = new List<string>();
 			HttpClient client = new HttpClient();
 
@@ -36,7 +47,7 @@ namespace BerichtManager.AddForm
 			Config.User user = null;
 			if (configHandler.StayLoggedIn())
 			{
-				responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
+				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 			}
 			else 
 			{
@@ -48,13 +59,13 @@ namespace BerichtManager.AddForm
 				}
 				else 
 				{
-					responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + user.Username + "&j_password=" + user.Password).Result;
+					responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + user.Username + "&j_password=" + user.Password).Result;
 				}
 			}
 			//HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 
 			//Obtain Api Key
-			string apiKey = client.GetAsync("https://borys.webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
+			string apiKey = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
 			if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
 			{
 				client.DefaultRequestHeaders.Authorization = authorize;
@@ -66,7 +77,7 @@ namespace BerichtManager.AddForm
 			}
 
 			//Guarantee complete Header
-			responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
+			responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
 			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result);
 
 			//Request Timetable for the week
@@ -74,7 +85,7 @@ namespace BerichtManager.AddForm
 			string date = baseDate.ToString("yyyy-MM-dd");
 
 			//Stundenplan api https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=2022-09-28&formatId=2
-			responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
+			responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
 			string jsonResponse = responseMessage.Content.ReadAsStringAsync().Result;
 
 			//Deserialize Root from response
@@ -120,7 +131,6 @@ namespace BerichtManager.AddForm
 			});
 
 			//Crosscheck ClassIds to Coursenames
-			OptionsMenu.OptionConfigHandler options = new OptionsMenu.OptionConfigHandler();
 			bool useUserPrefix = options.UseUserPrefix();
 			testRoot.result.data.elements.ForEach((element) =>
 			{
@@ -191,7 +201,7 @@ namespace BerichtManager.AddForm
 					if (isInWeek || isStarting || isEnding || weekInEvent) 
 					{
 						classes.Add("-" + holiday.longName + "\n");
-						HasVacationOrHoliday = true;
+						//HasVacationOrHoliday = true;
 					}
 				});	
 			}
@@ -210,7 +220,7 @@ namespace BerichtManager.AddForm
 			HttpResponseMessage responseMessage;
 			if (configHandler.StayLoggedIn())
 			{
-				responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
+				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 			}
 			else
 			{
@@ -225,14 +235,14 @@ namespace BerichtManager.AddForm
 				}
 				else
 				{
-					responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + user.Username + "&j_password=" + user.Password).Result;
+					responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + user.Username + "&j_password=" + user.Password).Result;
 				}
 			}
 
 			//Obtain Api Key
 			if (client.DefaultRequestHeaders.Authorization == null) 
 			{
-				string apiKey = client.GetAsync("https://borys.webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
+				string apiKey = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
 				if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
 				{
 					client.DefaultRequestHeaders.Authorization = authorize;
@@ -245,14 +255,14 @@ namespace BerichtManager.AddForm
 
 			//var trash = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 			//https://borys.webuntis.com/WebUntis/jsonrpc.do
-			HttpResponseMessage response = client.GetAsync("https://borys.webuntis.com/WebUntis/jsonrpc.do").Result;
+			HttpResponseMessage response = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/jsonrpc.do").Result;
 			var id = response.Headers.GetValues("requestId");
 
 			JObject cont = new JObject(new JProperty("id", id.ToString()), new JProperty("method", "getHolidays"), new JProperty("jsonrpc", "2.0"));
 
 			HttpContent content = new StringContent(cont.ToString());
 			client.DefaultRequestHeaders.Add("Accept", "application/json");
-			HttpResponseMessage response1 = client.PostAsync("https://borys.webuntis.com/WebUntis/jsonrpc.do", content).Result;
+			HttpResponseMessage response1 = client.PostAsync("https://" + server + ".webuntis.com/WebUntis/jsonrpc.do", content).Result;
 			return JsonConvert.DeserializeObject<Holidays>(response1.Content.ReadAsStringAsync().Result);
 		}
 
@@ -274,7 +284,7 @@ namespace BerichtManager.AddForm
 				if (isInWeek || isStarting || isEnding || weekInEvent)
 				{
 					str +=  "-" + holiday.longName + "\n";
-					HasVacationOrHoliday = true;
+					//HasVacationOrHoliday = true;
 				}
 			});
 			return str;
