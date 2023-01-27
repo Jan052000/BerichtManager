@@ -769,14 +769,14 @@ namespace BerichtManager
 		{
 			visible = cbVisible.Checked;
 		}
-		
+
 		/**
 		<summary>
 		Method for editing a Word document at a path relative to the working directory
 		</summary> 
 		<param name="path">The path relative to the working directory</param>
 		*/
-		public void Edit(string path) 
+		public void Edit(string path, bool quickEdit = false)
 		{
 			try
 			{
@@ -794,35 +794,61 @@ namespace BerichtManager
 						return;
 					}
 
-					SelectEditFrom selectEdit = new SelectEditFrom();
-					if (selectEdit.ShowDialog() == DialogResult.OK) 
+					if (quickEdit)
 					{
 						IEnumerator enumerator = doc.FormFields.GetEnumerator();
-						EditForm edit;
-						foreach(EditState si in selectEdit.SelectedItems) 
+						for (int i = 0; i < 6; i++)
 						{
-							if (enumerator.MoveNext()) 
+							if (enumerator.MoveNext())
 							{
-								if (si.ShouldEdit)
+
+							}
+						}
+						EditForm edit = new EditForm("Edit work", text: ((Word.FormField)enumerator.Current).Result);
+						if (edit.ShowDialog() == DialogResult.OK)
+						{
+							FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
+						}
+						else
+						{
+							if (edit.DialogResult == DialogResult.Ignore)
+							{
+								FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
+							}
+						}
+					}
+					else
+					{
+						SelectEditFrom selectEdit = new SelectEditFrom();
+						if (selectEdit.ShowDialog() == DialogResult.OK)
+						{
+							IEnumerator enumerator = doc.FormFields.GetEnumerator();
+							EditForm edit;
+							foreach (EditState si in selectEdit.SelectedItems)
+							{
+								if (enumerator.MoveNext())
 								{
-									edit = new EditForm(si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
-									edit.ShowDialog();
-									if (edit.DialogResult == DialogResult.OK)
+									if (si.ShouldEdit)
 									{
-										FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
-									}
-									else
-									{
-										if (edit.DialogResult == DialogResult.Abort)
+										edit = new EditForm(si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
+										edit.ShowDialog();
+										if (edit.DialogResult == DialogResult.OK)
 										{
-											break;
+											FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
 										}
 										else
 										{
-											if (edit.DialogResult == DialogResult.Ignore)
+											if (edit.DialogResult == DialogResult.Abort)
 											{
-												FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
 												break;
+											}
+											else
+											{
+												if (edit.DialogResult == DialogResult.Ignore)
+												{
+													FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
+													break;
+												}
 											}
 										}
 									}
@@ -839,7 +865,7 @@ namespace BerichtManager
 				}
 				else
 				{
-					MessageBox.Show(path + "not found was it deleted or moved?");
+					MessageBox.Show(path + " not found was it deleted or moved?");
 				}
 			}
 			catch (Exception ex)
@@ -1034,6 +1060,11 @@ namespace BerichtManager
 			PrintDocument(tvReports.SelectedNode.FullPath);
 		}
 
+		private void miQuickEdit_Click(object sender, EventArgs e)
+		{
+			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEdit: true);
+		}
+
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			bool isInLogs = false;
@@ -1052,10 +1083,12 @@ namespace BerichtManager
 				miEdit.Enabled = true;
 				miPrint.Enabled = true;
 				miDelete.Enabled = true;
+				miQuickEdit.Enabled = true;
 				if (tvReports.SelectedNode.Text.StartsWith("~$") || isInLogs)
 				{
 					miEdit.Enabled = false;
 					miPrint.Enabled = false;
+					miQuickEdit.Enabled = false;
 				}
 			}
 			/*
