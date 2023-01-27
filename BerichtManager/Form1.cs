@@ -785,8 +785,10 @@ namespace BerichtManager
 		Method for editing a Word document at a path relative to the working directory
 		</summary> 
 		<param name="path">The path relative to the working directory</param>
+		<param name="quickEditFieldNr">The number of the field to quick edit</param>
+		<param name="quickEditTitle">Title of the editor window</param>
 		*/
-		public void Edit(string path, bool quickEdit = false)
+		public void Edit(string path, int quickEditFieldNr = -1, string quickEditTitle = "")
 		{
 			try
 			{
@@ -804,17 +806,17 @@ namespace BerichtManager
 						return;
 					}
 
-					if (quickEdit)
+					if (quickEditFieldNr > -1)
 					{
 						IEnumerator enumerator = doc.FormFields.GetEnumerator();
-						for (int i = 0; i < 6; i++)
+						for (int i = 0; i < quickEditFieldNr; i++)
 						{
 							if (enumerator.MoveNext())
 							{
 
 							}
 						}
-						EditForm edit = new EditForm("Edit work", text: ((Word.FormField)enumerator.Current).Result);
+						EditForm edit = new EditForm(quickEditTitle, text: ((Word.FormField)enumerator.Current).Result);
 						if (edit.ShowDialog() == DialogResult.OK)
 						{
 							FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
@@ -866,9 +868,7 @@ namespace BerichtManager
 							}
 						}
 					}
-
 					SetFontInDoc(doc, wordApp);
-
 					doc.Save();
 					doc.Close();
 					wordApp.Quit();
@@ -1072,7 +1072,7 @@ namespace BerichtManager
 
 		private void miQuickEdit_Click(object sender, EventArgs e)
 		{
-			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEdit: true);
+			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 6, quickEditTitle: "Edit work");
 		}
 
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
