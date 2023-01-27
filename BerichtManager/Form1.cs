@@ -1070,9 +1070,14 @@ namespace BerichtManager
 			PrintDocument(tvReports.SelectedNode.FullPath);
 		}
 
-		private void miQuickEdit_Click(object sender, EventArgs e)
+		private void miQuickEditWork_Click(object sender, EventArgs e)
 		{
 			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 6, quickEditTitle: "Edit work");
+		}
+
+		private void miQuickEditSchool_Click(object sender, EventArgs e)
+		{
+			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 8, quickEditTitle: "Edit school");
 		}
 
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1093,12 +1098,12 @@ namespace BerichtManager
 				miEdit.Enabled = true;
 				miPrint.Enabled = true;
 				miDelete.Enabled = true;
-				miQuickEdit.Enabled = true;
+				miQuickEditOptions.Enabled = true;
 				if (tvReports.SelectedNode.Text.StartsWith("~$") || isInLogs)
 				{
 					miEdit.Enabled = false;
 					miPrint.Enabled = false;
-					miQuickEdit.Enabled = false;
+					miQuickEditOptions.Enabled = false;
 				}
 			}
 			/*

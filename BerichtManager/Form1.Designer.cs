@@ -50,7 +50,6 @@ namespace BerichtManager
 			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.miEdit = new System.Windows.Forms.ToolStripMenuItem();
-			this.miQuickEdit = new System.Windows.Forms.ToolStripMenuItem();
 			this.miPrint = new System.Windows.Forms.ToolStripMenuItem();
 			this.btEditExisting = new System.Windows.Forms.Button();
 			this.btDelete = new System.Windows.Forms.Button();
@@ -60,6 +59,9 @@ namespace BerichtManager
 			this.btEditName = new System.Windows.Forms.Button();
 			this.cbVisible = new System.Windows.Forms.CheckBox();
 			this.btOptions = new System.Windows.Forms.Button();
+			this.miQuickEditOptions = new System.Windows.Forms.ToolStripMenuItem();
+			this.tiQuickEditWork = new System.Windows.Forms.ToolStripMenuItem();
+			this.miQuickEditSchool = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -149,37 +151,30 @@ namespace BerichtManager
 			this.toRightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miDelete,
             this.miEdit,
-            this.miQuickEdit,
+            this.miQuickEditOptions,
             this.miPrint});
 			this.toRightClickMenu.Name = "contextMenuStrip1";
-			this.toRightClickMenu.Size = new System.Drawing.Size(131, 92);
+			this.toRightClickMenu.Size = new System.Drawing.Size(181, 114);
 			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
 			// 
 			// miDelete
 			// 
 			this.miDelete.Name = "miDelete";
-			this.miDelete.Size = new System.Drawing.Size(130, 22);
+			this.miDelete.Size = new System.Drawing.Size(180, 22);
 			this.miDelete.Text = "Delete";
 			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
 			// 
 			// miEdit
 			// 
 			this.miEdit.Name = "miEdit";
-			this.miEdit.Size = new System.Drawing.Size(130, 22);
+			this.miEdit.Size = new System.Drawing.Size(180, 22);
 			this.miEdit.Text = "Edit";
 			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
-			// 
-			// miQuickEdit
-			// 
-			this.miQuickEdit.Name = "miQuickEdit";
-			this.miQuickEdit.Size = new System.Drawing.Size(130, 22);
-			this.miQuickEdit.Text = "Edit(Work)";
-			this.miQuickEdit.Click += new System.EventHandler(this.miQuickEdit_Click);
 			// 
 			// miPrint
 			// 
 			this.miPrint.Name = "miPrint";
-			this.miPrint.Size = new System.Drawing.Size(130, 22);
+			this.miPrint.Size = new System.Drawing.Size(180, 22);
 			this.miPrint.Text = "Print";
 			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
 			// 
@@ -272,6 +267,29 @@ namespace BerichtManager
 			this.btOptions.UseVisualStyleBackColor = true;
 			this.btOptions.Click += new System.EventHandler(this.btOptions_Click);
 			// 
+			// miQuickEditOptions
+			// 
+			this.miQuickEditOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tiQuickEditWork,
+            this.miQuickEditSchool});
+			this.miQuickEditOptions.Name = "miQuickEditOptions";
+			this.miQuickEditOptions.Size = new System.Drawing.Size(180, 22);
+			this.miQuickEditOptions.Text = "Quick actions";
+			// 
+			// tiQuickEditWork
+			// 
+			this.tiQuickEditWork.Name = "tiQuickEditWork";
+			this.tiQuickEditWork.Size = new System.Drawing.Size(180, 22);
+			this.tiQuickEditWork.Text = "Edit work";
+			this.tiQuickEditWork.Click += new System.EventHandler(this.miQuickEditWork_Click);
+			// 
+			// miQuickEditSchool
+			// 
+			this.miQuickEditSchool.Name = "miQuickEditSchool";
+			this.miQuickEditSchool.Size = new System.Drawing.Size(180, 22);
+			this.miQuickEditSchool.Text = "Edit school";
+			this.miQuickEditSchool.Click += new System.EventHandler(this.miQuickEditSchool_Click);
+			// 
 			// FormManager
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -322,7 +340,9 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miEdit;
 		private System.Windows.Forms.ToolStripMenuItem miPrint;
 		private System.Windows.Forms.Button btOptions;
-		private System.Windows.Forms.ToolStripMenuItem miQuickEdit;
+		private System.Windows.Forms.ToolStripMenuItem miQuickEditOptions;
+		private System.Windows.Forms.ToolStripMenuItem tiQuickEditWork;
+		private System.Windows.Forms.ToolStripMenuItem miQuickEditSchool;
 	}
 }
 
