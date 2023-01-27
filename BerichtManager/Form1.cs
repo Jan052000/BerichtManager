@@ -390,9 +390,11 @@ namespace BerichtManager
 		{
 			OpenFileDialog dialog = new OpenFileDialog();
 			dialog.Filter = "Word Templates (*.dotx)|*.dotx";
-			dialog.ShowDialog();
-			handler.Save(Path.GetFullPath(dialog.FileName));
-			MessageBox.Show("Muster auf: "+ Path.GetFullPath(dialog.FileName) + " gesetzt");
+			if (dialog.ShowDialog() == DialogResult.OK)
+			{
+				handler.Save(Path.GetFullPath(dialog.FileName));
+				MessageBox.Show("Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
+			}
 		}
 
 		/**
