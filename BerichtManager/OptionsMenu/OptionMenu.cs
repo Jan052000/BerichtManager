@@ -75,6 +75,7 @@ namespace BerichtManager.OptionsMenu
 		{
 			isDirty = true;
 			btSave.Enabled = true;
+			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
 		}
 
 		private void btSave_Click(object sender, EventArgs e)
@@ -114,6 +115,8 @@ namespace BerichtManager.OptionsMenu
 		{
 			isDirty = true;
 			btSave.Enabled = true;
+			tbSchool.Enabled = cbShouldUseUntis.Checked;
+			tbServer.Enabled = cbShouldUseUntis.Checked;
 		}
 	}
 }
