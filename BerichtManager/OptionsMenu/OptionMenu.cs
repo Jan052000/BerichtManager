@@ -13,12 +13,16 @@ namespace BerichtManager.OptionsMenu
 {
 	public partial class OptionMenu : Form
 	{
+		/// <summary>
+		/// Value if the form has been edited
+		/// </summary>
 		private bool isDirty { get; set; }
 		private readonly OptionConfigHandler configHandler = new OptionConfigHandler();
 		public OptionMenu()
 		{
 			InitializeComponent();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
+			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
 			cbShouldUseUntis.Checked = configHandler.UseWebUntis();
 			cbEndOfWeek.Checked = configHandler.EndWeekOnFriday();

@@ -492,6 +492,10 @@ namespace BerichtManager
 			CreateDocument(handler.LoadPath(), baseDate: DateTime.Today, wordApp/*new Word.Application { Visible = visible}*/, isSingle: true);
 		}
 
+		/// <summary>
+		/// Returns the distance between the last created date in the config and today
+		/// </summary>
+		/// <returns>The number of weeks since last report creation</returns>
 		private int getDistanceToToday() 
 		{
 			int lastReportKW = handler.LoadLastReportKW();
