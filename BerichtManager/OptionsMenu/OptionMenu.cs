@@ -21,6 +21,7 @@ namespace BerichtManager.OptionsMenu
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
 			cbShouldUseUntis.Checked = configHandler.UseWebUntis();
+			cbEndOfWeek.Checked = configHandler.EndWeekOnFriday();
 			tbCustomPrefix.Text = configHandler.GetCustomPrefix();
 			tbServer.Text = configHandler.GetWebUntisServer();
 			tbSchool.Text = configHandler.GetSchoolName();
