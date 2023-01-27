@@ -18,7 +18,8 @@ namespace BerichtManager.OptionsMenu
 			bool isComplete = true;
 			if (!ConfigExists())
 			{
-				configObject = new JObject(new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"), new JProperty("UseWebUntis", true));
+				configObject = new JObject(new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
+					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false));
 				File.WriteAllText(path + "\\" + configName, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else 
@@ -47,6 +48,11 @@ namespace BerichtManager.OptionsMenu
 				if (!configObject.ContainsKey("UseWebUntis"))
 				{
 					configObject.Add(new JProperty("UseWebUntis", true));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("EndWeekOnFriday"))
+				{
+					configObject.Add(new JProperty("EndWeekOnFriday", false));
 					isComplete = false;
 				}
 			}
@@ -125,6 +131,16 @@ namespace BerichtManager.OptionsMenu
 		public void SetUseWebUntis(bool useWebUntis)
 		{
 			GenericSet<bool>("UseWebUntis", useWebUntis);
+		}
+
+		public bool EndWeekOnFriday()
+		{
+			return GenericGet<bool>("EndWeekOnFriday");
+		}
+
+		public void EndWeekOnFriday(bool endWeekOnFriday)
+		{
+			GenericSet<bool>("EndWeekOnFriday", endWeekOnFriday);
 		}
 	}
 }

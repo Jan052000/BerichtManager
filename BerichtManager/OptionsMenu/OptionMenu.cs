@@ -57,6 +57,7 @@ namespace BerichtManager.OptionsMenu
 						configHandler.SetWebUntisServer(tbServer.Text);
 						configHandler.SetSchoolName(tbSchool.Text);
 					}
+					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					try
 					{
 						configHandler.SaveConfig();
@@ -93,6 +94,7 @@ namespace BerichtManager.OptionsMenu
 						configHandler.SetSchoolName(tbSchool.Text);
 					}
 					configHandler.SetUseWebUntis(cbShouldUseUntis.Checked);
+					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 				}
 				configHandler.SaveConfig();
 			}
@@ -117,6 +119,12 @@ namespace BerichtManager.OptionsMenu
 			btSave.Enabled = true;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
+		}
+
+		private void cbEndOfWeek_CheckedChanged(object sender, EventArgs e)
+		{
+			isDirty = true;
+			btSave.Enabled = true;
 		}
 	}
 }

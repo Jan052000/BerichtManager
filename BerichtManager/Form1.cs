@@ -21,6 +21,7 @@ namespace BerichtManager
 		private readonly DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
 		private bool visible = false;
 		private readonly CultureInfo culture = new CultureInfo("de-DE");
+		private readonly OptionConfigHandler optionConfigHandler = new OptionConfigHandler();
 
 		public FormManager()
 		{
@@ -186,7 +187,14 @@ namespace BerichtManager
 					enumerator.MoveNext();
 					((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
 					enumerator.MoveNext();
-					((Word.FormField)enumerator.Current).Result = thisWeekEnd.ToString("dd.MM.yyyy");
+					if (optionConfigHandler.EndWeekOnFriday())
+					{
+						((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
+					}
+					else
+					{
+						((Word.FormField)enumerator.Current).Result = thisWeekEnd.ToString("dd.MM.yyyy");
+					}
 
 					//Enter Year
 					enumerator.MoveNext();

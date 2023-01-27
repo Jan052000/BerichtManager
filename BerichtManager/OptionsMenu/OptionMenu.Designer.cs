@@ -37,6 +37,7 @@
 			this.tbSchool = new System.Windows.Forms.TextBox();
 			this.laSchool = new System.Windows.Forms.Label();
 			this.cbShouldUseUntis = new System.Windows.Forms.CheckBox();
+			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -132,11 +133,23 @@
 			this.cbShouldUseUntis.UseVisualStyleBackColor = true;
 			this.cbShouldUseUntis.CheckedChanged += new System.EventHandler(this.cbShouldUseUntis_CheckedChanged);
 			// 
+			// cbEndOfWeek
+			// 
+			this.cbEndOfWeek.AutoSize = true;
+			this.cbEndOfWeek.Location = new System.Drawing.Point(12, 136);
+			this.cbEndOfWeek.Name = "cbEndOfWeek";
+			this.cbEndOfWeek.Size = new System.Drawing.Size(117, 17);
+			this.cbEndOfWeek.TabIndex = 9;
+			this.cbEndOfWeek.Text = "End week on friday";
+			this.cbEndOfWeek.UseVisualStyleBackColor = true;
+			this.cbEndOfWeek.CheckedChanged += new System.EventHandler(this.cbEndOfWeek_CheckedChanged);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.cbEndOfWeek);
 			this.Controls.Add(this.cbShouldUseUntis);
 			this.Controls.Add(this.laSchool);
 			this.Controls.Add(this.tbSchool);
@@ -146,7 +159,7 @@
 			this.Controls.Add(this.cbUseCustomPrefix);
 			this.Controls.Add(this.btSave);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(195, 209);
+			this.MinimumSize = new System.Drawing.Size(195, 232);
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			this.ResumeLayout(false);
@@ -165,5 +178,6 @@
 		private System.Windows.Forms.TextBox tbSchool;
 		private System.Windows.Forms.Label laSchool;
 		private System.Windows.Forms.CheckBox cbShouldUseUntis;
+		private System.Windows.Forms.CheckBox cbEndOfWeek;
 	}
 }
