@@ -17,11 +17,9 @@ namespace BerichtManager.AddForm
 		private readonly OptionsMenu.OptionConfigHandler options = new OptionsMenu.OptionConfigHandler();
 		private readonly string server;
 		private readonly string schoolName;
-		//public bool HasVacationOrHoliday { get; set; }
 		public Client()
 		{
 			InitializeComponent();
-			//HasVacationOrHoliday = false;
 			//Get school and server
 			schoolName = options.GetSchoolName();
 			server = options.GetWebUntisServer();
@@ -201,7 +199,6 @@ namespace BerichtManager.AddForm
 					if (isInWeek || isStarting || isEnding || weekInEvent) 
 					{
 						classes.Add("-" + holiday.longName + "\n");
-						//HasVacationOrHoliday = true;
 					}
 				});	
 			}
@@ -284,7 +281,6 @@ namespace BerichtManager.AddForm
 				if (isInWeek || isStarting || isEnding || weekInEvent)
 				{
 					str +=  "-" + holiday.longName + "\n";
-					//HasVacationOrHoliday = true;
 				}
 			});
 			return str;

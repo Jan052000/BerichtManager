@@ -27,20 +27,17 @@ namespace BerichtManager
 		{
 			InitializeComponent();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
-			//handler = new ConfigHandler();
-			//client = new Client();
 			UpdateTree();
-			if (handler.LoadActive() == "") 
+			if (handler.LoadActive() == "")
 			{
 				btEdit.Enabled = false;
 			}
-			//tvReports.ContextMenuStrip = toRightClickMenu;
 		}
 
 		/**
 		 *<summary>Fills the TreeView of the main form with nodes of the upper directory</summary> 
 		*/
-		private void UpdateTree() 
+		private void UpdateTree()
 		{
 			tvReports.Nodes.Clear();
 			tvReports.Nodes.Add(CreateDirectoryNode(info));
@@ -72,10 +69,10 @@ namespace BerichtManager
 		 * <param name="field">The FormField to fill with Text</param>
 		 * <param name="text">The Text to Fill</param>
 		*/
-		private void FillText(Word.Application app, Word.FormField field, string text) 
+		private void FillText(Word.Application app, Word.FormField field, string text)
 		{
 			field.Select();
-			for (int i = 1; i < 6; i++) 
+			for (int i = 1; i < 6; i++)
 			{
 				field.Range.Paragraphs.TabStops.Add(i * 14);
 			}
@@ -89,7 +86,7 @@ namespace BerichtManager
 				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
 				app.Selection.TypeText(text.Substring(201));
 			}
-			else 
+			else
 			{
 				field.Result = text.Replace("\n", "\v");
 			}
@@ -102,10 +99,10 @@ namespace BerichtManager
 		 * <param name="app">The Wordapp containing the document</param>
 		 * <param name="doc">The Document which needs a font change</param>
 		*/
-		private void SetFontInDoc(Word.Document doc, Word.Application app) 
+		private void SetFontInDoc(Word.Document doc, Word.Application app)
 		{
 			doc.Content.Select();
-			if (app.Selection.Font.Name != handler.LoadFont()) 
+			if (app.Selection.Font.Name != handler.LoadFont())
 			{
 				app.Selection.Font.Name = handler.LoadFont();
 				MessageBox.Show("Changed report Font to: " + handler.LoadFont(), "Font changed!");
@@ -175,7 +172,7 @@ namespace BerichtManager
 					enumerator.MoveNext();
 
 					//Enter report nr.
-					if (int.TryParse(handler.LoadNumber(), out int number)) 
+					if (int.TryParse(handler.LoadNumber(), out int number))
 					{
 						FillText(app, ((Word.FormField)enumerator.Current), (number + reportDifference).ToString());
 					}
@@ -206,7 +203,7 @@ namespace BerichtManager
 					{
 						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 					}
-					else 
+					else
 					{
 						form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", isCreate: true);
 						form.ShowDialog();
@@ -236,7 +233,7 @@ namespace BerichtManager
 					{
 						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 					}
-					else 
+					else
 					{
 						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: "-Keine-", isCreate: true);
 						form.ShowDialog();
@@ -266,7 +263,7 @@ namespace BerichtManager
 					{
 						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", school: true, isCreate: true);
 					}
-					else 
+					else
 					{
 						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", text: client.getHolidaysForDate(baseDate), isCreate: true);
 					}
@@ -314,7 +311,7 @@ namespace BerichtManager
 					UpdateTree();
 
 					//If single report close app
-					if (isSingle) 
+					if (isSingle)
 					{
 						try
 						{
@@ -369,17 +366,17 @@ namespace BerichtManager
 		{
 			try
 			{
-				if (doc != null) 
+				if (doc != null)
 				{
 					doc.Close();
 				}
-				if (wordApp != null) 
+				if (wordApp != null)
 				{
 					wordApp.Quit(SaveChanges: false);
 				}
 				Close();
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
 				Console.Write(ex.StackTrace);
 				Close();
@@ -403,17 +400,14 @@ namespace BerichtManager
 		 * </summary>
 		 * 
 		*/
-		private void CreateMissing(bool vacation = false) 
+		private void CreateMissing(bool vacation = false)
 		{
 			DateTimeFormatInfo dfi = culture.DateTimeFormat;
 			DateTime date1 = new DateTime(DateTime.Today.Year, 12, 31);
 
-			Calendar cal = dfi.Calendar;
 			int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			int reportNr = handler.LoadLastReportKW();
 
-			//Word.Application multipleApp = new Word.Application();
-			//multipleApp.Visible = visible;
 			wordApp = new Word.Application();
 			wordApp.Visible = visible;
 
@@ -423,8 +417,7 @@ namespace BerichtManager
 				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					//Console.WriteLine("Created report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays( i * 7), wordApp/*multipleApp*/, vacation: vacation);
+					CreateDocument(handler.LoadPath(), today.AddDays( i * 7), wordApp, vacation: vacation);
 				}
 			}
 			else
@@ -442,13 +435,11 @@ namespace BerichtManager
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					//Console.WriteLine("Creating report for week " + culture.Calendar.GetWeekOfYear(today.AddDays(i * (7)), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					CreateDocument(handler.LoadPath(), today.AddDays(i * 7), wordApp/*multipleApp*/, vacation: vacation);
+					CreateDocument(handler.LoadPath(), today.AddDays(i * 7), wordApp, vacation: vacation);
 				}
 			}
 			try
 			{
-				//multipleApp.Quit(SaveChanges: false);
 				wordApp.Quit(SaveChanges: false);
 			}
 			catch
@@ -461,7 +452,7 @@ namespace BerichtManager
 		{
 			//Check if report for this week was already created
 			int currentWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))// || handler.LoadLastReportKW() == currentWeek)
+			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
 			{
 				MessageBox.Show("A report has already been created for this week");
 				return;
@@ -470,7 +461,6 @@ namespace BerichtManager
 			if (handler.LoadLastReportKW() > 0)
 			{
 				//Check if report for last week was created
-				//if (handler.LoadLastReportKW() > culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)
 				if (getDistanceToToday() > 1)
 				{
 					if (MessageBox.Show("You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -489,14 +479,14 @@ namespace BerichtManager
 
 			wordApp = new Word.Application();
 			wordApp.Visible = visible;
-			CreateDocument(handler.LoadPath(), baseDate: DateTime.Today, wordApp/*new Word.Application { Visible = visible}*/, isSingle: true);
+			CreateDocument(handler.LoadPath(), baseDate: DateTime.Today, wordApp, isSingle: true);
 		}
 
 		/// <summary>
 		/// Returns the distance between the last created date in the config and today
 		/// </summary>
 		/// <returns>The number of weeks since last report creation</returns>
-		private int getDistanceToToday() 
+		private int getDistanceToToday()
 		{
 			int lastReportKW = handler.LoadLastReportKW();
 			int todaysWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
@@ -506,7 +496,7 @@ namespace BerichtManager
 				return todaysWeek - lastReportKW;
 			}
 			//Both weeks are in different years
-			else 
+			else
 			{
 				int lastWeekOfLastYear = culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 				return lastWeekOfLastYear - lastReportKW + todaysWeek;
@@ -523,7 +513,7 @@ namespace BerichtManager
 				{
 					handler.EditNumber(form.Result);
 				}
-				else 
+				else
 				{
 					MessageBox.Show("Entered value is not a number, the report number was thus not set");
 				}
@@ -543,77 +533,24 @@ namespace BerichtManager
 
 		private void btPrint_Click(object sender, EventArgs e)
 		{
-			if (tvReports.SelectedNode == null) 
+			if (tvReports.SelectedNode == null)
 			{
 				MessageBox.Show("No report selected");
 				return;
 			}
 			PrintDocument(tvReports.SelectedNode.FullPath);
-			/*if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx")
-			{
-				MessageBox.Show("You may only print Documents(*.docx) files");
-				return;
-			}
-			DirectoryInfo printed = new DirectoryInfo(Path.GetDirectoryName(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)));
-			if (printed.Name == "Gedruckt") 
-			{
-				if (MessageBox.Show("Report was already printed do you want to print it again?", "Reprint?", MessageBoxButtons.YesNo) != DialogResult.Yes) 
-				{
-					return;
-				}
-			}
-			PrintDialog printDialog = new PrintDialog();
-			if (printDialog.ShowDialog() == DialogResult.OK)
-			{
-				Word.Application printApp = null;
-				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
-				{
-					if (!Directory.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt")) 
-					{
-						Directory.CreateDirectory(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt");
-					}
-					try
-					{
-						printApp = new Word.Application();
-						printApp.Visible = visible;
-						Word.Document document = printApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), ReadOnly: true);
-						document.PrintOut(Background: false);
-						printApp.Documents.Close();
-						printApp.Quit(false);
-						if (printed.Name != "Gedruckt") 
-						{
-							File.Move(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath),
-							Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Substring(0, Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length - Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath).Length) + "\\Gedruckt\\" + Path.GetFileName(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
-						}
-						UpdateTree();
-					}
-					catch (Exception ex)
-					{
-						Console.Write(ex.Message);
-						Console.Write("\n" + ex.StackTrace);
-						try
-						{
-							printApp.Quit(false);
-						}
-						catch
-						{
-
-						}
-					}
-				}
-			}*/
 		}
 
 		private void btPrintAll_Click(object sender, EventArgs e)
 		{
-			if (Directory.Exists(Path.GetFullPath(".\\.."))) 
+			if (Directory.Exists(Path.GetFullPath(".\\..")))
 			{
 				Dictionary<string, List<string>> unPrintedFiles = new Dictionary<string, List<string>>();
-				foreach (string dirName in Directory.GetDirectories(Path.GetFullPath(".\\.."))) 
+				foreach (string dirName in Directory.GetDirectories(Path.GetFullPath(".\\..")))
 				{
-					foreach (string file in Directory.GetFiles(dirName)) 
+					foreach (string file in Directory.GetFiles(dirName))
 					{
-						if (Path.GetExtension(file) == ".docx") 
+						if (Path.GetExtension(file) == ".docx")
 						{
 							if (!Directory.Exists(dirName + "\\Gedruckt"))
 							{
@@ -631,13 +568,12 @@ namespace BerichtManager
 				PrintDialog printDialog = new PrintDialog();
 				if (printDialog.ShowDialog() == DialogResult.OK)
 				{
-					//Word.Application printApp = null;
 					if (unPrintedFiles.Count == 0)
 					{
 						MessageBox.Show("No unprinted reports found");
 						return;
 					}
-					else 
+					else
 					{
 						foreach (string key in unPrintedFiles.Keys)
 						{
@@ -652,26 +588,20 @@ namespace BerichtManager
 					}
 					try
 					{
-						//printApp = new Word.Application();
-						//printApp.Visible = visible;
 						wordApp = new Word.Application();
 						wordApp.Visible = visible;
-						foreach (string key in unPrintedFiles.Keys) 
+						foreach (string key in unPrintedFiles.Keys)
 						{
 							unPrintedFiles[key].ForEach((f) => 
 							{
-								//Word.Document document = printApp.Documents.Open(FileName: f, ReadOnly: true);
-								//document.PrintOut(Background: false);
-								//printApp.Documents.Close();
 								Word.Document document = wordApp.Documents.Open(FileName: f, ReadOnly: true);
 								document.PrintOut(Background: false);
 								wordApp.Documents.Close();
 							});
 						}
-						//printApp.Quit(false);
 						wordApp.Quit(SaveChanges: false);
 
-						foreach (string key in unPrintedFiles.Keys) 
+						foreach (string key in unPrintedFiles.Keys)
 						{
 							unPrintedFiles[key].ForEach((f) => 
 							{
@@ -685,11 +615,8 @@ namespace BerichtManager
 						HelperClasses.Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
-						//Console.Write(ex.Message);
-						//Console.Write("\n" + ex.StackTrace);
 						try
 						{
-							//printApp.Quit(false);
 							wordApp.Quit(false);
 						}
 						catch
@@ -709,7 +636,7 @@ namespace BerichtManager
 				MessageBox.Show("No report selected");
 				return;
 			}
-			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx") 
+			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx")
 			{
 				MessageBox.Show("You may only edit Documents(*.docx) files");
 			}
@@ -724,41 +651,6 @@ namespace BerichtManager
 				return;
 			}
 			DeleteDocument(tvReports.SelectedNode.FullPath);
-			/*if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes) 
-			{
-				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)))
-				{
-					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)).StartsWith("~$"))
-					{
-						if (Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath) == handler.LoadActive())
-						{
-							if (tvReports.SelectedNode.Text.Substring(15, ("" + culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()) 
-							{
-								if (int.TryParse(handler.LoadNumber(), out int number))
-								{
-									handler.EditNumber("" + (number - 1));
-								}
-								else
-								{
-									MessageBox.Show("Could not reset current number of report");
-								}
-							}
-						}
-						File.Delete(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
-						//tvReports.Nodes.Remove(tvReports.SelectedNode);
-						UpdateTree();
-						MessageBox.Show("File deleted successfully");
-					}
-					else 
-					{
-						MessageBox.Show("You may only delete Documents(*.docx) or their temporary files");
-					}
-				}
-				else 
-				{
-					MessageBox.Show("File not Found (was it moved or deleted?)");
-				}
-			}*/
 		}
 
 		private void btLogin_Click(object sender, EventArgs e)
@@ -771,7 +663,7 @@ namespace BerichtManager
 			EditForm form = new EditForm("Enter your name", text: "Name Vorname");
 			if (form.ShowDialog() == DialogResult.OK)
 			{
-				if (form.Result != "Name Vorname") 
+				if (form.Result != "Name Vorname")
 				{
 					handler.SaveName(form.Result);
 				}
@@ -942,7 +834,6 @@ namespace BerichtManager
 			PrintDialog printDialog = new PrintDialog();
 			if (printDialog.ShowDialog() == DialogResult.OK)
 			{
-				//Word.Application printApp = null;
 				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + path)))
 				{
 					if (!Directory.Exists(Path.GetFullPath(".\\..\\..\\" + path).Substring(0, Path.GetFullPath(".\\..\\..\\" + path).Length - Path.GetFileName(".\\..\\..\\" + path).Length) + "\\Gedruckt"))
@@ -951,12 +842,6 @@ namespace BerichtManager
 					}
 					try
 					{
-						//printApp = new Word.Application();
-						//printApp.Visible = visible;
-						//Word.Document document = printApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + path), ReadOnly: true);
-						//document.PrintOut(Background: false);
-						//printApp.Documents.Close();
-						//printApp.Quit(false);
 						wordApp = new Word.Application();
 						wordApp.Visible = visible;
 						Word.Document document = wordApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + path), ReadOnly: true);
@@ -975,11 +860,8 @@ namespace BerichtManager
 						HelperClasses.Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
-						//Console.Write(ex.Message);
-						//Console.Write("\n" + ex.StackTrace);
 						try
 						{
-							//printApp.Quit(false);
 							wordApp.Quit(false);
 						}
 						catch
@@ -1053,7 +935,7 @@ namespace BerichtManager
 
 		private void tvReports_Click(object sender, EventArgs e)
 		{
-			if (((MouseEventArgs)e).Button == MouseButtons.Right) 
+			if (((MouseEventArgs)e).Button == MouseButtons.Right)
 			{
 				tvReports.SelectedNode = tvReports.GetNodeAt(((MouseEventArgs)e).X, ((MouseEventArgs)e).Y);
 			}
@@ -1088,14 +970,13 @@ namespace BerichtManager
 		{
 			bool isInLogs = false;
 			e.Cancel = true;
-			if (tvReports.SelectedNode.Parent != null) 
+			if (tvReports.SelectedNode.Parent != null)
 			{
 				if (tvReports.SelectedNode.Parent.Text == "Logs")
 				{
 					isInLogs = true;
 				}
 			}
-			//((ContextMenuStrip)sender).Items.Clear();
 			if (tvReports.SelectedNode.Text.EndsWith(".docx") || isInLogs)
 			{
 				e.Cancel = false;
@@ -1110,26 +991,6 @@ namespace BerichtManager
 					miQuickEditOptions.Enabled = false;
 				}
 			}
-			/*
-			 e.Cancel = true;
-			((ContextMenuStrip)sender).Items.Clear();
-			if (tvReports.SelectedNode.Text.EndsWith(".docx"))
-			{
-				e.Cancel = false;
-				if (!tvReports.SelectedNode.Text.StartsWith("~$"))
-				{
-					//ToolStripMenuItem miEdit = new ToolStripMenuItem("Edit");
-					//miEdit.Click += new EventHandler(miEdit_Click);
-					((ContextMenuStrip)sender).Items.Add(miEdit);
-					//ToolStripMenuItem miPrint = new ToolStripMenuItem("Print");
-					//miPrint.Click += new EventHandler(miPrint_Click);
-					((ContextMenuStrip)sender).Items.Add(miPrint);
-				}
-				//ToolStripMenuItem miDelete = new ToolStripMenuItem("Delete");
-				//miDelete.Click += new EventHandler(miDelete_Click);
-				((ContextMenuStrip)sender).Items.Add(miDelete);
-			}
-			 */
 		}
 
 		private void btOptions_Click(object sender, EventArgs e)
