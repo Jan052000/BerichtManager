@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace BerichtManager.AddForm
 {
-	public partial class Client : Form
+	public partial class Client
 	{
 		private readonly ConfigHandler configHandler = new ConfigHandler();
 		private readonly OptionsMenu.OptionConfigHandler options = new OptionsMenu.OptionConfigHandler();
@@ -19,15 +19,9 @@ namespace BerichtManager.AddForm
 		private readonly string schoolName;
 		public Client()
 		{
-			InitializeComponent();
 			//Get school and server
 			schoolName = options.GetSchoolName();
 			server = options.GetWebUntisServer();
-		}
-
-		private void btClose_Click(object sender, EventArgs e)
-		{
-			Close();
 		}
 
 		public List<string> GetClassesFromWebUntis() 
