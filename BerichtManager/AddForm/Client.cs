@@ -24,7 +24,7 @@ namespace BerichtManager.AddForm
 			server = options.GetWebUntisServer();
 		}
 
-		public List<string> GetClassesFromWebUntis() 
+		public List<string> GetClassesFromWebUntis()
 		{
 			if (!options.UseWebUntis())
 			{
@@ -41,7 +41,7 @@ namespace BerichtManager.AddForm
 			{
 				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 			}
-			else 
+			else
 			{
 				user = configHandler.doLogin();
 				if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
@@ -49,7 +49,7 @@ namespace BerichtManager.AddForm
 					MessageBox.Show("You need to login to automatically enter classes");
 					return classes;
 				}
-				else 
+				else
 				{
 					responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + user.Username + "&j_password=" + user.Password).Result;
 				}
@@ -62,7 +62,7 @@ namespace BerichtManager.AddForm
 			{
 				client.DefaultRequestHeaders.Authorization = authorize;
 			}
-			else 
+			else
 			{
 				MessageBox.Show("There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
 				return new List<string>();
@@ -112,7 +112,7 @@ namespace BerichtManager.AddForm
 								{
 									cancelled[id.id] = false;
 								}
-								else 
+								else
 								{
 									cancelled.Add(id.id, false);
 								}
@@ -176,7 +176,7 @@ namespace BerichtManager.AddForm
 			});
 
 			//Check for Holidays if list empty
-			if (classes.Count == 0) 
+			if (classes.Count == 0)
 			{
 				DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
 				DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
@@ -184,17 +184,17 @@ namespace BerichtManager.AddForm
 				if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
 
 				Holidays holidays = GetHolidays(user);
-				holidays.result.ForEach((holiday) => 
+				holidays.result.ForEach((holiday) =>
 				{
 					bool isInWeek = (holiday.startDate >= weekStart && holiday.endDate <= weekEnd);
 					bool isStarting = (holiday.startDate >= weekStart && holiday.startDate <= weekEnd);
 					bool isEnding = (holiday.endDate >= weekStart && holiday.endDate <= weekEnd);
 					bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
-					if (isInWeek || isStarting || isEnding || weekInEvent) 
+					if (isInWeek || isStarting || isEnding || weekInEvent)
 					{
 						classes.Add("-" + holiday.longName + "\n");
 					}
-				});	
+				});
 			}
 
 			classes.Sort();
@@ -202,7 +202,7 @@ namespace BerichtManager.AddForm
 			return classes;
 		}
 
-		private Holidays GetHolidays(Config.User user = null) 
+		private Holidays GetHolidays(Config.User user = null)
 		{
 			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
 			HttpClient client = new HttpClient();
@@ -215,7 +215,7 @@ namespace BerichtManager.AddForm
 			}
 			else
 			{
-				if (user == null) 
+				if (user == null)
 				{
 					user = configHandler.doLogin();
 				}
@@ -231,7 +231,7 @@ namespace BerichtManager.AddForm
 			}
 
 			//Obtain Api Key
-			if (client.DefaultRequestHeaders.Authorization == null) 
+			if (client.DefaultRequestHeaders.Authorization == null)
 			{
 				string apiKey = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
 				if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
@@ -257,7 +257,7 @@ namespace BerichtManager.AddForm
 			return JsonConvert.DeserializeObject<Holidays>(response1.Content.ReadAsStringAsync().Result);
 		}
 
-		public string getHolidaysForDate(DateTime time) 
+		public string getHolidaysForDate(DateTime time)
 		{
 			string str = "";
 			DateTime thisWeekStart = time.AddDays(-(int)time.DayOfWeek + 1);
@@ -274,7 +274,7 @@ namespace BerichtManager.AddForm
 				bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
 				if (isInWeek || isStarting || isEnding || weekInEvent)
 				{
-					str +=  "-" + holiday.longName + "\n";
+					str += "-" + holiday.longName + "\n";
 				}
 			});
 			return str;
@@ -289,7 +289,7 @@ namespace BerichtManager.AddForm
 	//Lesen https://www.newtonsoft.com/json/help/html/serializationattributes.htm
 
 	[Serializable]
-	public class Courses 
+	public class Courses
 	{
 		public int type { get; set; }
 		public int id { get; set; }
@@ -303,7 +303,7 @@ namespace BerichtManager.AddForm
 	}
 
 	[Serializable]
-	public class Classes 
+	public class Classes
 	{
 		public int type { get; set; }
 		public int id { get; set; }
@@ -313,7 +313,7 @@ namespace BerichtManager.AddForm
 	}
 
 	[Serializable]
-	public class @is 
+	public class @is
 	{
 		public bool standard { get; set; }
 		[JsonProperty("event")]
@@ -324,7 +324,7 @@ namespace BerichtManager.AddForm
 	}
 
 	[Serializable]
-	public class Entry 
+	public class Entry
 	{
 		public int id { get; set; }
 		public int lessonId { get; set; }
@@ -350,7 +350,7 @@ namespace BerichtManager.AddForm
 	}
 
 	[Serializable]
-	public class Data 
+	public class Data
 	{
 		public bool noDetails { get; set; }
 		public List<int> elementIds { get; set; }
@@ -359,14 +359,14 @@ namespace BerichtManager.AddForm
 	}
 
 	[Serializable]
-	public class Result 
+	public class Result
 	{
 		public Data data { get; set; }
 		public long lastImportTimestamp { get; set; }
 	}
 
 	[Serializable]
-	public class Root 
+	public class Root
 	{
 		public Result result { get; set; }
 	}
