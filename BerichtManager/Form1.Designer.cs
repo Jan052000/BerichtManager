@@ -50,6 +50,9 @@ namespace BerichtManager
 			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.miEdit = new System.Windows.Forms.ToolStripMenuItem();
+			this.miQuickEditOptions = new System.Windows.Forms.ToolStripMenuItem();
+			this.tiQuickEditWork = new System.Windows.Forms.ToolStripMenuItem();
+			this.miQuickEditSchool = new System.Windows.Forms.ToolStripMenuItem();
 			this.miPrint = new System.Windows.Forms.ToolStripMenuItem();
 			this.btEditExisting = new System.Windows.Forms.Button();
 			this.btDelete = new System.Windows.Forms.Button();
@@ -59,9 +62,7 @@ namespace BerichtManager
 			this.btEditName = new System.Windows.Forms.Button();
 			this.cbVisible = new System.Windows.Forms.CheckBox();
 			this.btOptions = new System.Windows.Forms.Button();
-			this.miQuickEditOptions = new System.Windows.Forms.ToolStripMenuItem();
-			this.tiQuickEditWork = new System.Windows.Forms.ToolStripMenuItem();
-			this.miQuickEditSchool = new System.Windows.Forms.ToolStripMenuItem();
+			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
 			this.toRightClickMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -84,6 +85,7 @@ namespace BerichtManager
 			this.btSetTemplate.Size = new System.Drawing.Size(79, 23);
 			this.btSetTemplate.TabIndex = 1;
 			this.btSetTemplate.Text = "Set Template";
+			this.ttTips.SetToolTip(this.btSetTemplate, "Sets the path for the template");
 			this.btSetTemplate.UseVisualStyleBackColor = true;
 			this.btSetTemplate.Click += new System.EventHandler(this.btSetTemplate_Click);
 			// 
@@ -95,6 +97,7 @@ namespace BerichtManager
 			this.btCreate.Size = new System.Drawing.Size(84, 23);
 			this.btCreate.TabIndex = 2;
 			this.btCreate.Text = "Create";
+			this.ttTips.SetToolTip(this.btCreate, "Creates a new report");
 			this.btCreate.UseVisualStyleBackColor = true;
 			this.btCreate.Click += new System.EventHandler(this.btCreate_Click);
 			// 
@@ -106,6 +109,7 @@ namespace BerichtManager
 			this.btSetNumber.Size = new System.Drawing.Size(75, 23);
 			this.btSetNumber.TabIndex = 3;
 			this.btSetNumber.Text = "Set Number";
+			this.ttTips.SetToolTip(this.btSetNumber, "Changes the report number to be used next");
 			this.btSetNumber.UseVisualStyleBackColor = true;
 			this.btSetNumber.Click += new System.EventHandler(this.btSetNumber_Click);
 			// 
@@ -117,6 +121,7 @@ namespace BerichtManager
 			this.btEdit.Size = new System.Drawing.Size(84, 23);
 			this.btEdit.TabIndex = 4;
 			this.btEdit.Text = "Edit Latest";
+			this.ttTips.SetToolTip(this.btEdit, "Edits last created report");
 			this.btEdit.UseVisualStyleBackColor = true;
 			this.btEdit.Click += new System.EventHandler(this.btEdit_Click);
 			// 
@@ -154,27 +159,50 @@ namespace BerichtManager
             this.miQuickEditOptions,
             this.miPrint});
 			this.toRightClickMenu.Name = "contextMenuStrip1";
-			this.toRightClickMenu.Size = new System.Drawing.Size(181, 114);
+			this.toRightClickMenu.Size = new System.Drawing.Size(147, 92);
 			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
 			// 
 			// miDelete
 			// 
 			this.miDelete.Name = "miDelete";
-			this.miDelete.Size = new System.Drawing.Size(180, 22);
+			this.miDelete.Size = new System.Drawing.Size(146, 22);
 			this.miDelete.Text = "Delete";
 			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
 			// 
 			// miEdit
 			// 
 			this.miEdit.Name = "miEdit";
-			this.miEdit.Size = new System.Drawing.Size(180, 22);
+			this.miEdit.Size = new System.Drawing.Size(146, 22);
 			this.miEdit.Text = "Edit";
 			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
+			// 
+			// miQuickEditOptions
+			// 
+			this.miQuickEditOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tiQuickEditWork,
+            this.miQuickEditSchool});
+			this.miQuickEditOptions.Name = "miQuickEditOptions";
+			this.miQuickEditOptions.Size = new System.Drawing.Size(146, 22);
+			this.miQuickEditOptions.Text = "Quick actions";
+			// 
+			// tiQuickEditWork
+			// 
+			this.tiQuickEditWork.Name = "tiQuickEditWork";
+			this.tiQuickEditWork.Size = new System.Drawing.Size(132, 22);
+			this.tiQuickEditWork.Text = "Edit work";
+			this.tiQuickEditWork.Click += new System.EventHandler(this.miQuickEditWork_Click);
+			// 
+			// miQuickEditSchool
+			// 
+			this.miQuickEditSchool.Name = "miQuickEditSchool";
+			this.miQuickEditSchool.Size = new System.Drawing.Size(132, 22);
+			this.miQuickEditSchool.Text = "Edit school";
+			this.miQuickEditSchool.Click += new System.EventHandler(this.miQuickEditSchool_Click);
 			// 
 			// miPrint
 			// 
 			this.miPrint.Name = "miPrint";
-			this.miPrint.Size = new System.Drawing.Size(180, 22);
+			this.miPrint.Size = new System.Drawing.Size(146, 22);
 			this.miPrint.Text = "Print";
 			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
 			// 
@@ -186,6 +214,7 @@ namespace BerichtManager
 			this.btEditExisting.Size = new System.Drawing.Size(84, 23);
 			this.btEditExisting.TabIndex = 7;
 			this.btEditExisting.Text = "Edit";
+			this.ttTips.SetToolTip(this.btEditExisting, "Edits selected report");
 			this.btEditExisting.UseVisualStyleBackColor = true;
 			this.btEditExisting.Click += new System.EventHandler(this.btEditExisting_Click);
 			// 
@@ -197,28 +226,31 @@ namespace BerichtManager
 			this.btDelete.Size = new System.Drawing.Size(84, 23);
 			this.btDelete.TabIndex = 8;
 			this.btDelete.Text = "Delete";
+			this.ttTips.SetToolTip(this.btDelete, "Deletes selected report");
 			this.btDelete.UseVisualStyleBackColor = true;
 			this.btDelete.Click += new System.EventHandler(this.btDelete_Click);
 			// 
 			// btPrint
 			// 
 			this.btPrint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btPrint.Location = new System.Drawing.Point(704, 157);
+			this.btPrint.Location = new System.Drawing.Point(704, 128);
 			this.btPrint.Name = "btPrint";
 			this.btPrint.Size = new System.Drawing.Size(84, 23);
 			this.btPrint.TabIndex = 9;
 			this.btPrint.Text = "Print Selected";
+			this.ttTips.SetToolTip(this.btPrint, "Prints the selected report");
 			this.btPrint.UseVisualStyleBackColor = true;
 			this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
 			// 
 			// btPrintAll
 			// 
 			this.btPrintAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btPrintAll.Location = new System.Drawing.Point(704, 128);
+			this.btPrintAll.Location = new System.Drawing.Point(704, 157);
 			this.btPrintAll.Name = "btPrintAll";
 			this.btPrintAll.Size = new System.Drawing.Size(84, 23);
 			this.btPrintAll.TabIndex = 10;
 			this.btPrintAll.Text = "Print All";
+			this.ttTips.SetToolTip(this.btPrintAll, "Prints all unprinted reports");
 			this.btPrintAll.UseVisualStyleBackColor = true;
 			this.btPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
 			// 
@@ -230,6 +262,7 @@ namespace BerichtManager
 			this.btLogin.Size = new System.Drawing.Size(75, 23);
 			this.btLogin.TabIndex = 11;
 			this.btLogin.Text = "Login";
+			this.ttTips.SetToolTip(this.btLogin, "Opens login window");
 			this.btLogin.UseVisualStyleBackColor = true;
 			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
 			// 
@@ -241,6 +274,7 @@ namespace BerichtManager
 			this.btEditName.Size = new System.Drawing.Size(75, 23);
 			this.btEditName.TabIndex = 12;
 			this.btEditName.Text = "Edit Name";
+			this.ttTips.SetToolTip(this.btEditName, "Sets the name to be used in reports");
 			this.btEditName.UseVisualStyleBackColor = true;
 			this.btEditName.Click += new System.EventHandler(this.btEditName_Click);
 			// 
@@ -253,6 +287,7 @@ namespace BerichtManager
 			this.cbVisible.Size = new System.Drawing.Size(90, 17);
 			this.cbVisible.TabIndex = 13;
 			this.cbVisible.Text = "Word visible?";
+			this.ttTips.SetToolTip(this.cbVisible, "Toggles if word should open a window");
 			this.cbVisible.UseVisualStyleBackColor = true;
 			this.cbVisible.CheckedChanged += new System.EventHandler(this.cbVisible_CheckedChanged);
 			// 
@@ -264,31 +299,9 @@ namespace BerichtManager
 			this.btOptions.Size = new System.Drawing.Size(84, 23);
 			this.btOptions.TabIndex = 14;
 			this.btOptions.Text = "Options";
+			this.ttTips.SetToolTip(this.btOptions, "Opens the option menu");
 			this.btOptions.UseVisualStyleBackColor = true;
 			this.btOptions.Click += new System.EventHandler(this.btOptions_Click);
-			// 
-			// miQuickEditOptions
-			// 
-			this.miQuickEditOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tiQuickEditWork,
-            this.miQuickEditSchool});
-			this.miQuickEditOptions.Name = "miQuickEditOptions";
-			this.miQuickEditOptions.Size = new System.Drawing.Size(180, 22);
-			this.miQuickEditOptions.Text = "Quick actions";
-			// 
-			// tiQuickEditWork
-			// 
-			this.tiQuickEditWork.Name = "tiQuickEditWork";
-			this.tiQuickEditWork.Size = new System.Drawing.Size(180, 22);
-			this.tiQuickEditWork.Text = "Edit work";
-			this.tiQuickEditWork.Click += new System.EventHandler(this.miQuickEditWork_Click);
-			// 
-			// miQuickEditSchool
-			// 
-			this.miQuickEditSchool.Name = "miQuickEditSchool";
-			this.miQuickEditSchool.Size = new System.Drawing.Size(180, 22);
-			this.miQuickEditSchool.Text = "Edit school";
-			this.miQuickEditSchool.Click += new System.EventHandler(this.miQuickEditSchool_Click);
 			// 
 			// FormManager
 			// 
@@ -340,6 +353,7 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miEdit;
 		private System.Windows.Forms.ToolStripMenuItem miPrint;
 		private System.Windows.Forms.Button btOptions;
+		private System.Windows.Forms.ToolTip ttTips;
 		private System.Windows.Forms.ToolStripMenuItem miQuickEditOptions;
 		private System.Windows.Forms.ToolStripMenuItem tiQuickEditWork;
 		private System.Windows.Forms.ToolStripMenuItem miQuickEditSchool;

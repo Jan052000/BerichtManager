@@ -48,7 +48,7 @@ namespace BerichtManager
 		 * Generates TreeNodes from files and directorys contained in the upper directory
 		 * </summary>
 		 * <param name="directoryInfo">The target directory</param>
-		 * <returns>A Treenode containing the files and folders in <c>directoryInfo</c></returns>
+		 * <returns>A Treenode representing the contents of <paramref name="directoryInfo"/></returns>
 		*/
 		//https://stackoverflow.com/questions/6239544/populate-treeview-with-file-system-directory-structure
 		private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)

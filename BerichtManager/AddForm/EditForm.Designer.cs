@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.btClose = new System.Windows.Forms.Button();
 			this.btConfirm = new System.Windows.Forms.Button();
 			this.rtInput = new System.Windows.Forms.RichTextBox();
@@ -36,6 +37,7 @@
 			this.cbFontFamily = new System.Windows.Forms.ComboBox();
 			this.cbEditorFont = new System.Windows.Forms.CheckBox();
 			this.btSaveAndQuit = new System.Windows.Forms.Button();
+			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -47,6 +49,7 @@
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 0;
 			this.btClose.Text = "Close";
+			this.ttTips.SetToolTip(this.btClose, "Saves input and closes this window");
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
@@ -58,6 +61,7 @@
 			this.btConfirm.Size = new System.Drawing.Size(75, 23);
 			this.btConfirm.TabIndex = 1;
 			this.btConfirm.Text = "Confirm";
+			this.ttTips.SetToolTip(this.btConfirm, "Saves input");
 			this.btConfirm.UseVisualStyleBackColor = true;
 			this.btConfirm.Click += new System.EventHandler(this.btConfirm_Click);
 			// 
@@ -81,6 +85,7 @@
 			this.btQuit.Size = new System.Drawing.Size(75, 23);
 			this.btQuit.TabIndex = 3;
 			this.btQuit.Text = "Quit Edit";
+			this.ttTips.SetToolTip(this.btQuit, "Aborts edit");
 			this.btQuit.UseVisualStyleBackColor = true;
 			this.btQuit.Click += new System.EventHandler(this.btQuit_Click);
 			// 
@@ -92,6 +97,7 @@
 			this.nudFontSize.Name = "nudFontSize";
 			this.nudFontSize.Size = new System.Drawing.Size(47, 20);
 			this.nudFontSize.TabIndex = 5;
+			this.ttTips.SetToolTip(this.nudFontSize, "Changes local font size");
 			this.nudFontSize.ValueChanged += new System.EventHandler(this.nudFontSize_ValueChanged);
 			// 
 			// cbFontFamily
@@ -104,6 +110,7 @@
 			this.cbFontFamily.Name = "cbFontFamily";
 			this.cbFontFamily.Size = new System.Drawing.Size(306, 21);
 			this.cbFontFamily.TabIndex = 6;
+			this.ttTips.SetToolTip(this.cbFontFamily, "Changes font in editor and report");
 			this.cbFontFamily.SelectedValueChanged += new System.EventHandler(this.cbFontFamily_SelectedValueChanged);
 			// 
 			// cbEditorFont
@@ -115,6 +122,7 @@
 			this.cbEditorFont.Size = new System.Drawing.Size(77, 17);
 			this.cbEditorFont.TabIndex = 7;
 			this.cbEditorFont.Text = "Editor Font";
+			this.ttTips.SetToolTip(this.cbEditorFont, "Toggles if the selected font should be used");
 			this.cbEditorFont.UseVisualStyleBackColor = true;
 			this.cbEditorFont.CheckedChanged += new System.EventHandler(this.cbEditorFont_CheckedChanged);
 			// 
@@ -126,6 +134,7 @@
 			this.btSaveAndQuit.Size = new System.Drawing.Size(85, 23);
 			this.btSaveAndQuit.TabIndex = 8;
 			this.btSaveAndQuit.Text = "Save and Quit";
+			this.ttTips.SetToolTip(this.btSaveAndQuit, "Saves input and closes this window");
 			this.btSaveAndQuit.UseVisualStyleBackColor = true;
 			this.btSaveAndQuit.Click += new System.EventHandler(this.btSaveAndQuit_Click);
 			// 
@@ -161,5 +170,6 @@
 		private System.Windows.Forms.ComboBox cbFontFamily;
 		private System.Windows.Forms.CheckBox cbEditorFont;
 		private System.Windows.Forms.Button btSaveAndQuit;
+		private System.Windows.Forms.ToolTip ttTips;
 	}
 }

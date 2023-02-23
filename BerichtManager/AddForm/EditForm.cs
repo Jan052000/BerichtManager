@@ -63,6 +63,7 @@ namespace BerichtManager.AddForm
 			{
 				btSaveAndQuit.Enabled = false;
 				btQuit.Text = "Cancel";
+				ttTips.SetToolTip(btQuit, "Cancels the creation process");
 			}
 		}
 
