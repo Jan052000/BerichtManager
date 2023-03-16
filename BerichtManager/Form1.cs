@@ -690,6 +690,8 @@ namespace BerichtManager
 			{
 				if (File.Exists(path))
 				{
+					if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
+						return;
 					wordApp = new Word.Application();
 					wordApp.Visible = visible;
 					doc = wordApp.Documents.Open(path);
@@ -927,10 +929,7 @@ namespace BerichtManager
 		{
 			if (tvReports.SelectedNode == null)
 				return;
-			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) == ".docx")
-			{
-				Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
-			}
+			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 		}
 
 		private void tvReports_Click(object sender, EventArgs e)
