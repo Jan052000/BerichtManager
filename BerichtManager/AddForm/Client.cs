@@ -99,7 +99,7 @@ namespace BerichtManager.AddForm
 							classids.Add(id.id);
 
 							//Check for cancellation
-							if (en.@is.cancelled == true)
+							if (en.@is.cancelled == true)// || en.@is.substitution)
 							{
 								if (!cancelled.Keys.Contains(id.id))
 								{
@@ -321,6 +321,7 @@ namespace BerichtManager.AddForm
 		public bool? cancelled { get; set; }
 		public bool? shift { get; set; }
 		public bool? roomSubstitution { get; set; }
+		public bool substitution { get; set; }
 	}
 
 	[Serializable]

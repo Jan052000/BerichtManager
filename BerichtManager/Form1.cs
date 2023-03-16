@@ -390,7 +390,7 @@ namespace BerichtManager
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
 				handler.Save(Path.GetFullPath(dialog.FileName));
-				MessageBox.Show("Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
+				MessageBox.Show("Template set to: " + Path.GetFullPath(dialog.FileName));
 			}
 		}
 

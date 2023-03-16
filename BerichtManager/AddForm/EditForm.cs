@@ -19,7 +19,7 @@ namespace BerichtManager.AddForm
 			InitializeComponent();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
-			rtInput.Multiline = true;
+			//rtInput.Multiline = true;
 			nudFontSize.Value = (decimal)handler.LoadEditorFontSize();
 			foreach (FontFamily family in (new InstalledFontCollection()).Families)
 			{
@@ -28,7 +28,7 @@ namespace BerichtManager.AddForm
 			cbFontFamily.Text = handler.LoadFont();
 			cbFontFamily.Enabled = false;
 
-			rtInput.Font = new Font(cbFontFamily.Text, handler.LoadEditorFontSize());
+			rtInput.Font = new Font(cbFontFamily.Text, (float)nudFontSize.Value);
 
 			List<int> tabstops = new List<int>();
 			for (int i = 1; i * 14 < rtInput.Size.Width && tabstops.Count < 32; i++) 
