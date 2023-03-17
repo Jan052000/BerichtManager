@@ -74,7 +74,7 @@ namespace BerichtManager
 				else
 				{
 					if (tvReportsMaxWidth < node.Bounds.Right + 1)
-						tvReportsMaxWidth = node.Bounds.Right + 1 - 25;
+						tvReportsMaxWidth = node.Bounds.Right + 20;
 				}
 			}
 		}
