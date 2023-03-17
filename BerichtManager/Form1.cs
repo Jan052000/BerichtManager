@@ -53,10 +53,10 @@ namespace BerichtManager
 				TvReportsMaxWidth(node);
 			tvReports.CollapseAll();
 			splitterTreeBoxes.SplitPosition = tvReportsMaxWidth + 1;
-			Rectangle bounds = paTextBoxes.Bounds;
+			Rectangle bounds = scTextBoxes.Bounds;
 			bounds.X = paFileTree.Bounds.Right + 1;
 			bounds.Width = btCreate.Bounds.X - 6;
-			paTextBoxes.Bounds = bounds;
+			scTextBoxes.Bounds = bounds;
 		}
 
 		/// <summary>
@@ -1274,11 +1274,6 @@ namespace BerichtManager
 		private void EditRichTextBox(object sender, EventArgs e)
 		{
 			wasEdited = true;
-		}
-
-		private void paTextBoxes_Resize(object sender, EventArgs e)
-		{
-			splitterBoxes.SplitPosition = ((Panel)sender).Height / 2;
 		}
 	}
 }

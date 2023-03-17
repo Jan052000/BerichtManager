@@ -66,14 +66,16 @@ namespace BerichtManager
 			this.rtbSchool = new System.Windows.Forms.RichTextBox();
 			this.button1 = new System.Windows.Forms.Button();
 			this.paMainView = new System.Windows.Forms.Panel();
-			this.paTextBoxes = new System.Windows.Forms.Panel();
-			this.splitterBoxes = new System.Windows.Forms.Splitter();
-			this.paFileTree = new System.Windows.Forms.Panel();
 			this.splitterTreeBoxes = new System.Windows.Forms.Splitter();
+			this.paFileTree = new System.Windows.Forms.Panel();
+			this.scTextBoxes = new System.Windows.Forms.SplitContainer();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
-			this.paTextBoxes.SuspendLayout();
 			this.paFileTree.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
+			this.scTextBoxes.Panel1.SuspendLayout();
+			this.scTextBoxes.Panel2.SuspendLayout();
+			this.scTextBoxes.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -304,11 +306,11 @@ namespace BerichtManager
 			// rtbWork
 			// 
 			this.rtbWork.AcceptsTab = true;
-			this.rtbWork.Dock = System.Windows.Forms.DockStyle.Top;
+			this.rtbWork.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.rtbWork.Location = new System.Drawing.Point(0, 0);
 			this.rtbWork.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbWork.Name = "rtbWork";
-			this.rtbWork.Size = new System.Drawing.Size(460, 202);
+			this.rtbWork.Size = new System.Drawing.Size(460, 204);
 			this.rtbWork.TabIndex = 4;
 			this.rtbWork.Text = "";
 			this.ttTips.SetToolTip(this.rtbWork, "Work");
@@ -320,10 +322,10 @@ namespace BerichtManager
 			// 
 			this.rtbSchool.AcceptsTab = true;
 			this.rtbSchool.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.rtbSchool.Location = new System.Drawing.Point(0, 202);
+			this.rtbSchool.Location = new System.Drawing.Point(0, 0);
 			this.rtbSchool.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbSchool.Name = "rtbSchool";
-			this.rtbSchool.Size = new System.Drawing.Size(460, 207);
+			this.rtbSchool.Size = new System.Drawing.Size(460, 204);
 			this.rtbSchool.TabIndex = 4;
 			this.rtbSchool.Text = "";
 			this.ttTips.SetToolTip(this.rtbSchool, "School");
@@ -349,7 +351,7 @@ namespace BerichtManager
 			this.paMainView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.paMainView.Controls.Add(this.paTextBoxes);
+			this.paMainView.Controls.Add(this.scTextBoxes);
 			this.paMainView.Controls.Add(this.splitterTreeBoxes);
 			this.paMainView.Controls.Add(this.paFileTree);
 			this.paMainView.Location = new System.Drawing.Point(0, 0);
@@ -358,26 +360,13 @@ namespace BerichtManager
 			this.paMainView.Size = new System.Drawing.Size(698, 409);
 			this.paMainView.TabIndex = 15;
 			// 
-			// paTextBoxes
+			// splitterTreeBoxes
 			// 
-			this.paTextBoxes.Controls.Add(this.splitterBoxes);
-			this.paTextBoxes.Controls.Add(this.rtbSchool);
-			this.paTextBoxes.Controls.Add(this.rtbWork);
-			this.paTextBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.paTextBoxes.Location = new System.Drawing.Point(238, 0);
-			this.paTextBoxes.Name = "paTextBoxes";
-			this.paTextBoxes.Size = new System.Drawing.Size(460, 409);
-			this.paTextBoxes.TabIndex = 1;
-			this.paTextBoxes.Resize += new System.EventHandler(this.paTextBoxes_Resize);
-			// 
-			// splitterBoxes
-			// 
-			this.splitterBoxes.Dock = System.Windows.Forms.DockStyle.Top;
-			this.splitterBoxes.Location = new System.Drawing.Point(0, 202);
-			this.splitterBoxes.Name = "splitterBoxes";
-			this.splitterBoxes.Size = new System.Drawing.Size(460, 3);
-			this.splitterBoxes.TabIndex = 5;
-			this.splitterBoxes.TabStop = false;
+			this.splitterTreeBoxes.Location = new System.Drawing.Point(235, 0);
+			this.splitterTreeBoxes.Name = "splitterTreeBoxes";
+			this.splitterTreeBoxes.Size = new System.Drawing.Size(3, 409);
+			this.splitterTreeBoxes.TabIndex = 1;
+			this.splitterTreeBoxes.TabStop = false;
 			// 
 			// paFileTree
 			// 
@@ -388,13 +377,24 @@ namespace BerichtManager
 			this.paFileTree.Size = new System.Drawing.Size(235, 409);
 			this.paFileTree.TabIndex = 0;
 			// 
-			// splitterTreeBoxes
+			// scTextBoxes
 			// 
-			this.splitterTreeBoxes.Location = new System.Drawing.Point(235, 0);
-			this.splitterTreeBoxes.Name = "splitterTreeBoxes";
-			this.splitterTreeBoxes.Size = new System.Drawing.Size(3, 409);
-			this.splitterTreeBoxes.TabIndex = 1;
-			this.splitterTreeBoxes.TabStop = false;
+			this.scTextBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.scTextBoxes.Location = new System.Drawing.Point(238, 0);
+			this.scTextBoxes.Name = "scTextBoxes";
+			this.scTextBoxes.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// scTextBoxes.Panel1
+			// 
+			this.scTextBoxes.Panel1.Controls.Add(this.rtbWork);
+			// 
+			// scTextBoxes.Panel2
+			// 
+			this.scTextBoxes.Panel2.Controls.Add(this.rtbSchool);
+			this.scTextBoxes.Size = new System.Drawing.Size(460, 409);
+			this.scTextBoxes.SplitterDistance = 204;
+			this.scTextBoxes.SplitterWidth = 1;
+			this.scTextBoxes.TabIndex = 2;
 			// 
 			// FormManager
 			// 
@@ -423,8 +423,11 @@ namespace BerichtManager
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
 			this.toRightClickMenu.ResumeLayout(false);
 			this.paMainView.ResumeLayout(false);
-			this.paTextBoxes.ResumeLayout(false);
 			this.paFileTree.ResumeLayout(false);
+			this.scTextBoxes.Panel1.ResumeLayout(false);
+			this.scTextBoxes.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).EndInit();
+			this.scTextBoxes.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -458,10 +461,9 @@ namespace BerichtManager
 		private System.Windows.Forms.RichTextBox rtbWork;
 		private System.Windows.Forms.RichTextBox rtbSchool;
 		private System.Windows.Forms.Panel paMainView;
-		private System.Windows.Forms.Panel paTextBoxes;
-		private System.Windows.Forms.Splitter splitterBoxes;
 		private System.Windows.Forms.Panel paFileTree;
 		private System.Windows.Forms.Splitter splitterTreeBoxes;
+		private System.Windows.Forms.SplitContainer scTextBoxes;
 	}
 }
 
