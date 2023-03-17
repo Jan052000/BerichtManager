@@ -32,6 +32,7 @@ namespace BerichtManager
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
+			tvReports.TreeViewNodeSorter = new HelperClasses.TreeNodeSorter();
 			UpdateTree();
 			if (handler.LoadActive() == "")
 			{
@@ -85,6 +86,7 @@ namespace BerichtManager
 		{
 			tvReports.Nodes.Clear();
 			tvReports.Nodes.Add(CreateDirectoryNode(info));
+			tvReports.Sort();
 		}
 
 		/**
