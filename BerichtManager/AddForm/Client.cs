@@ -17,8 +17,10 @@ namespace BerichtManager.AddForm
 		private readonly OptionsMenu.OptionConfigHandler options = new OptionsMenu.OptionConfigHandler();
 		private readonly string server;
 		private readonly string schoolName;
-		public Client()
+		public Client(OptionsMenu.OptionConfigHandler optionConfigHandler = null)
 		{
+			if(optionConfigHandler != null)
+				options = optionConfigHandler;
 			//Get school and server
 			schoolName = options.GetSchoolName();
 			server = options.GetWebUntisServer();

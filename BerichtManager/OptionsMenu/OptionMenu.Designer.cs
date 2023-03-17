@@ -38,6 +38,7 @@
 			this.laSchool = new System.Windows.Forms.Label();
 			this.cbShouldUseUntis = new System.Windows.Forms.CheckBox();
 			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
+			this.cbLegacyEdit = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -82,7 +83,7 @@
 			this.tbCustomPrefix.Name = "tbCustomPrefix";
 			this.tbCustomPrefix.Size = new System.Drawing.Size(776, 20);
 			this.tbCustomPrefix.TabIndex = 3;
-			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.tbCustomPrefix_TextChanged);
+			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// laServer
 			// 
@@ -101,7 +102,7 @@
 			this.tbServer.Name = "tbServer";
 			this.tbServer.Size = new System.Drawing.Size(684, 20);
 			this.tbServer.TabIndex = 5;
-			this.tbServer.TextChanged += new System.EventHandler(this.tbCustomPrefix_TextChanged);
+			this.tbServer.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// tbSchool
 			// 
@@ -111,7 +112,7 @@
 			this.tbSchool.Name = "tbSchool";
 			this.tbSchool.Size = new System.Drawing.Size(684, 20);
 			this.tbSchool.TabIndex = 6;
-			this.tbSchool.TextChanged += new System.EventHandler(this.tbCustomPrefix_TextChanged);
+			this.tbSchool.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// laSchool
 			// 
@@ -142,13 +143,25 @@
 			this.cbEndOfWeek.TabIndex = 9;
 			this.cbEndOfWeek.Text = "End week on friday";
 			this.cbEndOfWeek.UseVisualStyleBackColor = true;
-			this.cbEndOfWeek.CheckedChanged += new System.EventHandler(this.cbEndOfWeek_CheckedChanged);
+			this.cbEndOfWeek.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// cbLegacyEdit
+			// 
+			this.cbLegacyEdit.AutoSize = true;
+			this.cbLegacyEdit.Location = new System.Drawing.Point(12, 159);
+			this.cbLegacyEdit.Name = "cbLegacyEdit";
+			this.cbLegacyEdit.Size = new System.Drawing.Size(99, 17);
+			this.cbLegacyEdit.TabIndex = 10;
+			this.cbLegacyEdit.Text = "Use legacy edit";
+			this.cbLegacyEdit.UseVisualStyleBackColor = true;
+			this.cbLegacyEdit.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.cbLegacyEdit);
 			this.Controls.Add(this.cbEndOfWeek);
 			this.Controls.Add(this.cbShouldUseUntis);
 			this.Controls.Add(this.laSchool);
@@ -179,5 +192,6 @@
 		private System.Windows.Forms.Label laSchool;
 		private System.Windows.Forms.CheckBox cbShouldUseUntis;
 		private System.Windows.Forms.CheckBox cbEndOfWeek;
+		private System.Windows.Forms.CheckBox cbLegacyEdit;
 	}
 }

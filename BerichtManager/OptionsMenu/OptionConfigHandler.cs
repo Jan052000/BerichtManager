@@ -9,7 +9,7 @@ namespace BerichtManager.OptionsMenu
 	/// <summary>
 	/// Class for getting and setting user options in a file .\Config\UserOptions.json
 	/// </summary>
-	internal class OptionConfigHandler
+	public class OptionConfigHandler
 	{
 		/// <summary>
 		/// Location of the config folder
@@ -30,7 +30,7 @@ namespace BerichtManager.OptionsMenu
 			if (!ConfigExists())
 			{
 				configObject = new JObject(new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
-					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false));
+					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false));
 				File.WriteAllText(path + "\\" + configName, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else 
@@ -65,6 +65,10 @@ namespace BerichtManager.OptionsMenu
 				{
 					configObject.Add(new JProperty("EndWeekOnFriday", false));
 					isComplete = false;
+				}
+				if (!configObject.ContainsKey("EnableLegacyEdit"))
+				{
+					configObject.Add(new JProperty("EnableLegacyEdit", false));
 				}
 			}
 			if (!isComplete)
@@ -219,6 +223,24 @@ namespace BerichtManager.OptionsMenu
 		public void EndWeekOnFriday(bool endWeekOnFriday)
 		{
 			GenericSet<bool>("EndWeekOnFriday", endWeekOnFriday);
+		}
+
+		/// <summary>
+		/// Gets if legacy edit should be used
+		/// </summary>
+		/// <returns>if legacy edit should be used</returns>
+		public bool LegacyEdit()
+		{
+			return GenericGet<bool>("EnableLegacyEdit");
+		}
+
+		/// <summary>
+		/// Sets if legacy edit should be used
+		/// </summary>
+		/// <param name="legacyEdit">if legacy edit should be used</param>
+		public void LegacyEdit(bool legacyEdit)
+		{
+			GenericSet("EnableLegacyEdit", legacyEdit);
 		}
 	}
 }
