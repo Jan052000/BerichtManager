@@ -17,12 +17,12 @@ namespace BerichtManager.HelperClasses
 			switch (control)
 			{
 				case RichTextBox rtb:
-					rtb.BackColor = Color.FromArgb(64, 64, 64);
+					rtb.BackColor = Color.FromArgb(70, 70, 70);
 					rtb.BorderStyle = BorderStyle.None;
 					break;
 				case TextBox tb:
 					if(tb.Enabled)
-						tb.BackColor = Color.DimGray;
+						tb.BackColor = Color.FromArgb(70, 70, 70);
 					else
 						tb.BackColor = Color.FromArgb(64, 64, 64);
 					tb.BorderStyle = BorderStyle.FixedSingle;
