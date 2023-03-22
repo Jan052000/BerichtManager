@@ -13,9 +13,11 @@ namespace BerichtManager.AddForm
 		public string Result { get; set; }
 		private readonly ConfigHandler handler = new ConfigHandler();
 
-		public EditForm(string title, string text = "", bool school = false, bool isCreate = false)
+		public EditForm(string title, string text = "", bool school = false, bool isCreate = false, bool useDark = false)
 		{
 			InitializeComponent();
+			if (useDark)
+				HelperClasses.ThemeSetter.SetThemes(this);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
 			//rtInput.Multiline = true;

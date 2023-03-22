@@ -17,6 +17,8 @@ namespace BerichtManager.OptionsMenu
 		public OptionMenu(OptionConfigHandler optionConfigHandler)
 		{
 			InitializeComponent();
+			if (optionConfigHandler.DarkMode())
+				HelperClasses.ThemeSetter.SetThemes(this);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			configHandler = optionConfigHandler;
 			//Set values of fields to values in config
@@ -27,6 +29,7 @@ namespace BerichtManager.OptionsMenu
 			tbServer.Text = configHandler.GetWebUntisServer();
 			tbSchool.Text = configHandler.GetSchoolName();
 			cbLegacyEdit.Checked = configHandler.LegacyEdit();
+			cbUseDarkMode.Checked = configHandler.DarkMode();
 			isDirty = false;
 			btSave.Enabled = false;
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
@@ -63,6 +66,7 @@ namespace BerichtManager.OptionsMenu
 					}
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
+					configHandler.DarkMode(cbUseDarkMode.Checked);
 					try
 					{
 						configHandler.SaveConfig();
@@ -101,6 +105,7 @@ namespace BerichtManager.OptionsMenu
 					configHandler.SetUseWebUntis(cbShouldUseUntis.Checked);
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
+					configHandler.DarkMode(cbUseDarkMode.Checked);
 				}
 				configHandler.SaveConfig();
 			}

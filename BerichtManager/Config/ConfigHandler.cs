@@ -14,8 +14,10 @@ namespace BerichtManager.Config
 	{
 		private readonly string path = Environment.CurrentDirectory + "\\Config";
 		public bool loginAborted = false;
-		public ConfigHandler() 
+		private bool useDark;
+		public ConfigHandler(bool useDark = false) 
 		{
+			this.useDark = useDark;
 			if (!File.Exists(path + "\\Config.json")) 
 			{
 				Directory.CreateDirectory(path);
@@ -45,7 +47,7 @@ namespace BerichtManager.Config
 				}
 				if (!config.ContainsKey("ReportNR")) 
 				{
-					EditForm form = new EditForm("Edit Number of Report", "", false);
+					EditForm form = new EditForm("Edit Number of Report", "", false, useDark: useDark);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -66,7 +68,7 @@ namespace BerichtManager.Config
 				}
 				if (!config.ContainsKey("Name")) 
 				{
-					EditForm form = new EditForm("Enter your name", "Name Vorname", false);
+					EditForm form = new EditForm("Enter your name", "Name Vorname", false, useDark: useDark);
 					if (form.ShowDialog() == DialogResult.OK)
 					{
 						config.Add(new JProperty("Name", form.Result));
@@ -203,7 +205,7 @@ namespace BerichtManager.Config
 
 		public User doLogin() 
 		{
-			Login form = new Login();
+			Login form = new Login(useDark: useDark);
 			form.ShowDialog();
 			if (form.DialogResult == DialogResult.OK)
 			{

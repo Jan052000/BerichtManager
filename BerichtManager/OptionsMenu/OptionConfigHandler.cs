@@ -30,7 +30,7 @@ namespace BerichtManager.OptionsMenu
 			if (!ConfigExists())
 			{
 				configObject = new JObject(new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
-					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false));
+					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("DarkMode", true));
 				File.WriteAllText(path + "\\" + configName, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else 
@@ -69,6 +69,10 @@ namespace BerichtManager.OptionsMenu
 				if (!configObject.ContainsKey("EnableLegacyEdit"))
 				{
 					configObject.Add(new JProperty("EnableLegacyEdit", false));
+				}
+				if (!configObject.ContainsKey("DarkMode"))
+				{
+					configObject.Add(new JProperty("DarkMode", true));
 				}
 			}
 			if (!isComplete)
@@ -241,6 +245,24 @@ namespace BerichtManager.OptionsMenu
 		public void LegacyEdit(bool legacyEdit)
 		{
 			GenericSet("EnableLegacyEdit", legacyEdit);
+		}
+
+		/// <summary>
+		/// Gets if dark mode should be used
+		/// </summary>
+		/// <returns>use darkmode</returns>
+		public bool DarkMode()
+		{
+			return GenericGet<bool>("DarkMode");
+		}
+
+		/// <summary>
+		/// Sets if dark mode should be used
+		/// </summary>
+		/// <param name="darkMode">use darkmode</param>
+		public void DarkMode(bool darkMode)
+		{
+			GenericSet("DarkMode", darkMode);
 		}
 	}
 }

@@ -8,9 +8,11 @@ namespace BerichtManager.AddForm
 	{
 		public List<EditState> SelectedItems { get; set; }
 		private int Count = 0;
-		public SelectEditFrom()
+		public SelectEditFrom(bool useDark = false)
 		{
 			InitializeComponent();
+			if (useDark)
+				HelperClasses.ThemeSetter.SetThemes(this);
 			SelectedItems = new List<EditState>();
 			btConfirm.Text = "Close";
 		}

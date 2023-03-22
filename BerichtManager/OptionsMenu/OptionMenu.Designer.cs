@@ -39,6 +39,7 @@
 			this.cbShouldUseUntis = new System.Windows.Forms.CheckBox();
 			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
 			this.cbLegacyEdit = new System.Windows.Forms.CheckBox();
+			this.cbUseDarkMode = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -156,11 +157,23 @@
 			this.cbLegacyEdit.UseVisualStyleBackColor = true;
 			this.cbLegacyEdit.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
+			// cbUseDarkMode
+			// 
+			this.cbUseDarkMode.AutoSize = true;
+			this.cbUseDarkMode.Location = new System.Drawing.Point(12, 182);
+			this.cbUseDarkMode.Name = "cbUseDarkMode";
+			this.cbUseDarkMode.Size = new System.Drawing.Size(97, 17);
+			this.cbUseDarkMode.TabIndex = 11;
+			this.cbUseDarkMode.Text = "Use Darkmode";
+			this.cbUseDarkMode.UseVisualStyleBackColor = true;
+			this.cbUseDarkMode.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.cbUseDarkMode);
 			this.Controls.Add(this.cbLegacyEdit);
 			this.Controls.Add(this.cbEndOfWeek);
 			this.Controls.Add(this.cbShouldUseUntis);
@@ -193,5 +206,6 @@
 		private System.Windows.Forms.CheckBox cbShouldUseUntis;
 		private System.Windows.Forms.CheckBox cbEndOfWeek;
 		private System.Windows.Forms.CheckBox cbLegacyEdit;
+		private System.Windows.Forms.CheckBox cbUseDarkMode;
 	}
 }

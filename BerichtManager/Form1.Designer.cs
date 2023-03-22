@@ -66,16 +66,16 @@ namespace BerichtManager
 			this.rtbSchool = new System.Windows.Forms.RichTextBox();
 			this.button1 = new System.Windows.Forms.Button();
 			this.paMainView = new System.Windows.Forms.Panel();
+			this.scTextBoxes = new System.Windows.Forms.SplitContainer();
 			this.splitterTreeBoxes = new System.Windows.Forms.Splitter();
 			this.paFileTree = new System.Windows.Forms.Panel();
-			this.scTextBoxes = new System.Windows.Forms.SplitContainer();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
-			this.paFileTree.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
 			this.scTextBoxes.Panel1.SuspendLayout();
 			this.scTextBoxes.Panel2.SuspendLayout();
 			this.scTextBoxes.SuspendLayout();
+			this.paFileTree.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -360,23 +360,6 @@ namespace BerichtManager
 			this.paMainView.Size = new System.Drawing.Size(698, 409);
 			this.paMainView.TabIndex = 15;
 			// 
-			// splitterTreeBoxes
-			// 
-			this.splitterTreeBoxes.Location = new System.Drawing.Point(235, 0);
-			this.splitterTreeBoxes.Name = "splitterTreeBoxes";
-			this.splitterTreeBoxes.Size = new System.Drawing.Size(3, 409);
-			this.splitterTreeBoxes.TabIndex = 1;
-			this.splitterTreeBoxes.TabStop = false;
-			// 
-			// paFileTree
-			// 
-			this.paFileTree.Controls.Add(this.tvReports);
-			this.paFileTree.Dock = System.Windows.Forms.DockStyle.Left;
-			this.paFileTree.Location = new System.Drawing.Point(0, 0);
-			this.paFileTree.Name = "paFileTree";
-			this.paFileTree.Size = new System.Drawing.Size(235, 409);
-			this.paFileTree.TabIndex = 0;
-			// 
 			// scTextBoxes
 			// 
 			this.scTextBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -395,6 +378,23 @@ namespace BerichtManager
 			this.scTextBoxes.SplitterDistance = 204;
 			this.scTextBoxes.SplitterWidth = 1;
 			this.scTextBoxes.TabIndex = 2;
+			// 
+			// splitterTreeBoxes
+			// 
+			this.splitterTreeBoxes.Location = new System.Drawing.Point(235, 0);
+			this.splitterTreeBoxes.Name = "splitterTreeBoxes";
+			this.splitterTreeBoxes.Size = new System.Drawing.Size(3, 409);
+			this.splitterTreeBoxes.TabIndex = 1;
+			this.splitterTreeBoxes.TabStop = false;
+			// 
+			// paFileTree
+			// 
+			this.paFileTree.Controls.Add(this.tvReports);
+			this.paFileTree.Dock = System.Windows.Forms.DockStyle.Left;
+			this.paFileTree.Location = new System.Drawing.Point(0, 0);
+			this.paFileTree.Name = "paFileTree";
+			this.paFileTree.Size = new System.Drawing.Size(235, 409);
+			this.paFileTree.TabIndex = 0;
 			// 
 			// FormManager
 			// 
@@ -423,11 +423,11 @@ namespace BerichtManager
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
 			this.toRightClickMenu.ResumeLayout(false);
 			this.paMainView.ResumeLayout(false);
-			this.paFileTree.ResumeLayout(false);
 			this.scTextBoxes.Panel1.ResumeLayout(false);
 			this.scTextBoxes.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).EndInit();
 			this.scTextBoxes.ResumeLayout(false);
+			this.paFileTree.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

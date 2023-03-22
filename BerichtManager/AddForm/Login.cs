@@ -10,9 +10,11 @@ namespace BerichtManager.AddForm
 		public string Username;
 		public string Password;
 		public bool KeepLoggedIn;
-		public Login()
+		public Login(bool useDark = false)
 		{
 			InitializeComponent();
+			if (useDark)
+				HelperClasses.ThemeSetter.SetThemes(this);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 		}
 
