@@ -42,13 +42,50 @@ namespace BerichtManager.HelperClasses
 				case Splitter splitter:
 					control.BackColor = Color.DimGray;
 					break;
-
+				case MenuStrip menuStrip:
+					menuStrip.BackColor = Color.FromArgb(50, 50, 50);
+					menuStrip.Renderer = new DarkModeRenderer(new DarkModeTheme());
+					break;
 			}
 			control.ForeColor = Color.White;
 			foreach (Control control1 in control.Controls)
 			{
 				SetThemes(control1);
 			}
+		}
+	}
+
+	/// <summary>
+	/// Color table for dark mode
+	/// </summary>
+	internal class DarkModeTheme : ProfessionalColorTable
+	{
+		public override Color ToolStripDropDownBackground => Color.FromArgb(50, 50, 50);
+	}
+
+	/// <summary>
+	/// Renderer for dark mode
+	/// </summary>
+	internal class DarkModeRenderer : ToolStripProfessionalRenderer
+	{
+		public DarkModeRenderer(ProfessionalColorTable table): base(table)
+		{
+
+		}
+
+		protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+		{
+			e.TextColor = Color.White;
+			base.OnRenderItemText(e);
+		}
+
+		protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+		{
+			base.OnRenderMenuItemBackground(e);
+			if (e.Item.Selected)
+				e.Graphics.Clear(Color.FromArgb(60, 60, 60));
+			else
+				e.Graphics.Clear(Color.FromArgb(50, 50, 50));
 		}
 	}
 }

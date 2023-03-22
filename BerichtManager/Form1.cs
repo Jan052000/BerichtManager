@@ -38,10 +38,9 @@ namespace BerichtManager
 			UpdateTree();
 			if (handler.LoadActive() == "")
 			{
-				btEdit.Enabled = false;
+				miEditLatest.Enabled = false;
 			}
 			SetComponentPositions();
-			//TODO alle form überprüfen ob dark mode benutzt werden soll
 			if (darkMode)
 				HelperClasses.ThemeSetter.SetThemes(this);
 			client = new Client(optionConfigHandler);
@@ -59,7 +58,7 @@ namespace BerichtManager
 			splitterTreeBoxes.SplitPosition = tvReportsMaxWidth + 1;
 			Rectangle bounds = scTextBoxes.Bounds;
 			bounds.X = paFileTree.Bounds.Right + 1;
-			bounds.Width = btCreate.Bounds.X - 6;
+			bounds.Width = Width - 1 - paFileTree.Bounds.Width;
 			scTextBoxes.Bounds = bounds;
 		}
 
@@ -366,7 +365,7 @@ namespace BerichtManager
 					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
 					handler.SaveLastReportKW(culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					handler.EditActive(path);
-					btEdit.Enabled = true;
+					miEditLatest.Enabled = true;
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + weekOfYear + ".docx");
 
 					doc.Close();
@@ -755,7 +754,7 @@ namespace BerichtManager
 
 		private void cbVisible_CheckedChanged(object sender, EventArgs e)
 		{
-			visible = cbVisible.Checked;
+			//visible = cbVisible.Checked;
 		}
 
 		/**
@@ -1260,6 +1259,11 @@ namespace BerichtManager
 		private void EditRichTextBox(object sender, EventArgs e)
 		{
 			wasEdited = true;
+		}
+
+		private void miWordVisible_Click(object sender, EventArgs e)
+		{
+			visible = miWordVisible.Checked;
 		}
 	}
 }
