@@ -984,11 +984,8 @@ namespace BerichtManager
 				FillText(wordApp, doc.FormFields[6], rtbWork.Text);
 				FillText(wordApp, doc.FormFields[8], rtbSchool.Text);
 				doc.Close(SaveChanges: true);
-				doc = null;
-				wordApp.Quit(SaveChanges: false);
-				wordApp = null;
-				editMode = false;
 				MessageBox.Show("Saved changes", "Saved");
+				wasEdited = false;
 			}
 			catch(Exception ex)
 			{
@@ -1001,12 +998,6 @@ namespace BerichtManager
 						MessageBox.Show("Word closed unexpectedly");
 						break;
 					case -2146822750:
-						//Document is only one page long
-						doc.Save();
-						doc.Close();
-						doc = null;
-						wordApp.Quit();
-						wordApp = null;
 						break;
 					case -2146233088:
 						MessageBox.Show("Connection refused by remotehost");
@@ -1016,15 +1007,6 @@ namespace BerichtManager
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
-				}
-				try
-				{
-					wordApp.Quit(false);
-					wordApp = null;
-				}
-				catch
-				{
-
 				}
 			}
 		}
