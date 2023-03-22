@@ -12,40 +12,49 @@ namespace BerichtManager.Config
 {
 	public class ConfigHandler
 	{
-		private readonly string path = Environment.CurrentDirectory + "\\Config";
+		private readonly string path = Environment.CurrentDirectory + "\\Config\\Config.json";
+		private readonly JObject configObject;
 		public bool loginAborted = false;
 		private bool useDark;
-		public ConfigHandler(bool useDark = false) 
+		public ConfigHandler()
 		{
-			this.useDark = useDark;
-			if (!File.Exists(path + "\\Config.json")) 
+			bool isComplete = true;
+			if (!ConfigExists())
 			{
 				Directory.CreateDirectory(path);
-				File.Create(path + "\\Config.json").Close();
-				JObject config = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
-					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1), new JProperty("StayLoggedIn", false));
-				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
+				File.Create(path).Close();
+				configObject = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
+					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1),
+					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
+					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("DarkMode", true));
+				File.WriteAllText(path, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
-			else 
+			else
 			{
-				JObject config;
-				if (new FileInfo(path + "\\Config.json").Length == 0)
+				if (new FileInfo(path).Length == 0)
 				{
-					config = new JObject();
+					configObject = new JObject();
 				}
-				else 
+				else
 				{
-					config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));					
+					configObject = JObject.Parse(File.ReadAllText(path));
 				}
-				if (!config.ContainsKey("TemplatePath")) 
+				if (!configObject.ContainsKey("TemplatePath"))
 				{
 					OpenFileDialog dialog = new OpenFileDialog();
 					dialog.Filter = "Word Templates (*.dotx)|*.dotx";
 					dialog.ShowDialog();
 					Save(Path.GetFullPath(dialog.FileName));
 					MessageBox.Show("Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
+					isComplete = false;
 				}
-				if (!config.ContainsKey("ReportNR")) 
+				if (!configObject.ContainsKey("DarkMode"))
+				{
+					configObject.Add(new JProperty("DarkMode", true));
+					isComplete = false;
+				}
+				useDark = DarkMode(); 
+				if (!configObject.ContainsKey("ReportNR"))
 				{
 					EditForm form = new EditForm("Edit Number of Report", "", false, useDark: useDark);
 					form.ShowDialog();
@@ -53,157 +62,222 @@ namespace BerichtManager.Config
 					{
 						EditNumber(form.Result);
 					}
+					isComplete = false;
 				}
-				if (!config.ContainsKey("Active")) 
+				if (!configObject.ContainsKey("Active"))
 				{
-					config.Add(new JProperty("Active", ""));
+					configObject.Add(new JProperty("Active", ""));
+					isComplete = false;
 				}
-				if (!config.ContainsKey("Username")) 
+				if (!configObject.ContainsKey("Username"))
 				{
-					config.Add(new JProperty("Username", ""));
+					configObject.Add(new JProperty("Username", ""));
+					isComplete = false;
 				}
-				if (!config.ContainsKey("Password")) 
+				if (!configObject.ContainsKey("Password"))
 				{
-					config.Add(new JProperty("Password", ""));
+					configObject.Add(new JProperty("Password", ""));
+					isComplete = false;
 				}
-				if (!config.ContainsKey("Name")) 
+				if (!configObject.ContainsKey("Name"))
 				{
 					EditForm form = new EditForm("Enter your name", "Name Vorname", false, useDark: useDark);
 					if (form.ShowDialog() == DialogResult.OK)
 					{
-						config.Add(new JProperty("Name", form.Result));
+						configObject.Add(new JProperty("Name", form.Result));
 					}
-					else 
+					else
 					{
-						config.Add(new JProperty("Name", ""));
+						configObject.Add(new JProperty("Name", ""));
 					}
+					isComplete = false;
 				}
-				if (!config.ContainsKey("Font")) 
+				if (!configObject.ContainsKey("Font"))
 				{
-					config.Add(new JProperty("Font", "Arial"));
+					configObject.Add(new JProperty("Font", "Arial"));
+					isComplete = false;
 				}
-				if (!config.ContainsKey("EditorFontSize")) 
+				if (!configObject.ContainsKey("EditorFontSize"))
 				{
-					config.Add(new JProperty("EditorFontSize", 8.25f));
+					configObject.Add(new JProperty("EditorFontSize", 8.25f));
+					isComplete = false;
 				}
-				if (!config.ContainsKey("LastReportWeekOfYear")) 
+				if (!configObject.ContainsKey("LastReportWeekOfYear"))
 				{
-					config.Add(new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1));
+					configObject.Add(new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1));
+					isComplete = false;
 				}
-				if (!config.ContainsKey("StayLoggedIn")) 
+				if (!configObject.ContainsKey("StayLoggedIn"))
 				{
-					config.Add(new JProperty("StayLoggedIn", false));	
+					configObject.Add(new JProperty("StayLoggedIn", false));
+					isComplete = false;
 				}
-				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(config, Formatting.Indented));
+				if (!configObject.ContainsKey("UseCustomPrefix"))
+				{
+					configObject.Add(new JProperty("UseCustomPrefix", false));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("CustomPrefix"))
+				{
+					configObject.Add(new JProperty("CustomPrefix", "-"));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("WebUntisServer"))
+				{
+					configObject.Add(new JProperty("WebUntisServer", "borys"));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("SchoolName"))
+				{
+					configObject.Add(new JProperty("SchoolName", "pictorus-bk"));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("UseWebUntis"))
+				{
+					configObject.Add(new JProperty("UseWebUntis", true));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("EndWeekOnFriday"))
+				{
+					configObject.Add(new JProperty("EndWeekOnFriday", false));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("EnableLegacyEdit"))
+				{
+					configObject.Add(new JProperty("EnableLegacyEdit", false));
+					isComplete = false;
+				}
 			}
+			if (!isComplete)
+				File.WriteAllText(path, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 		}
 
-		/**
-		<summary>
-		Loads the path to the template
-		</summary> 
-		*/
-		public string LoadPath() 
+		/// <summary>
+		/// Generic method for getting values from the configObject
+		/// </summary>
+		/// <typeparam name="T">Type of the value to get</typeparam>
+		/// <param name="key">Key of the value to get</param>
+		/// <returns></returns>
+		private T GenericGet<T>(string key)
 		{
-			return LoadGeneric<string>("TemplatePath");
+			return configObject.Value<T>(key);
 		}
 
-		/**
-		<summary>
-		Loads the number of the next
-		</summary> 
-		*/
-		public string LoadNumber() 
+		/// <summary>
+		/// Generic method for setting values of the configObject
+		/// </summary>
+		/// <typeparam name="T">Type of the value to set</typeparam>
+		/// <param name="key">Key of the value to set</param>
+		/// <param name="value">Value to set</param>
+		private void GenericSet<T>(string key, T value)
 		{
-			return LoadGeneric<string>("ReportNR");
+			configObject.Remove(key);
+			configObject.Add(new JProperty(key, value));
 		}
 
-		/**
-		<summary>
-		Sets the template path
-		</summary> 
-		*/
-		public void Save(string templateFilePath) 
+		/// <summary>
+		/// Saves the configObject to file
+		/// </summary>
+		public void SaveConfig()
 		{
-			SaveGeneric<string>("TemplatePath", templateFilePath);
+			File.WriteAllText(path, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 		}
 
-		/**
-		<summary>
-		Sets the number of the next report
-		</summary> 
-		*/
-		public void EditNumber(string number) 
+		/// <summary>
+		/// Loads the path to the template
+		/// </summary>
+		/// <returns>The path to the template</returns>
+		public string LoadPath()
 		{
-			SaveGeneric<string>("ReportNR", number);
+			return GenericGet<string>("TemplatePath");
 		}
 
-		/**
-		<summary>
-		Sets the last active document path
-		</summary> 
-		*/
-		public void EditActive(string activeDocument) 
+		/// <summary>
+		/// Loads the number of the next report
+		/// </summary>
+		/// <returns>The number of the next report</returns>
+		public string LoadNumber()
 		{
-			SaveGeneric<string>("Active", activeDocument);
+			return GenericGet<string>("ReportNR");
 		}
 
-		/**
-		<summary>
-		Loads the last active document path
-		</summary> 
-		*/
-		public string LoadActive() 
+		/// <summary>
+		/// Sets the template path
+		/// </summary>
+		/// <param name="templateFilePath">Path to template</param>
+		public void Save(string templateFilePath)
 		{
-			return LoadGeneric<string>("Active");
+			GenericSet("TemplatePath", templateFilePath);
 		}
 
-		/**
-		<summary>
-		Loads the username for webuntis
-		</summary> 
-		*/
-		public string LoadUsername() 
+		/// <summary>
+		/// Sets the number of the next report
+		/// </summary>
+		/// <param name="number">Number of the next report</param>
+		public void EditNumber(string number)
 		{
-			return LoadGeneric<string>("Username");
+			GenericSet("ReportNR", number);
 		}
 
-		/**
-		<summary>
-		Sets the username for webuntis
-		</summary> 
-		*/
-		public void SaveUsername(string username) 
+		/// <summary>
+		/// Sets the last active document path
+		/// </summary>
+		/// <param name="activeDocument">Path to last created document</param>
+		public void EditActive(string activeDocument)
 		{
-			SaveGeneric<string>("Username", username);
+			GenericSet("Active", activeDocument);
 		}
 
-		/**
-		<summary>
-		Loads the password for Webuntis
-		</summary> 
-		*/
-		public string LoadPassword() 
+		/// <summary>
+		/// Loads the last active document path
+		/// </summary>
+		/// <returns>Path to last created document</returns>
+		public string LoadActive()
 		{
-			if (File.Exists(path + "\\Config.json"))
-			{
-				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
-				return UserHandler.DecodePassword(config.GetValue("Password").ToString());
-			}
-			return "";
+			return GenericGet<string>("Active");
 		}
 
-		/**
-		<summary>
-		Sets the password for Webuntis
-		</summary> 
-		*/
-		public void SavePassword(string password) 
+		/// <summary>
+		/// Loads the username for webuntis
+		/// </summary>
+		/// <returns>Username</returns>
+		public string LoadUsername()
 		{
-			SaveGeneric<string>("Password", UserHandler.EncodePassword(password));
+			return GenericGet<string>("Username");
 		}
 
-		public User doLogin() 
+		/// <summary>
+		/// Sets the username for webuntis
+		/// </summary>
+		/// <param name="username">Username</param>
+		public void SaveUsername(string username)
+		{
+			GenericSet("Username", username);
+		}
+
+		/// <summary>
+		/// Loads the password for Webuntis
+		/// </summary>
+		/// <returns>Password</returns>
+		public string LoadPassword()
+		{
+			return UserHandler.DecodePassword(GenericGet<string>("Password"));
+		}
+
+		/// <summary>
+		/// Sets the password for Webuntis
+		/// </summary>
+		/// <param name="password">Password</param>
+		public void SavePassword(string password)
+		{
+			GenericSet("Password", UserHandler.EncodePassword(password));
+		}
+
+		/// <summary>
+		/// Starts the login process for the user
+		/// </summary>
+		/// <returns><see cref="User"/> object containing username and password</returns>
+		public User doLogin()
 		{
 			Login form = new Login(useDark: useDark);
 			form.ShowDialog();
@@ -220,191 +294,275 @@ namespace BerichtManager.Config
 					SavePassword("");
 				}
 				StayLoggedIn(form.KeepLoggedIn);
+				SaveConfig();
 				return new User(username: form.Username, password: form.Password);
 			}
 			return new User();
 		}
 
-		/**
-		<summary>
-		Loads the name of the person
-		</summary> 
-		*/
-		public string LoadName() 
+		/// <summary>
+		/// Loads name to be used in report
+		/// </summary>
+		/// <returns>Name to be used in report</returns>
+		public string LoadName()
 		{
-			if (File.Exists(path + "\\Config.json")) 
-			{
-				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
-				return config.GetValue("Name").ToString();
-			}
-			return "";
+			return GenericGet<string>("Name");
 		}
 
-		/**
-		<summary>
-		Sets the name of the person
-		</summary> 
-		*/
-		public void SaveName(string name) 
+		/// <summary>
+		/// Sets name to be used in report
+		/// </summary>
+		/// <param name="name">Name to be used in report</param>
+		public void SaveName(string name)
 		{
-			SaveGeneric<string>("Name", name);
+			GenericSet("Name", name);
 		}
 
-		/**
-		<summary>
-		Loads the font
-		</summary> 
-		*/
-		public string LoadFont() 
+		/// <summary>
+		/// Loads font to be used in editor and report
+		/// </summary>
+		/// <returns>Font to be used in editor and report</returns>
+		public string LoadFont()
 		{
-			if (File.Exists(path + "\\Config.json")) 
-			{
-				return JObject.Parse(File.ReadAllText(path + "\\Config.json")).GetValue("Font").ToString();
-			}
-			return "Arial";
+			return GenericGet<string>("Font");
 		}
 
-		/**
-		<summary>
-		Sets the font
-		</summary> 
-		*/
-		public void SaveFont(string fontName) 
+		/// <summary>
+		/// Sets font to be used in editor and report
+		/// </summary>
+		/// <param name="fontName">Font to be used in editor and report</param>
+		public void SaveFont(string fontName)
 		{
-			SaveGeneric<string>("Font", fontName);
+			GenericSet("Font", fontName);
 		}
 
-		/**
-		<summary>
-		Loads the fontsize
-		</summary> 
-		*/
-		public float LoadEditorFontSize() 
+		/// <summary>
+		/// Loads the font size
+		/// </summary>
+		/// <returns>Font size</returns>
+		public float LoadEditorFontSize()
 		{
-			return LoadGeneric<float>("EditorFontSize");
+			return GenericGet<float>("EditorFontSize");
 		}
 
-		/**
-		<summary>
-		Sets the fontsize
-		</summary> 
-		*/
-		public void SaveEditorFontSize(float size) 
+		/// <summary>
+		/// Sets the font size
+		/// </summary>
+		/// <param name="size">Font size</param>
+		public void SaveEditorFontSize(float size)
 		{
-			SaveGeneric<float>("EditorFontSize", size);
+			GenericSet("EditorFontSize", size);
 		}
 
-		/**
-		<summary>
-		Loads the weeknumber of the last report that was created
-		</summary> 
-		*/
-		public int LoadLastReportKW() 
+		/// <summary>
+		/// Loads the weeknumber of the last report that was created
+		/// </summary>
+		/// <returns>The weeknumber of the last report that was created</returns>
+		public int LoadLastReportKW()
 		{
-			return LoadGeneric<int>("LastReportWeekOfYear");
+			return GenericGet<int>("LastReportWeekOfYear");
 		}
 
-		/**
-		<summary>
-		Sets the weeknumber of the last report that was created
-		</summary> 
-		*/
-		public void SaveLastReportKW(int kw) 
+		/// <summary>
+		/// Sets the weeknumber of the last report that was created
+		/// </summary>
+		/// <param name="kw">Weeknumber of the last report that was created</param>
+		public void SaveLastReportKW(int kw)
 		{
-			SaveGeneric<int>("LastReportWeekOfYear", kw);
+			GenericSet("LastReportWeekOfYear", kw);
 		}
 
-		/**
-		<summary>
-		Gets the boolean if the User wanted to stay logged in
-		</summary>
-		*/
-		public bool StayLoggedIn() 
+		/// <summary>
+		/// Gets the boolean if the User wanted to stay logged in
+		/// </summary>
+		/// <returns>If the User wanted to stay logged in</returns>
+		public bool StayLoggedIn()
 		{
-			return LoadGeneric<bool>("StayLoggedIn");
+			return GenericGet<bool>("StayLoggedIn");
 		}
 
-		/**
-		<summary>
-		Sets if the user wanted to stay logged in
-		</summary> 
-		*/
-		public void StayLoggedIn(bool stayLoggedIn) 
+		/// <summary>
+		/// Sets if the user wanted to stay logged in
+		/// </summary>
+		/// <param name="stayLoggedIn">Should the user stay logged in</param>
+		public void StayLoggedIn(bool stayLoggedIn)
 		{
-			SaveGeneric<bool>("StayLoggedIn", stayLoggedIn);
+			GenericSet("StayLoggedIn", stayLoggedIn);
 		}
 
-		/**
-		<summary>
-		Only implement
-		Sets the specified key and value in the config
-		</summary> 
-		*/
-		private void SaveGeneric<T>(string key, T toSave) 
+		/// <summary>
+		/// Gets wether or not to use the custom prefix for listing classes
+		/// </summary>
+		/// <returns>custom prefix should be used</returns>
+		public bool UseUserPrefix()
 		{
-			if (ConfigExists()) 
-			{
-				JObject obj = new JObject(new JProperty(key, toSave));
-				JObject config = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
-
-				JToken token = config.First;
-				for (int i = 0; i < config.Count; i++)
-				{
-					if (((JProperty)token).Name != key)
-					{
-						obj.Add((JProperty)token);
-					}
-					token = token.Next;
-				}
-
-				File.WriteAllText(path + "\\Config.json", JsonConvert.SerializeObject(obj, Formatting.Indented));
-			}
+			return GenericGet<bool>("UseCustomPrefix");
 		}
 
-		/**
-		<summary>
-		Only implement
-		Loads the value for the specified key
-		</summary> 
-		*/
-		private T LoadGeneric<T>(string key) 
+		/// <summary>
+		/// Sets wether or not to use the custom prefix for listing classes
+		/// </summary>
+		/// <param name="useUserPrefix">the custom prefix should be used</param>
+		public void SetUseUserPrefix(bool useUserPrefix)
 		{
-			if (ConfigExists()) 
-			{
-				JObject obj = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
-				if (obj.ContainsKey(key)) 
-				{
-					return obj.Value<T>(key);
-				}
-			}
-			throw new DataNotFoundException();
+			GenericSet<bool>("UseCustomPrefix", useUserPrefix);
 		}
 
-		public bool ConfigExists() 
+		/// <summary>
+		/// Gets the custom prefix from the configObject
+		/// </summary>
+		/// <returns>custom prefix</returns>
+		public string GetCustomPrefix()
 		{
-			return File.Exists(path + "\\Config.json");
+			return GenericGet<string>("CustomPrefix");
 		}
 
-		private void SortConfig() 
+		/// <summary>
+		/// Sets the custom prefix
+		/// </summary>
+		/// <param name="customPrefix">customPrefix to use</param>
+		public void SetCustomPrefix(string customPrefix)
+		{
+			GenericSet<string>("CustomPrefix", customPrefix);
+		}
+
+		/// <summary>
+		/// Gets the WebUntis server from config
+		/// </summary>
+		/// <returns>WebUntis server to query</returns>
+		public string GetWebUntisServer()
+		{
+			return GenericGet<string>("WebUntisServer");
+		}
+
+		/// <summary>
+		/// Sets WebUntis server to query
+		/// </summary>
+		/// <param name="server">server to query</param>
+		public void SetWebUntisServer(string server)
+		{
+			GenericSet<string>("WebUntisServer", server);
+		}
+
+		/// <summary>
+		/// Gets school name from config
+		/// </summary>
+		/// <returns>school name to use</returns>
+		public string GetSchoolName()
+		{
+			return GenericGet<string>("SchoolName");
+		}
+
+		/// <summary>
+		/// Sets the school name to use
+		/// </summary>
+		/// <param name="schoolName">school name to use</param>
+		public void SetSchoolName(string schoolName)
+		{
+			GenericSet<string>("SchoolName", schoolName);
+		}
+
+		/// <summary>
+		/// Gets if the classes should be queried from WebUntis
+		/// </summary>
+		/// <returns>classes should be queried</returns>
+		public bool UseWebUntis()
+		{
+			return GenericGet<bool>("UseWebUntis");
+		}
+
+		/// <summary>
+		/// Sets if the classes should be queried from WebUntis
+		/// </summary>
+		/// <param name="useWebUntis">classes should be queried</param>
+		public void SetUseWebUntis(bool useWebUntis)
+		{
+			GenericSet<bool>("UseWebUntis", useWebUntis);
+		}
+
+		/// <summary>
+		/// Gets if week end dates should be friday instead of sunday
+		/// </summary>
+		/// <returns>week end dates should be friday instead of sunday</returns>
+		public bool EndWeekOnFriday()
+		{
+			return GenericGet<bool>("EndWeekOnFriday");
+		}
+
+		/// <summary>
+		/// Sets if week end dates should be friday instead of sunday
+		/// </summary>
+		/// <param name="endWeekOnFriday">week end dates should be friday instead of sunday</param>
+		public void EndWeekOnFriday(bool endWeekOnFriday)
+		{
+			GenericSet<bool>("EndWeekOnFriday", endWeekOnFriday);
+		}
+
+		/// <summary>
+		/// Gets if legacy edit should be used
+		/// </summary>
+		/// <returns>if legacy edit should be used</returns>
+		public bool LegacyEdit()
+		{
+			return GenericGet<bool>("EnableLegacyEdit");
+		}
+
+		/// <summary>
+		/// Sets if legacy edit should be used
+		/// </summary>
+		/// <param name="legacyEdit">if legacy edit should be used</param>
+		public void LegacyEdit(bool legacyEdit)
+		{
+			GenericSet("EnableLegacyEdit", legacyEdit);
+		}
+
+		/// <summary>
+		/// Gets if dark mode should be used
+		/// </summary>
+		/// <returns>use darkmode</returns>
+		public bool DarkMode()
+		{
+			return GenericGet<bool>("DarkMode");
+		}
+
+		/// <summary>
+		/// Sets if dark mode should be used
+		/// </summary>
+		/// <param name="darkMode">use darkmode</param>
+		public void DarkMode(bool darkMode)
+		{
+			GenericSet("DarkMode", darkMode);
+		}
+
+		/// <summary>
+		/// Checks if config file exists
+		/// </summary>
+		/// <returns>Config file exists</returns>
+		public bool ConfigExists()
+		{
+			return File.Exists(path);
+		}
+
+		private void SortConfig()
 		{
 			List<JProperty> jProperties = new List<JProperty>();
-			JObject jobject = JObject.Parse(File.ReadAllText(path + "\\Config.json"));
+			JObject jobject = JObject.Parse(File.ReadAllText(path));
 			var test = jobject.Children<JProperty>().OrderBy(p => p.Name);
 		}
 	}
 
-	public class User 
+	public class User
 	{
 		public string Username { get; set; }
 		public string Password { get; set; }
-		public User(string username = "", string password = "") 
+		public User(string username = "", string password = "")
 		{
 			Username = username;
 			Password = password;
 		}
 	}
 
-	public class DataNotFoundException : Exception 
+	public class DataNotFoundException : Exception
 	{
 		public DataNotFoundException() : base("Key and / or Value not found")
 		{

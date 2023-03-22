@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using BerichtManager.Config;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -13,14 +12,14 @@ namespace BerichtManager.OptionsMenu
 		/// Value if the form has been edited
 		/// </summary>
 		private bool isDirty { get; set; }
-		private readonly OptionConfigHandler configHandler;
-		public OptionMenu(OptionConfigHandler optionConfigHandler)
+		private readonly ConfigHandler configHandler;
+		public OptionMenu(ConfigHandler configHandler)
 		{
 			InitializeComponent();
-			if (optionConfigHandler.DarkMode())
+			if (configHandler.DarkMode())
 				HelperClasses.ThemeSetter.SetThemes(this);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
-			configHandler = optionConfigHandler;
+			this.configHandler = configHandler;
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
 			cbShouldUseUntis.Checked = configHandler.UseWebUntis();

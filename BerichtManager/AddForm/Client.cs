@@ -13,22 +13,22 @@ namespace BerichtManager.AddForm
 {
 	public partial class Client
 	{
-		private readonly ConfigHandler configHandler = new ConfigHandler();
-		private readonly OptionsMenu.OptionConfigHandler options = new OptionsMenu.OptionConfigHandler();
+		private readonly ConfigHandler configHandler;
 		private readonly string server;
 		private readonly string schoolName;
-		public Client(OptionsMenu.OptionConfigHandler optionConfigHandler = null)
+		public Client(ConfigHandler configHandler = null)
 		{
-			if(optionConfigHandler != null)
-				options = optionConfigHandler;
+			this.configHandler = configHandler;
+			if(configHandler == null)
+				configHandler = new ConfigHandler();
 			//Get school and server
-			schoolName = options.GetSchoolName();
-			server = options.GetWebUntisServer();
+			schoolName = configHandler.GetSchoolName();
+			server = configHandler.GetWebUntisServer();
 		}
 
 		public List<string> GetClassesFromWebUntis()
 		{
-			if (!options.UseWebUntis())
+			if (!configHandler.UseWebUntis())
 			{
 				return new List<string>();
 			}
@@ -125,8 +125,8 @@ namespace BerichtManager.AddForm
 			});
 
 			//Crosscheck ClassIds to Coursenames
-			bool useUserPrefix = options.UseUserPrefix();
-			testRoot.result.data.elements.ForEach((element) =>
+			bool useUserPrefix = configHandler.UseUserPrefix();
+			testRoot.result.data.elements.ForEach((Action<Courses>)((element) =>
 			{
 				if (element.type == 3 && classids.Contains(element.id))
 				{
@@ -134,21 +134,21 @@ namespace BerichtManager.AddForm
 					{
 						if (cancelled[element.id])
 						{
-							if (!classes.Contains(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "\n"))
+							if (!classes.Contains((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "\n")))
 							{
-								classes.Add(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "Ausgefallen\n");
+								classes.Add((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "Ausgefallen\n"));
 							}
 						}
 						else
 						{
-							if (classes.Contains(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "Ausgefallen\n"))
+							if (classes.Contains((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "Ausgefallen\n")))
 							{
-								classes.Remove(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "Ausgefallen\n");
-								classes.Add(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "\n");
+								classes.Remove((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "Ausgefallen\n"));
+								classes.Add((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "\n"));
 							}
 							else
 							{
-								classes.Add(options.GetCustomPrefix() + element.name + "\n\t" + options.GetCustomPrefix() + "\n");
+								classes.Add((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "\n"));
 							}
 						}
 					}
@@ -175,7 +175,7 @@ namespace BerichtManager.AddForm
 						}
 					}
 				}
-			});
+			}));
 
 			//Check for Holidays if list empty
 			if (classes.Count == 0)

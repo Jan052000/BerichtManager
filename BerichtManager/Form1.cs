@@ -16,12 +16,11 @@ namespace BerichtManager
 	{
 		private Word.Document doc = null;
 		private Word.Application wordApp = null;
-		private readonly ConfigHandler handler = new ConfigHandler();
+		private readonly ConfigHandler configHandler = new ConfigHandler();
 		private readonly Client client;
 		private readonly DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
 		private bool visible = false;
 		private readonly CultureInfo culture = new CultureInfo("de-DE");
-		private readonly OptionConfigHandler optionConfigHandler = new OptionConfigHandler();
 		private int tvReportsMaxWidth = 50;
 		private bool editMode = false;
 		private bool wasEdited = false;
@@ -30,20 +29,20 @@ namespace BerichtManager
 		public FormManager()
 		{
 			InitializeComponent();
-			darkMode = optionConfigHandler.DarkMode();
+			darkMode = configHandler.DarkMode();
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			tvReports.TreeViewNodeSorter = new HelperClasses.TreeNodeSorter();
 			UpdateTree();
-			if (handler.LoadActive() == "")
+			if (configHandler.LoadActive() == "")
 			{
 				miEditLatest.Enabled = false;
 			}
 			SetComponentPositions();
 			if (darkMode)
 				HelperClasses.ThemeSetter.SetThemes(this);
-			client = new Client(optionConfigHandler);
+			client = new Client(configHandler);
 		}
 
 		/// <summary>
@@ -151,10 +150,10 @@ namespace BerichtManager
 		private void SetFontInDoc(Word.Document doc, Word.Application app)
 		{
 			doc.Content.Select();
-			if (app.Selection.Font.Name != handler.LoadFont())
+			if (app.Selection.Font.Name != configHandler.LoadFont())
 			{
-				app.Selection.Font.Name = handler.LoadFont();
-				MessageBox.Show("Changed report Font to: " + handler.LoadFont(), "Font changed!");
+				app.Selection.Font.Name = configHandler.LoadFont();
+				MessageBox.Show("Changed report Font to: " + configHandler.LoadFont(), "Font changed!");
 			}
 			try
 			{
@@ -199,17 +198,17 @@ namespace BerichtManager
 					//Fill name
 					IEnumerator enumerator = doc.FormFields.GetEnumerator();
 					enumerator.MoveNext();
-					if (!string.IsNullOrEmpty(handler.LoadName()))
+					if (!string.IsNullOrEmpty(configHandler.LoadName()))
 					{
-						((Word.FormField)enumerator.Current).Result = handler.LoadName();
+						((Word.FormField)enumerator.Current).Result = configHandler.LoadName();
 					}
 					else
 					{
 						form = new EditForm("Enter your name", text: "Name Vorname", useDark: darkMode);
 						if (form.ShowDialog() == DialogResult.OK)
 						{
-							handler.SaveName(form.Result);
-							((Word.FormField)enumerator.Current).Result = handler.LoadName();
+							configHandler.SaveName(form.Result);
+							((Word.FormField)enumerator.Current).Result = configHandler.LoadName();
 						}
 						else
 						{
@@ -220,7 +219,7 @@ namespace BerichtManager
 					enumerator.MoveNext();
 
 					//Enter report nr.
-					if (int.TryParse(handler.LoadNumber(), out int number))
+					if (int.TryParse(configHandler.LoadNumber(), out int number))
 					{
 						FillText(app, ((Word.FormField)enumerator.Current), (number + reportDifference).ToString());
 					}
@@ -232,7 +231,7 @@ namespace BerichtManager
 					enumerator.MoveNext();
 					((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
 					enumerator.MoveNext();
-					if (optionConfigHandler.EndWeekOnFriday())
+					if (configHandler.EndWeekOnFriday())
 					{
 						((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
 					}
@@ -362,9 +361,9 @@ namespace BerichtManager
 					SetFontInDoc(doc, app);
 					doc.SaveAs2(FileName: path);
 
-					if (int.TryParse(handler.LoadNumber(), out int i)) handler.EditNumber("" + (i + 1));
-					handler.SaveLastReportKW(culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-					handler.EditActive(path);
+					if (int.TryParse(configHandler.LoadNumber(), out int i)) configHandler.EditNumber("" + (i + 1));
+					configHandler.SaveLastReportKW(culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+					configHandler.EditActive(path);
 					miEditLatest.Enabled = true;
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + weekOfYear + ".docx");
 
@@ -387,7 +386,7 @@ namespace BerichtManager
 				}
 				else
 				{
-					MessageBox.Show(handler.LoadPath() + " was not found was it moved or deleted?");
+					MessageBox.Show(configHandler.LoadPath() + " was not found was it moved or deleted?");
 				}
 			}
 			catch (Exception ex)
@@ -460,7 +459,7 @@ namespace BerichtManager
 			dialog.Filter = "Word Templates (*.dotx)|*.dotx";
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				handler.Save(Path.GetFullPath(dialog.FileName));
+				configHandler.Save(Path.GetFullPath(dialog.FileName));
 				MessageBox.Show("Template set to: " + Path.GetFullPath(dialog.FileName));
 			}
 		}
@@ -477,18 +476,18 @@ namespace BerichtManager
 			DateTime date1 = new DateTime(DateTime.Today.Year, 12, 31);
 
 			int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-			int reportNr = handler.LoadLastReportKW();
+			int reportNr = configHandler.LoadLastReportKW();
 
 			wordApp = new Word.Application();
 			wordApp.Visible = visible;
 
-			if (handler.LoadLastReportKW() < weekOfYear)
+			if (configHandler.LoadLastReportKW() < weekOfYear)
 			{
 				//Missing reports in current year
 				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					CreateDocument(handler.LoadPath(), today.AddDays( i * 7), wordApp, vacation: vacation);
+					CreateDocument(configHandler.LoadPath(), today.AddDays( i * 7), wordApp, vacation: vacation);
 				}
 			}
 			else
@@ -506,7 +505,7 @@ namespace BerichtManager
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					CreateDocument(handler.LoadPath(), today.AddDays(i * 7), wordApp, vacation: vacation);
+					CreateDocument(configHandler.LoadPath(), today.AddDays(i * 7), wordApp, vacation: vacation);
 				}
 			}
 			try
@@ -530,7 +529,7 @@ namespace BerichtManager
 				return;
 			}
 			//Check if a report was created
-			if (handler.LoadLastReportKW() > 0)
+			if (configHandler.LoadLastReportKW() > 0)
 			{
 				//Check if report for last week was created
 				if (getDistanceToToday() > 1)
@@ -551,7 +550,7 @@ namespace BerichtManager
 
 			wordApp = new Word.Application();
 			wordApp.Visible = visible;
-			CreateDocument(handler.LoadPath(), baseDate: DateTime.Today, wordApp, isSingle: true);
+			CreateDocument(configHandler.LoadPath(), baseDate: DateTime.Today, wordApp, isSingle: true);
 		}
 
 		/// <summary>
@@ -560,7 +559,7 @@ namespace BerichtManager
 		/// <returns>The number of weeks since last report creation</returns>
 		private int getDistanceToToday()
 		{
-			int lastReportKW = handler.LoadLastReportKW();
+			int lastReportKW = configHandler.LoadLastReportKW();
 			int todaysWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			//Both weeks are in the same year
 			if (lastReportKW <= todaysWeek)
@@ -583,7 +582,7 @@ namespace BerichtManager
 			{
 				if (int.TryParse(form.Result, out int i))
 				{
-					handler.EditNumber(form.Result);
+					configHandler.EditNumber(form.Result);
 				}
 				else
 				{
@@ -597,10 +596,10 @@ namespace BerichtManager
 			if (DocIsSamePathAsSelected())
 				return;
 			SaveOrExit();
-			if (optionConfigHandler.LegacyEdit())
-				Edit(handler.LoadActive());
+			if (configHandler.LegacyEdit())
+				Edit(configHandler.LoadActive());
 			else
-				EditInTb(handler.LoadActive());
+				EditInTb(configHandler.LoadActive());
 		}
 
 		private void btTest_Click(object sender, EventArgs e)
@@ -655,11 +654,11 @@ namespace BerichtManager
 					{
 						foreach (string key in unPrintedFiles.Keys)
 						{
-							if (unPrintedFiles[key].Contains(handler.LoadActive()))
+							if (unPrintedFiles[key].Contains(configHandler.LoadActive()))
 							{
-								if (MessageBox.Show("Do you want to also print the last created report?\n(" + handler.LoadActive() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
+								if (MessageBox.Show("Do you want to also print the last created report?\n(" + configHandler.LoadActive() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
 								{
-									unPrintedFiles[key].Remove(handler.LoadActive());
+									unPrintedFiles[key].Remove(configHandler.LoadActive());
 								}
 							}
 						}
@@ -736,7 +735,7 @@ namespace BerichtManager
 
 		private void btLogin_Click(object sender, EventArgs e)
 		{
-			handler.doLogin();
+			configHandler.doLogin();
 		}
 
 		private void btEditName_Click(object sender, EventArgs e)
@@ -746,7 +745,7 @@ namespace BerichtManager
 			{
 				if (form.Result != "Name Vorname")
 				{
-					handler.SaveName(form.Result);
+					configHandler.SaveName(form.Result);
 				}
 			}
 
@@ -1132,14 +1131,14 @@ namespace BerichtManager
 				{
 					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + path)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + path)).StartsWith("~$") || (path.Contains("Logs") && path.EndsWith(".txt")))
 					{
-						if (Path.GetFullPath(".\\..\\..\\" + path) == handler.LoadActive())
+						if (Path.GetFullPath(".\\..\\..\\" + path) == configHandler.LoadActive())
 						{
 							string[] split = path.Split('\\');
 							if (split[split.Length - 1].Substring(15, ("" + culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString())
 							{
-								if (int.TryParse(handler.LoadNumber(), out int number))
+								if (int.TryParse(configHandler.LoadNumber(), out int number))
 								{
-									handler.EditNumber("" + (number - 1));
+									configHandler.EditNumber("" + (number - 1));
 								}
 								else
 								{
@@ -1170,7 +1169,7 @@ namespace BerichtManager
 			if (DocIsSamePathAsSelected())
 				return;
 			SaveOrExit();
-			if (optionConfigHandler.LegacyEdit())
+			if (configHandler.LegacyEdit())
 			{
 				Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 			}
@@ -1245,7 +1244,7 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			new OptionMenu(optionConfigHandler).ShowDialog();
+			new OptionMenu(configHandler).ShowDialog();
 		}
 
 		private void DetectKeys(object sender, KeyEventArgs e)

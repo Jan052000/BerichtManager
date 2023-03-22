@@ -121,7 +121,6 @@
     <Compile Include="HelperClasses\Logger.cs" />
     <Compile Include="HelperClasses\ThemeSetter.cs" />
     <Compile Include="HelperClasses\TreeNodeSorter.cs" />
-    <Compile Include="OptionsMenu\OptionConfigHandler.cs" />
     <Compile Include="OptionsMenu\OptionMenu.cs">
       <SubType>Form</SubType>
     </Compile>
