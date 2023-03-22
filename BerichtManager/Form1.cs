@@ -285,7 +285,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: "-Keine-", isCreate: true);
+						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: "-Keine-", isCreate: true, useDark: darkMode);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
