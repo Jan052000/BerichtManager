@@ -1,4 +1,5 @@
-﻿using BerichtManager.Config;
+﻿using BerichtManager.AddForm;
+using BerichtManager.Config;
 using System;
 using System.Drawing;
 using System.IO;
@@ -29,6 +30,10 @@ namespace BerichtManager.OptionsMenu
 			tbSchool.Text = configHandler.GetSchoolName();
 			cbLegacyEdit.Checked = configHandler.LegacyEdit();
 			cbUseDarkMode.Checked = configHandler.DarkMode();
+			tbTemplate.Text = configHandler.LoadPath();
+			tbName.Text = configHandler.LoadName();
+			if (int.TryParse(configHandler.LoadNumber(), out int value))
+				nudNumber.Value = value;
 			isDirty = false;
 			btSave.Enabled = false;
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
@@ -66,6 +71,9 @@ namespace BerichtManager.OptionsMenu
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
 					configHandler.DarkMode(cbUseDarkMode.Checked);
+					configHandler.SaveName(tbName.Text);
+					configHandler.EditNumber("" + nudNumber.Value);
+					configHandler.Save(tbTemplate.Text);
 					try
 					{
 						configHandler.SaveConfig();
@@ -105,6 +113,9 @@ namespace BerichtManager.OptionsMenu
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
 					configHandler.DarkMode(cbUseDarkMode.Checked);
+					configHandler.SaveName(tbName.Text);
+					configHandler.EditNumber("" + nudNumber.Value);
+					configHandler.Save(tbTemplate.Text);
 				}
 				configHandler.SaveConfig();
 			}
@@ -117,6 +128,11 @@ namespace BerichtManager.OptionsMenu
 			isDirty = false;
 		}
 
+		/// <summary>
+		/// Marks form as dirty
+		/// </summary>
+		/// <param name="sender">changed control</param>
+		/// <param name="e">event</param>
 		private void MarkAsDirty(object sender, EventArgs e)
 		{
 			isDirty = true;
@@ -129,6 +145,22 @@ namespace BerichtManager.OptionsMenu
 			btSave.Enabled = true;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
+		}
+
+		private void btLogin_Click(object sender, EventArgs e)
+		{
+			configHandler.doLogin();
+		}
+
+		private void tbTemplate_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog dialog = new OpenFileDialog();
+			dialog.Filter = "Word Templates (*.dotx)|*.dotx";
+			if (dialog.ShowDialog() == DialogResult.OK)
+			{
+				tbTemplate.Text = dialog.FileName;
+				MarkAsDirty(sender, e);
+			}
 		}
 	}
 }

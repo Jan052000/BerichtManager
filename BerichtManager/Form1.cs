@@ -426,42 +426,7 @@ namespace BerichtManager
 
 		private void btClose_Click(object sender, EventArgs e)
 		{
-			try
-			{
-				if (editMode && wasEdited)
-					if (MessageBox.Show("Do you want to save unsaved changes?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-					{
-						SaveFromTb();
-						Close();
-					}
-				if (doc != null)
-				{
-					doc.Close();
-					doc = null;
-				}
-				if (wordApp != null)
-				{
-					wordApp.Quit(SaveChanges: false);
-					wordApp = null;
-				}
-				Close();
-			}
-			catch (Exception ex)
-			{
-				Console.Write(ex.StackTrace);
-				Close();
-			}
-		}
-
-		private void btSetTemplate_Click(object sender, EventArgs e)
-		{
-			OpenFileDialog dialog = new OpenFileDialog();
-			dialog.Filter = "Word Templates (*.dotx)|*.dotx";
-			if (dialog.ShowDialog() == DialogResult.OK)
-			{
-				configHandler.Save(Path.GetFullPath(dialog.FileName));
-				MessageBox.Show("Template set to: " + Path.GetFullPath(dialog.FileName));
-			}
+			Close();
 		}
 
 		/**
@@ -574,23 +539,6 @@ namespace BerichtManager
 			}
 		}
 
-		private void btSetNumber_Click(object sender, EventArgs e)
-		{
-			EditForm form = new EditForm("Edit Number of Report", useDark: darkMode);
-			form.ShowDialog();
-			if (form.DialogResult == DialogResult.OK)
-			{
-				if (int.TryParse(form.Result, out int i))
-				{
-					configHandler.EditNumber(form.Result);
-				}
-				else
-				{
-					MessageBox.Show("Entered value is not a number, the report number was thus not set");
-				}
-			}
-		}
-
 		private void btEdit_Click(object sender, EventArgs e)
 		{
 			if (DocIsSamePathAsSelected())
@@ -600,12 +548,6 @@ namespace BerichtManager
 				Edit(configHandler.LoadActive());
 			else
 				EditInTb(configHandler.LoadActive());
-		}
-
-		private void btTest_Click(object sender, EventArgs e)
-		{
-			//Client form = new Client();
-			//form.ShowDialog();
 		}
 
 		private void btPrint_Click(object sender, EventArgs e)
@@ -731,24 +673,6 @@ namespace BerichtManager
 				return;
 			}
 			DeleteDocument(tvReports.SelectedNode.FullPath);
-		}
-
-		private void btLogin_Click(object sender, EventArgs e)
-		{
-			configHandler.doLogin();
-		}
-
-		private void btEditName_Click(object sender, EventArgs e)
-		{
-			EditForm form = new EditForm("Enter your name", text: "Name Vorname", useDark: darkMode);
-			if (form.ShowDialog() == DialogResult.OK)
-			{
-				if (form.Result != "Name Vorname")
-				{
-					configHandler.SaveName(form.Result);
-				}
-			}
-
 		}
 
 		private void cbVisible_CheckedChanged(object sender, EventArgs e)
@@ -1263,6 +1187,31 @@ namespace BerichtManager
 		private void miWordVisible_Click(object sender, EventArgs e)
 		{
 			visible = miWordVisible.Checked;
+		}
+
+		private void FormManager_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			try
+			{
+				if (editMode && wasEdited && MessageBox.Show("Do you want to save unsaved changes?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				{
+					SaveFromTb();
+				}
+				if (doc != null)
+				{
+					doc.Close();
+					doc = null;
+				}
+				if (wordApp != null)
+				{
+					wordApp.Quit(SaveChanges: false);
+					wordApp = null;
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.Write(ex.StackTrace);
+			}
 		}
 	}
 }

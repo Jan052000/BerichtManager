@@ -40,9 +40,6 @@ namespace BerichtManager
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.btClose = new System.Windows.Forms.Button();
-			this.btSetTemplate = new System.Windows.Forms.Button();
-			this.btSetNumber = new System.Windows.Forms.Button();
 			this.tvReports = new System.Windows.Forms.TreeView();
 			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,12 +48,9 @@ namespace BerichtManager
 			this.tiQuickEditWork = new System.Windows.Forms.ToolStripMenuItem();
 			this.miQuickEditSchool = new System.Windows.Forms.ToolStripMenuItem();
 			this.miPrint = new System.Windows.Forms.ToolStripMenuItem();
-			this.btLogin = new System.Windows.Forms.Button();
-			this.btEditName = new System.Windows.Forms.Button();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
 			this.rtbWork = new System.Windows.Forms.RichTextBox();
 			this.rtbSchool = new System.Windows.Forms.RichTextBox();
-			this.button1 = new System.Windows.Forms.Button();
 			this.paMainView = new System.Windows.Forms.Panel();
 			this.scTextBoxes = new System.Windows.Forms.SplitContainer();
 			this.splitterTreeBoxes = new System.Windows.Forms.Splitter();
@@ -69,6 +63,7 @@ namespace BerichtManager
 			this.miOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
+			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -79,41 +74,6 @@ namespace BerichtManager
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// btClose
-			// 
-			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(704, 415);
-			this.btClose.Name = "btClose";
-			this.btClose.Size = new System.Drawing.Size(84, 23);
-			this.btClose.TabIndex = 0;
-			this.btClose.Text = "Close";
-			this.btClose.UseVisualStyleBackColor = true;
-			this.btClose.Click += new System.EventHandler(this.btClose_Click);
-			// 
-			// btSetTemplate
-			// 
-			this.btSetTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSetTemplate.Location = new System.Drawing.Point(619, 415);
-			this.btSetTemplate.Name = "btSetTemplate";
-			this.btSetTemplate.Size = new System.Drawing.Size(79, 23);
-			this.btSetTemplate.TabIndex = 1;
-			this.btSetTemplate.Text = "Set Template";
-			this.ttTips.SetToolTip(this.btSetTemplate, "Sets the path for the template");
-			this.btSetTemplate.UseVisualStyleBackColor = true;
-			this.btSetTemplate.Click += new System.EventHandler(this.btSetTemplate_Click);
-			// 
-			// btSetNumber
-			// 
-			this.btSetNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSetNumber.Location = new System.Drawing.Point(538, 415);
-			this.btSetNumber.Name = "btSetNumber";
-			this.btSetNumber.Size = new System.Drawing.Size(75, 23);
-			this.btSetNumber.TabIndex = 3;
-			this.btSetNumber.Text = "Set Number";
-			this.ttTips.SetToolTip(this.btSetNumber, "Changes the report number to be used next");
-			this.btSetNumber.UseVisualStyleBackColor = true;
-			this.btSetNumber.Click += new System.EventHandler(this.btSetNumber_Click);
-			// 
 			// tvReports
 			// 
 			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -122,7 +82,7 @@ namespace BerichtManager
 			this.tvReports.Location = new System.Drawing.Point(0, 0);
 			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
 			this.tvReports.Name = "tvReports";
-			this.tvReports.Size = new System.Drawing.Size(235, 385);
+			this.tvReports.Size = new System.Drawing.Size(235, 426);
 			this.tvReports.TabIndex = 6;
 			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
 			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
@@ -183,30 +143,6 @@ namespace BerichtManager
 			this.miPrint.Text = "Print";
 			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
 			// 
-			// btLogin
-			// 
-			this.btLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.btLogin.Location = new System.Drawing.Point(12, 415);
-			this.btLogin.Name = "btLogin";
-			this.btLogin.Size = new System.Drawing.Size(75, 23);
-			this.btLogin.TabIndex = 11;
-			this.btLogin.Text = "Login";
-			this.ttTips.SetToolTip(this.btLogin, "Opens login window");
-			this.btLogin.UseVisualStyleBackColor = true;
-			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
-			// 
-			// btEditName
-			// 
-			this.btEditName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btEditName.Location = new System.Drawing.Point(457, 415);
-			this.btEditName.Name = "btEditName";
-			this.btEditName.Size = new System.Drawing.Size(75, 23);
-			this.btEditName.TabIndex = 12;
-			this.btEditName.Text = "Edit Name";
-			this.ttTips.SetToolTip(this.btEditName, "Sets the name to be used in reports");
-			this.btEditName.UseVisualStyleBackColor = true;
-			this.btEditName.Click += new System.EventHandler(this.btEditName_Click);
-			// 
 			// rtbWork
 			// 
 			this.rtbWork.AcceptsTab = true;
@@ -214,7 +150,7 @@ namespace BerichtManager
 			this.rtbWork.Location = new System.Drawing.Point(0, 0);
 			this.rtbWork.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbWork.Name = "rtbWork";
-			this.rtbWork.Size = new System.Drawing.Size(562, 192);
+			this.rtbWork.Size = new System.Drawing.Size(562, 212);
 			this.rtbWork.TabIndex = 4;
 			this.rtbWork.Text = "";
 			this.ttTips.SetToolTip(this.rtbWork, "Work");
@@ -229,26 +165,13 @@ namespace BerichtManager
 			this.rtbSchool.Location = new System.Drawing.Point(0, 0);
 			this.rtbSchool.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbSchool.Name = "rtbSchool";
-			this.rtbSchool.Size = new System.Drawing.Size(562, 192);
+			this.rtbSchool.Size = new System.Drawing.Size(562, 213);
 			this.rtbSchool.TabIndex = 4;
 			this.rtbSchool.Text = "";
 			this.ttTips.SetToolTip(this.rtbSchool, "School");
 			this.rtbSchool.WordWrap = false;
 			this.rtbSchool.TextChanged += new System.EventHandler(this.EditRichTextBox);
 			this.rtbSchool.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
-			// 
-			// button1
-			// 
-			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.button1.Enabled = false;
-			this.button1.Location = new System.Drawing.Point(203, 415);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 5;
-			this.button1.Text = "Test";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Visible = false;
-			this.button1.Click += new System.EventHandler(this.btTest_Click);
 			// 
 			// paMainView
 			// 
@@ -261,7 +184,7 @@ namespace BerichtManager
 			this.paMainView.Location = new System.Drawing.Point(0, 24);
 			this.paMainView.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
 			this.paMainView.Name = "paMainView";
-			this.paMainView.Size = new System.Drawing.Size(800, 385);
+			this.paMainView.Size = new System.Drawing.Size(800, 426);
 			this.paMainView.TabIndex = 15;
 			// 
 			// scTextBoxes
@@ -278,8 +201,8 @@ namespace BerichtManager
 			// scTextBoxes.Panel2
 			// 
 			this.scTextBoxes.Panel2.Controls.Add(this.rtbSchool);
-			this.scTextBoxes.Size = new System.Drawing.Size(562, 385);
-			this.scTextBoxes.SplitterDistance = 192;
+			this.scTextBoxes.Size = new System.Drawing.Size(562, 426);
+			this.scTextBoxes.SplitterDistance = 212;
 			this.scTextBoxes.SplitterWidth = 1;
 			this.scTextBoxes.TabIndex = 2;
 			// 
@@ -287,7 +210,7 @@ namespace BerichtManager
 			// 
 			this.splitterTreeBoxes.Location = new System.Drawing.Point(235, 0);
 			this.splitterTreeBoxes.Name = "splitterTreeBoxes";
-			this.splitterTreeBoxes.Size = new System.Drawing.Size(3, 385);
+			this.splitterTreeBoxes.Size = new System.Drawing.Size(3, 426);
 			this.splitterTreeBoxes.TabIndex = 1;
 			this.splitterTreeBoxes.TabStop = false;
 			// 
@@ -297,14 +220,15 @@ namespace BerichtManager
 			this.paFileTree.Dock = System.Windows.Forms.DockStyle.Left;
 			this.paFileTree.Location = new System.Drawing.Point(0, 0);
 			this.paFileTree.Name = "paFileTree";
-			this.paFileTree.Size = new System.Drawing.Size(235, 385);
+			this.paFileTree.Size = new System.Drawing.Size(235, 426);
 			this.paFileTree.TabIndex = 0;
 			// 
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miFile,
-            this.miOptions});
+            this.miOptions,
+            this.miClose});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -354,7 +278,7 @@ namespace BerichtManager
 			// miOptionsMenu
 			// 
 			this.miOptionsMenu.Name = "miOptionsMenu";
-			this.miOptionsMenu.Size = new System.Drawing.Size(180, 22);
+			this.miOptionsMenu.Size = new System.Drawing.Size(150, 22);
 			this.miOptionsMenu.Text = "Options menu";
 			this.miOptionsMenu.Click += new System.EventHandler(this.btOptions_Click);
 			// 
@@ -362,9 +286,19 @@ namespace BerichtManager
 			// 
 			this.miWordVisible.CheckOnClick = true;
 			this.miWordVisible.Name = "miWordVisible";
-			this.miWordVisible.Size = new System.Drawing.Size(180, 22);
+			this.miWordVisible.Size = new System.Drawing.Size(150, 22);
 			this.miWordVisible.Text = "Word visible";
 			this.miWordVisible.Click += new System.EventHandler(this.miWordVisible_Click);
+			// 
+			// miClose
+			// 
+			this.miClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.miClose.Enabled = false;
+			this.miClose.Name = "miClose";
+			this.miClose.Size = new System.Drawing.Size(48, 20);
+			this.miClose.Text = "Close";
+			this.miClose.Visible = false;
+			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
 			// FormManager
 			// 
@@ -374,16 +308,11 @@ namespace BerichtManager
 			this.ClientSize = new System.Drawing.Size(800, 450);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.paMainView);
-			this.Controls.Add(this.btEditName);
-			this.Controls.Add(this.btLogin);
-			this.Controls.Add(this.button1);
-			this.Controls.Add(this.btSetNumber);
-			this.Controls.Add(this.btSetTemplate);
-			this.Controls.Add(this.btClose);
 			this.MainMenuStrip = this.menuStrip1;
 			this.MinimumSize = new System.Drawing.Size(545, 289);
 			this.Name = "FormManager";
 			this.Text = "Bericht Manager";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormManager_FormClosing);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
 			this.toRightClickMenu.ResumeLayout(false);
 			this.paMainView.ResumeLayout(false);
@@ -400,13 +329,7 @@ namespace BerichtManager
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Button btClose;
-		private System.Windows.Forms.Button btSetTemplate;
-		private System.Windows.Forms.Button btSetNumber;
 		private System.Windows.Forms.TreeView tvReports;
-		private System.Windows.Forms.Button btLogin;
-		private System.Windows.Forms.Button btEditName;
 		private System.Windows.Forms.ContextMenuStrip toRightClickMenu;
 		private System.Windows.Forms.ToolStripMenuItem miDelete;
 		private System.Windows.Forms.ToolStripMenuItem miEdit;
@@ -415,7 +338,6 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miQuickEditOptions;
 		private System.Windows.Forms.ToolStripMenuItem tiQuickEditWork;
 		private System.Windows.Forms.ToolStripMenuItem miQuickEditSchool;
-		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.RichTextBox rtbWork;
 		private System.Windows.Forms.RichTextBox rtbSchool;
 		private System.Windows.Forms.Panel paMainView;
@@ -430,6 +352,7 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miPrintAll;
 		private System.Windows.Forms.ToolStripMenuItem miWordVisible;
 		private System.Windows.Forms.ToolStripMenuItem miOptionsMenu;
+		private System.Windows.Forms.ToolStripMenuItem miClose;
 	}
 }
 

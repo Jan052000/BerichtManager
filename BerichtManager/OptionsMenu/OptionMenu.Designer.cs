@@ -40,6 +40,14 @@
 			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
 			this.cbLegacyEdit = new System.Windows.Forms.CheckBox();
 			this.cbUseDarkMode = new System.Windows.Forms.CheckBox();
+			this.btLogin = new System.Windows.Forms.Button();
+			this.laTemplate = new System.Windows.Forms.Label();
+			this.tbTemplate = new System.Windows.Forms.TextBox();
+			this.laName = new System.Windows.Forms.Label();
+			this.tbName = new System.Windows.Forms.TextBox();
+			this.laNumber = new System.Windows.Forms.Label();
+			this.nudNumber = new System.Windows.Forms.NumericUpDown();
+			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -168,11 +176,83 @@
 			this.cbUseDarkMode.UseVisualStyleBackColor = true;
 			this.cbUseDarkMode.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
+			// btLogin
+			// 
+			this.btLogin.Location = new System.Drawing.Point(230, 247);
+			this.btLogin.Name = "btLogin";
+			this.btLogin.Size = new System.Drawing.Size(75, 23);
+			this.btLogin.TabIndex = 15;
+			this.btLogin.Text = "Login";
+			this.btLogin.UseVisualStyleBackColor = true;
+			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
+			// 
+			// laTemplate
+			// 
+			this.laTemplate.AutoSize = true;
+			this.laTemplate.Location = new System.Drawing.Point(47, 202);
+			this.laTemplate.Name = "laTemplate";
+			this.laTemplate.Size = new System.Drawing.Size(51, 13);
+			this.laTemplate.TabIndex = 16;
+			this.laTemplate.Text = "Template";
+			// 
+			// tbTemplate
+			// 
+			this.tbTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbTemplate.Location = new System.Drawing.Point(104, 199);
+			this.tbTemplate.Name = "tbTemplate";
+			this.tbTemplate.Size = new System.Drawing.Size(684, 20);
+			this.tbTemplate.TabIndex = 17;
+			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
+			// 
+			// laName
+			// 
+			this.laName.AutoSize = true;
+			this.laName.Location = new System.Drawing.Point(63, 227);
+			this.laName.Name = "laName";
+			this.laName.Size = new System.Drawing.Size(35, 13);
+			this.laName.TabIndex = 18;
+			this.laName.Text = "Name";
+			// 
+			// tbName
+			// 
+			this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbName.Location = new System.Drawing.Point(104, 224);
+			this.tbName.Name = "tbName";
+			this.tbName.Size = new System.Drawing.Size(684, 20);
+			this.tbName.TabIndex = 19;
+			this.tbName.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laNumber
+			// 
+			this.laNumber.AutoSize = true;
+			this.laNumber.Location = new System.Drawing.Point(54, 252);
+			this.laNumber.Name = "laNumber";
+			this.laNumber.Size = new System.Drawing.Size(44, 13);
+			this.laNumber.TabIndex = 20;
+			this.laNumber.Text = "Number";
+			// 
+			// nudNumber
+			// 
+			this.nudNumber.Location = new System.Drawing.Point(104, 250);
+			this.nudNumber.Name = "nudNumber";
+			this.nudNumber.Size = new System.Drawing.Size(120, 20);
+			this.nudNumber.TabIndex = 21;
+			this.nudNumber.ValueChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.nudNumber);
+			this.Controls.Add(this.laNumber);
+			this.Controls.Add(this.tbName);
+			this.Controls.Add(this.laName);
+			this.Controls.Add(this.tbTemplate);
+			this.Controls.Add(this.laTemplate);
+			this.Controls.Add(this.btLogin);
 			this.Controls.Add(this.cbUseDarkMode);
 			this.Controls.Add(this.cbLegacyEdit);
 			this.Controls.Add(this.cbEndOfWeek);
@@ -185,9 +265,10 @@
 			this.Controls.Add(this.cbUseCustomPrefix);
 			this.Controls.Add(this.btSave);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(195, 232);
+			this.MinimumSize = new System.Drawing.Size(495, 321);
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
+			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -207,5 +288,12 @@
 		private System.Windows.Forms.CheckBox cbEndOfWeek;
 		private System.Windows.Forms.CheckBox cbLegacyEdit;
 		private System.Windows.Forms.CheckBox cbUseDarkMode;
+		private System.Windows.Forms.Button btLogin;
+		private System.Windows.Forms.Label laTemplate;
+		private System.Windows.Forms.TextBox tbTemplate;
+		private System.Windows.Forms.Label laName;
+		private System.Windows.Forms.TextBox tbName;
+		private System.Windows.Forms.Label laNumber;
+		private System.Windows.Forms.NumericUpDown nudNumber;
 	}
 }
