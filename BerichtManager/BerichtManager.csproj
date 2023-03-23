@@ -118,6 +118,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="HelperClasses\CustomNodeDrawer.cs" />
     <Compile Include="HelperClasses\Logger.cs" />
     <Compile Include="HelperClasses\ThemeSetter.cs" />
     <Compile Include="HelperClasses\TreeNodeSorter.cs" />

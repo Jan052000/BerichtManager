@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Collections;
 using BerichtManager.OptionsMenu;
+using BerichtManager.HelperClasses;
 
 namespace BerichtManager
 {
@@ -25,11 +26,15 @@ namespace BerichtManager
 		private bool editMode = false;
 		private bool wasEdited = false;
 		public bool darkMode = false;
+		private CustomNodeDrawer nodeDrawer;
 
 		public FormManager()
 		{
 			InitializeComponent();
+			nodeDrawer = new CustomNodeDrawer(ilTreeViewIcons);
 			darkMode = configHandler.DarkMode();
+			if (darkMode)
+				tvReports.DrawMode = TreeViewDrawMode.OwnerDrawAll;
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
@@ -1212,6 +1217,13 @@ namespace BerichtManager
 			{
 				Console.Write(ex.StackTrace);
 			}
+		}
+
+		private void tvReports_DrawNode(object sender, DrawTreeNodeEventArgs e)
+		{
+			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
+				return;
+			nodeDrawer.DrawNode(e);
 		}
 	}
 }

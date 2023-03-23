@@ -40,6 +40,7 @@ namespace BerichtManager
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormManager));
 			this.tvReports = new System.Windows.Forms.TreeView();
 			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +65,7 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
+			this.ilTreeViewIcons = new System.Windows.Forms.ImageList(this.components);
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -84,6 +86,7 @@ namespace BerichtManager
 			this.tvReports.Name = "tvReports";
 			this.tvReports.Size = new System.Drawing.Size(235, 426);
 			this.tvReports.TabIndex = 6;
+			this.tvReports.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tvReports_DrawNode);
 			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
 			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
 			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
@@ -300,6 +303,13 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
+			// ilTreeViewIcons
+			// 
+			this.ilTreeViewIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilTreeViewIcons.ImageStream")));
+			this.ilTreeViewIcons.TransparentColor = System.Drawing.Color.Transparent;
+			this.ilTreeViewIcons.Images.SetKeyName(0, "Folder_Closed.png");
+			this.ilTreeViewIcons.Images.SetKeyName(1, "Folder_Open.png");
+			// 
 			// FormManager
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -353,6 +363,7 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miWordVisible;
 		private System.Windows.Forms.ToolStripMenuItem miOptionsMenu;
 		private System.Windows.Forms.ToolStripMenuItem miClose;
+		private System.Windows.Forms.ImageList ilTreeViewIcons;
 	}
 }
 
