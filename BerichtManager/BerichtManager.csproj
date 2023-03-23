@@ -120,6 +120,9 @@
     </Compile>
     <Compile Include="ThemeManagement\CustomNodeDrawer.cs" />
     <Compile Include="HelperClasses\Logger.cs" />
+    <Compile Include="ThemeManagement\DefaultThemes\DarkMode.cs" />
+    <Compile Include="ThemeManagement\DefaultThemes\LightMode.cs" />
+    <Compile Include="ThemeManagement\ITheme.cs" />
     <Compile Include="ThemeManagement\ThemeSetter.cs" />
     <Compile Include="HelperClasses\TreeNodeSorter.cs" />
     <Compile Include="OptionsMenu\OptionMenu.cs">
