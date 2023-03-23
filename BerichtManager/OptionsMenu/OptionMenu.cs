@@ -18,7 +18,7 @@ namespace BerichtManager.OptionsMenu
 		{
 			InitializeComponent();
 			if (configHandler.DarkMode())
-				HelperClasses.ThemeSetter.SetThemes(this);
+				ThemeManagement.ThemeSetter.SetThemes(this);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.configHandler = configHandler;
 			//Set values of fields to values in config

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace BerichtManager.HelperClasses
+namespace BerichtManager.ThemeManagement
 {
 	/// <summary>
 	/// Class to set Theme in control

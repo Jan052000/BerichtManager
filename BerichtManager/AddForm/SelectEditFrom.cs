@@ -12,7 +12,7 @@ namespace BerichtManager.AddForm
 		{
 			InitializeComponent();
 			if (useDark)
-				HelperClasses.ThemeSetter.SetThemes(this);
+				ThemeManagement.ThemeSetter.SetThemes(this);
 			SelectedItems = new List<EditState>();
 			btConfirm.Text = "Close";
 		}

@@ -14,7 +14,7 @@ namespace BerichtManager.AddForm
 		{
 			InitializeComponent();
 			if (useDark)
-				HelperClasses.ThemeSetter.SetThemes(this);
+				ThemeManagement.ThemeSetter.SetThemes(this);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 		}
 

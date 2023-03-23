@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Collections;
 using BerichtManager.OptionsMenu;
 using BerichtManager.HelperClasses;
+using BerichtManager.ThemeManagement;
 
 namespace BerichtManager
 {
@@ -46,7 +47,7 @@ namespace BerichtManager
 			}
 			SetComponentPositions();
 			if (darkMode)
-				HelperClasses.ThemeSetter.SetThemes(this);
+				ThemeSetter.SetThemes(this);
 			client = new Client(configHandler);
 		}
 
