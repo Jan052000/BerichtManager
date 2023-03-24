@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -8,7 +8,6 @@ using BerichtManager.AddForm;
 using System.Collections.Generic;
 using System.Globalization;
 using BerichtManager.ThemeManagement;
-using BerichtManager.ThemeManagement.DefaultThemes;
 
 namespace BerichtManager.Config
 {
@@ -17,10 +16,10 @@ namespace BerichtManager.Config
 		private readonly string path = Environment.CurrentDirectory + "\\Config\\Config.json";
 		private readonly JObject configObject;
 		public bool loginAborted = false;
-		private bool useDark;
-		private ITheme theme;
-		public ConfigHandler()
+		private ThemeManager themeManager;
+		public ConfigHandler(ThemeManager themeManager)
 		{
+			this.themeManager = themeManager;
 			bool isComplete = true;
 			if (!ConfigExists())
 			{
@@ -29,7 +28,7 @@ namespace BerichtManager.Config
 				configObject = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
 					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1),
 					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
-					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("DarkMode", true));
+					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"));
 				File.WriteAllText(path, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else
@@ -51,19 +50,14 @@ namespace BerichtManager.Config
 					MessageBox.Show("Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("DarkMode"))
+				if (!configObject.ContainsKey("ActiveTheme"))
 				{
-					configObject.Add(new JProperty("DarkMode", true));
+					configObject.Add(new JProperty("ActiveTheme", "Dark Mode"));
 					isComplete = false;
 				}
-				useDark = DarkMode();
-				if (useDark)
-					theme = new DarkMode();
-				else
-					theme = new LightMode();
 				if (!configObject.ContainsKey("ReportNR"))
 				{
-					EditForm form = new EditForm("Edit Number of Report", theme, "", false);
+					EditForm form = new EditForm("Edit Number of Report", themeManager.GetTheme(ActiveTheme()), "", false);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -88,7 +82,7 @@ namespace BerichtManager.Config
 				}
 				if (!configObject.ContainsKey("Name"))
 				{
-					EditForm form = new EditForm("Enter your name", theme, "Name Vorname", false);
+					EditForm form = new EditForm("Enter your name", themeManager.GetTheme(ActiveTheme()), "Name Vorname", false);
 					if (form.ShowDialog() == DialogResult.OK)
 					{
 						configObject.Add(new JProperty("Name", form.Result));
@@ -286,7 +280,7 @@ namespace BerichtManager.Config
 		/// <returns><see cref="User"/> object containing username and password</returns>
 		public User doLogin()
 		{
-			Login form = new Login(theme);
+			Login form = new Login(themeManager.GetTheme(ActiveTheme()));
 			form.ShowDialog();
 			if (form.DialogResult == DialogResult.OK)
 			{
@@ -524,21 +518,21 @@ namespace BerichtManager.Config
 		}
 
 		/// <summary>
-		/// Gets if dark mode should be used
+		/// Gets name of theme to be used
 		/// </summary>
-		/// <returns>use darkmode</returns>
-		public bool DarkMode()
+		/// <returns>Theme name</returns>
+		public string ActiveTheme()
 		{
-			return GenericGet<bool>("DarkMode");
+			return GenericGet<string>("ActiveTheme");
 		}
 
 		/// <summary>
-		/// Sets if dark mode should be used
+		/// Sets name of theme to be used
 		/// </summary>
-		/// <param name="darkMode">use darkmode</param>
-		public void DarkMode(bool darkMode)
+		/// <param name="themeName">Name of theme to be used</param>
+		public void ActiveTheme(string themeName)
 		{
-			GenericSet("DarkMode", darkMode);
+			GenericSet("ActiveTheme", themeName);
 		}
 
 		/// <summary>

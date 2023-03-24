@@ -19,7 +19,7 @@ namespace BerichtManager
 	{
 		private Word.Document doc = null;
 		private Word.Application wordApp = null;
-		private readonly ConfigHandler configHandler = new ConfigHandler();
+		private readonly ConfigHandler configHandler = new ConfigHandler(themeManager);
 		private readonly Client client;
 		private readonly DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
 		private bool visible = false;
@@ -28,6 +28,7 @@ namespace BerichtManager
 		private bool editMode = false;
 		private bool wasEdited = false;
 		private CustomNodeDrawer nodeDrawer;
+		private static readonly ThemeManager themeManager = new ThemeManager();
 		private ITheme activeTheme;
 
 		public FormManager()
@@ -44,6 +45,7 @@ namespace BerichtManager
 				miEditLatest.Enabled = false;
 			}
 			SetComponentPositions();
+			activeTheme = themeManager.GetTheme(configHandler.ActiveTheme());
 			if (activeTheme == null)
 				activeTheme = new DarkMode();
 			ThemeSetter.SetThemes(this, activeTheme);
@@ -1173,7 +1175,8 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			new OptionMenu(configHandler, activeTheme).ShowDialog();
+			OptionMenu optionMenu = new OptionMenu(configHandler, activeTheme, themeManager);
+			optionMenu.ShowDialog();
 		}
 
 		private void DetectKeys(object sender, KeyEventArgs e)

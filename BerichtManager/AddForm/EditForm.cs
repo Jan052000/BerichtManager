@@ -1,4 +1,4 @@
-using BerichtManager.Config;
+﻿using BerichtManager.Config;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
@@ -13,7 +13,7 @@ namespace BerichtManager.AddForm
 	public partial class EditForm : Form
 	{
 		public string Result { get; set; }
-		private readonly ConfigHandler handler = new ConfigHandler();
+		private readonly ConfigHandler handler = new ConfigHandler(null);
 
 		public EditForm(string title, ITheme theme, string text = "", bool school = false, bool isCreate = false)
 		{

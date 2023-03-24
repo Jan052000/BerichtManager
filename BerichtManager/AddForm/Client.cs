@@ -20,7 +20,7 @@ namespace BerichtManager.AddForm
 		{
 			this.configHandler = configHandler;
 			if(configHandler == null)
-				configHandler = new ConfigHandler();
+				configHandler = new ConfigHandler(null);
 			//Get school and server
 			schoolName = configHandler.GetSchoolName();
 			server = configHandler.GetWebUntisServer();

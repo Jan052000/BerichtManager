@@ -16,7 +16,7 @@ namespace BerichtManager.OptionsMenu
 		/// </summary>
 		private bool isDirty { get; set; }
 		private readonly ConfigHandler configHandler;
-		public OptionMenu(ConfigHandler configHandler, ITheme theme)
+		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
 		{
 			InitializeComponent();
 			if (theme == null)
@@ -32,7 +32,9 @@ namespace BerichtManager.OptionsMenu
 			tbServer.Text = configHandler.GetWebUntisServer();
 			tbSchool.Text = configHandler.GetSchoolName();
 			cbLegacyEdit.Checked = configHandler.LegacyEdit();
-			cbUseDarkMode.Checked = configHandler.DarkMode();
+			themeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
+			int selectedIndex = coTheme.Items.IndexOf(configHandler.ActiveTheme());
+			coTheme.SelectedIndex = selectedIndex;
 			tbTemplate.Text = configHandler.LoadPath();
 			tbName.Text = configHandler.LoadName();
 			if (int.TryParse(configHandler.LoadNumber(), out int value))
@@ -42,7 +44,6 @@ namespace BerichtManager.OptionsMenu
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
-			
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -73,10 +74,10 @@ namespace BerichtManager.OptionsMenu
 					}
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
-					configHandler.DarkMode(cbUseDarkMode.Checked);
 					configHandler.SaveName(tbName.Text);
 					configHandler.EditNumber("" + nudNumber.Value);
 					configHandler.Save(tbTemplate.Text);
+					configHandler.ActiveTheme(coTheme.Text);
 					try
 					{
 						configHandler.SaveConfig();
@@ -115,10 +116,10 @@ namespace BerichtManager.OptionsMenu
 					configHandler.SetUseWebUntis(cbShouldUseUntis.Checked);
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
-					configHandler.DarkMode(cbUseDarkMode.Checked);
 					configHandler.SaveName(tbName.Text);
 					configHandler.EditNumber("" + nudNumber.Value);
 					configHandler.Save(tbTemplate.Text);
+					configHandler.ActiveTheme(coTheme.Text);
 				}
 				configHandler.SaveConfig();
 			}
