@@ -31,7 +31,7 @@ namespace BerichtManager.ThemeManagement
 		{
 			if(!Directory.Exists(themesFolderPath))
 				Directory.CreateDirectory(themesFolderPath);
-			AvailableThemes = GetThemes();
+			AvailableThemes.AddRange(GetThemes());
 		}
 
 		/// <summary>
