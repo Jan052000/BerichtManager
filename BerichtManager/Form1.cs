@@ -1175,8 +1175,7 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			OptionMenu optionMenu = new OptionMenu(configHandler, activeTheme, themeManager);
-			optionMenu.ShowDialog();
+			new OptionMenu(configHandler, activeTheme, themeManager, this).ShowDialog();
 		}
 
 		private void DetectKeys(object sender, KeyEventArgs e)

@@ -1,4 +1,4 @@
-using BerichtManager.AddForm;
+﻿using BerichtManager.AddForm;
 using BerichtManager.Config;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
@@ -16,7 +16,12 @@ namespace BerichtManager.OptionsMenu
 		/// </summary>
 		private bool isDirty { get; set; }
 		private readonly ConfigHandler configHandler;
-		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
+		/// <summary>
+		/// Name of the active theme
+		/// </summary>
+		public string ThemeName;
+		private ThemeManager ThemeManager;
+		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager, Form owner)
 		{
 			InitializeComponent();
 			if (theme == null)
@@ -24,6 +29,8 @@ namespace BerichtManager.OptionsMenu
 			ThemeSetter.SetThemes(this, theme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.configHandler = configHandler;
+			Owner = owner;
+			ThemeManager = themeManager;
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
 			cbShouldUseUntis.Checked = configHandler.UseWebUntis();
@@ -35,6 +42,7 @@ namespace BerichtManager.OptionsMenu
 			themeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
 			int selectedIndex = coTheme.Items.IndexOf(configHandler.ActiveTheme());
 			coTheme.SelectedIndex = selectedIndex;
+			ThemeName = coTheme.Text;
 			tbTemplate.Text = configHandler.LoadPath();
 			tbName.Text = configHandler.LoadName();
 			if (int.TryParse(configHandler.LoadNumber(), out int value))
@@ -78,6 +86,11 @@ namespace BerichtManager.OptionsMenu
 					configHandler.EditNumber("" + nudNumber.Value);
 					configHandler.Save(tbTemplate.Text);
 					configHandler.ActiveTheme(coTheme.Text);
+					if(ThemeName != coTheme.Text)
+					{
+						ThemeName = coTheme.Text;
+						ThemeSetter.SetThemes(Owner, ThemeManager.GetTheme(ThemeName));
+					}
 					try
 					{
 						configHandler.SaveConfig();
@@ -120,6 +133,13 @@ namespace BerichtManager.OptionsMenu
 					configHandler.EditNumber("" + nudNumber.Value);
 					configHandler.Save(tbTemplate.Text);
 					configHandler.ActiveTheme(coTheme.Text);
+					if (ThemeName != coTheme.Text)
+					{
+						ThemeName = coTheme.Text;
+						ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
+						ThemeSetter.SetThemes(this, activeTheme);
+						ThemeSetter.SetThemes(Owner, activeTheme);
+					}
 				}
 				configHandler.SaveConfig();
 			}
