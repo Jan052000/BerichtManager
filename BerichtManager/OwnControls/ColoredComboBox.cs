@@ -16,7 +16,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Color of the inner border
 		/// </summary>
-		private Color borderColor = Color.Black;
+		private Color borderColor = SystemColors.Window;
 		/// <summary>
 		/// Color of the inner border
 		/// </summary>
