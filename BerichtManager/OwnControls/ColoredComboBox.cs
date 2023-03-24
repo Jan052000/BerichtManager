@@ -56,6 +56,27 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
+		/// Color of the drop down button background
+		/// </summary>
+		private Color dropDownButtonColor = SystemColors.Menu;
+		/// <summary>
+		/// Color of the drop down button background
+		/// </summary>
+		[Category("Colored Combo Box")]
+		public Color DropDownButtonColor
+		{
+			get => dropDownButtonColor;
+			set
+			{
+				if (dropDownButtonColor != value)
+				{
+					dropDownButtonColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Color of the arrow drawn in dropdown button
 		/// </summary>
 		private Color arrowColor = Color.FromArgb(100, 100, 100);
@@ -105,7 +126,7 @@ namespace BerichtManager.OwnControls
 				using (Graphics g = Graphics.FromHwnd(m.HWnd))
 				{
 					g.Clear(borderColor);
-					using (Brush b = new SolidBrush(outlineColor))
+					using (Brush b = new SolidBrush(dropDownButtonColor))
 					{
 						g.FillRectangle(b, dropDownRect);
 					}
