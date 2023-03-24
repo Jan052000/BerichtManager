@@ -126,6 +126,7 @@
     <Compile Include="ThemeManagement\DefaultThemes\DarkMode.cs" />
     <Compile Include="ThemeManagement\DefaultThemes\LightMode.cs" />
     <Compile Include="ThemeManagement\ITheme.cs" />
+    <Compile Include="ThemeManagement\ThemeManager.cs" />
     <Compile Include="ThemeManagement\ThemeSetter.cs" />
     <Compile Include="HelperClasses\TreeNodeSorter.cs" />
     <Compile Include="OptionsMenu\OptionMenu.cs">
@@ -219,5 +220,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
