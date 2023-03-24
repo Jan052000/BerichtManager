@@ -11,6 +11,7 @@ using System.Collections;
 using BerichtManager.OptionsMenu;
 using BerichtManager.HelperClasses;
 using BerichtManager.ThemeManagement;
+using BerichtManager.ThemeManagement.DefaultThemes;
 
 namespace BerichtManager
 {
@@ -26,16 +27,13 @@ namespace BerichtManager
 		private int tvReportsMaxWidth = 50;
 		private bool editMode = false;
 		private bool wasEdited = false;
-		public bool darkMode = false;
 		private CustomNodeDrawer nodeDrawer;
+		private ITheme activeTheme;
 
 		public FormManager()
 		{
 			InitializeComponent();
 			nodeDrawer = new CustomNodeDrawer(ilTreeViewIcons);
-			darkMode = configHandler.DarkMode();
-			if (darkMode)
-				tvReports.DrawMode = TreeViewDrawMode.OwnerDrawAll;
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
@@ -46,8 +44,9 @@ namespace BerichtManager
 				miEditLatest.Enabled = false;
 			}
 			SetComponentPositions();
-			if (darkMode)
-				ThemeSetter.SetThemes(this);
+			if (activeTheme == null)
+				activeTheme = new DarkMode();
+			ThemeSetter.SetThemes(this, activeTheme);
 			client = new Client(configHandler);
 		}
 
@@ -210,7 +209,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Enter your name", text: "Name Vorname", useDark: darkMode);
+						form = new EditForm("Enter your name", activeTheme, text: "Name Vorname");
 						if (form.ShowDialog() == DialogResult.OK)
 						{
 							configHandler.SaveName(form.Result);
@@ -258,7 +257,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", isCreate: true, useDark: darkMode);
+						form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", activeTheme, isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -289,7 +288,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: "-Keine-", isCreate: true, useDark: darkMode);
+						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", activeTheme, text: "-Keine-", isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -326,11 +325,11 @@ namespace BerichtManager
 							MessageBox.Show("Unable to process classes from web\n(try to cancel the creation process and start again)");
 							HelperClasses.Logger.LogError(e);
 						}
-						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", school: true, isCreate: true, text: classes, useDark: darkMode);
+						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", activeTheme, school: true, isCreate: true, text: classes);
 					}
 					else
 					{
-						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", text: client.getHolidaysForDate(baseDate), isCreate: true, useDark: darkMode);
+						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", activeTheme, text: client.getHolidaysForDate(baseDate), isCreate: true);
 					}
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -726,7 +725,7 @@ namespace BerichtManager
 
 							}
 						}
-						EditForm edit = new EditForm(quickEditTitle, text: ((Word.FormField)enumerator.Current).Result, useDark: darkMode);
+						EditForm edit = new EditForm(quickEditTitle, activeTheme, text: ((Word.FormField)enumerator.Current).Result);
 						if (edit.ShowDialog() == DialogResult.OK)
 						{
 							FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
@@ -741,7 +740,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						SelectEditFrom selectEdit = new SelectEditFrom(useDark: darkMode);
+						SelectEditFrom selectEdit = new SelectEditFrom(activeTheme);
 						if (selectEdit.ShowDialog() == DialogResult.OK)
 						{
 							IEnumerator enumerator = doc.FormFields.GetEnumerator();
@@ -752,7 +751,7 @@ namespace BerichtManager
 								{
 									if (si.ShouldEdit)
 									{
-										edit = new EditForm(si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result, useDark: darkMode);
+										edit = new EditForm(si.EditorTitle, activeTheme, text: ((Word.FormField)enumerator.Current).Result);
 										edit.ShowDialog();
 										if (edit.DialogResult == DialogResult.OK)
 										{
@@ -1174,7 +1173,7 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			new OptionMenu(configHandler).ShowDialog();
+			new OptionMenu(configHandler, activeTheme).ShowDialog();
 		}
 
 		private void DetectKeys(object sender, KeyEventArgs e)

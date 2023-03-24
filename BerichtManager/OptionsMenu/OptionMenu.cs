@@ -1,5 +1,7 @@
-﻿using BerichtManager.AddForm;
+using BerichtManager.AddForm;
 using BerichtManager.Config;
+using BerichtManager.ThemeManagement;
+using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
 using System.Drawing;
 using System.IO;
@@ -14,11 +16,12 @@ namespace BerichtManager.OptionsMenu
 		/// </summary>
 		private bool isDirty { get; set; }
 		private readonly ConfigHandler configHandler;
-		public OptionMenu(ConfigHandler configHandler)
+		public OptionMenu(ConfigHandler configHandler, ITheme theme)
 		{
 			InitializeComponent();
-			if (configHandler.DarkMode())
-				ThemeManagement.ThemeSetter.SetThemes(this);
+			if (theme == null)
+				theme = new DarkMode();
+			ThemeSetter.SetThemes(this, theme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.configHandler = configHandler;
 			//Set values of fields to values in config

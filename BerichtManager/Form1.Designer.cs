@@ -81,6 +81,7 @@ namespace BerichtManager
 			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
 			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
 			this.tvReports.Location = new System.Drawing.Point(0, 0);
 			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
 			this.tvReports.Name = "tvReports";

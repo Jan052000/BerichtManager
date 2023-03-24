@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using BerichtManager.AddForm;
 using System.Collections.Generic;
 using System.Globalization;
+using BerichtManager.ThemeManagement;
+using BerichtManager.ThemeManagement.DefaultThemes;
 
 namespace BerichtManager.Config
 {
@@ -16,6 +18,7 @@ namespace BerichtManager.Config
 		private readonly JObject configObject;
 		public bool loginAborted = false;
 		private bool useDark;
+		private ITheme theme;
 		public ConfigHandler()
 		{
 			bool isComplete = true;
@@ -53,10 +56,14 @@ namespace BerichtManager.Config
 					configObject.Add(new JProperty("DarkMode", true));
 					isComplete = false;
 				}
-				useDark = DarkMode(); 
+				useDark = DarkMode();
+				if (useDark)
+					theme = new DarkMode();
+				else
+					theme = new LightMode();
 				if (!configObject.ContainsKey("ReportNR"))
 				{
-					EditForm form = new EditForm("Edit Number of Report", "", false, useDark: useDark);
+					EditForm form = new EditForm("Edit Number of Report", theme, "", false);
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
@@ -81,7 +88,7 @@ namespace BerichtManager.Config
 				}
 				if (!configObject.ContainsKey("Name"))
 				{
-					EditForm form = new EditForm("Enter your name", "Name Vorname", false, useDark: useDark);
+					EditForm form = new EditForm("Enter your name", theme, "Name Vorname", false);
 					if (form.ShowDialog() == DialogResult.OK)
 					{
 						configObject.Add(new JProperty("Name", form.Result));
@@ -279,7 +286,7 @@ namespace BerichtManager.Config
 		/// <returns><see cref="User"/> object containing username and password</returns>
 		public User doLogin()
 		{
-			Login form = new Login(useDark: useDark);
+			Login form = new Login(theme);
 			form.ShowDialog();
 			if (form.DialogResult == DialogResult.OK)
 			{
