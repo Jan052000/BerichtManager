@@ -1,11 +1,9 @@
 ﻿using BerichtManager.ThemeManagement.DefaultThemes;
 using Newtonsoft.Json;
-using System;
+using System.Windows.Forms;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BerichtManager.ThemeManagement
 {
@@ -17,11 +15,11 @@ namespace BerichtManager.ThemeManagement
 		/// <summary>
 		/// List of available theme objects
 		/// </summary>
-		public List<ITheme> AvailableThemes = new List<ITheme>() { new DarkMode(), new LightMode()};
+		public List<ITheme> AvailableThemes = new List<ITheme>() { new DarkMode(), new LightMode() };
 		/// <summary>
 		/// List of available theme names
 		/// </summary>
-		public List<string> ThemeNames = new List<string>() { "Dark Mode", "Light Mode"};
+		public List<string> ThemeNames = new List<string>() { "Dark Mode", "Light Mode" };
 		/// <summary>
 		/// Path to themes folder
 		/// </summary>
@@ -29,7 +27,7 @@ namespace BerichtManager.ThemeManagement
 
 		public ThemeManager()
 		{
-			if(!Directory.Exists(themesFolderPath))
+			if (!Directory.Exists(themesFolderPath))
 				Directory.CreateDirectory(themesFolderPath);
 			AvailableThemes.AddRange(GetThemes());
 		}
@@ -43,9 +41,16 @@ namespace BerichtManager.ThemeManagement
 			List<ITheme> themes = new List<ITheme>();
 			Directory.GetFiles(themesFolderPath).ToList().ForEach(file =>
 			{
-				ITheme theme = JsonConvert.DeserializeObject<ITheme>(File.ReadAllText(file));
-				AvailableThemes.Add(theme);
-				ThemeNames.Add(theme.Name);
+				try
+				{
+					ITheme theme = JsonConvert.DeserializeObject<ITheme>(File.ReadAllText(file));
+					AvailableThemes.Add(theme);
+					ThemeNames.Add(theme.Name);
+				}
+				catch
+				{
+					MessageBox.Show("Unable to load " + file + "!", "Errow while loading theme");
+				}
 			});
 			return themes;
 		}
