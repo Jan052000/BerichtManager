@@ -28,6 +28,7 @@ namespace BerichtManager
 		private bool wasEdited = false;
 		public bool darkMode = false;
 		private CustomNodeDrawer nodeDrawer;
+		private static readonly string VersionNumber = "v1.9";
 
 		public FormManager()
 		{
@@ -1226,6 +1227,12 @@ namespace BerichtManager
 			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
 				return;
 			nodeDrawer.DrawNode(e);
+		}
+
+		private void menuStrip1_Paint(object sender, PaintEventArgs e)
+		{
+			int versionNumberWidth = (int)e.Graphics.MeasureString(VersionNumber, menuStrip1.Font).Width / 2;
+			TextRenderer.DrawText(e.Graphics, VersionNumber, menuStrip1.Font, new Point(e.ClipRectangle.X + e.ClipRectangle.Width / 2 - versionNumberWidth, e.ClipRectangle.Y + menuStrip1.Padding.Top + 2), menuStrip1.ForeColor);
 		}
 	}
 }
