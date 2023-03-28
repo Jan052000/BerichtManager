@@ -34,7 +34,11 @@ namespace BerichtManager
 		public FormManager()
 		{
 			InitializeComponent();
-			nodeDrawer = new CustomNodeDrawer(ilTreeViewIcons);
+			activeTheme = themeManager.GetTheme(configHandler.ActiveTheme());
+			if (activeTheme == null)
+				activeTheme = new DarkMode();
+			ThemeSetter.SetThemes(this, activeTheme);
+			nodeDrawer = new CustomNodeDrawer(ilTreeViewIcons, activeTheme);
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
@@ -45,10 +49,6 @@ namespace BerichtManager
 				miEditLatest.Enabled = false;
 			}
 			SetComponentPositions();
-			activeTheme = themeManager.GetTheme(configHandler.ActiveTheme());
-			if (activeTheme == null)
-				activeTheme = new DarkMode();
-			ThemeSetter.SetThemes(this, activeTheme);
 			client = new Client(configHandler);
 		}
 
@@ -1175,7 +1175,10 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			new OptionMenu(configHandler, activeTheme, themeManager, this).ShowDialog();
+			OptionMenu optionMenu = new OptionMenu(configHandler, activeTheme, themeManager);
+			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
+			optionMenu.ShowDialog();
+			optionMenu.ActiveThemeChanged -= ActiveThemeChanged;
 		}
 
 		private void DetectKeys(object sender, KeyEventArgs e)
@@ -1226,6 +1229,14 @@ namespace BerichtManager
 			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
 				return;
 			nodeDrawer.DrawNode(e);
+		}
+
+		private void ActiveThemeChanged(object sender, ITheme theme)
+		{
+			activeTheme = theme;
+			ThemeSetter.SetThemes(this, theme);
+			nodeDrawer.SetTheme(activeTheme);
+			tvReports.Refresh();
 		}
 	}
 }

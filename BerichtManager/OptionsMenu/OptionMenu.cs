@@ -20,8 +20,12 @@ namespace BerichtManager.OptionsMenu
 		/// Name of the active theme
 		/// </summary>
 		public string ThemeName;
+		/// <summary>
+		/// Emits when the active theme changes
+		/// </summary>
+		public event activeThemeChanged ActiveThemeChanged;
 		private ThemeManager ThemeManager;
-		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager, Form owner)
+		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
 		{
 			InitializeComponent();
 			if (theme == null)
@@ -29,7 +33,6 @@ namespace BerichtManager.OptionsMenu
 			ThemeSetter.SetThemes(this, theme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.configHandler = configHandler;
-			Owner = owner;
 			ThemeManager = themeManager;
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
@@ -39,10 +42,12 @@ namespace BerichtManager.OptionsMenu
 			tbServer.Text = configHandler.GetWebUntisServer();
 			tbSchool.Text = configHandler.GetSchoolName();
 			cbLegacyEdit.Checked = configHandler.LegacyEdit();
+
 			themeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
 			int selectedIndex = coTheme.Items.IndexOf(configHandler.ActiveTheme());
 			coTheme.SelectedIndex = selectedIndex;
 			ThemeName = coTheme.Text;
+
 			tbTemplate.Text = configHandler.LoadPath();
 			tbName.Text = configHandler.LoadName();
 			if (int.TryParse(configHandler.LoadNumber(), out int value))
@@ -86,10 +91,12 @@ namespace BerichtManager.OptionsMenu
 					configHandler.EditNumber("" + nudNumber.Value);
 					configHandler.Save(tbTemplate.Text);
 					configHandler.ActiveTheme(coTheme.Text);
-					if(ThemeName != coTheme.Text)
+					if(ThemeName != (string)coTheme.SelectedValue)
 					{
 						ThemeName = coTheme.Text;
-						ThemeSetter.SetThemes(Owner, ThemeManager.GetTheme(ThemeName));
+						ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
+						ThemeSetter.SetThemes(this, activeTheme);
+						ActiveThemeChanged(this, activeTheme);
 					}
 					try
 					{
@@ -138,7 +145,7 @@ namespace BerichtManager.OptionsMenu
 						ThemeName = coTheme.Text;
 						ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
 						ThemeSetter.SetThemes(this, activeTheme);
-						ThemeSetter.SetThemes(Owner, activeTheme);
+						ActiveThemeChanged(this, activeTheme);
 					}
 				}
 				configHandler.SaveConfig();
@@ -184,6 +191,19 @@ namespace BerichtManager.OptionsMenu
 			{
 				tbTemplate.Text = dialog.FileName;
 				MarkAsDirty(sender, e);
+			}
+		}
+
+		public delegate void activeThemeChanged(object sender, ITheme theme);
+
+		//https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+				cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+				return cp;
 			}
 		}
 	}

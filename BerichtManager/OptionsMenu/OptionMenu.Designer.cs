@@ -247,6 +247,7 @@ namespace BerichtManager.OptionsMenu
 			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
 			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
 			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
+			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.coTheme.FormattingEnabled = true;
 			this.coTheme.Location = new System.Drawing.Point(104, 182);
 			this.coTheme.Name = "coTheme";
