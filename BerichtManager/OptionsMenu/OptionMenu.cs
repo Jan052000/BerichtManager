@@ -31,6 +31,7 @@ namespace BerichtManager.OptionsMenu
 			if (theme == null)
 				theme = new DarkMode();
 			ThemeSetter.SetThemes(this, theme);
+			ThemeName = theme.Name;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.configHandler = configHandler;
 			ThemeManager = themeManager;
@@ -176,6 +177,11 @@ namespace BerichtManager.OptionsMenu
 			btSave.Enabled = true;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
+			ITheme theme = ThemeManager.GetTheme(ThemeName);
+			if (theme == null)
+				return;
+			ThemeSetter.SetThemes(tbSchool, theme);
+			ThemeSetter.SetThemes(tbServer, theme);
 		}
 
 		private void btLogin_Click(object sender, EventArgs e)
