@@ -219,5 +219,16 @@ namespace BerichtManager.OptionsMenu
 			coTheme.Items.Clear();
 			ThemeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
 		}
+
+		private void btEditTheme_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog fileDialog = new OpenFileDialog();
+			fileDialog.Filter = "Themes (*.bmtheme)|*.bmtheme";
+			fileDialog.InitialDirectory = Path.GetFullPath(".\\Config\\Themes");
+			if(fileDialog.ShowDialog() == DialogResult.OK)
+			{
+				new CreateTheme(configHandler, ThemeManager.GetTheme(ThemeName), ThemeManager, ThemeManager.GetTheme(Path.GetFileNameWithoutExtension(fileDialog.FileName))).ShowDialog();
+			}
+		}
 	}
 }

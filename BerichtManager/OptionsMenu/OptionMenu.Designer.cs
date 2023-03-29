@@ -49,6 +49,7 @@ namespace BerichtManager.OptionsMenu
 			this.laTheme = new System.Windows.Forms.Label();
 			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
 			this.btCreateTheme = new System.Windows.Forms.Button();
+			this.btEditTheme = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -257,7 +258,7 @@ namespace BerichtManager.OptionsMenu
 			this.coTheme.Location = new System.Drawing.Point(104, 182);
 			this.coTheme.Name = "coTheme";
 			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.Size = new System.Drawing.Size(598, 21);
+			this.coTheme.Size = new System.Drawing.Size(517, 21);
 			this.coTheme.TabIndex = 23;
 			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
 			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
@@ -273,11 +274,23 @@ namespace BerichtManager.OptionsMenu
 			this.btCreateTheme.UseVisualStyleBackColor = true;
 			this.btCreateTheme.Click += new System.EventHandler(this.btCreateTheme_Click);
 			// 
+			// btEditTheme
+			// 
+			this.btEditTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btEditTheme.Location = new System.Drawing.Point(627, 182);
+			this.btEditTheme.Name = "btEditTheme";
+			this.btEditTheme.Size = new System.Drawing.Size(75, 21);
+			this.btEditTheme.TabIndex = 25;
+			this.btEditTheme.Text = "Edit theme";
+			this.btEditTheme.UseVisualStyleBackColor = true;
+			this.btEditTheme.Click += new System.EventHandler(this.btEditTheme_Click);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btEditTheme);
 			this.Controls.Add(this.btCreateTheme);
 			this.Controls.Add(this.coTheme);
 			this.Controls.Add(this.laTheme);
@@ -331,5 +344,6 @@ namespace BerichtManager.OptionsMenu
 		private System.Windows.Forms.Label laTheme;
 		private OwnControls.ColoredComboBox coTheme;
 		private System.Windows.Forms.Button btCreateTheme;
+		private System.Windows.Forms.Button btEditTheme;
 	}
 }

@@ -8,16 +8,16 @@ namespace BerichtManager.ThemeManagement
 	public partial class CreateTheme : Form
 	{
 		private readonly ConfigHandler ConfigHandler;
-		private ITheme Theme;
 		private readonly ThemeManager ThemeManager;
-		public CreateTheme(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
+		public CreateTheme(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager, ITheme edit = null)
 		{
 			InitializeComponent();
+			InitializeEdit(edit);
 			ThemeSetter.SetThemes(this, theme);
 			ConfigHandler = configHandler;
-			Theme = theme;
 			ThemeManager = themeManager;
 			btSave.Focus();
+			ColorConverter colorConverter = new ColorConverter();
 			foreach (Control control in Controls)
 			{
 				if (control == tbName)
@@ -25,7 +25,7 @@ namespace BerichtManager.ThemeManagement
 				switch (control)
 				{
 					case TextBox textBox:
-						Color backColor = Color.FromArgb(int.Parse(textBox.Text));
+						Color backColor = (Color)colorConverter.ConvertFromString(textBox.Text);
 						textBox.BackColor = backColor;
 						if ((backColor.R * 0.299 + backColor.G * 0.587 + backColor.B * 0.114) > 186)
 							textBox.ForeColor = Color.Black;
@@ -56,11 +56,13 @@ namespace BerichtManager.ThemeManagement
 			else
 				((TextBox)sender).ForeColor = Color.White;
 			((TextBox)sender).BackColor = backColor;
+			if (string.IsNullOrEmpty(((TextBox)sender).Text))
+				((TextBox)sender).Text = "-1";
 		}
 
 		private void btSave_Click(object sender, EventArgs e)
 		{
-			if (ConfigHandler == null || Theme == null || ThemeManager == null)
+			if (ConfigHandler == null || ThemeManager == null)
 				return;
 			if (string.IsNullOrEmpty(tbName.Text))
 			{
@@ -91,12 +93,40 @@ namespace BerichtManager.ThemeManagement
 				TreeViewDottedLineColor = (Color)colorConverter.ConvertFromString(tbTVDottedLine.Text),
 				TreeViewHighlightedNodeColor = (Color)colorConverter.ConvertFromString(tbHighlight.Text)
 			});
-			if (code == SaveStatusCodes.InvalidThemeName)
-			{
-				MessageBox.Show("Name is already in use, please select a different name", "Invalid name");
+			if (code == SaveStatusCodes.OverwriteDeclined)
 				return;
-			}
+			MessageBox.Show("Changes saved", "Changes saved");
 			Close();
+		}
+
+		/// <summary>
+		/// Sets <see cref="TextBox"/> text to values of <see href="theme"/>
+		/// </summary>
+		/// <param name="theme">Theme to be edited</param>
+		private void InitializeEdit(ITheme theme)
+		{
+			if (theme == null)
+				return;
+			tbName.Text = theme.Name;
+			tbBack.Text = ColorTranslator.ToHtml(theme.BackColor);
+			tbBack.Text = null;
+			tbBt.Text = ColorTranslator.ToHtml(theme.ButtonColor);
+			tbBTDisabled.Text = ColorTranslator.ToHtml(theme.ButtonDisabledColor);
+			tbCCBDisabled.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDisabledColor);
+			tbCCBDisabledText.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDisabledTextColor);
+			tbCCBDropDownButton.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDropDownButtonBackColor);
+			tbHighlight.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxHighlightColor);
+			tbCCBText.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxTextColor);
+			tbFore.Text = ColorTranslator.ToHtml(theme.ForeColor);
+			tbMenuStripBack.Text = ColorTranslator.ToHtml(theme.MenuStripBackColor);
+			tbMenuStripDropDown.Text = ColorTranslator.ToHtml(theme.MenuStripDropdownBackColor);
+			tbMenuStripSelectedDropDown.Text = ColorTranslator.ToHtml(theme.MenuStripSelectedDropDownBackColor);
+			tbSplitter.Text = ColorTranslator.ToHtml(theme.SplitterColor);
+			tbTBArrowColor.Text = ColorTranslator.ToHtml(theme.TextBoxArrowColor);
+			tbTBBackColor.Text = ColorTranslator.ToHtml(theme.TextBoxBackColor);
+			tbTBBorderColor.Text = ColorTranslator.ToHtml(theme.TextBoxBorderColor);
+			tbTBDisabledBackColor.Text = ColorTranslator.ToHtml(theme.TextBoxDisabledBackColor);
+			tbTVDottedLine.Text = ColorTranslator.ToHtml(theme.TreeViewDottedLineColor);
 		}
 	}
 }
