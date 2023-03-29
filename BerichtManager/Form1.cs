@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Collections;
 using BerichtManager.OptionsMenu;
-using BerichtManager.HelperClasses;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
 
@@ -30,7 +29,7 @@ namespace BerichtManager
 		private CustomNodeDrawer nodeDrawer;
 		private static readonly ThemeManager themeManager = new ThemeManager();
 		private ITheme activeTheme;
-		private static readonly string VersionNumber = "v1.9";
+		private static readonly string VersionNumber = "v1.10";
 
 		public FormManager()
 		{
@@ -1249,11 +1248,16 @@ namespace BerichtManager
 			TextRenderer.DrawText(e.Graphics, VersionNumber, menuStrip1.Font, new Point(e.ClipRectangle.X + e.ClipRectangle.Width / 2 - versionNumberWidth, e.ClipRectangle.Y + menuStrip1.Padding.Top + 2), menuStrip1.ForeColor);
 		}
 
-		private void tvReports_KeyPress(object sender, KeyPressEventArgs e)
+		private void tvReports_KeyUp(object sender, KeyEventArgs e)
 		{
-			if (e.KeyChar == (char)13)
+			switch (e.KeyCode)
 			{
-				EditInTb(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+				case Keys.Enter:
+					EditInTb(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+					break;
+				case Keys.Delete:
+					DeleteDocument(tvReports.SelectedNode.FullPath);
+					break;
 			}
 		}
 	}

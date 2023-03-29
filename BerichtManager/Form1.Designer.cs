@@ -91,7 +91,7 @@ namespace BerichtManager
 			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
 			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
 			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
-			this.tvReports.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tvReports_KeyPress);
+			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
 			// 
 			// toRightClickMenu
 			// 
