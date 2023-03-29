@@ -21,6 +21,10 @@ namespace BerichtManager.ThemeManagement
 		/// </summary>
 		private ImageList treeIcons;
 		/// <summary>
+		/// Back color
+		/// </summary>
+		private Brush BackColor;
+		/// <summary>
 		/// Creates a CustomDrawer object
 		/// </summary>
 		/// <param name="icons">list of icons to be used in treeview [0] closed [1] open</param>
@@ -30,6 +34,7 @@ namespace BerichtManager.ThemeManagement
 			hilightSelected = new SolidBrush(theme.TreeViewHighlightedNodeColor);
 			dottedLines.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
 			treeIcons = icons;
+			BackColor = new SolidBrush(theme.BackColor);
 		}
 
 		/// <summary>
@@ -41,6 +46,7 @@ namespace BerichtManager.ThemeManagement
 			dottedLines = new Pen(theme.TreeViewDottedLineColor);
 			hilightSelected = new SolidBrush(theme.TreeViewHighlightedNodeColor);
 			dottedLines.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+			BackColor = new SolidBrush(theme.BackColor);
 		}
 
 		/// <summary>
@@ -52,6 +58,8 @@ namespace BerichtManager.ThemeManagement
 			e.DrawDefault = false;
 			if (e.Node == e.Node.TreeView.SelectedNode)
 				e.Graphics.FillRectangle(hilightSelected, e.Node.Bounds);
+			else
+				e.Graphics.FillRectangle(BackColor, e.Bounds);
 			TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.TreeView.Font, new Point(e.Node.Bounds.X, e.Node.Bounds.Y), e.Node.TreeView.ForeColor);
 			DrawDottedLine(e);
 			if (e.Node.Nodes.Count > 0)
@@ -74,6 +82,8 @@ namespace BerichtManager.ThemeManagement
 				else
 					e.Graphics.DrawImage(treeIcons.Images[0], new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
 			}
+			if ((e.State & TreeNodeStates.Hot) == TreeNodeStates.Hot)
+				return;
 		}
 
 		/// <summary>
