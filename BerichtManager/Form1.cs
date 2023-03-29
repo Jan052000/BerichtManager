@@ -74,9 +74,9 @@ namespace BerichtManager
 		/// <param name="treeNode">root nodes of tree</param>
 		private void TvReportsMaxWidth(TreeNode treeNode)
 		{
-			foreach(TreeNode node in treeNode.Nodes)
+			foreach (TreeNode node in treeNode.Nodes)
 			{
-				if(node.Nodes.Count > 0)
+				if (node.Nodes.Count > 0)
 				{
 					TvReportsMaxWidth(node);
 				}
@@ -166,9 +166,9 @@ namespace BerichtManager
 			{
 				doc.FitToPages();
 			}
-			catch 
+			catch
 			{
-				
+
 			}
 		}
 
@@ -301,7 +301,7 @@ namespace BerichtManager
 							if (form.DialogResult == DialogResult.Abort)
 							{
 								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-								doc= null;
+								doc = null;
 								if (isSingle)
 									app.Quit(SaveChanges: false);
 								return;
@@ -385,9 +385,9 @@ namespace BerichtManager
 						{
 							app.Quit(SaveChanges: false);
 						}
-						catch 
+						catch
 						{
-							
+
 						}
 					}
 				}
@@ -459,7 +459,7 @@ namespace BerichtManager
 				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					CreateDocument(configHandler.LoadPath(), today.AddDays( i * 7), wordApp, vacation: vacation);
+					CreateDocument(configHandler.LoadPath(), today.AddDays(i * 7), wordApp, vacation: vacation);
 				}
 			}
 			else
@@ -618,7 +618,7 @@ namespace BerichtManager
 						wordApp.Visible = visible;
 						foreach (string key in unPrintedFiles.Keys)
 						{
-							unPrintedFiles[key].ForEach((f) => 
+							unPrintedFiles[key].ForEach((f) =>
 							{
 								Word.Document document = wordApp.Documents.Open(FileName: f, ReadOnly: true);
 								document.PrintOut(Background: false);
@@ -630,7 +630,7 @@ namespace BerichtManager
 
 						foreach (string key in unPrintedFiles.Keys)
 						{
-							unPrintedFiles[key].ForEach((f) => 
+							unPrintedFiles[key].ForEach((f) =>
 							{
 								File.Move(f, key + "\\Gedruckt\\" + Path.GetFileName(f));
 							});
@@ -841,6 +841,8 @@ namespace BerichtManager
 					return;
 			try
 			{
+				if ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory)
+					return;
 				if (!File.Exists(path))
 					return;
 				if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
@@ -908,7 +910,7 @@ namespace BerichtManager
 		{
 			try
 			{
-				if(doc == null || wordApp == null)
+				if (doc == null || wordApp == null)
 					return;
 				FillText(wordApp, doc.FormFields[6], rtbWork.Text);
 				FillText(wordApp, doc.FormFields[8], rtbSchool.Text);
@@ -917,7 +919,7 @@ namespace BerichtManager
 				MessageBox.Show("Saved changes", "Saved");
 				wasEdited = false;
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				switch (ex.HResult)
 				{
@@ -1181,7 +1183,7 @@ namespace BerichtManager
 
 		private void DetectKeys(object sender, KeyEventArgs e)
 		{
-			if(e.Control && e.KeyCode == Keys.S && editMode)
+			if (e.Control && e.KeyCode == Keys.S && editMode)
 			{
 				SaveFromTb();
 			}
@@ -1233,6 +1235,14 @@ namespace BerichtManager
 		{
 			int versionNumberWidth = (int)e.Graphics.MeasureString(VersionNumber, menuStrip1.Font).Width / 2;
 			TextRenderer.DrawText(e.Graphics, VersionNumber, menuStrip1.Font, new Point(e.ClipRectangle.X + e.ClipRectangle.Width / 2 - versionNumberWidth, e.ClipRectangle.Y + menuStrip1.Padding.Top + 2), menuStrip1.ForeColor);
+		}
+
+		private void tvReports_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar == (char)13)
+			{
+				EditInTb(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+			}
 		}
 	}
 }
