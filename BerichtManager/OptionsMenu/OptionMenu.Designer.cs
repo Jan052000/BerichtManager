@@ -48,6 +48,7 @@ namespace BerichtManager.OptionsMenu
 			this.nudNumber = new System.Windows.Forms.NumericUpDown();
 			this.laTheme = new System.Windows.Forms.Label();
 			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
+			this.btCreateTheme = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -168,9 +169,9 @@ namespace BerichtManager.OptionsMenu
 			// 
 			// btLogin
 			// 
-			this.btLogin.Location = new System.Drawing.Point(230, 262);
+			this.btLogin.Location = new System.Drawing.Point(230, 263);
 			this.btLogin.Name = "btLogin";
-			this.btLogin.Size = new System.Drawing.Size(75, 23);
+			this.btLogin.Size = new System.Drawing.Size(75, 21);
 			this.btLogin.TabIndex = 15;
 			this.btLogin.Text = "Login";
 			this.btLogin.UseVisualStyleBackColor = true;
@@ -256,16 +257,28 @@ namespace BerichtManager.OptionsMenu
 			this.coTheme.Location = new System.Drawing.Point(104, 182);
 			this.coTheme.Name = "coTheme";
 			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.Size = new System.Drawing.Size(684, 21);
+			this.coTheme.Size = new System.Drawing.Size(598, 21);
 			this.coTheme.TabIndex = 23;
 			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
 			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// btCreateTheme
+			// 
+			this.btCreateTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btCreateTheme.Location = new System.Drawing.Point(708, 182);
+			this.btCreateTheme.Name = "btCreateTheme";
+			this.btCreateTheme.Size = new System.Drawing.Size(80, 21);
+			this.btCreateTheme.TabIndex = 24;
+			this.btCreateTheme.Text = "Create theme";
+			this.btCreateTheme.UseVisualStyleBackColor = true;
+			this.btCreateTheme.Click += new System.EventHandler(this.btCreateTheme_Click);
 			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btCreateTheme);
 			this.Controls.Add(this.coTheme);
 			this.Controls.Add(this.laTheme);
 			this.Controls.Add(this.nudNumber);
@@ -317,5 +330,6 @@ namespace BerichtManager.OptionsMenu
 		private System.Windows.Forms.NumericUpDown nudNumber;
 		private System.Windows.Forms.Label laTheme;
 		private OwnControls.ColoredComboBox coTheme;
+		private System.Windows.Forms.Button btCreateTheme;
 	}
 }

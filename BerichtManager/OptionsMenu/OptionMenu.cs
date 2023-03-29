@@ -212,5 +212,12 @@ namespace BerichtManager.OptionsMenu
 				return cp;
 			}
 		}
+
+		private void btCreateTheme_Click(object sender, EventArgs e)
+		{
+			new CreateTheme(configHandler, ThemeManager.GetTheme(ThemeName), ThemeManager).ShowDialog();
+			coTheme.Items.Clear();
+			ThemeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
+		}
 	}
 }
