@@ -170,7 +170,7 @@ namespace BerichtManager.OptionsMenu
 			// 
 			// btLogin
 			// 
-			this.btLogin.Location = new System.Drawing.Point(230, 263);
+			this.btLogin.Location = new System.Drawing.Point(113, 61);
 			this.btLogin.Name = "btLogin";
 			this.btLogin.Size = new System.Drawing.Size(75, 21);
 			this.btLogin.TabIndex = 15;
@@ -276,7 +276,7 @@ namespace BerichtManager.OptionsMenu
 			// 
 			// btEditTheme
 			// 
-			this.btEditTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btEditTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.btEditTheme.Location = new System.Drawing.Point(627, 182);
 			this.btEditTheme.Name = "btEditTheme";
 			this.btEditTheme.Size = new System.Drawing.Size(75, 21);
@@ -312,7 +312,7 @@ namespace BerichtManager.OptionsMenu
 			this.Controls.Add(this.cbUseCustomPrefix);
 			this.Controls.Add(this.btSave);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(495, 321);
+			this.MinimumSize = new System.Drawing.Size(495, 338);
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
