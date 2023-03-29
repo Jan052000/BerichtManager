@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Drawing;
 
 namespace BerichtManager.ThemeManagement
 {
@@ -43,7 +44,9 @@ namespace BerichtManager.ThemeManagement
 			{
 				try
 				{
-					ITheme theme = JsonConvert.DeserializeObject<ITheme>(File.ReadAllText(file));
+					ITheme theme = JsonConvert.DeserializeObject<ThemeSerialization>(File.ReadAllText(file));
+					if (ThemeNames.Contains(theme.Name))
+						return;
 					AvailableThemes.Add(theme);
 					ThemeNames.Add(theme.Name);
 				}
@@ -74,5 +77,59 @@ namespace BerichtManager.ThemeManagement
 		{
 			return AvailableThemes.Find(theme => theme.Name == name);
 		}
+
+		/// <summary>
+		/// Saves a theme to file
+		/// </summary>
+		/// <param name="theme">Theme to save</param>
+		/// <returns></returns>
+		public SaveStatusCodes SaveTheme(ITheme theme)
+		{
+			if (File.Exists(themesFolderPath + theme.Name + ".json"))
+				if (MessageBox.Show("Overwrite existing file: " + themesFolderPath + theme.Name + ".json ?", "Overwrite file?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+					return SaveStatusCodes.OverwriteDeclined;
+			if (ThemeNames.Contains(theme.Name))
+				return SaveStatusCodes.InvalidThemeName;
+			File.WriteAllText(themesFolderPath + "\\" + theme.Name + ".json", JsonConvert.SerializeObject(theme, Formatting.Indented));
+			UpdateThemesList();
+			return SaveStatusCodes.Success;
+		}
+	}
+
+	/// <summary>
+	/// Status codes for <see cref="ThemeManager.SaveTheme"/>
+	/// </summary>
+	public enum SaveStatusCodes
+	{
+		Success,
+		OverwriteDeclined,
+		InvalidThemeName
+	}
+
+	/// <summary>
+	/// Class for serializing and deserializing an <see cref="ITheme"/> object
+	/// </summary>
+	public class ThemeSerialization : ITheme
+	{
+		public string Name { get; set; }
+		public Color TextBoxBackColor { get; set; }
+		public Color TextBoxDisabledBackColor { get; set; }
+		public Color TextBoxBorderColor { get; set; }
+		public Color TextBoxArrowColor { get; set; }
+		public Color ColoredComboBoxDropDownButtonBackColor { get; set; }
+		public Color ColoredComboBoxTextColor { get; set; }
+		public Color ColoredComboBoxDisabledColor { get; set; }
+		public Color ColoredComboBoxDisabledTextColor { get; set; }
+		public Color ColoredComboBoxHighlightColor { get; set; }
+		public Color MenuStripBackColor { get; set; }
+		public Color MenuStripDropdownBackColor { get; set; }
+		public Color MenuStripSelectedDropDownBackColor { get; set; }
+		public Color ForeColor { get; set; }
+		public Color BackColor { get; set; }
+		public Color ButtonColor { get; set; }
+		public Color ButtonDisabledColor { get; set; }
+		public Color SplitterColor { get; set; }
+		public Color TreeViewDottedLineColor { get; set; }
+		public Color TreeViewHighlightedNodeColor { get; set; }
 	}
 }
