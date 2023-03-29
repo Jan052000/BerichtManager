@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 
 namespace BerichtManager.ThemeManagement.DefaultThemes
 {
@@ -9,7 +9,11 @@ namespace BerichtManager.ThemeManagement.DefaultThemes
 		public Color TextBoxDisabledBackColor => Color.FromArgb(64, 64, 64);
 		public Color TextBoxBorderColor => Color.FromArgb(70, 70, 70);
 		public Color TextBoxArrowColor => Color.Black;
+		public Color ColoredComboBoxTextColor => Color.White;
 		public Color ColoredComboBoxDropDownButtonBackColor => Color.FromArgb(100, 100, 100);
+		public Color ColoredComboBoxDisabledColor => Color.FromArgb(64, 64, 64);
+		public Color ColoredComboBoxDisabledTextColor => Color.FromArgb(109, 109, 109);
+		public Color ColoredComboBoxHighlightColor => Color.FromArgb(90, 90, 90);
 		public Color MenuStripBackColor => Color.FromArgb(50, 50, 50);
 		public Color MenuStripDropdownBackColor => Color.FromArgb(50, 50, 50);
 		public Color MenuStripSelectedDropDownBackColor => Color.FromArgb(60, 60, 60);

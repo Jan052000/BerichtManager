@@ -246,14 +246,19 @@ namespace BerichtManager.OptionsMenu
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
 			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
+			this.coTheme.DisabledColor = System.Drawing.SystemColors.Control;
+			this.coTheme.DisabledTextColor = System.Drawing.SystemColors.GrayText;
+			this.coTheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
 			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.coTheme.FormattingEnabled = true;
+			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
 			this.coTheme.Location = new System.Drawing.Point(104, 182);
 			this.coTheme.Name = "coTheme";
 			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
 			this.coTheme.Size = new System.Drawing.Size(684, 21);
 			this.coTheme.TabIndex = 23;
+			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
 			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// OptionMenu

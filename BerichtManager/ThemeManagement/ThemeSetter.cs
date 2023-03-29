@@ -34,6 +34,10 @@ namespace BerichtManager.ThemeManagement
 					comboBox.BorderColor = theme.TextBoxBorderColor;
 					comboBox.ArrowColor = theme.TextBoxArrowColor;
 					comboBox.DropDownButtonColor = theme.ColoredComboBoxDropDownButtonBackColor;
+					comboBox.TextColor = theme.ColoredComboBoxTextColor;
+					comboBox.DisabledColor = theme.ColoredComboBoxDisabledColor;
+					comboBox.DisabledTextColor = theme.ColoredComboBoxDisabledTextColor;
+					comboBox.HighlightColor = theme.ColoredComboBoxHighlightColor;
 					break;
 				case TreeView treeView:
 					treeView.BackColor = theme.BackColor;
