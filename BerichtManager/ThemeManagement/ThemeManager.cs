@@ -85,12 +85,12 @@ namespace BerichtManager.ThemeManagement
 		/// <returns></returns>
 		public SaveStatusCodes SaveTheme(ITheme theme)
 		{
-			if (File.Exists(themesFolderPath + theme.Name + ".json"))
-				if (MessageBox.Show("Overwrite existing file: " + themesFolderPath + theme.Name + ".json ?", "Overwrite file?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+			if (File.Exists(themesFolderPath + theme.Name + ".bmtheme"))
+				if (MessageBox.Show("Overwrite existing file: " + themesFolderPath + theme.Name + ".bmtheme ?", "Overwrite file?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 					return SaveStatusCodes.OverwriteDeclined;
 			if (ThemeNames.Contains(theme.Name))
 				return SaveStatusCodes.InvalidThemeName;
-			File.WriteAllText(themesFolderPath + "\\" + theme.Name + ".json", JsonConvert.SerializeObject(theme, Formatting.Indented));
+			File.WriteAllText(themesFolderPath + "\\" + theme.Name + ".bmtheme", JsonConvert.SerializeObject(theme, Formatting.Indented));
 			UpdateThemesList();
 			return SaveStatusCodes.Success;
 		}
