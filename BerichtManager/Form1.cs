@@ -61,7 +61,7 @@ namespace BerichtManager
 			foreach (TreeNode node in tvReports.Nodes)
 				TvReportsMaxWidth(node);
 			tvReports.CollapseAll();
-			splitterTreeBoxes.SplitPosition = tvReportsMaxWidth + 1;
+			splitterTreeBoxes.SplitPosition = tvReportsMaxWidth + 5;
 			Rectangle bounds = scTextBoxes.Bounds;
 			bounds.X = paFileTree.Bounds.Right + 1;
 			bounds.Width = Width - 1 - paFileTree.Bounds.Width;
