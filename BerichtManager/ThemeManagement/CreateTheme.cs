@@ -109,7 +109,6 @@ namespace BerichtManager.ThemeManagement
 				return;
 			tbName.Text = theme.Name;
 			tbBack.Text = ColorTranslator.ToHtml(theme.BackColor);
-			tbBack.Text = null;
 			tbBt.Text = ColorTranslator.ToHtml(theme.ButtonColor);
 			tbBTDisabled.Text = ColorTranslator.ToHtml(theme.ButtonDisabledColor);
 			tbCCBDisabled.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDisabledColor);
