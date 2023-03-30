@@ -928,6 +928,7 @@ namespace BerichtManager
 				return;
 			if (!wasEdited)
 			{
+				doc.Close(SaveChanges: false);
 				doc = null;
 				return;
 			}
