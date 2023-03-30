@@ -20,7 +20,7 @@ namespace BerichtManager
 			Application.SetCompatibleTextRenderingDefault(false);
 			try
 			{
-				Application.Run(new FormManager());
+				Application.Run(new MainForm());
 			}
 			catch(Exception e) 
 			{
