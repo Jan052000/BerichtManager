@@ -1057,7 +1057,8 @@ namespace BerichtManager
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
 			//Check if word has started
-			if (!WordInitialized)
+			string path = Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath);
+			if (!WordInitialized && Path.GetExtension(path) == ".docx" && !Path.GetFileName(path).StartsWith("~$"))
 			{
 				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
 				return;
