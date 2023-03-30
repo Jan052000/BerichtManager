@@ -21,7 +21,11 @@ namespace BerichtManager
 		private Word.Application wordApp;
 		private readonly ConfigHandler configHandler = new ConfigHandler(themeManager);
 		private readonly Client client;
-		private readonly DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
+
+		/// <summary>
+		/// Directory containing all reports
+		/// </summary>
+		private DirectoryInfo info;
 		private readonly CultureInfo culture = new CultureInfo("de-DE");
 		private int tvReportsMaxWidth = 50;
 		private bool editMode = false;
@@ -30,6 +34,11 @@ namespace BerichtManager
 		private static readonly ThemeManager themeManager = new ThemeManager();
 		private ITheme activeTheme;
 		private static readonly string VersionNumber = "v1.10.2";
+
+		/// <summary>
+		/// Full path to report folder
+		/// </summary>
+		private string ActivePath = Path.GetFullPath(".\\..");
 
 		/// <summary>
 		/// Status if the word app has finished loading
@@ -53,6 +62,8 @@ namespace BerichtManager
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			tvReports.TreeViewNodeSorter = new HelperClasses.TreeNodeSorter();
+			info = new DirectoryInfo(configHandler.ReportPath());
+			ActivePath = configHandler.ReportPath();
 			UpdateTree();
 			if (configHandler.LoadActive() == "")
 			{
@@ -375,8 +386,8 @@ namespace BerichtManager
 					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
 
 
-					Directory.CreateDirectory(Path.GetFullPath(Environment.CurrentDirectory + "\\..") + "\\" + today.Year);
-					string path = Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + weekOfYear + ".docx";
+					Directory.CreateDirectory(ActivePath + "\\" + today.Year);
+					string path = ActivePath + "\\" + today.Year + "\\WochenberichtKW" + weekOfYear + ".docx";
 					SetFontInDoc(doc, app);
 					doc.SaveAs2(FileName: path);
 
@@ -384,7 +395,7 @@ namespace BerichtManager
 					configHandler.SaveLastReportKW(culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 					configHandler.EditActive(path);
 					miEditLatest.Enabled = true;
-					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + weekOfYear + ".docx");
+					MessageBox.Show("Created Document at: " + path + "\\WochenberichtKW" + weekOfYear + ".docx");
 
 					doc.Close();
 					doc = null;
@@ -490,7 +501,7 @@ namespace BerichtManager
 
 			//Check if report for this week was already created
 			int currentWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
+			if (File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
 			{
 				MessageBox.Show("A report has already been created for this week");
 				return;
@@ -571,7 +582,7 @@ namespace BerichtManager
 				MessageBox.Show("No report selected");
 				return;
 			}
-			PrintDocument(tvReports.SelectedNode.FullPath);
+			PrintDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 		}
 
 		private void btPrintAll_Click(object sender, EventArgs e)
@@ -583,10 +594,10 @@ namespace BerichtManager
 				return;
 			}
 
-			if (Directory.Exists(Path.GetFullPath(".\\..")))
+			if (Directory.Exists(ActivePath))
 			{
 				Dictionary<string, List<string>> unPrintedFiles = new Dictionary<string, List<string>>();
-				foreach (string dirName in Directory.GetDirectories(Path.GetFullPath(".\\..")))
+				foreach (string dirName in Directory.GetDirectories(ActivePath))
 				{
 					foreach (string file in Directory.GetFiles(dirName))
 					{
@@ -656,43 +667,6 @@ namespace BerichtManager
 
 				}
 			}
-		}
-
-		private void btEditExisting_Click(object sender, EventArgs e)
-		{
-			//Check if word has started
-			if (!WordInitialized)
-			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-				return;
-			}
-
-			if (tvReports.SelectedNode == null)
-			{
-				MessageBox.Show("No report selected");
-				return;
-			}
-			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath)) != ".docx")
-			{
-				MessageBox.Show("You may only edit Documents(*.docx) files");
-			}
-			SaveOrExit();
-			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
-		}
-
-		private void btDelete_Click(object sender, EventArgs e)
-		{
-			if (tvReports.SelectedNode == null)
-			{
-				MessageBox.Show("No report selected");
-				return;
-			}
-			DeleteDocument(tvReports.SelectedNode.FullPath);
-		}
-
-		private void cbVisible_CheckedChanged(object sender, EventArgs e)
-		{
-			//visible = cbVisible.Checked;
 		}
 
 		/**
@@ -949,23 +923,23 @@ namespace BerichtManager
 		{
 			if (doc == null)
 				return false;
-			return Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath) == doc.Path + "\\" + doc.Name;
+			return Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath) == doc.Path + "\\" + doc.Name;
 		}
 
 		/**
 		<summary>
-		Method for printing a document contained at a path relative to the working directory
+		Method for printing a document located at the path
 		</summary> 
-		<param name="path">The path relative to the working directory</param>
+		<param name="path">The path</param>
 		*/
 		private void PrintDocument(string path)
 		{
-			if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + path)) != ".docx")
+			if (Path.GetExtension(path) != ".docx")
 			{
 				MessageBox.Show("You may only print Documents(*.docx) files");
 				return;
 			}
-			DirectoryInfo printed = new DirectoryInfo(Path.GetDirectoryName(Path.GetFullPath(".\\..\\..\\" + path)));
+			DirectoryInfo printed = new DirectoryInfo(Path.GetDirectoryName(path));
 			if (printed.Name == "Gedruckt")
 			{
 				if (MessageBox.Show("Report was already printed do you want to print it again?", "Reprint?", MessageBoxButtons.YesNo) != DialogResult.Yes)
@@ -976,21 +950,21 @@ namespace BerichtManager
 			PrintDialog printDialog = new PrintDialog();
 			if (printDialog.ShowDialog() == DialogResult.OK)
 			{
-				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + path)))
+				if (File.Exists(path))
 				{
-					if (!Directory.Exists(Path.GetFullPath(".\\..\\..\\" + path).Substring(0, Path.GetFullPath(".\\..\\..\\" + path).Length - Path.GetFileName(".\\..\\..\\" + path).Length) + "\\Gedruckt"))
+					if (!Directory.Exists(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt"))
 					{
-						Directory.CreateDirectory(Path.GetFullPath(".\\..\\..\\" + path).Substring(0, Path.GetFullPath(".\\..\\..\\" + path).Length - Path.GetFileName(".\\..\\..\\" + path).Length) + "\\Gedruckt");
+						Directory.CreateDirectory(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt");
 					}
 					try
 					{
-						Word.Document document = wordApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + path), ReadOnly: true);
+						Word.Document document = wordApp.Documents.Open(path, ReadOnly: true);
 						document.PrintOut(Background: false);
 						wordApp.Documents.Close();
 						if (printed.Name != "Gedruckt")
 						{
-							File.Move(Path.GetFullPath(".\\..\\..\\" + path),
-							Path.GetFullPath(".\\..\\..\\" + path).Substring(0, Path.GetFullPath(".\\..\\..\\" + path).Length - Path.GetFileName(".\\..\\..\\" + path).Length) + "\\Gedruckt\\" + Path.GetFileName(".\\..\\..\\" + path));
+							File.Move(path,
+							path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path));
 							UpdateTree();
 						}
 					}
@@ -1006,24 +980,24 @@ namespace BerichtManager
 
 		/**
 		<summary>
-		Method for deleting a file with a path relative to the working directory
+		Method for deleting a file located at the path
 		</summary> 
-		<param name="path">The path relative to the working directory</param>
+		<param name="path">The path</param>
 		*/
 		private void DeleteDocument(string path)
 		{
-			if (File.GetAttributes(Path.GetFullPath(".\\..\\..\\" + path)) == FileAttributes.Directory)
+			if (File.GetAttributes(path) == FileAttributes.Directory)
 			{
 				MessageBox.Show("You may not delete folders using the manager");
 				return;
 			}
 			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				if (File.Exists(Path.GetFullPath(".\\..\\..\\" + path)))
+				if (File.Exists(path))
 				{
-					if (Path.GetExtension(Path.GetFullPath(".\\..\\..\\" + path)) == ".docx" || Path.GetFileName(Path.GetFullPath(".\\..\\..\\" + path)).StartsWith("~$") || (path.Contains("Logs") && path.EndsWith(".txt")))
+					if (Path.GetExtension(path) == ".docx" || Path.GetFileName(path).StartsWith("~$") || (path.Contains("Logs") && path.EndsWith(".txt")))
 					{
-						if (Path.GetFullPath(".\\..\\..\\" + path) == configHandler.LoadActive())
+						if (path == configHandler.LoadActive())
 						{
 							string[] split = path.Split('\\');
 							if (split[split.Length - 1].Substring(15, ("" + culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString())
@@ -1038,7 +1012,7 @@ namespace BerichtManager
 								}
 							}
 						}
-						File.Delete(Path.GetFullPath(".\\..\\..\\" + path));
+						File.Delete(path);
 						UpdateTree();
 						MessageBox.Show("File deleted successfully");
 					}
@@ -1057,10 +1031,10 @@ namespace BerichtManager
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
 			//Check if word has started
-			string path = Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath);
+			string path = Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath);
 			if (!WordInitialized && Path.GetExtension(path) == ".docx" && !Path.GetFileName(path).StartsWith("~$"))
 			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				MessageBox.Show("Word is still starting, please try again", "Please try again");
 				return;
 			}
 
@@ -1071,11 +1045,11 @@ namespace BerichtManager
 			SaveOrExit();
 			if (configHandler.LegacyEdit())
 			{
-				Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+				Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 			}
 			else
 			{
-				EditInTb(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+				EditInTb(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 			}
 		}
 
@@ -1089,7 +1063,7 @@ namespace BerichtManager
 
 		private void miDelete_Click(object sender, EventArgs e)
 		{
-			DeleteDocument(tvReports.SelectedNode.FullPath);
+			DeleteDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 		}
 
 		private void miEdit_Click(object sender, EventArgs e)
@@ -1102,7 +1076,7 @@ namespace BerichtManager
 			}
 
 			SaveOrExit();
-			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+			Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 		}
 
 		private void miPrint_Click(object sender, EventArgs e)
@@ -1114,7 +1088,7 @@ namespace BerichtManager
 				return;
 			}
 
-			PrintDocument(tvReports.SelectedNode.FullPath);
+			PrintDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 		}
 
 		private void miQuickEditWork_Click(object sender, EventArgs e)
@@ -1127,7 +1101,7 @@ namespace BerichtManager
 			}
 
 			SaveOrExit();
-			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 6, quickEditTitle: "Edit work");
+			Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 6, quickEditTitle: "Edit work");
 		}
 
 		private void miQuickEditSchool_Click(object sender, EventArgs e)
@@ -1140,7 +1114,7 @@ namespace BerichtManager
 			}
 
 			SaveOrExit();
-			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 8, quickEditTitle: "Edit school");
+			Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 8, quickEditTitle: "Edit school");
 		}
 
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1174,8 +1148,10 @@ namespace BerichtManager
 		{
 			OptionMenu optionMenu = new OptionMenu(configHandler, activeTheme, themeManager);
 			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
+			optionMenu.ReportFolderChanged += ReportFolderChanged;
 			optionMenu.ShowDialog();
 			optionMenu.ActiveThemeChanged -= ActiveThemeChanged;
+			optionMenu.ReportFolderChanged -= ReportFolderChanged;
 		}
 
 		private void DetectKeys(object sender, KeyEventArgs e)
@@ -1250,12 +1226,18 @@ namespace BerichtManager
 						return;
 					}
 
-					EditInTb(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+					EditInTb(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 					break;
 				case Keys.Delete:
-					DeleteDocument(tvReports.SelectedNode.FullPath);
+					DeleteDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 					break;
 			}
+		}
+
+		private void ReportFolderChanged(object sender, string folderPath)
+		{
+			info = new DirectoryInfo(folderPath);
+			UpdateTree();
 		}
 	}
 }

@@ -28,7 +28,8 @@ namespace BerichtManager.Config
 				configObject = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
 					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1),
 					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
-					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"));
+					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"),
+					new JProperty("ReportPath", Path.GetFullPath(".\\..")));
 				File.WriteAllText(path, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else
@@ -146,6 +147,11 @@ namespace BerichtManager.Config
 				if (!configObject.ContainsKey("EnableLegacyEdit"))
 				{
 					configObject.Add(new JProperty("EnableLegacyEdit", false));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("ReportPath"))
+				{
+					configObject.Add(new JProperty("ReportPath", Path.GetFullPath(".\\..")));
 					isComplete = false;
 				}
 			}
@@ -533,6 +539,24 @@ namespace BerichtManager.Config
 		public void ActiveTheme(string themeName)
 		{
 			GenericSet("ActiveTheme", themeName);
+		}
+
+		/// <summary>
+		/// Gets path of folder containing all reports
+		/// </summary>
+		/// <returns>Path of folder containing all reports</returns>
+		public string ReportPath()
+		{
+			return GenericGet<string>("ReportPath");
+		}
+
+		/// <summary>
+		/// Sets path of folder containing all reports
+		/// </summary>
+		/// <param name="path">Path of folder containing all reports</param>
+		public void ReportPath(string path)
+		{
+			GenericSet("ReportPath", path);
 		}
 
 		/// <summary>

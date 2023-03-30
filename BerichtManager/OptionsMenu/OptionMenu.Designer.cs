@@ -47,9 +47,11 @@ namespace BerichtManager.OptionsMenu
 			this.laNumber = new System.Windows.Forms.Label();
 			this.nudNumber = new System.Windows.Forms.NumericUpDown();
 			this.laTheme = new System.Windows.Forms.Label();
-			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
 			this.btCreateTheme = new System.Windows.Forms.Button();
 			this.btEditTheme = new System.Windows.Forms.Button();
+			this.laFolder = new System.Windows.Forms.Label();
+			this.tbFolder = new System.Windows.Forms.TextBox();
+			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -193,6 +195,7 @@ namespace BerichtManager.OptionsMenu
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbTemplate.Location = new System.Drawing.Point(104, 209);
 			this.tbTemplate.Name = "tbTemplate";
+			this.tbTemplate.ReadOnly = true;
 			this.tbTemplate.Size = new System.Drawing.Size(684, 20);
 			this.tbTemplate.TabIndex = 17;
 			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
@@ -242,27 +245,6 @@ namespace BerichtManager.OptionsMenu
 			this.laTheme.TabIndex = 22;
 			this.laTheme.Text = "Theme";
 			// 
-			// coTheme
-			// 
-			this.coTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
-			this.coTheme.DisabledColor = System.Drawing.SystemColors.Control;
-			this.coTheme.DisabledTextColor = System.Drawing.SystemColors.GrayText;
-			this.coTheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
-			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.coTheme.FormattingEnabled = true;
-			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
-			this.coTheme.Location = new System.Drawing.Point(104, 182);
-			this.coTheme.Name = "coTheme";
-			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.Size = new System.Drawing.Size(517, 21);
-			this.coTheme.TabIndex = 23;
-			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
-			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
 			// btCreateTheme
 			// 
 			this.btCreateTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -285,11 +267,54 @@ namespace BerichtManager.OptionsMenu
 			this.btEditTheme.UseVisualStyleBackColor = true;
 			this.btEditTheme.Click += new System.EventHandler(this.btEditTheme_Click);
 			// 
+			// laFolder
+			// 
+			this.laFolder.AutoSize = true;
+			this.laFolder.Location = new System.Drawing.Point(62, 292);
+			this.laFolder.Name = "laFolder";
+			this.laFolder.Size = new System.Drawing.Size(36, 13);
+			this.laFolder.TabIndex = 26;
+			this.laFolder.Text = "Folder";
+			// 
+			// tbFolder
+			// 
+			this.tbFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbFolder.Location = new System.Drawing.Point(104, 289);
+			this.tbFolder.Name = "tbFolder";
+			this.tbFolder.ReadOnly = true;
+			this.tbFolder.Size = new System.Drawing.Size(684, 20);
+			this.tbFolder.TabIndex = 27;
+			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
+			// 
+			// coTheme
+			// 
+			this.coTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
+			this.coTheme.DisabledColor = System.Drawing.SystemColors.Control;
+			this.coTheme.DisabledTextColor = System.Drawing.SystemColors.GrayText;
+			this.coTheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
+			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.coTheme.FormattingEnabled = true;
+			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
+			this.coTheme.Location = new System.Drawing.Point(104, 182);
+			this.coTheme.Name = "coTheme";
+			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.coTheme.Size = new System.Drawing.Size(517, 21);
+			this.coTheme.TabIndex = 23;
+			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
+			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.tbFolder);
+			this.Controls.Add(this.laFolder);
 			this.Controls.Add(this.btEditTheme);
 			this.Controls.Add(this.btCreateTheme);
 			this.Controls.Add(this.coTheme);
@@ -345,5 +370,7 @@ namespace BerichtManager.OptionsMenu
 		private OwnControls.ColoredComboBox coTheme;
 		private System.Windows.Forms.Button btCreateTheme;
 		private System.Windows.Forms.Button btEditTheme;
+		private System.Windows.Forms.Label laFolder;
+		private System.Windows.Forms.TextBox tbFolder;
 	}
 }

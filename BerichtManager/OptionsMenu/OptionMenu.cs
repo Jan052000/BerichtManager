@@ -1,5 +1,4 @@
-﻿using BerichtManager.AddForm;
-using BerichtManager.Config;
+﻿using BerichtManager.Config;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
@@ -16,14 +15,21 @@ namespace BerichtManager.OptionsMenu
 		/// </summary>
 		private bool isDirty { get; set; }
 		private readonly ConfigHandler configHandler;
+
 		/// <summary>
 		/// Name of the active theme
 		/// </summary>
 		public string ThemeName;
+
 		/// <summary>
 		/// Emits when the active theme changes
 		/// </summary>
 		public event activeThemeChanged ActiveThemeChanged;
+
+		/// <summary>
+		/// Emits when the report folder path changes
+		/// </summary>
+		public event reportFolderChanged ReportFolderChanged;
 		private ThemeManager ThemeManager;
 		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
 		{
@@ -53,6 +59,8 @@ namespace BerichtManager.OptionsMenu
 			tbName.Text = configHandler.LoadName();
 			if (int.TryParse(configHandler.LoadNumber(), out int value))
 				nudNumber.Value = value;
+			tbFolder.Text = configHandler.ReportPath();
+
 			isDirty = false;
 			btSave.Enabled = false;
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
@@ -92,12 +100,18 @@ namespace BerichtManager.OptionsMenu
 					configHandler.EditNumber("" + nudNumber.Value);
 					configHandler.Save(tbTemplate.Text);
 					configHandler.ActiveTheme(coTheme.Text);
-					if(ThemeName != (string)coTheme.SelectedValue)
+					if (ThemeName != (string)coTheme.SelectedValue)
 					{
 						ThemeName = coTheme.Text;
 						ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
 						ThemeSetter.SetThemes(this, activeTheme);
 						ActiveThemeChanged(this, activeTheme);
+					}
+					if(configHandler.ReportPath() != tbFolder.Text)
+					{
+						if (MessageBox.Show("Do you want to switch over imediately?", "Change directory?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+							ReportFolderChanged(this, tbFolder.Text);
+						configHandler.ReportPath(tbFolder.Text);
 					}
 					try
 					{
@@ -124,7 +138,7 @@ namespace BerichtManager.OptionsMenu
 		{
 			try
 			{
-				if (isDirty) 
+				if (isDirty)
 				{
 					configHandler.SetUseUserPrefix(cbUseCustomPrefix.Checked);
 					if (cbUseCustomPrefix.Checked)
@@ -148,13 +162,19 @@ namespace BerichtManager.OptionsMenu
 						ThemeSetter.SetThemes(this, activeTheme);
 						ActiveThemeChanged(this, activeTheme);
 					}
+					if (configHandler.ReportPath() != tbFolder.Text)
+					{
+						if (MessageBox.Show("Do you want to switch over imediately?", "Change directory?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+							ReportFolderChanged(this, tbFolder.Text);
+						configHandler.ReportPath(tbFolder.Text);
+					}
 				}
 				configHandler.SaveConfig();
 			}
 			catch (Exception ex)
 			{
 				HelperClasses.Logger.LogError(ex);
-				MessageBox.Show(ex.StackTrace);	
+				MessageBox.Show(ex.StackTrace);
 			}
 			btSave.Enabled = false;
 			isDirty = false;
@@ -200,6 +220,11 @@ namespace BerichtManager.OptionsMenu
 			}
 		}
 
+		/// <summary>
+		/// Delegate for the <see cref="ActiveThemeChanged"/> event
+		/// </summary>
+		/// <param name="sender">Event sender</param>
+		/// <param name="theme">New active theme</param>
 		public delegate void activeThemeChanged(object sender, ITheme theme);
 
 		//https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
@@ -225,10 +250,27 @@ namespace BerichtManager.OptionsMenu
 			OpenFileDialog fileDialog = new OpenFileDialog();
 			fileDialog.Filter = "Themes (*.bmtheme)|*.bmtheme";
 			fileDialog.InitialDirectory = Path.GetFullPath(".\\Config\\Themes");
-			if(fileDialog.ShowDialog() == DialogResult.OK)
+			if (fileDialog.ShowDialog() == DialogResult.OK)
 			{
 				new CreateTheme(configHandler, ThemeManager.GetTheme(ThemeName), ThemeManager, ThemeManager.GetTheme(Path.GetFileNameWithoutExtension(fileDialog.FileName))).ShowDialog();
 			}
 		}
+
+		private void tbFolder_Click(object sender, EventArgs e)
+		{
+			FolderBrowserDialog folderDialog = new FolderBrowserDialog();
+			if (folderDialog.ShowDialog() == DialogResult.OK)
+			{
+				tbFolder.Text = folderDialog.SelectedPath;
+				MarkAsDirty(sender, e);
+			}
+		}
+
+		/// <summary>
+		/// Delegate for the <see cref="ReportFolderChanged"/> event
+		/// </summary>
+		/// <param name="sender">Event sender</param>
+		/// <param name="reportFolderPath">New report folder path</param>
+		public delegate void reportFolderChanged(object sender, string reportFolderPath);
 	}
 }
