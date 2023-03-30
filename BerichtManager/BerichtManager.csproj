@@ -167,6 +167,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="ThemeManagement\CreateTheme.resx">
       <DependentUpon>CreateTheme.cs</DependentUpon>
@@ -215,6 +216,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Folder_Closed.png" />
+    <None Include="Resources\Folder_Open.png" />
     <Content Include="Icon3.ico" />
   </ItemGroup>
   <ItemGroup>

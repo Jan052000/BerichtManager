@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace BerichtManager.ThemeManagement
@@ -12,28 +13,36 @@ namespace BerichtManager.ThemeManagement
 		/// Pen for drawing dottet lines
 		/// </summary>
 		private Pen dottedLines;
+
 		/// <summary>
 		/// Brush for filling the highlighted node
 		/// </summary>
 		private Brush hilightSelected;
-		/// <summary>
-		/// List of icons for folders
-		/// </summary>
-		private ImageList treeIcons;
+
 		/// <summary>
 		/// Back color
 		/// </summary>
 		private Brush BackColor;
+
+		/// <summary>
+		/// Icon displayed before a collapsed node
+		/// </summary>
+		private readonly Bitmap FolderClosedIcon = new Bitmap(BerichtManager.Properties.Resources.Folder_Closed);
+
+		/// <summary>
+		/// Icon displayed before an expanded node
+		/// </summary>
+		private readonly Bitmap FolderOpenedIcon = new Bitmap(Properties.Resources.Folder_Open);
+
 		/// <summary>
 		/// Creates a CustomDrawer object
 		/// </summary>
 		/// <param name="icons">list of icons to be used in treeview [0] closed [1] open</param>
-		public CustomNodeDrawer(ImageList icons, ITheme theme)
+		public CustomNodeDrawer(ITheme theme)
 		{
 			dottedLines = new Pen(theme.TreeViewDottedLineColor);
 			hilightSelected = new SolidBrush(theme.TreeViewHighlightedNodeColor);
 			dottedLines.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-			treeIcons = icons;
 			BackColor = new SolidBrush(theme.BackColor);
 		}
 
@@ -67,20 +76,20 @@ namespace BerichtManager.ThemeManagement
 				if (e.Node.IsExpanded)
 				{
 					if (e.Node.Parent != null)
-						e.Graphics.DrawImage(treeIcons.Images[1], new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
+						e.Graphics.DrawImage(FolderOpenedIcon, new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
 				}
 				else
 				{
 					if (e.Node.Parent != null)
-						e.Graphics.DrawImage(treeIcons.Images[0], new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
+						e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
 				}
 			}
 			if (e.Node == e.Node.TreeView.Nodes[0])
 			{
 				if (e.Node.IsExpanded)
-					e.Graphics.DrawImage(treeIcons.Images[1], new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
+					e.Graphics.DrawImage(FolderOpenedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
 				else
-					e.Graphics.DrawImage(treeIcons.Images[0], new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
+					e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
 			}
 			if ((e.State & TreeNodeStates.Hot) == TreeNodeStates.Hot)
 				return;

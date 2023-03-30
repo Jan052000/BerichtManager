@@ -38,7 +38,7 @@ namespace BerichtManager
 			if (activeTheme == null)
 				activeTheme = new DarkMode();
 			ThemeSetter.SetThemes(this, activeTheme);
-			nodeDrawer = new CustomNodeDrawer(ilTreeViewIcons, activeTheme);
+			nodeDrawer = new CustomNodeDrawer(activeTheme);
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
