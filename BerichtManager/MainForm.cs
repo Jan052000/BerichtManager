@@ -11,17 +11,18 @@ using System.Collections;
 using BerichtManager.OptionsMenu;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BerichtManager
 {
 	public partial class MainForm : Form
 	{
 		private Word.Document doc = null;
-		private Word.Application wordApp = null;
+		private Word.Application wordApp;
 		private readonly ConfigHandler configHandler = new ConfigHandler(themeManager);
 		private readonly Client client;
 		private readonly DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
-		private bool visible = false;
 		private readonly CultureInfo culture = new CultureInfo("de-DE");
 		private int tvReportsMaxWidth = 50;
 		private bool editMode = false;
@@ -29,7 +30,8 @@ namespace BerichtManager
 		private CustomNodeDrawer nodeDrawer;
 		private static readonly ThemeManager themeManager = new ThemeManager();
 		private ITheme activeTheme;
-		private static readonly string VersionNumber = "v1.10";
+		private static readonly string VersionNumber = "v1.10.1";
+		private bool WordInitialized = false;
 
 		public MainForm()
 		{
@@ -50,6 +52,14 @@ namespace BerichtManager
 			}
 			SetComponentPositions();
 			client = new Client(configHandler);
+			new Task(new Action(() =>
+			{
+				wordApp = new Word.Application()
+				{
+					Visible = false
+				};
+				WordInitialized = true;
+			})).Start();
 		}
 
 		/// <summary>
@@ -450,9 +460,6 @@ namespace BerichtManager
 			int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			int reportNr = configHandler.LoadLastReportKW();
 
-			wordApp = new Word.Application();
-			wordApp.Visible = visible;
-
 			if (configHandler.LoadLastReportKW() < weekOfYear)
 			{
 				//Missing reports in current year
@@ -480,19 +487,17 @@ namespace BerichtManager
 					CreateDocument(configHandler.LoadPath(), today.AddDays(i * 7), wordApp, vacation: vacation);
 				}
 			}
-			try
-			{
-				wordApp.Quit(SaveChanges: false);
-				wordApp = null;
-			}
-			catch
-			{
-
-			}
 		}
 
 		private void btCreate_Click(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			//Check if report for this week was already created
 			int currentWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			if (File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(Path.GetFullPath(".\\..\\" + DateTime.Today.Year) + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
@@ -520,8 +525,6 @@ namespace BerichtManager
 				}
 			}
 
-			wordApp = new Word.Application();
-			wordApp.Visible = visible;
 			CreateDocument(configHandler.LoadPath(), baseDate: DateTime.Today, wordApp, isSingle: true);
 		}
 
@@ -548,6 +551,13 @@ namespace BerichtManager
 
 		private void btEdit_Click(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			if (DocIsSamePathAsSelected())
 				return;
 			SaveOrExit();
@@ -559,6 +569,13 @@ namespace BerichtManager
 
 		private void btPrint_Click(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			if (tvReports.SelectedNode == null)
 			{
 				MessageBox.Show("No report selected");
@@ -569,6 +586,13 @@ namespace BerichtManager
 
 		private void btPrintAll_Click(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			if (Directory.Exists(Path.GetFullPath(".\\..")))
 			{
 				Dictionary<string, List<string>> unPrintedFiles = new Dictionary<string, List<string>>();
@@ -614,8 +638,6 @@ namespace BerichtManager
 					}
 					try
 					{
-						wordApp = new Word.Application();
-						wordApp.Visible = visible;
 						foreach (string key in unPrintedFiles.Keys)
 						{
 							unPrintedFiles[key].ForEach((f) =>
@@ -625,8 +647,6 @@ namespace BerichtManager
 								wordApp.Documents.Close();
 							});
 						}
-						wordApp.Quit(SaveChanges: false);
-						wordApp = null;
 
 						foreach (string key in unPrintedFiles.Keys)
 						{
@@ -642,15 +662,6 @@ namespace BerichtManager
 						HelperClasses.Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
-						try
-						{
-							wordApp.Quit(false);
-							wordApp = null;
-						}
-						catch
-						{
-
-						}
 					}
 
 				}
@@ -659,6 +670,13 @@ namespace BerichtManager
 
 		private void btEditExisting_Click(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			if (tvReports.SelectedNode == null)
 			{
 				MessageBox.Show("No report selected");
@@ -703,8 +721,6 @@ namespace BerichtManager
 				{
 					if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
 						return;
-					wordApp = new Word.Application();
-					wordApp.Visible = visible;
 					doc = wordApp.Documents.Open(path);
 
 					if (doc.FormFields.Count != 10)
@@ -712,8 +728,6 @@ namespace BerichtManager
 						MessageBox.Show("Invalid document (you will have to manually edit)");
 						doc.Close(SaveChanges: false);
 						doc = null;
-						wordApp.Quit();
-						wordApp = null;
 						return;
 					}
 
@@ -783,8 +797,6 @@ namespace BerichtManager
 					doc.Save();
 					doc.Close();
 					doc = null;
-					wordApp.Quit();
-					wordApp = null;
 				}
 				else
 				{
@@ -806,8 +818,6 @@ namespace BerichtManager
 						doc.Save();
 						doc.Close();
 						doc = null;
-						wordApp.Quit();
-						wordApp = null;
 						break;
 					case -2146233088:
 						MessageBox.Show("Connection refused by remotehost");
@@ -817,15 +827,6 @@ namespace BerichtManager
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
-				}
-				try
-				{
-					wordApp.Quit(false);
-					wordApp = null;
-				}
-				catch
-				{
-
 				}
 			}
 		}
@@ -847,16 +848,12 @@ namespace BerichtManager
 					return;
 				if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
 					return;
-				wordApp = new Word.Application();
-				wordApp.Visible = visible;
 				doc = wordApp.Documents.Open(path);
 				if (doc.FormFields.Count != 10)
 				{
 					MessageBox.Show("Invalid document (you will have to manually edit)");
 					doc.Close(SaveChanges: false);
 					doc = null;
-					wordApp.Quit();
-					wordApp = null;
 					return;
 				}
 				rtbWork.Text = doc.FormFields[6].Result;
@@ -879,8 +876,6 @@ namespace BerichtManager
 						doc.Save();
 						doc.Close();
 						doc = null;
-						wordApp.Quit();
-						wordApp = null;
 						break;
 					case -2146233088:
 						MessageBox.Show("Connection refused by remotehost");
@@ -890,15 +885,6 @@ namespace BerichtManager
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
-				}
-				try
-				{
-					wordApp.Quit(false);
-					wordApp = null;
-				}
-				catch
-				{
-
 				}
 			}
 		}
@@ -952,9 +938,7 @@ namespace BerichtManager
 				return;
 			if (!wasEdited)
 			{
-				wordApp.Quit(SaveChanges: false);
 				doc = null;
-				wordApp = null;
 				return;
 			}
 			if (DocIsSamePathAsSelected())
@@ -963,11 +947,7 @@ namespace BerichtManager
 			if (MessageBox.Show("Save unsaved changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				SaveFromTb();
 			else
-			{
-				wordApp.Quit(SaveChanges: false);
 				doc = null;
-				wordApp = null;
-			}
 		}
 
 		/// <summary>
@@ -1013,13 +993,9 @@ namespace BerichtManager
 					}
 					try
 					{
-						wordApp = new Word.Application();
-						wordApp.Visible = visible;
 						Word.Document document = wordApp.Documents.Open(Path.GetFullPath(".\\..\\..\\" + path), ReadOnly: true);
 						document.PrintOut(Background: false);
 						wordApp.Documents.Close();
-						wordApp.Quit(false);
-						wordApp = null;
 						if (printed.Name != "Gedruckt")
 						{
 							File.Move(Path.GetFullPath(".\\..\\..\\" + path),
@@ -1032,15 +1008,6 @@ namespace BerichtManager
 						HelperClasses.Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
-						try
-						{
-							wordApp.Quit(false);
-							wordApp = null;
-						}
-						catch
-						{
-
-						}
 					}
 				}
 			}
@@ -1098,6 +1065,13 @@ namespace BerichtManager
 
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			if (tvReports.SelectedNode == null)
 				return;
 			if (DocIsSamePathAsSelected())
@@ -1128,23 +1102,51 @@ namespace BerichtManager
 
 		private void miEdit_Click(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			SaveOrExit();
 			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 		}
 
 		private void miPrint_Click(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			PrintDocument(tvReports.SelectedNode.FullPath);
 		}
 
 		private void miQuickEditWork_Click(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			SaveOrExit();
 			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 6, quickEditTitle: "Edit work");
 		}
 
 		private void miQuickEditSchool_Click(object sender, EventArgs e)
 		{
+			//Check if word has started
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+				return;
+			}
+
 			SaveOrExit();
 			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 8, quickEditTitle: "Edit school");
 		}
@@ -1199,10 +1201,10 @@ namespace BerichtManager
 
 		private void miWordVisible_Click(object sender, EventArgs e)
 		{
-			visible = miWordVisible.Checked;
+			wordApp.Visible = miWordVisible.Checked;
 		}
 
-		private void FormManager_FormClosing(object sender, FormClosingEventArgs e)
+		private async void FormManager_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			try
 			{
@@ -1216,10 +1218,7 @@ namespace BerichtManager
 					doc = null;
 				}
 				if (wordApp != null)
-				{
-					wordApp.Quit(SaveChanges: false);
-					wordApp = null;
-				}
+					await new Task(new Action(() => wordApp.Quit(SaveChanges: false)));
 			}
 			catch (Exception ex)
 			{
@@ -1253,6 +1252,13 @@ namespace BerichtManager
 			switch (e.KeyCode)
 			{
 				case Keys.Enter:
+					//Check if word has started
+					if (!WordInitialized)
+					{
+						MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
+						return;
+					}
+
 					EditInTb(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 					break;
 				case Keys.Delete:
