@@ -12,7 +12,6 @@ using BerichtManager.OptionsMenu;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BerichtManager
 {
@@ -30,8 +29,17 @@ namespace BerichtManager
 		private CustomNodeDrawer nodeDrawer;
 		private static readonly ThemeManager themeManager = new ThemeManager();
 		private ITheme activeTheme;
-		private static readonly string VersionNumber = "v1.10.1";
+		private static readonly string VersionNumber = "v1.10.2";
+
+		/// <summary>
+		/// Status if the word app has finished loading
+		/// </summary>
 		private bool WordInitialized = false;
+
+		/// <summary>
+		/// Thread that contains the word app, it is forcefully terminated when form closes
+		/// </summary>
+		private Thread WordThread;
 
 		public MainForm()
 		{
@@ -52,14 +60,15 @@ namespace BerichtManager
 			}
 			SetComponentPositions();
 			client = new Client(configHandler);
-			new Task(new Action(() =>
+			WordThread = new Thread(new ThreadStart(() =>
 			{
 				wordApp = new Word.Application()
 				{
 					Visible = false
 				};
 				WordInitialized = true;
-			})).Start();
+			}));
+			WordThread.Start();
 		}
 
 		/// <summary>
@@ -207,7 +216,6 @@ namespace BerichtManager
 						MessageBox.Show("Invalid template");
 						doc.Close(SaveChanges: false);
 						doc = null;
-						app.Quit(SaveChanges: false);
 						return;
 					}
 
@@ -281,8 +289,6 @@ namespace BerichtManager
 							{
 								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 								doc = null;
-								if (isSingle)
-									app.Quit(SaveChanges: false);
 								return;
 							}
 							else
@@ -312,8 +318,6 @@ namespace BerichtManager
 							{
 								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 								doc = null;
-								if (isSingle)
-									app.Quit(SaveChanges: false);
 								return;
 							}
 							else
@@ -354,8 +358,6 @@ namespace BerichtManager
 						{
 							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 							doc = null;
-							if (isSingle)
-								app.Quit(SaveChanges: false);
 							return;
 						}
 						else
@@ -387,19 +389,6 @@ namespace BerichtManager
 					doc.Close();
 					doc = null;
 					UpdateTree();
-
-					//If single report close app
-					if (isSingle)
-					{
-						try
-						{
-							app.Quit(SaveChanges: false);
-						}
-						catch
-						{
-
-						}
-					}
 				}
 				else
 				{
@@ -430,7 +419,8 @@ namespace BerichtManager
 						MessageBox.Show(ex.StackTrace);
 						try
 						{
-							app.Quit(false);
+							doc.Close(SaveChanges: false);
+							doc = null;
 						}
 						catch
 						{
@@ -1204,7 +1194,7 @@ namespace BerichtManager
 			wordApp.Visible = miWordVisible.Checked;
 		}
 
-		private async void FormManager_FormClosing(object sender, FormClosingEventArgs e)
+		private void FormManager_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			try
 			{
@@ -1214,11 +1204,10 @@ namespace BerichtManager
 				}
 				if (doc != null)
 				{
-					doc.Close();
+					doc.Close(SaveChanges: false);
 					doc = null;
 				}
-				if (wordApp != null)
-					await new Task(new Action(() => wordApp.Quit(SaveChanges: false)));
+				WordThread.Join();
 			}
 			catch (Exception ex)
 			{
