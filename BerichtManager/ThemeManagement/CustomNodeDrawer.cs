@@ -77,22 +77,17 @@ namespace BerichtManager.ThemeManagement
 				{
 					if (e.Node.Parent != null)
 						e.Graphics.DrawImage(FolderOpenedIcon, new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
+					else
+						e.Graphics.DrawImage(FolderOpenedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
 				}
 				else
 				{
 					if (e.Node.Parent != null)
 						e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
+					else
+						e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
 				}
 			}
-			if (e.Node == e.Node.TreeView.Nodes[0])
-			{
-				if (e.Node.IsExpanded)
-					e.Graphics.DrawImage(FolderOpenedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
-				else
-					e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
-			}
-			if ((e.State & TreeNodeStates.Hot) == TreeNodeStates.Hot)
-				return;
 		}
 
 		/// <summary>
