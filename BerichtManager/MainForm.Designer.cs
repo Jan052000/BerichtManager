@@ -64,6 +64,7 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
+			this.miRefresh = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -97,22 +98,23 @@ namespace BerichtManager
             this.miDelete,
             this.miEdit,
             this.miQuickEditOptions,
-            this.miPrint});
+            this.miPrint,
+            this.miRefresh});
 			this.toRightClickMenu.Name = "contextMenuStrip1";
-			this.toRightClickMenu.Size = new System.Drawing.Size(147, 92);
+			this.toRightClickMenu.Size = new System.Drawing.Size(181, 136);
 			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
 			// 
 			// miDelete
 			// 
 			this.miDelete.Name = "miDelete";
-			this.miDelete.Size = new System.Drawing.Size(146, 22);
+			this.miDelete.Size = new System.Drawing.Size(180, 22);
 			this.miDelete.Text = "Delete";
 			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
 			// 
 			// miEdit
 			// 
 			this.miEdit.Name = "miEdit";
-			this.miEdit.Size = new System.Drawing.Size(146, 22);
+			this.miEdit.Size = new System.Drawing.Size(180, 22);
 			this.miEdit.Text = "Edit";
 			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
 			// 
@@ -122,7 +124,7 @@ namespace BerichtManager
             this.tiQuickEditWork,
             this.miQuickEditSchool});
 			this.miQuickEditOptions.Name = "miQuickEditOptions";
-			this.miQuickEditOptions.Size = new System.Drawing.Size(146, 22);
+			this.miQuickEditOptions.Size = new System.Drawing.Size(180, 22);
 			this.miQuickEditOptions.Text = "Quick actions";
 			// 
 			// tiQuickEditWork
@@ -142,7 +144,7 @@ namespace BerichtManager
 			// miPrint
 			// 
 			this.miPrint.Name = "miPrint";
-			this.miPrint.Size = new System.Drawing.Size(146, 22);
+			this.miPrint.Size = new System.Drawing.Size(180, 22);
 			this.miPrint.Text = "Print";
 			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
 			// 
@@ -252,21 +254,21 @@ namespace BerichtManager
 			// miCreate
 			// 
 			this.miCreate.Name = "miCreate";
-			this.miCreate.Size = new System.Drawing.Size(125, 22);
+			this.miCreate.Size = new System.Drawing.Size(180, 22);
 			this.miCreate.Text = "Create";
 			this.miCreate.Click += new System.EventHandler(this.btCreate_Click);
 			// 
 			// miEditLatest
 			// 
 			this.miEditLatest.Name = "miEditLatest";
-			this.miEditLatest.Size = new System.Drawing.Size(125, 22);
+			this.miEditLatest.Size = new System.Drawing.Size(180, 22);
 			this.miEditLatest.Text = "Edit latest";
 			this.miEditLatest.Click += new System.EventHandler(this.btEdit_Click);
 			// 
 			// miPrintAll
 			// 
 			this.miPrintAll.Name = "miPrintAll";
-			this.miPrintAll.Size = new System.Drawing.Size(125, 22);
+			this.miPrintAll.Size = new System.Drawing.Size(180, 22);
 			this.miPrintAll.Text = "Print all";
 			this.miPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
 			// 
@@ -303,6 +305,13 @@ namespace BerichtManager
 			this.miClose.Text = "Close";
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
+			// 
+			// miRefresh
+			// 
+			this.miRefresh.Name = "miRefresh";
+			this.miRefresh.Size = new System.Drawing.Size(180, 22);
+			this.miRefresh.Text = "Refresh";
+			this.miRefresh.Click += new System.EventHandler(this.MiRefresh_Click);
 			// 
 			// MainForm
 			// 
@@ -357,6 +366,7 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miWordVisible;
 		private System.Windows.Forms.ToolStripMenuItem miOptionsMenu;
 		private System.Windows.Forms.ToolStripMenuItem miClose;
+		private System.Windows.Forms.ToolStripMenuItem miRefresh;
 	}
 }
 

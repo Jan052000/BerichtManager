@@ -1177,7 +1177,6 @@ namespace BerichtManager
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			bool isInLogs = false;
-			e.Cancel = true;
 			if (tvReports.SelectedNode.Parent != null)
 			{
 				if (tvReports.SelectedNode.Parent.Text == "Logs")
@@ -1185,20 +1184,15 @@ namespace BerichtManager
 					isInLogs = true;
 				}
 			}
-			if (tvReports.SelectedNode.Text.EndsWith(".docx") || isInLogs)
-			{
-				e.Cancel = false;
-				miEdit.Enabled = true;
-				miPrint.Enabled = true;
-				miDelete.Enabled = true;
-				miQuickEditOptions.Enabled = true;
-				if (tvReports.SelectedNode.Text.StartsWith("~$") || isInLogs)
-				{
-					miEdit.Enabled = false;
-					miPrint.Enabled = false;
-					miQuickEditOptions.Enabled = false;
-				}
-			}
+			miEdit.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
+			//miEdit.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
+			miPrint.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
+			//miPrint.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
+			miDelete.Enabled = isInLogs || tvReports.SelectedNode.Text.EndsWith(".docx") || tvReports.SelectedNode.Text.StartsWith("~$");
+			//miDelete.Visible = isInLogs || tvReports.SelectedNode.Text.EndsWith(".docx") || tvReports.SelectedNode.Text.StartsWith("~$");
+			miQuickEditOptions.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
+			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
+			return;
 		}
 
 		private void btOptions_Click(object sender, EventArgs e)
@@ -1294,6 +1288,11 @@ namespace BerichtManager
 		private void ReportFolderChanged(object sender, string folderPath)
 		{
 			info = new DirectoryInfo(folderPath);
+			UpdateTree();
+		}
+
+		private void MiRefresh_Click(object sender, EventArgs e)
+		{
 			UpdateTree();
 		}
 	}
