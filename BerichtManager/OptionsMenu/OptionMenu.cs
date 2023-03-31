@@ -60,6 +60,7 @@ namespace BerichtManager.OptionsMenu
 			if (int.TryParse(configHandler.LoadNumber(), out int value))
 				nudNumber.Value = value;
 			tbFolder.Text = configHandler.ReportPath();
+			tbUpdate.Text = configHandler.PublishPath();
 
 			isDirty = false;
 			btSave.Enabled = false;
@@ -107,12 +108,14 @@ namespace BerichtManager.OptionsMenu
 						ThemeSetter.SetThemes(this, activeTheme);
 						ActiveThemeChanged(this, activeTheme);
 					}
-					if(configHandler.ReportPath() != tbFolder.Text)
+					if (configHandler.ReportPath() != tbFolder.Text)
 					{
 						if (MessageBox.Show("Do you want to switch over imediately?", "Change directory?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 							ReportFolderChanged(this, tbFolder.Text);
 						configHandler.ReportPath(tbFolder.Text);
 					}
+					if (configHandler.PublishPath() != tbUpdate.Text)
+						configHandler.PublishPath(tbUpdate.Text);
 					try
 					{
 						configHandler.SaveConfig();
@@ -168,6 +171,8 @@ namespace BerichtManager.OptionsMenu
 							ReportFolderChanged(this, tbFolder.Text);
 						configHandler.ReportPath(tbFolder.Text);
 					}
+					if (configHandler.PublishPath() != tbUpdate.Text)
+						configHandler.PublishPath(tbUpdate.Text);
 				}
 				configHandler.SaveConfig();
 			}
@@ -272,5 +277,13 @@ namespace BerichtManager.OptionsMenu
 		/// <param name="sender">Event sender</param>
 		/// <param name="reportFolderPath">New report folder path</param>
 		public delegate void reportFolderChanged(object sender, string reportFolderPath);
+
+		private void tbUpdate_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog openFileDialog = new OpenFileDialog();
+			openFileDialog.Filter = "Executables (*.exe)|*.exe";
+			if (openFileDialog.ShowDialog() == DialogResult.OK)
+				tbUpdate.Text = openFileDialog.FileName;
+		}
 	}
 }

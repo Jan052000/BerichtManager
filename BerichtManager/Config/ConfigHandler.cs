@@ -29,7 +29,7 @@ namespace BerichtManager.Config
 					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1),
 					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
 					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"),
-					new JProperty("ReportPath", Path.GetFullPath(".\\..")));
+					new JProperty("ReportPath", Path.GetFullPath(".\\..")), new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"));
 				File.WriteAllText(path, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else
@@ -152,6 +152,11 @@ namespace BerichtManager.Config
 				if (!configObject.ContainsKey("ReportPath"))
 				{
 					configObject.Add(new JProperty("ReportPath", Path.GetFullPath(".\\..")));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("PublishPath"))
+				{
+					configObject.Add(new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"));
 					isComplete = false;
 				}
 			}
@@ -557,6 +562,24 @@ namespace BerichtManager.Config
 		public void ReportPath(string path)
 		{
 			GenericSet("ReportPath", path);
+		}
+
+		/// <summary>
+		/// Gets path of published application to check for version number
+		/// </summary>
+		/// <returns>Path of published application</returns>
+		public string PublishPath()
+		{
+			return GenericGet<string>("PublishPath");
+		}
+
+		/// <summary>
+		/// Sets path of published application to check for version number
+		/// </summary>
+		/// <param name="path">Path of published application</param>
+		public void PublishPath(string path)
+		{
+			GenericSet("PublishPath", path);
 		}
 
 		/// <summary>

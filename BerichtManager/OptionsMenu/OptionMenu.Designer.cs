@@ -52,6 +52,8 @@ namespace BerichtManager.OptionsMenu
 			this.laFolder = new System.Windows.Forms.Label();
 			this.tbFolder = new System.Windows.Forms.TextBox();
 			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
+			this.laUpdate = new System.Windows.Forms.Label();
+			this.tbUpdate = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -308,11 +310,33 @@ namespace BerichtManager.OptionsMenu
 			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
 			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
+			// laUpdate
+			// 
+			this.laUpdate.AutoSize = true;
+			this.laUpdate.Location = new System.Drawing.Point(32, 318);
+			this.laUpdate.Name = "laUpdate";
+			this.laUpdate.Size = new System.Drawing.Size(66, 13);
+			this.laUpdate.TabIndex = 28;
+			this.laUpdate.Text = "Update path";
+			// 
+			// tbUpdate
+			// 
+			this.tbUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbUpdate.Location = new System.Drawing.Point(104, 315);
+			this.tbUpdate.Name = "tbUpdate";
+			this.tbUpdate.ReadOnly = true;
+			this.tbUpdate.Size = new System.Drawing.Size(684, 20);
+			this.tbUpdate.TabIndex = 29;
+			this.tbUpdate.Click += new System.EventHandler(this.tbUpdate_Click);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.tbUpdate);
+			this.Controls.Add(this.laUpdate);
 			this.Controls.Add(this.tbFolder);
 			this.Controls.Add(this.laFolder);
 			this.Controls.Add(this.btEditTheme);
@@ -372,5 +396,7 @@ namespace BerichtManager.OptionsMenu
 		private System.Windows.Forms.Button btEditTheme;
 		private System.Windows.Forms.Label laFolder;
 		private System.Windows.Forms.TextBox tbFolder;
+		private System.Windows.Forms.Label laUpdate;
+		private System.Windows.Forms.TextBox tbUpdate;
 	}
 }

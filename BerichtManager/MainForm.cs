@@ -12,6 +12,7 @@ using BerichtManager.OptionsMenu;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
 using System.Threading;
+using System.Diagnostics;
 
 namespace BerichtManager
 {
@@ -33,7 +34,17 @@ namespace BerichtManager
 		private CustomNodeDrawer nodeDrawer;
 		private static readonly ThemeManager themeManager = new ThemeManager();
 		private ITheme activeTheme;
-		private static readonly string VersionNumber = "v1.10.2";
+
+		/// <summary>
+		/// Version number
+		/// Major.Minor.Build.Revision
+		/// </summary>
+		public const string VersionNumber = "1.10.3";
+
+		/// <summary>
+		/// String to be printed
+		/// </summary>
+		private string VersionString = "v" + VersionNumber;
 
 		/// <summary>
 		/// Full path to report folder
@@ -71,6 +82,9 @@ namespace BerichtManager
 			}
 			SetComponentPositions();
 			client = new Client(configHandler);
+			if (File.Exists(configHandler.PublishPath()))
+				if (CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(configHandler.PublishPath()).FileVersion) > 0)
+					VersionString += "*";
 			WordThread = new Thread(new ThreadStart(() =>
 			{
 				wordApp = new Word.Application()
@@ -80,6 +94,46 @@ namespace BerichtManager
 				WordInitialized = true;
 			}));
 			WordThread.Start();
+		}
+
+		/// <summary>
+		/// Compares two version numbers
+		/// </summary>
+		/// <param name="version1">Version number 1</param>
+		/// <param name="version2">Version number 2</param>
+		/// <returns>0 if versions are equal, positive if version2 is greater and negative if version2 is smaller</returns>
+		private int CompareVersionNumbers(string version1, string version2)
+		{
+			string[] splitv1 = version1.Split('.');
+			string[] splitv2 = version2.Split('.');
+			if (splitv1.Length == splitv2.Length)
+			{
+				for (int i = 0; i < splitv1.Length; i++)
+				{
+					if (splitv1[i] != splitv2[i])
+					{
+						if (int.TryParse(splitv1[i], out int v1) && int.TryParse(splitv2[i], out int v2))
+						{
+							return v2 - v1;
+						}
+					}
+				}
+			}
+			else
+			{
+				for (int i = 0; i < Math.Min(splitv1.Length, splitv2.Length); i++)
+				{
+					if (splitv1[i] != splitv2[i])
+					{
+						if (int.TryParse(splitv1[i], out int v1) && int.TryParse(splitv2[i], out int v2))
+						{
+							return v2 - v1;
+						}
+					}
+				}
+				return splitv2.Length - splitv1.Length;
+			}
+			return 0;
 		}
 
 		/// <summary>
@@ -1211,7 +1265,7 @@ namespace BerichtManager
 		private void menuStrip1_Paint(object sender, PaintEventArgs e)
 		{
 			int versionNumberWidth = (int)e.Graphics.MeasureString(VersionNumber, menuStrip1.Font).Width / 2;
-			TextRenderer.DrawText(e.Graphics, VersionNumber, menuStrip1.Font, new Point(e.ClipRectangle.X + e.ClipRectangle.Width / 2 - versionNumberWidth, e.ClipRectangle.Y + menuStrip1.Padding.Top + 2), menuStrip1.ForeColor);
+			TextRenderer.DrawText(e.Graphics, VersionString, menuStrip1.Font, new Point(e.ClipRectangle.X + e.ClipRectangle.Width / 2 - versionNumberWidth, e.ClipRectangle.Y + menuStrip1.Padding.Top + 2), menuStrip1.ForeColor);
 		}
 
 		private void tvReports_KeyUp(object sender, KeyEventArgs e)
