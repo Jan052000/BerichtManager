@@ -39,7 +39,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.10.3";
+		public const string VersionNumber = "1.10.3.1";
 
 		/// <summary>
 		/// String to be printed
@@ -1091,6 +1091,9 @@ namespace BerichtManager
 				MessageBox.Show("Word is still starting, please try again", "Please try again");
 				return;
 			}
+
+			if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
+				return;
 
 			if (tvReports.SelectedNode == null)
 				return;
