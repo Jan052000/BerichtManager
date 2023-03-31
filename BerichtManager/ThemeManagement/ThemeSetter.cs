@@ -61,6 +61,10 @@ namespace BerichtManager.ThemeManagement
 					menuStrip.BackColor = theme.MenuStripBackColor;
 					menuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(theme), theme);
 					break;
+				case ContextMenuStrip contextMenuStrip:
+					contextMenuStrip.BackColor = theme.MenuStripBackColor;
+					contextMenuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(theme), theme);
+					break;
 			}
 			control.ForeColor = theme.ForeColor;
 			foreach (Control control1 in control.Controls)
