@@ -39,7 +39,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.10.3.2";
+		public const string VersionNumber = "1.10.3.3";
 
 		/// <summary>
 		/// String to be printed
@@ -458,6 +458,7 @@ namespace BerichtManager
 				if (int.TryParse(configHandler.LoadNumber(), out int i)) configHandler.EditNumber("" + (i + 1));
 				configHandler.SaveLastReportKW(culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 				configHandler.EditActive(path);
+				configHandler.SaveConfig();
 				miEditLatest.Enabled = true;
 				MessageBox.Show("Created Document at: " + path + "\\WochenberichtKW" + weekOfYear + ".docx");
 
