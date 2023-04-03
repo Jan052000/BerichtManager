@@ -28,6 +28,7 @@ namespace BerichtManager.OptionsMenu
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.btClose = new System.Windows.Forms.Button();
 			this.btSave = new System.Windows.Forms.Button();
 			this.cbUseCustomPrefix = new System.Windows.Forms.CheckBox();
@@ -51,11 +52,14 @@ namespace BerichtManager.OptionsMenu
 			this.btEditTheme = new System.Windows.Forms.Button();
 			this.laFolder = new System.Windows.Forms.Label();
 			this.tbFolder = new System.Windows.Forms.TextBox();
-			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
 			this.laUpdate = new System.Windows.Forms.Label();
 			this.tbUpdate = new System.Windows.Forms.TextBox();
 			this.laTabStop = new System.Windows.Forms.Label();
 			this.nudTabStops = new System.Windows.Forms.NumericUpDown();
+			this.tbNamingPattern = new System.Windows.Forms.TextBox();
+			this.laNamingPattern = new System.Windows.Forms.Label();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			this.SuspendLayout();
@@ -292,27 +296,6 @@ namespace BerichtManager.OptionsMenu
 			this.tbFolder.TabIndex = 27;
 			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
 			// 
-			// coTheme
-			// 
-			this.coTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
-			this.coTheme.DisabledColor = System.Drawing.SystemColors.Control;
-			this.coTheme.DisabledTextColor = System.Drawing.SystemColors.GrayText;
-			this.coTheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
-			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.coTheme.FormattingEnabled = true;
-			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
-			this.coTheme.Location = new System.Drawing.Point(104, 182);
-			this.coTheme.Name = "coTheme";
-			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.Size = new System.Drawing.Size(517, 21);
-			this.coTheme.TabIndex = 23;
-			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
-			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
 			// laUpdate
 			// 
 			this.laUpdate.AutoSize = true;
@@ -350,11 +333,62 @@ namespace BerichtManager.OptionsMenu
 			this.nudTabStops.TabIndex = 31;
 			this.nudTabStops.ValueChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
+			// tbNamingPattern
+			// 
+			this.tbNamingPattern.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbNamingPattern.Location = new System.Drawing.Point(104, 341);
+			this.tbNamingPattern.Name = "tbNamingPattern";
+			this.tbNamingPattern.Size = new System.Drawing.Size(684, 20);
+			this.tbNamingPattern.TabIndex = 32;
+			this.toolTip1.SetToolTip(this.tbNamingPattern, "~+KW+~ = Calendar week\r\n~+RN+~ = Report number");
+			this.tbNamingPattern.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laNamingPattern
+			// 
+			this.laNamingPattern.AutoSize = true;
+			this.laNamingPattern.Location = new System.Drawing.Point(19, 344);
+			this.laNamingPattern.Name = "laNamingPattern";
+			this.laNamingPattern.Size = new System.Drawing.Size(79, 13);
+			this.laNamingPattern.TabIndex = 33;
+			this.laNamingPattern.Text = "Naming pattern";
+			// 
+			// toolTip1
+			// 
+			this.toolTip1.AutoPopDelay = 5000;
+			this.toolTip1.InitialDelay = 500;
+			this.toolTip1.OwnerDraw = true;
+			this.toolTip1.ReshowDelay = 100;
+			this.toolTip1.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this.toolTip1_Draw);
+			// 
+			// coTheme
+			// 
+			this.coTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
+			this.coTheme.DisabledColor = System.Drawing.SystemColors.Control;
+			this.coTheme.DisabledTextColor = System.Drawing.SystemColors.GrayText;
+			this.coTheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
+			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.coTheme.FormattingEnabled = true;
+			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
+			this.coTheme.Location = new System.Drawing.Point(104, 182);
+			this.coTheme.Name = "coTheme";
+			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.coTheme.Size = new System.Drawing.Size(517, 21);
+			this.coTheme.TabIndex = 23;
+			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
+			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.laNamingPattern);
+			this.Controls.Add(this.tbNamingPattern);
 			this.Controls.Add(this.nudTabStops);
 			this.Controls.Add(this.laTabStop);
 			this.Controls.Add(this.tbUpdate);
@@ -383,7 +417,7 @@ namespace BerichtManager.OptionsMenu
 			this.Controls.Add(this.cbUseCustomPrefix);
 			this.Controls.Add(this.btSave);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(495, 338);
+			this.MinimumSize = new System.Drawing.Size(495, 364);
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
@@ -423,5 +457,8 @@ namespace BerichtManager.OptionsMenu
 		private System.Windows.Forms.TextBox tbUpdate;
 		private System.Windows.Forms.Label laTabStop;
 		private System.Windows.Forms.NumericUpDown nudTabStops;
+		private System.Windows.Forms.TextBox tbNamingPattern;
+		private System.Windows.Forms.Label laNamingPattern;
+		private System.Windows.Forms.ToolTip toolTip1;
 	}
 }

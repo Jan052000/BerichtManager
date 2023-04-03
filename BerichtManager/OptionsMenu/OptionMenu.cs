@@ -36,11 +36,13 @@ namespace BerichtManager.OptionsMenu
 		/// </summary>
 		public event tabStopsChanged TabStopsChanged;
 		private ThemeManager ThemeManager;
+		private ITheme Theme;
 		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
 		{
 			InitializeComponent();
 			if (theme == null)
 				theme = new DarkMode();
+			Theme = theme;
 			ThemeSetter.SetThemes(this, theme);
 			ThemeName = theme.Name;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
@@ -67,6 +69,7 @@ namespace BerichtManager.OptionsMenu
 			nudTabStops.Value = configHandler.TabStops();
 			tbFolder.Text = configHandler.ReportPath();
 			tbUpdate.Text = configHandler.PublishPath();
+			tbNamingPattern.Text = configHandler.NamingPattern();
 
 			isDirty = false;
 			btSave.Enabled = false;
@@ -148,6 +151,7 @@ namespace BerichtManager.OptionsMenu
 						configHandler.TabStops((int)nudTabStops.Value);
 						TabStopsChanged(this, (int)nudTabStops.Value);
 					}
+					configHandler.NamingPattern(tbNamingPattern.Text);
 					try
 					{
 						if (isDirty)
@@ -211,6 +215,7 @@ namespace BerichtManager.OptionsMenu
 						configHandler.TabStops((int)nudTabStops.Value);
 						TabStopsChanged(this, (int)nudTabStops.Value);
 					}
+					configHandler.NamingPattern(tbNamingPattern.Text);
 				}
 				configHandler.SaveConfig();
 			}
@@ -308,6 +313,12 @@ namespace BerichtManager.OptionsMenu
 			openFileDialog.Filter = "Executables (*.exe)|*.exe";
 			if (openFileDialog.ShowDialog() == DialogResult.OK)
 				tbUpdate.Text = openFileDialog.FileName;
+		}
+
+		private void toolTip1_Draw(object sender, DrawToolTipEventArgs e)
+		{
+			e.Graphics.Clear(Theme.BackColor);
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, Theme.ForeColor);
 		}
 	}
 }

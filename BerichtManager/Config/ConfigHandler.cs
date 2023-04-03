@@ -32,7 +32,7 @@ namespace BerichtManager.Config
 					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
 					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"),
 					new JProperty("ReportPath", Path.GetFullPath(".\\..")), new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"),
-					new JProperty("TabStops", 20));
+					new JProperty("TabStops", 20), new JProperty("NamingPattern", "WochenberichtKW~+CW+~"));
 				File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else
@@ -165,6 +165,11 @@ namespace BerichtManager.Config
 				if (!configObject.ContainsKey("TabStops"))
 				{
 					configObject.Add(new JProperty("TabStops", 20));
+					isComplete = false;
+				}
+				if (!configObject.ContainsKey("NamingPattern"))
+				{
+					configObject.Add(new JProperty("NamingPattern", "WochenberichtKW~+CW+~"));
 					isComplete = false;
 				}
 			}
@@ -615,6 +620,24 @@ namespace BerichtManager.Config
 		public void TabStops(int tabStops)
 		{
 			GenericSet("TabStops", tabStops);
+		}
+
+		/// <summary>
+		/// Gets naming patterm
+		/// </summary>
+		/// <returns>Naming pattern</returns>
+		public string NamingPattern()
+		{
+			return GenericGet<string>("NamingPattern");
+		}
+
+		/// <summary>
+		/// Sets naming pattern
+		/// </summary>
+		/// <param name="pattern">Naming pattern</param>
+		public void NamingPattern(string pattern)
+		{
+			GenericSet("NamingPattern", pattern);
 		}
 
 		private void SortConfig()

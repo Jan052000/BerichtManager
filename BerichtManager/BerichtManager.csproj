@@ -112,6 +112,7 @@
     </Compile>
     <Compile Include="Config\ConfigHandler.cs" />
     <Compile Include="Config\UserHandler.cs" />
+    <Compile Include="HelperClasses\NamingPatternResolver.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

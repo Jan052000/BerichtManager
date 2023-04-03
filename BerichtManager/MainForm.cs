@@ -13,6 +13,7 @@ using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
 using System.Threading;
 using System.Diagnostics;
+using BerichtManager.HelperClasses;
 
 namespace BerichtManager
 {
@@ -39,7 +40,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.10.3.3";
+		public const string VersionNumber = "1.10.4";
 
 		/// <summary>
 		/// String to be printed
@@ -73,7 +74,7 @@ namespace BerichtManager
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
-			tvReports.TreeViewNodeSorter = new HelperClasses.TreeNodeSorter();
+			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			info = new DirectoryInfo(configHandler.ReportPath());
 			ActivePath = configHandler.ReportPath();
 			UpdateTree();
@@ -415,7 +416,7 @@ namespace BerichtManager
 					catch (AggregateException e)
 					{
 						MessageBox.Show("Unable to process classes from web\n(try to cancel the creation process and start again)");
-						HelperClasses.Logger.LogError(e);
+						Logger.LogError(e);
 					}
 					form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", activeTheme, school: true, isCreate: true, text: classes);
 				}
@@ -452,7 +453,8 @@ namespace BerichtManager
 
 
 				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
-				string path = ActivePath + "\\" + today.Year + "\\WochenberichtKW" + weekOfYear + ".docx";
+				string name = configHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, configHandler.LoadNumber());
+				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
 				SetFontInDoc(ldoc, app);
 				ldoc.SaveAs2(FileName: path);
 
@@ -461,7 +463,7 @@ namespace BerichtManager
 				configHandler.EditActive(path);
 				configHandler.SaveConfig();
 				miEditLatest.Enabled = true;
-				MessageBox.Show("Created Document at: " + path + "\\WochenberichtKW" + weekOfYear + ".docx");
+				MessageBox.Show("Created Document at: " + path);
 
 				ldoc.Close();
 				UpdateTree();
@@ -491,7 +493,7 @@ namespace BerichtManager
 						MessageBox.Show("Connection refused by remotehost");
 						break;
 					default:
-						HelperClasses.Logger.LogError(ex);
+						Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						try
 						{
@@ -724,7 +726,7 @@ namespace BerichtManager
 					}
 					catch (Exception ex)
 					{
-						HelperClasses.Logger.LogError(ex);
+						Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
 					}
@@ -851,7 +853,7 @@ namespace BerichtManager
 						MessageBox.Show("Connection refused by remotehost");
 						break;
 					default:
-						HelperClasses.Logger.LogError(ex);
+						Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
@@ -909,7 +911,7 @@ namespace BerichtManager
 						MessageBox.Show("Connection refused by remotehost");
 						break;
 					default:
-						HelperClasses.Logger.LogError(ex);
+						Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
@@ -949,7 +951,7 @@ namespace BerichtManager
 						MessageBox.Show("Connection refused by remotehost");
 						break;
 					default:
-						HelperClasses.Logger.LogError(ex);
+						Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
@@ -1034,7 +1036,7 @@ namespace BerichtManager
 					}
 					catch (Exception ex)
 					{
-						HelperClasses.Logger.LogError(ex);
+						Logger.LogError(ex);
 						MessageBox.Show(ex.StackTrace);
 						Console.Write(ex.StackTrace);
 					}
@@ -1042,54 +1044,48 @@ namespace BerichtManager
 			}
 		}
 
-		/**
-		<summary>
-		Method for deleting a file located at the path
-		</summary> 
-		<param name="path">The path</param>
-		*/
+		/// <summary>
+		/// Method for deleting a file located at the path
+		/// </summary>
+		/// <param name="path">Path of file to delete</param>
 		private void DeleteDocument(string path)
 		{
+			if (!File.Exists(path))
+			{
+				MessageBox.Show(path + " not Found (was it moved or deleted?)");
+				return;
+			}
 			if (File.GetAttributes(path) == FileAttributes.Directory)
 			{
 				MessageBox.Show("You may not delete folders using the manager");
 				return;
 			}
-			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			if (Path.GetExtension(path) != ".docx" && !Path.GetFileName(path).StartsWith("~$") && path.Split('\\')[path.Split('\\').Length - 2] != "Logs" && !path.EndsWith(".txt"))
 			{
-				if (File.Exists(path))
+				MessageBox.Show("You may only delete Documents(*.docx) or their temporary files");
+				return;
+			}
+			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				return;
+			if (path == configHandler.LoadActive())
+			{
+				if (configHandler.LoadLastReportKW() == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
 				{
-					if (Path.GetExtension(path) == ".docx" || Path.GetFileName(path).StartsWith("~$") || (path.Contains("Logs") && path.EndsWith(".txt")))
+					if (int.TryParse(configHandler.LoadNumber(), out int number))
 					{
-						if (path == configHandler.LoadActive())
-						{
-							string[] split = path.Split('\\');
-							if (split[split.Length - 1].Substring(15, ("" + culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday)).Length) == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString())
-							{
-								if (int.TryParse(configHandler.LoadNumber(), out int number))
-								{
-									configHandler.EditNumber("" + (number - 1));
-								}
-								else
-								{
-									MessageBox.Show("Could not reset current number of report");
-								}
-							}
-						}
-						File.Delete(path);
-						UpdateTree();
-						MessageBox.Show("File deleted successfully");
+						configHandler.EditNumber("" + (number - 1));
+						configHandler.SaveLastReportKW(culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1);
+						configHandler.SaveConfig();
 					}
 					else
 					{
-						MessageBox.Show("You may only delete Documents(*.docx) or their temporary files");
+						MessageBox.Show("Could not reset current number of report");
 					}
 				}
-				else
-				{
-					MessageBox.Show("File not Found (was it moved or deleted?)");
-				}
 			}
+			File.Delete(path);
+			UpdateTree();
+			MessageBox.Show("File deleted successfully");
 		}
 
 		private void tvReports_DoubleClick(object sender, EventArgs e)
