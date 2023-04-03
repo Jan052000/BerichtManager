@@ -13,7 +13,9 @@ namespace BerichtManager.Config
 {
 	public class ConfigHandler
 	{
-		private readonly string path = Environment.CurrentDirectory + "\\Config\\Config.json";
+		private readonly static string path = Environment.CurrentDirectory + "\\Config";
+		private readonly static string FileName = "Config.json";
+		private readonly string FullPath = path + "\\" + FileName;
 		private readonly JObject configObject;
 		public bool loginAborted = false;
 		private ThemeManager themeManager;
@@ -24,23 +26,23 @@ namespace BerichtManager.Config
 			if (!ConfigExists())
 			{
 				Directory.CreateDirectory(path);
-				File.Create(path).Close();
+				File.Create(FullPath).Close();
 				configObject = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
 					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1),
 					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
 					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"),
 					new JProperty("ReportPath", Path.GetFullPath(".\\..")), new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"));
-				File.WriteAllText(path, JsonConvert.SerializeObject(configObject, Formatting.Indented));
+				File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else
 			{
-				if (new FileInfo(path).Length == 0)
+				if (new FileInfo(FullPath).Length == 0)
 				{
 					configObject = new JObject();
 				}
 				else
 				{
-					configObject = JObject.Parse(File.ReadAllText(path));
+					configObject = JObject.Parse(File.ReadAllText(FullPath));
 				}
 				if (!configObject.ContainsKey("TemplatePath"))
 				{
@@ -161,7 +163,7 @@ namespace BerichtManager.Config
 				}
 			}
 			if (!isComplete)
-				File.WriteAllText(path, JsonConvert.SerializeObject(configObject, Formatting.Indented));
+				File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 		}
 
 		/// <summary>
@@ -192,7 +194,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public void SaveConfig()
 		{
-			File.WriteAllText(path, JsonConvert.SerializeObject(configObject, Formatting.Indented));
+			File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 		}
 
 		/// <summary>
@@ -588,13 +590,13 @@ namespace BerichtManager.Config
 		/// <returns>Config file exists</returns>
 		public bool ConfigExists()
 		{
-			return File.Exists(path);
+			return File.Exists(FullPath);
 		}
 
 		private void SortConfig()
 		{
 			List<JProperty> jProperties = new List<JProperty>();
-			JObject jobject = JObject.Parse(File.ReadAllText(path));
+			JObject jobject = JObject.Parse(File.ReadAllText(FullPath));
 			var test = jobject.Children<JProperty>().OrderBy(p => p.Name);
 		}
 	}
