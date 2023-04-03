@@ -82,6 +82,7 @@ namespace BerichtManager
 				miEditLatest.Enabled = false;
 			}
 			SetComponentPositions();
+			UpdateTabStops(this, configHandler.TabStops());
 			client = new Client(configHandler);
 			if (File.Exists(configHandler.PublishPath()))
 				if (CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(configHandler.PublishPath()).FileVersion) > 0)
@@ -1206,12 +1207,46 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
+			int tabStops = configHandler.TabStops();
 			OptionMenu optionMenu = new OptionMenu(configHandler, activeTheme, themeManager);
 			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
 			optionMenu.ReportFolderChanged += ReportFolderChanged;
+			optionMenu.TabStopsChanged += UpdateTabStops;
 			optionMenu.ShowDialog();
 			optionMenu.ActiveThemeChanged -= ActiveThemeChanged;
 			optionMenu.ReportFolderChanged -= ReportFolderChanged;
+			optionMenu.TabStopsChanged -= UpdateTabStops;
+		}
+
+		private void ReportFolderChanged(object sender, string folderPath)
+		{
+			info = new DirectoryInfo(folderPath);
+			UpdateTree();
+		}
+
+		private void UpdateTabStops(object sender, int tabStops)
+		{
+			List<int> tabs = new List<int>();
+			for (int i = 0; i < 32; i++)
+			{
+				tabs.Add(i * tabStops);
+			}
+			string tempBuffer = rtbSchool.Text;
+			rtbSchool.Text = "";
+			rtbSchool.SelectionTabs = tabs.ToArray();
+			rtbSchool.Text = tempBuffer;
+			tempBuffer = rtbWork.Text;
+			rtbWork.Text = "";
+			rtbWork.SelectionTabs = tabs.ToArray();
+			rtbWork.Text = tempBuffer;
+		}
+
+		private void ActiveThemeChanged(object sender, ITheme theme)
+		{
+			activeTheme = theme;
+			ThemeSetter.SetThemes(this, theme);
+			nodeDrawer.SetTheme(activeTheme);
+			tvReports.Refresh();
 		}
 
 		private void DetectKeys(object sender, KeyEventArgs e)
@@ -1260,14 +1295,6 @@ namespace BerichtManager
 			nodeDrawer.DrawNode(e);
 		}
 
-		private void ActiveThemeChanged(object sender, ITheme theme)
-		{
-			activeTheme = theme;
-			ThemeSetter.SetThemes(this, theme);
-			nodeDrawer.SetTheme(activeTheme);
-			tvReports.Refresh();
-		}
-
 		private void menuStrip1_Paint(object sender, PaintEventArgs e)
 		{
 			int versionNumberWidth = (int)e.Graphics.MeasureString(VersionNumber, menuStrip1.Font).Width / 2;
@@ -1292,12 +1319,6 @@ namespace BerichtManager
 					DeleteDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 					break;
 			}
-		}
-
-		private void ReportFolderChanged(object sender, string folderPath)
-		{
-			info = new DirectoryInfo(folderPath);
-			UpdateTree();
 		}
 
 		private void MiRefresh_Click(object sender, EventArgs e)

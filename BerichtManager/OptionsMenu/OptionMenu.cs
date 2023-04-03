@@ -30,6 +30,11 @@ namespace BerichtManager.OptionsMenu
 		/// Emits when the report folder path changes
 		/// </summary>
 		public event reportFolderChanged ReportFolderChanged;
+
+		/// <summary>
+		/// Emits when tab stops change
+		/// </summary>
+		public event tabStopsChanged TabStopsChanged;
 		private ThemeManager ThemeManager;
 		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
 		{
@@ -59,6 +64,7 @@ namespace BerichtManager.OptionsMenu
 			tbName.Text = configHandler.LoadName();
 			if (int.TryParse(configHandler.LoadNumber(), out int value))
 				nudNumber.Value = value;
+			nudTabStops.Value = configHandler.TabStops();
 			tbFolder.Text = configHandler.ReportPath();
 			tbUpdate.Text = configHandler.PublishPath();
 
@@ -68,6 +74,27 @@ namespace BerichtManager.OptionsMenu
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
 		}
+
+		/// <summary>
+		/// Delegate for the <see cref="ReportFolderChanged"/> event
+		/// </summary>
+		/// <param name="sender">Event sender</param>
+		/// <param name="reportFolderPath">New report folder path</param>
+		public delegate void reportFolderChanged(object sender, string reportFolderPath);
+
+		/// <summary>
+		/// Delegate for the <see cref="ActiveThemeChanged"/> event
+		/// </summary>
+		/// <param name="sender">Event sender</param>
+		/// <param name="theme">New active theme</param>
+		public delegate void activeThemeChanged(object sender, ITheme theme);
+
+		/// <summary>
+		/// Delegat fo the <see cref="TabStopsChanged"/> event
+		/// </summary>
+		/// <param name="sender">Event sender</param>
+		/// <param name="tabStops">Number of spaces per tab</param>
+		public delegate void tabStopsChanged(object sender, int tabStops);
 
 		private void btClose_Click(object sender, EventArgs e)
 		{
@@ -116,9 +143,15 @@ namespace BerichtManager.OptionsMenu
 					}
 					if (configHandler.PublishPath() != tbUpdate.Text)
 						configHandler.PublishPath(tbUpdate.Text);
+					if (configHandler.TabStops() != (int)nudTabStops.Value)
+					{
+						configHandler.TabStops((int)nudTabStops.Value);
+						TabStopsChanged(this, (int)nudTabStops.Value);
+					}
 					try
 					{
-						configHandler.SaveConfig();
+						if (isDirty)
+							configHandler.SaveConfig();
 					}
 					catch (Exception ex)
 					{
@@ -173,6 +206,11 @@ namespace BerichtManager.OptionsMenu
 					}
 					if (configHandler.PublishPath() != tbUpdate.Text)
 						configHandler.PublishPath(tbUpdate.Text);
+					if (configHandler.TabStops() != (int)nudTabStops.Value)
+					{
+						configHandler.TabStops((int)nudTabStops.Value);
+						TabStopsChanged(this, (int)nudTabStops.Value);
+					}
 				}
 				configHandler.SaveConfig();
 			}
@@ -225,13 +263,6 @@ namespace BerichtManager.OptionsMenu
 			}
 		}
 
-		/// <summary>
-		/// Delegate for the <see cref="ActiveThemeChanged"/> event
-		/// </summary>
-		/// <param name="sender">Event sender</param>
-		/// <param name="theme">New active theme</param>
-		public delegate void activeThemeChanged(object sender, ITheme theme);
-
 		//https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
 		protected override CreateParams CreateParams
 		{
@@ -270,13 +301,6 @@ namespace BerichtManager.OptionsMenu
 				MarkAsDirty(sender, e);
 			}
 		}
-
-		/// <summary>
-		/// Delegate for the <see cref="ReportFolderChanged"/> event
-		/// </summary>
-		/// <param name="sender">Event sender</param>
-		/// <param name="reportFolderPath">New report folder path</param>
-		public delegate void reportFolderChanged(object sender, string reportFolderPath);
 
 		private void tbUpdate_Click(object sender, EventArgs e)
 		{

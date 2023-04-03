@@ -31,7 +31,8 @@ namespace BerichtManager.Config
 					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1),
 					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
 					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"),
-					new JProperty("ReportPath", Path.GetFullPath(".\\..")), new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"));
+					new JProperty("ReportPath", Path.GetFullPath(".\\..")), new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"),
+					new JProperty("TabStops", 20));
 				File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
 			}
 			else
@@ -161,9 +162,23 @@ namespace BerichtManager.Config
 					configObject.Add(new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"));
 					isComplete = false;
 				}
+				if (!configObject.ContainsKey("TabStops"))
+				{
+					configObject.Add(new JProperty("TabStops", 20));
+					isComplete = false;
+				}
 			}
 			if (!isComplete)
 				File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
+		}
+
+		/// <summary>
+		/// Checks if config file exists
+		/// </summary>
+		/// <returns>Config file exists</returns>
+		public bool ConfigExists()
+		{
+			return File.Exists(FullPath);
 		}
 
 		/// <summary>
@@ -585,12 +600,21 @@ namespace BerichtManager.Config
 		}
 
 		/// <summary>
-		/// Checks if config file exists
+		/// Gets number to be used for tab stops
 		/// </summary>
-		/// <returns>Config file exists</returns>
-		public bool ConfigExists()
+		/// <returns>Number of spaces per tab</returns>
+		public int TabStops()
 		{
-			return File.Exists(FullPath);
+			return GenericGet<int>("TabStops");
+		}
+
+		/// <summary>
+		/// Sets number to be used for tab stops
+		/// </summary>
+		/// <param name="tabStops">Number of spaces per tab</param>
+		public void TabStops(int tabStops)
+		{
+			GenericSet("TabStops", tabStops);
 		}
 
 		private void SortConfig()

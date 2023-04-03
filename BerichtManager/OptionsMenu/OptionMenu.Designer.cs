@@ -54,7 +54,10 @@ namespace BerichtManager.OptionsMenu
 			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
 			this.laUpdate = new System.Windows.Forms.Label();
 			this.tbUpdate = new System.Windows.Forms.TextBox();
+			this.laTabStop = new System.Windows.Forms.Label();
+			this.nudTabStops = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -224,11 +227,11 @@ namespace BerichtManager.OptionsMenu
 			// laNumber
 			// 
 			this.laNumber.AutoSize = true;
-			this.laNumber.Location = new System.Drawing.Point(54, 267);
+			this.laNumber.Location = new System.Drawing.Point(19, 265);
 			this.laNumber.Name = "laNumber";
-			this.laNumber.Size = new System.Drawing.Size(44, 13);
+			this.laNumber.Size = new System.Drawing.Size(79, 13);
 			this.laNumber.TabIndex = 20;
-			this.laNumber.Text = "Number";
+			this.laNumber.Text = "Report Number";
 			// 
 			// nudNumber
 			// 
@@ -330,11 +333,30 @@ namespace BerichtManager.OptionsMenu
 			this.tbUpdate.TabIndex = 29;
 			this.tbUpdate.Click += new System.EventHandler(this.tbUpdate_Click);
 			// 
+			// laTabStop
+			// 
+			this.laTabStop.AutoSize = true;
+			this.laTabStop.Location = new System.Drawing.Point(286, 265);
+			this.laTabStop.Name = "laTabStop";
+			this.laTabStop.Size = new System.Drawing.Size(54, 13);
+			this.laTabStop.TabIndex = 30;
+			this.laTabStop.Text = "Tab stops";
+			// 
+			// nudTabStops
+			// 
+			this.nudTabStops.Location = new System.Drawing.Point(346, 263);
+			this.nudTabStops.Name = "nudTabStops";
+			this.nudTabStops.Size = new System.Drawing.Size(120, 20);
+			this.nudTabStops.TabIndex = 31;
+			this.nudTabStops.ValueChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.nudTabStops);
+			this.Controls.Add(this.laTabStop);
 			this.Controls.Add(this.tbUpdate);
 			this.Controls.Add(this.laUpdate);
 			this.Controls.Add(this.tbFolder);
@@ -365,6 +387,7 @@ namespace BerichtManager.OptionsMenu
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -398,5 +421,7 @@ namespace BerichtManager.OptionsMenu
 		private System.Windows.Forms.TextBox tbFolder;
 		private System.Windows.Forms.Label laUpdate;
 		private System.Windows.Forms.TextBox tbUpdate;
+		private System.Windows.Forms.Label laTabStop;
+		private System.Windows.Forms.NumericUpDown nudTabStops;
 	}
 }
