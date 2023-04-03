@@ -48,6 +48,7 @@ namespace BerichtManager
 			this.tiQuickEditWork = new System.Windows.Forms.ToolStripMenuItem();
 			this.miQuickEditSchool = new System.Windows.Forms.ToolStripMenuItem();
 			this.miPrint = new System.Windows.Forms.ToolStripMenuItem();
+			this.miRefresh = new System.Windows.Forms.ToolStripMenuItem();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
 			this.rtbWork = new System.Windows.Forms.RichTextBox();
 			this.rtbSchool = new System.Windows.Forms.RichTextBox();
@@ -64,7 +65,8 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRefresh = new System.Windows.Forms.ToolStripMenuItem();
+			this.paPadding1 = new System.Windows.Forms.Panel();
+			this.paPadding2 = new System.Windows.Forms.Panel();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -73,6 +75,8 @@ namespace BerichtManager
 			this.scTextBoxes.SuspendLayout();
 			this.paFileTree.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
+			this.paPadding1.SuspendLayout();
+			this.paPadding2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tvReports
@@ -101,20 +105,20 @@ namespace BerichtManager
             this.miPrint,
             this.miRefresh});
 			this.toRightClickMenu.Name = "contextMenuStrip1";
-			this.toRightClickMenu.Size = new System.Drawing.Size(181, 136);
+			this.toRightClickMenu.Size = new System.Drawing.Size(147, 114);
 			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
 			// 
 			// miDelete
 			// 
 			this.miDelete.Name = "miDelete";
-			this.miDelete.Size = new System.Drawing.Size(180, 22);
+			this.miDelete.Size = new System.Drawing.Size(146, 22);
 			this.miDelete.Text = "Delete";
 			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
 			// 
 			// miEdit
 			// 
 			this.miEdit.Name = "miEdit";
-			this.miEdit.Size = new System.Drawing.Size(180, 22);
+			this.miEdit.Size = new System.Drawing.Size(146, 22);
 			this.miEdit.Text = "Edit";
 			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
 			// 
@@ -124,7 +128,7 @@ namespace BerichtManager
             this.tiQuickEditWork,
             this.miQuickEditSchool});
 			this.miQuickEditOptions.Name = "miQuickEditOptions";
-			this.miQuickEditOptions.Size = new System.Drawing.Size(180, 22);
+			this.miQuickEditOptions.Size = new System.Drawing.Size(146, 22);
 			this.miQuickEditOptions.Text = "Quick actions";
 			// 
 			// tiQuickEditWork
@@ -144,18 +148,25 @@ namespace BerichtManager
 			// miPrint
 			// 
 			this.miPrint.Name = "miPrint";
-			this.miPrint.Size = new System.Drawing.Size(180, 22);
+			this.miPrint.Size = new System.Drawing.Size(146, 22);
 			this.miPrint.Text = "Print";
 			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
+			// 
+			// miRefresh
+			// 
+			this.miRefresh.Name = "miRefresh";
+			this.miRefresh.Size = new System.Drawing.Size(146, 22);
+			this.miRefresh.Text = "Refresh";
+			this.miRefresh.Click += new System.EventHandler(this.MiRefresh_Click);
 			// 
 			// rtbWork
 			// 
 			this.rtbWork.AcceptsTab = true;
 			this.rtbWork.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.rtbWork.Location = new System.Drawing.Point(0, 0);
+			this.rtbWork.Location = new System.Drawing.Point(0, 3);
 			this.rtbWork.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbWork.Name = "rtbWork";
-			this.rtbWork.Size = new System.Drawing.Size(562, 212);
+			this.rtbWork.Size = new System.Drawing.Size(559, 209);
 			this.rtbWork.TabIndex = 4;
 			this.rtbWork.Text = "";
 			this.ttTips.SetToolTip(this.rtbWork, "Work");
@@ -170,7 +181,7 @@ namespace BerichtManager
 			this.rtbSchool.Location = new System.Drawing.Point(0, 0);
 			this.rtbSchool.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbSchool.Name = "rtbSchool";
-			this.rtbSchool.Size = new System.Drawing.Size(562, 213);
+			this.rtbSchool.Size = new System.Drawing.Size(559, 210);
 			this.rtbSchool.TabIndex = 4;
 			this.rtbSchool.Text = "";
 			this.ttTips.SetToolTip(this.rtbSchool, "School");
@@ -201,11 +212,11 @@ namespace BerichtManager
 			// 
 			// scTextBoxes.Panel1
 			// 
-			this.scTextBoxes.Panel1.Controls.Add(this.rtbWork);
+			this.scTextBoxes.Panel1.Controls.Add(this.paPadding1);
 			// 
 			// scTextBoxes.Panel2
 			// 
-			this.scTextBoxes.Panel2.Controls.Add(this.rtbSchool);
+			this.scTextBoxes.Panel2.Controls.Add(this.paPadding2);
 			this.scTextBoxes.Size = new System.Drawing.Size(562, 426);
 			this.scTextBoxes.SplitterDistance = 212;
 			this.scTextBoxes.SplitterWidth = 1;
@@ -254,21 +265,21 @@ namespace BerichtManager
 			// miCreate
 			// 
 			this.miCreate.Name = "miCreate";
-			this.miCreate.Size = new System.Drawing.Size(180, 22);
+			this.miCreate.Size = new System.Drawing.Size(125, 22);
 			this.miCreate.Text = "Create";
 			this.miCreate.Click += new System.EventHandler(this.btCreate_Click);
 			// 
 			// miEditLatest
 			// 
 			this.miEditLatest.Name = "miEditLatest";
-			this.miEditLatest.Size = new System.Drawing.Size(180, 22);
+			this.miEditLatest.Size = new System.Drawing.Size(125, 22);
 			this.miEditLatest.Text = "Edit latest";
 			this.miEditLatest.Click += new System.EventHandler(this.btEdit_Click);
 			// 
 			// miPrintAll
 			// 
 			this.miPrintAll.Name = "miPrintAll";
-			this.miPrintAll.Size = new System.Drawing.Size(180, 22);
+			this.miPrintAll.Size = new System.Drawing.Size(125, 22);
 			this.miPrintAll.Text = "Print all";
 			this.miPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
 			// 
@@ -306,12 +317,25 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// miRefresh
+			// paPadding1
 			// 
-			this.miRefresh.Name = "miRefresh";
-			this.miRefresh.Size = new System.Drawing.Size(180, 22);
-			this.miRefresh.Text = "Refresh";
-			this.miRefresh.Click += new System.EventHandler(this.MiRefresh_Click);
+			this.paPadding1.Controls.Add(this.rtbWork);
+			this.paPadding1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.paPadding1.Location = new System.Drawing.Point(0, 0);
+			this.paPadding1.Name = "paPadding1";
+			this.paPadding1.Padding = new System.Windows.Forms.Padding(0, 3, 3, 0);
+			this.paPadding1.Size = new System.Drawing.Size(562, 212);
+			this.paPadding1.TabIndex = 0;
+			// 
+			// paPadding2
+			// 
+			this.paPadding2.Controls.Add(this.rtbSchool);
+			this.paPadding2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.paPadding2.Location = new System.Drawing.Point(0, 0);
+			this.paPadding2.Name = "paPadding2";
+			this.paPadding2.Padding = new System.Windows.Forms.Padding(0, 0, 3, 3);
+			this.paPadding2.Size = new System.Drawing.Size(562, 213);
+			this.paPadding2.TabIndex = 0;
 			// 
 			// MainForm
 			// 
@@ -336,6 +360,8 @@ namespace BerichtManager
 			this.paFileTree.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
+			this.paPadding1.ResumeLayout(false);
+			this.paPadding2.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -367,6 +393,8 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miOptionsMenu;
 		private System.Windows.Forms.ToolStripMenuItem miClose;
 		private System.Windows.Forms.ToolStripMenuItem miRefresh;
+		private System.Windows.Forms.Panel paPadding1;
+		private System.Windows.Forms.Panel paPadding2;
 	}
 }
 
