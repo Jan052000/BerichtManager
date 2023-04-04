@@ -65,6 +65,11 @@ namespace BerichtManager.ThemeManagement
 					contextMenuStrip.BackColor = theme.MenuStripBackColor;
 					contextMenuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(theme), theme);
 					break;
+				case ColoredGroupBox coloredGroupBox:
+					coloredGroupBox.BackColor = theme.BackColor;
+					coloredGroupBox.TitleColor = theme.ForeColor;
+					coloredGroupBox.BorderColor = theme.SplitterColor;
+					break;
 			}
 			control.ForeColor = theme.ForeColor;
 			foreach (Control control1 in control.Controls)
