@@ -78,7 +78,7 @@ namespace BerichtManager
 			info = new DirectoryInfo(configHandler.ReportPath());
 			ActivePath = configHandler.ReportPath();
 			UpdateTree();
-			if (configHandler.LoadActive() == "")
+			if (configHandler.LastCreated() == "")
 			{
 				miEditLatest.Enabled = false;
 			}
@@ -244,10 +244,10 @@ namespace BerichtManager
 		private void SetFontInDoc(Word.Document doc, Word.Application app)
 		{
 			doc.Content.Select();
-			if (app.Selection.Font.Name != configHandler.LoadFont())
+			if (app.Selection.Font.Name != configHandler.EditorFont())
 			{
-				app.Selection.Font.Name = configHandler.LoadFont();
-				MessageBox.Show("Changed report Font to: " + configHandler.LoadFont(), "Font changed!");
+				app.Selection.Font.Name = configHandler.EditorFont();
+				MessageBox.Show("Changed report Font to: " + configHandler.EditorFont(), "Font changed!");
 			}
 			try
 			{
@@ -275,7 +275,7 @@ namespace BerichtManager
 			Word.Document ldoc = null;
 			if (!File.Exists(templatePath))
 			{
-				MessageBox.Show(configHandler.LoadPath() + " was not found was it moved or deleted?");
+				MessageBox.Show(configHandler.TemplatePath() + " was not found was it moved or deleted?");
 				return;
 			}
 			try
@@ -295,17 +295,17 @@ namespace BerichtManager
 				//Fill name
 				IEnumerator enumerator = ldoc.FormFields.GetEnumerator();
 				enumerator.MoveNext();
-				if (!string.IsNullOrEmpty(configHandler.LoadName()))
+				if (!string.IsNullOrEmpty(configHandler.ReportUserName()))
 				{
-					((Word.FormField)enumerator.Current).Result = configHandler.LoadName();
+					((Word.FormField)enumerator.Current).Result = configHandler.ReportUserName();
 				}
 				else
 				{
 					form = new EditForm("Enter your name", activeTheme, text: "Name Vorname");
 					if (form.ShowDialog() == DialogResult.OK)
 					{
-						configHandler.SaveName(form.Result);
-						((Word.FormField)enumerator.Current).Result = configHandler.LoadName();
+						configHandler.ReportUserName(form.Result);
+						((Word.FormField)enumerator.Current).Result = configHandler.ReportUserName();
 					}
 					else
 					{
@@ -316,7 +316,7 @@ namespace BerichtManager
 				enumerator.MoveNext();
 
 				//Enter report nr.
-				if (int.TryParse(configHandler.LoadNumber(), out int number))
+				if (int.TryParse(configHandler.ReportNumber(), out int number))
 				{
 					FillText(app, ((Word.FormField)enumerator.Current), (number + reportDifference).ToString());
 				}
@@ -453,14 +453,14 @@ namespace BerichtManager
 
 
 				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
-				string name = configHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, configHandler.LoadNumber());
+				string name = configHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, configHandler.ReportNumber());
 				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
 				SetFontInDoc(ldoc, app);
 				ldoc.SaveAs2(FileName: path);
 
-				if (int.TryParse(configHandler.LoadNumber(), out int i)) configHandler.EditNumber("" + (i + 1));
-				configHandler.SaveLastReportKW(culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-				configHandler.EditActive(path);
+				if (int.TryParse(configHandler.ReportNumber(), out int i)) configHandler.ReportNumber("" + (i + 1));
+				configHandler.LastReportKW(culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+				configHandler.LastCreated(path);
 				configHandler.SaveConfig();
 				miEditLatest.Enabled = true;
 				MessageBox.Show("Created Document at: " + path);
@@ -525,15 +525,15 @@ namespace BerichtManager
 			DateTime date1 = new DateTime(DateTime.Today.Year, 12, 31);
 
 			int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-			int reportNr = configHandler.LoadLastReportKW();
+			int reportNr = configHandler.LastReportKW();
 
-			if (configHandler.LoadLastReportKW() < weekOfYear)
+			if (configHandler.LastReportKW() < weekOfYear)
 			{
 				//Missing reports in current year
 				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					CreateDocument(configHandler.LoadPath(), today.AddDays(i * 7), wordApp, vacation: vacation);
+					CreateDocument(configHandler.TemplatePath(), today.AddDays(i * 7), wordApp, vacation: vacation);
 				}
 			}
 			else
@@ -551,7 +551,7 @@ namespace BerichtManager
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					CreateDocument(configHandler.LoadPath(), today.AddDays(i * 7), wordApp, vacation: vacation);
+					CreateDocument(configHandler.TemplatePath(), today.AddDays(i * 7), wordApp, vacation: vacation);
 				}
 			}
 		}
@@ -573,7 +573,7 @@ namespace BerichtManager
 				return;
 			}
 			//Check if a report was created
-			if (configHandler.LoadLastReportKW() > 0)
+			if (configHandler.LastReportKW() > 0)
 			{
 				//Check if report for last week was created
 				if (getDistanceToToday() > 1)
@@ -592,7 +592,7 @@ namespace BerichtManager
 				}
 			}
 
-			CreateDocument(configHandler.LoadPath(), baseDate: DateTime.Today, wordApp, isSingle: true);
+			CreateDocument(configHandler.TemplatePath(), baseDate: DateTime.Today, wordApp, isSingle: true);
 		}
 
 		/// <summary>
@@ -601,7 +601,7 @@ namespace BerichtManager
 		/// <returns>The number of weeks since last report creation</returns>
 		private int getDistanceToToday()
 		{
-			int lastReportKW = configHandler.LoadLastReportKW();
+			int lastReportKW = configHandler.LastReportKW();
 			int todaysWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			//Both weeks are in the same year
 			if (lastReportKW <= todaysWeek)
@@ -629,9 +629,9 @@ namespace BerichtManager
 				return;
 			SaveOrExit();
 			if (configHandler.LegacyEdit())
-				Edit(configHandler.LoadActive());
+				Edit(configHandler.LastCreated());
 			else
-				EditInTb(configHandler.LoadActive());
+				EditInTb(configHandler.LastCreated());
 		}
 
 		private void btPrint_Click(object sender, EventArgs e)
@@ -694,11 +694,11 @@ namespace BerichtManager
 					{
 						foreach (string key in unPrintedFiles.Keys)
 						{
-							if (unPrintedFiles[key].Contains(configHandler.LoadActive()))
+							if (unPrintedFiles[key].Contains(configHandler.LastCreated()))
 							{
-								if (MessageBox.Show("Do you want to also print the last created report?\n(" + configHandler.LoadActive() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
+								if (MessageBox.Show("Do you want to also print the last created report?\n(" + configHandler.LastCreated() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
 								{
-									unPrintedFiles[key].Remove(configHandler.LoadActive());
+									unPrintedFiles[key].Remove(configHandler.LastCreated());
 								}
 							}
 						}
@@ -1067,14 +1067,14 @@ namespace BerichtManager
 			}
 			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
-			if (path == configHandler.LoadActive())
+			if (path == configHandler.LastCreated())
 			{
-				if (configHandler.LoadLastReportKW() == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
+				if (configHandler.LastReportKW() == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
 				{
-					if (int.TryParse(configHandler.LoadNumber(), out int number))
+					if (int.TryParse(configHandler.ReportNumber(), out int number))
 					{
-						configHandler.EditNumber("" + (number - 1));
-						configHandler.SaveLastReportKW(culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1);
+						configHandler.ReportNumber("" + (number - 1));
+						configHandler.LastReportKW(culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1);
 						configHandler.SaveConfig();
 					}
 					else

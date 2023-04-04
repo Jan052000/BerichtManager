@@ -22,8 +22,8 @@ namespace BerichtManager.AddForm
 			if(configHandler == null)
 				configHandler = new ConfigHandler(null);
 			//Get school and server
-			schoolName = configHandler.GetSchoolName();
-			server = configHandler.GetWebUntisServer();
+			schoolName = configHandler.SchoolName();
+			server = configHandler.WebUntisServer();
 		}
 
 		public List<string> GetClassesFromWebUntis()
@@ -41,7 +41,7 @@ namespace BerichtManager.AddForm
 			Config.User user = null;
 			if (configHandler.StayLoggedIn())
 			{
-				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
+				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.WebUntisUsername() + "&j_password=" + configHandler.WebUntisPassword()).Result;
 			}
 			else
 			{
@@ -134,21 +134,21 @@ namespace BerichtManager.AddForm
 					{
 						if (cancelled[element.id])
 						{
-							if (!classes.Contains((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "\n")))
+							if (!classes.Contains((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "\n")))
 							{
-								classes.Add((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "Ausgefallen\n"));
+								classes.Add((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "Ausgefallen\n"));
 							}
 						}
 						else
 						{
-							if (classes.Contains((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "Ausgefallen\n")))
+							if (classes.Contains((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "Ausgefallen\n")))
 							{
-								classes.Remove((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "Ausgefallen\n"));
-								classes.Add((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "\n"));
+								classes.Remove((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "Ausgefallen\n"));
+								classes.Add((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "\n"));
 							}
 							else
 							{
-								classes.Add((string)(this.configHandler.GetCustomPrefix() + element.name + "\n\t" + this.configHandler.GetCustomPrefix() + "\n"));
+								classes.Add((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "\n"));
 							}
 						}
 					}
@@ -213,7 +213,7 @@ namespace BerichtManager.AddForm
 			HttpResponseMessage responseMessage;
 			if (configHandler.StayLoggedIn())
 			{
-				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
+				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.WebUntisUsername() + "&j_password=" + configHandler.WebUntisPassword()).Result;
 			}
 			else
 			{

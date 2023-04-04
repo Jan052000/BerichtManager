@@ -50,7 +50,7 @@ namespace BerichtManager.Config
 					OpenFileDialog dialog = new OpenFileDialog();
 					dialog.Filter = "Word Templates (*.dotx)|*.dotx";
 					dialog.ShowDialog();
-					Save(Path.GetFullPath(dialog.FileName));
+					TemplatePath(Path.GetFullPath(dialog.FileName));
 					MessageBox.Show("Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
 					isComplete = false;
 				}
@@ -65,7 +65,7 @@ namespace BerichtManager.Config
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
 					{
-						EditNumber(form.Result);
+						ReportNumber(form.Result);
 					}
 					isComplete = false;
 				}
@@ -221,34 +221,34 @@ namespace BerichtManager.Config
 		/// Loads the path to the template
 		/// </summary>
 		/// <returns>The path to the template</returns>
-		public string LoadPath()
+		public string TemplatePath()
 		{
 			return GenericGet<string>("TemplatePath");
-		}
-
-		/// <summary>
-		/// Loads the number of the next report
-		/// </summary>
-		/// <returns>The number of the next report</returns>
-		public string LoadNumber()
-		{
-			return GenericGet<string>("ReportNR");
 		}
 
 		/// <summary>
 		/// Sets the template path
 		/// </summary>
 		/// <param name="templateFilePath">Path to template</param>
-		public void Save(string templateFilePath)
+		public void TemplatePath(string templateFilePath)
 		{
 			GenericSet("TemplatePath", templateFilePath);
+		}
+
+		/// <summary>
+		/// Loads the number of the next report
+		/// </summary>
+		/// <returns>The number of the next report</returns>
+		public string ReportNumber()
+		{
+			return GenericGet<string>("ReportNR");
 		}
 
 		/// <summary>
 		/// Sets the number of the next report
 		/// </summary>
 		/// <param name="number">Number of the next report</param>
-		public void EditNumber(string number)
+		public void ReportNumber(string number)
 		{
 			GenericSet("ReportNR", number);
 		}
@@ -257,7 +257,7 @@ namespace BerichtManager.Config
 		/// Sets the last active document path
 		/// </summary>
 		/// <param name="activeDocument">Path to last created document</param>
-		public void EditActive(string activeDocument)
+		public void LastCreated(string activeDocument)
 		{
 			GenericSet("Active", activeDocument);
 		}
@@ -266,7 +266,7 @@ namespace BerichtManager.Config
 		/// Loads the last active document path
 		/// </summary>
 		/// <returns>Path to last created document</returns>
-		public string LoadActive()
+		public string LastCreated()
 		{
 			return GenericGet<string>("Active");
 		}
@@ -275,7 +275,7 @@ namespace BerichtManager.Config
 		/// Loads the username for webuntis
 		/// </summary>
 		/// <returns>Username</returns>
-		public string LoadUsername()
+		public string WebUntisUsername()
 		{
 			return GenericGet<string>("Username");
 		}
@@ -284,7 +284,7 @@ namespace BerichtManager.Config
 		/// Sets the username for webuntis
 		/// </summary>
 		/// <param name="username">Username</param>
-		public void SaveUsername(string username)
+		public void WebUntisUsername(string username)
 		{
 			GenericSet("Username", username);
 		}
@@ -293,7 +293,7 @@ namespace BerichtManager.Config
 		/// Loads the password for Webuntis
 		/// </summary>
 		/// <returns>Password</returns>
-		public string LoadPassword()
+		public string WebUntisPassword()
 		{
 			return UserHandler.DecodePassword(GenericGet<string>("Password"));
 		}
@@ -302,7 +302,7 @@ namespace BerichtManager.Config
 		/// Sets the password for Webuntis
 		/// </summary>
 		/// <param name="password">Password</param>
-		public void SavePassword(string password)
+		public void WebUntisPassword(string password)
 		{
 			GenericSet("Password", UserHandler.EncodePassword(password));
 		}
@@ -319,13 +319,13 @@ namespace BerichtManager.Config
 			{
 				if (form.KeepLoggedIn)
 				{
-					SaveUsername(form.Username);
-					SavePassword(form.Password);
+					WebUntisUsername(form.Username);
+					WebUntisPassword(form.Password);
 				}
 				else
 				{
-					SaveUsername("");
-					SavePassword("");
+					WebUntisUsername("");
+					WebUntisPassword("");
 				}
 				StayLoggedIn(form.KeepLoggedIn);
 				SaveConfig();
@@ -338,7 +338,7 @@ namespace BerichtManager.Config
 		/// Loads name to be used in report
 		/// </summary>
 		/// <returns>Name to be used in report</returns>
-		public string LoadName()
+		public string ReportUserName()
 		{
 			return GenericGet<string>("Name");
 		}
@@ -347,7 +347,7 @@ namespace BerichtManager.Config
 		/// Sets name to be used in report
 		/// </summary>
 		/// <param name="name">Name to be used in report</param>
-		public void SaveName(string name)
+		public void ReportUserName(string name)
 		{
 			GenericSet("Name", name);
 		}
@@ -356,7 +356,7 @@ namespace BerichtManager.Config
 		/// Loads font to be used in editor and report
 		/// </summary>
 		/// <returns>Font to be used in editor and report</returns>
-		public string LoadFont()
+		public string EditorFont()
 		{
 			return GenericGet<string>("Font");
 		}
@@ -365,7 +365,7 @@ namespace BerichtManager.Config
 		/// Sets font to be used in editor and report
 		/// </summary>
 		/// <param name="fontName">Font to be used in editor and report</param>
-		public void SaveFont(string fontName)
+		public void EditorFont(string fontName)
 		{
 			GenericSet("Font", fontName);
 		}
@@ -374,7 +374,7 @@ namespace BerichtManager.Config
 		/// Loads the font size
 		/// </summary>
 		/// <returns>Font size</returns>
-		public float LoadEditorFontSize()
+		public float EditorFontSize()
 		{
 			return GenericGet<float>("EditorFontSize");
 		}
@@ -383,7 +383,7 @@ namespace BerichtManager.Config
 		/// Sets the font size
 		/// </summary>
 		/// <param name="size">Font size</param>
-		public void SaveEditorFontSize(float size)
+		public void EditorFontSize(float size)
 		{
 			GenericSet("EditorFontSize", size);
 		}
@@ -392,7 +392,7 @@ namespace BerichtManager.Config
 		/// Loads the weeknumber of the last report that was created
 		/// </summary>
 		/// <returns>The weeknumber of the last report that was created</returns>
-		public int LoadLastReportKW()
+		public int LastReportKW()
 		{
 			return GenericGet<int>("LastReportWeekOfYear");
 		}
@@ -401,7 +401,7 @@ namespace BerichtManager.Config
 		/// Sets the weeknumber of the last report that was created
 		/// </summary>
 		/// <param name="kw">Weeknumber of the last report that was created</param>
-		public void SaveLastReportKW(int kw)
+		public void LastReportKW(int kw)
 		{
 			GenericSet("LastReportWeekOfYear", kw);
 		}
@@ -437,7 +437,7 @@ namespace BerichtManager.Config
 		/// Sets wether or not to use the custom prefix for listing classes
 		/// </summary>
 		/// <param name="useUserPrefix">the custom prefix should be used</param>
-		public void SetUseUserPrefix(bool useUserPrefix)
+		public void UseUserPrefix(bool useUserPrefix)
 		{
 			GenericSet<bool>("UseCustomPrefix", useUserPrefix);
 		}
@@ -446,7 +446,7 @@ namespace BerichtManager.Config
 		/// Gets the custom prefix from the configObject
 		/// </summary>
 		/// <returns>custom prefix</returns>
-		public string GetCustomPrefix()
+		public string CustomPrefix()
 		{
 			return GenericGet<string>("CustomPrefix");
 		}
@@ -455,7 +455,7 @@ namespace BerichtManager.Config
 		/// Sets the custom prefix
 		/// </summary>
 		/// <param name="customPrefix">customPrefix to use</param>
-		public void SetCustomPrefix(string customPrefix)
+		public void CustomPrefix(string customPrefix)
 		{
 			GenericSet<string>("CustomPrefix", customPrefix);
 		}
@@ -464,7 +464,7 @@ namespace BerichtManager.Config
 		/// Gets the WebUntis server from config
 		/// </summary>
 		/// <returns>WebUntis server to query</returns>
-		public string GetWebUntisServer()
+		public string WebUntisServer()
 		{
 			return GenericGet<string>("WebUntisServer");
 		}
@@ -473,7 +473,7 @@ namespace BerichtManager.Config
 		/// Sets WebUntis server to query
 		/// </summary>
 		/// <param name="server">server to query</param>
-		public void SetWebUntisServer(string server)
+		public void WebUntisServer(string server)
 		{
 			GenericSet<string>("WebUntisServer", server);
 		}
@@ -482,7 +482,7 @@ namespace BerichtManager.Config
 		/// Gets school name from config
 		/// </summary>
 		/// <returns>school name to use</returns>
-		public string GetSchoolName()
+		public string SchoolName()
 		{
 			return GenericGet<string>("SchoolName");
 		}
@@ -491,7 +491,7 @@ namespace BerichtManager.Config
 		/// Sets the school name to use
 		/// </summary>
 		/// <param name="schoolName">school name to use</param>
-		public void SetSchoolName(string schoolName)
+		public void SchoolName(string schoolName)
 		{
 			GenericSet<string>("SchoolName", schoolName);
 		}
@@ -509,7 +509,7 @@ namespace BerichtManager.Config
 		/// Sets if the classes should be queried from WebUntis
 		/// </summary>
 		/// <param name="useWebUntis">classes should be queried</param>
-		public void SetUseWebUntis(bool useWebUntis)
+		public void UseWebUntis(bool useWebUntis)
 		{
 			GenericSet<bool>("UseWebUntis", useWebUntis);
 		}

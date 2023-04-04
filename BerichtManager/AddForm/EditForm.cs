@@ -24,12 +24,12 @@ namespace BerichtManager.AddForm
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
 			//rtInput.Multiline = true;
-			nudFontSize.Value = (decimal)handler.LoadEditorFontSize();
+			nudFontSize.Value = (decimal)handler.EditorFontSize();
 			foreach (FontFamily family in (new InstalledFontCollection()).Families)
 			{
 				cbFontFamily.Items.Add(family.Name);
 			}
-			cbFontFamily.Text = handler.LoadFont();
+			cbFontFamily.Text = handler.EditorFont();
 			cbFontFamily.Enabled = false;
 
 			rtInput.Font = new Font(cbFontFamily.Text, (float)nudFontSize.Value);
@@ -51,13 +51,13 @@ namespace BerichtManager.AddForm
 
 		private void SaveSize() 
 		{
-			if (((float)nudFontSize.Value) != handler.LoadEditorFontSize()) 
+			if (((float)nudFontSize.Value) != handler.EditorFontSize()) 
 			{
 				if (MessageBox.Show("Do you want to save the font size of the editor?", "Save font size", MessageBoxButtons.YesNo) == DialogResult.Yes) 
 				{
 					if (float.TryParse(nudFontSize.Text , out float size)) 
 					{
-						handler.SaveEditorFontSize(size);
+						handler.EditorFontSize(size);
 					}
 				}
 			}
@@ -65,11 +65,11 @@ namespace BerichtManager.AddForm
 
 		private void ChangeFont() 
 		{
-			if (rtInput.Font.FontFamily.Name != handler.LoadFont())
+			if (rtInput.Font.FontFamily.Name != handler.EditorFont())
 			{
 				if (MessageBox.Show("Do you want to change the font of following reports to " + cbFontFamily.Text + "?\n(Standard: \"Arial\")", "Change Font?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-					handler.SaveFont(rtInput.Font.FontFamily.Name);
+					handler.EditorFont(rtInput.Font.FontFamily.Name);
 				}
 			}
 			SaveSize();

@@ -52,9 +52,9 @@ namespace BerichtManager.OptionsMenu
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
 			cbShouldUseUntis.Checked = configHandler.UseWebUntis();
 			cbEndOfWeek.Checked = configHandler.EndWeekOnFriday();
-			tbCustomPrefix.Text = configHandler.GetCustomPrefix();
-			tbServer.Text = configHandler.GetWebUntisServer();
-			tbSchool.Text = configHandler.GetSchoolName();
+			tbCustomPrefix.Text = configHandler.CustomPrefix();
+			tbServer.Text = configHandler.WebUntisServer();
+			tbSchool.Text = configHandler.SchoolName();
 			cbLegacyEdit.Checked = configHandler.LegacyEdit();
 
 			themeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
@@ -62,9 +62,9 @@ namespace BerichtManager.OptionsMenu
 			coTheme.SelectedIndex = selectedIndex;
 			ThemeName = coTheme.Text;
 
-			tbTemplate.Text = configHandler.LoadPath();
-			tbName.Text = configHandler.LoadName();
-			if (int.TryParse(configHandler.LoadNumber(), out int value))
+			tbTemplate.Text = configHandler.TemplatePath();
+			tbName.Text = configHandler.ReportUserName();
+			if (int.TryParse(configHandler.ReportNumber(), out int value))
 				nudNumber.Value = value;
 			nudTabStops.Value = configHandler.TabStops();
 			tbFolder.Text = configHandler.ReportPath();
@@ -105,14 +105,14 @@ namespace BerichtManager.OptionsMenu
 			{
 				if (MessageBox.Show("Save changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-					configHandler.SetUseUserPrefix(cbUseCustomPrefix.Checked);
+					configHandler.UseUserPrefix(cbUseCustomPrefix.Checked);
 					if (cbUseCustomPrefix.Checked)
-						configHandler.SetCustomPrefix(tbCustomPrefix.Text);
+						configHandler.CustomPrefix(tbCustomPrefix.Text);
 					if (cbShouldUseUntis.Checked && (tbServer.Text == "" || tbSchool.Text == ""))
 					{
 						if (MessageBox.Show("Either Webuntis server or school name is empty if you continue to save these changes, \nUse Web Untis will be unchecked and automatic query of timetable will not work", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 						{
-							configHandler.SetUseWebUntis(false);
+							configHandler.UseWebUntis(false);
 						}
 						else
 						{
@@ -121,15 +121,15 @@ namespace BerichtManager.OptionsMenu
 					}
 					else
 					{
-						configHandler.SetUseWebUntis(false);
-						configHandler.SetWebUntisServer(tbServer.Text);
-						configHandler.SetSchoolName(tbSchool.Text);
+						configHandler.UseWebUntis(false);
+						configHandler.WebUntisServer(tbServer.Text);
+						configHandler.SchoolName(tbSchool.Text);
 					}
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
-					configHandler.SaveName(tbName.Text);
-					configHandler.EditNumber("" + nudNumber.Value);
-					configHandler.Save(tbTemplate.Text);
+					configHandler.ReportUserName(tbName.Text);
+					configHandler.ReportNumber("" + nudNumber.Value);
+					configHandler.TemplatePath(tbTemplate.Text);
 					configHandler.ActiveTheme(coTheme.Text);
 					if (ThemeName != (string)coTheme.SelectedValue)
 					{
@@ -180,20 +180,20 @@ namespace BerichtManager.OptionsMenu
 			{
 				if (isDirty)
 				{
-					configHandler.SetUseUserPrefix(cbUseCustomPrefix.Checked);
+					configHandler.UseUserPrefix(cbUseCustomPrefix.Checked);
 					if (cbUseCustomPrefix.Checked)
-						configHandler.SetCustomPrefix(tbCustomPrefix.Text);
+						configHandler.CustomPrefix(tbCustomPrefix.Text);
 					if (cbShouldUseUntis.Checked)
 					{
-						configHandler.SetWebUntisServer(tbServer.Text);
-						configHandler.SetSchoolName(tbSchool.Text);
+						configHandler.WebUntisServer(tbServer.Text);
+						configHandler.SchoolName(tbSchool.Text);
 					}
-					configHandler.SetUseWebUntis(cbShouldUseUntis.Checked);
+					configHandler.UseWebUntis(cbShouldUseUntis.Checked);
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
-					configHandler.SaveName(tbName.Text);
-					configHandler.EditNumber("" + nudNumber.Value);
-					configHandler.Save(tbTemplate.Text);
+					configHandler.ReportUserName(tbName.Text);
+					configHandler.ReportNumber("" + nudNumber.Value);
+					configHandler.TemplatePath(tbTemplate.Text);
 					configHandler.ActiveTheme(coTheme.Text);
 					if (ThemeName != coTheme.Text)
 					{
