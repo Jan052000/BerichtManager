@@ -59,15 +59,23 @@ namespace BerichtManager.OptionsMenu
 			this.tbNamingPattern = new System.Windows.Forms.TextBox();
 			this.laNamingPattern = new System.Windows.Forms.Label();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.gbWebUntis = new System.Windows.Forms.GroupBox();
+			this.gbPrefix = new System.Windows.Forms.GroupBox();
+			this.gbConfig = new System.Windows.Forms.GroupBox();
+			this.gbManagerOptions = new System.Windows.Forms.GroupBox();
 			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
+			this.gbWebUntis.SuspendLayout();
+			this.gbPrefix.SuspendLayout();
+			this.gbConfig.SuspendLayout();
+			this.gbManagerOptions.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(713, 415);
+			this.btClose.Location = new System.Drawing.Point(713, 424);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 0;
@@ -78,7 +86,7 @@ namespace BerichtManager.OptionsMenu
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(632, 415);
+			this.btSave.Location = new System.Drawing.Point(632, 424);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
 			this.btSave.TabIndex = 1;
@@ -89,7 +97,7 @@ namespace BerichtManager.OptionsMenu
 			// cbUseCustomPrefix
 			// 
 			this.cbUseCustomPrefix.AutoSize = true;
-			this.cbUseCustomPrefix.Location = new System.Drawing.Point(12, 12);
+			this.cbUseCustomPrefix.Location = new System.Drawing.Point(6, 23);
 			this.cbUseCustomPrefix.Name = "cbUseCustomPrefix";
 			this.cbUseCustomPrefix.Size = new System.Drawing.Size(183, 17);
 			this.cbUseCustomPrefix.TabIndex = 2;
@@ -103,9 +111,9 @@ namespace BerichtManager.OptionsMenu
 			this.tbCustomPrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbCustomPrefix.Enabled = false;
-			this.tbCustomPrefix.Location = new System.Drawing.Point(12, 35);
+			this.tbCustomPrefix.Location = new System.Drawing.Point(6, 46);
 			this.tbCustomPrefix.Name = "tbCustomPrefix";
-			this.tbCustomPrefix.Size = new System.Drawing.Size(776, 20);
+			this.tbCustomPrefix.Size = new System.Drawing.Size(788, 20);
 			this.tbCustomPrefix.TabIndex = 3;
 			this.toolTip1.SetToolTip(this.tbCustomPrefix, "Prefix to be used in school field");
 			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
@@ -113,7 +121,7 @@ namespace BerichtManager.OptionsMenu
 			// laServer
 			// 
 			this.laServer.AutoSize = true;
-			this.laServer.Location = new System.Drawing.Point(12, 87);
+			this.laServer.Location = new System.Drawing.Point(15, 45);
 			this.laServer.Name = "laServer";
 			this.laServer.Size = new System.Drawing.Size(86, 13);
 			this.laServer.TabIndex = 4;
@@ -123,9 +131,9 @@ namespace BerichtManager.OptionsMenu
 			// 
 			this.tbServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbServer.Location = new System.Drawing.Point(104, 84);
+			this.tbServer.Location = new System.Drawing.Point(107, 42);
 			this.tbServer.Name = "tbServer";
-			this.tbServer.Size = new System.Drawing.Size(684, 20);
+			this.tbServer.Size = new System.Drawing.Size(687, 20);
 			this.tbServer.TabIndex = 5;
 			this.toolTip1.SetToolTip(this.tbServer, "Name of the WebUntis server of your school");
 			this.tbServer.TextChanged += new System.EventHandler(this.MarkAsDirty);
@@ -134,9 +142,9 @@ namespace BerichtManager.OptionsMenu
 			// 
 			this.tbSchool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSchool.Location = new System.Drawing.Point(104, 110);
+			this.tbSchool.Location = new System.Drawing.Point(107, 68);
 			this.tbSchool.Name = "tbSchool";
-			this.tbSchool.Size = new System.Drawing.Size(684, 20);
+			this.tbSchool.Size = new System.Drawing.Size(687, 20);
 			this.tbSchool.TabIndex = 6;
 			this.toolTip1.SetToolTip(this.tbSchool, "WebUntis name of your school");
 			this.tbSchool.TextChanged += new System.EventHandler(this.MarkAsDirty);
@@ -144,7 +152,7 @@ namespace BerichtManager.OptionsMenu
 			// laSchool
 			// 
 			this.laSchool.AutoSize = true;
-			this.laSchool.Location = new System.Drawing.Point(29, 113);
+			this.laSchool.Location = new System.Drawing.Point(32, 71);
 			this.laSchool.Name = "laSchool";
 			this.laSchool.Size = new System.Drawing.Size(69, 13);
 			this.laSchool.TabIndex = 7;
@@ -153,7 +161,7 @@ namespace BerichtManager.OptionsMenu
 			// cbShouldUseUntis
 			// 
 			this.cbShouldUseUntis.AutoSize = true;
-			this.cbShouldUseUntis.Location = new System.Drawing.Point(12, 61);
+			this.cbShouldUseUntis.Location = new System.Drawing.Point(6, 19);
 			this.cbShouldUseUntis.Name = "cbShouldUseUntis";
 			this.cbShouldUseUntis.Size = new System.Drawing.Size(95, 17);
 			this.cbShouldUseUntis.TabIndex = 8;
@@ -165,7 +173,7 @@ namespace BerichtManager.OptionsMenu
 			// cbEndOfWeek
 			// 
 			this.cbEndOfWeek.AutoSize = true;
-			this.cbEndOfWeek.Location = new System.Drawing.Point(12, 136);
+			this.cbEndOfWeek.Location = new System.Drawing.Point(212, 105);
 			this.cbEndOfWeek.Name = "cbEndOfWeek";
 			this.cbEndOfWeek.Size = new System.Drawing.Size(117, 17);
 			this.cbEndOfWeek.TabIndex = 9;
@@ -177,7 +185,7 @@ namespace BerichtManager.OptionsMenu
 			// cbLegacyEdit
 			// 
 			this.cbLegacyEdit.AutoSize = true;
-			this.cbLegacyEdit.Location = new System.Drawing.Point(12, 159);
+			this.cbLegacyEdit.Location = new System.Drawing.Point(245, 21);
 			this.cbLegacyEdit.Name = "cbLegacyEdit";
 			this.cbLegacyEdit.Size = new System.Drawing.Size(99, 17);
 			this.cbLegacyEdit.TabIndex = 10;
@@ -188,7 +196,7 @@ namespace BerichtManager.OptionsMenu
 			// 
 			// btLogin
 			// 
-			this.btLogin.Location = new System.Drawing.Point(113, 61);
+			this.btLogin.Location = new System.Drawing.Point(107, 19);
 			this.btLogin.Name = "btLogin";
 			this.btLogin.Size = new System.Drawing.Size(75, 21);
 			this.btLogin.TabIndex = 15;
@@ -200,7 +208,7 @@ namespace BerichtManager.OptionsMenu
 			// laTemplate
 			// 
 			this.laTemplate.AutoSize = true;
-			this.laTemplate.Location = new System.Drawing.Point(47, 212);
+			this.laTemplate.Location = new System.Drawing.Point(29, 54);
 			this.laTemplate.Name = "laTemplate";
 			this.laTemplate.Size = new System.Drawing.Size(51, 13);
 			this.laTemplate.TabIndex = 16;
@@ -210,10 +218,10 @@ namespace BerichtManager.OptionsMenu
 			// 
 			this.tbTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbTemplate.Location = new System.Drawing.Point(104, 209);
+			this.tbTemplate.Location = new System.Drawing.Point(86, 51);
 			this.tbTemplate.Name = "tbTemplate";
 			this.tbTemplate.ReadOnly = true;
-			this.tbTemplate.Size = new System.Drawing.Size(684, 20);
+			this.tbTemplate.Size = new System.Drawing.Size(708, 20);
 			this.tbTemplate.TabIndex = 17;
 			this.toolTip1.SetToolTip(this.tbTemplate, "Path to word template");
 			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
@@ -221,7 +229,7 @@ namespace BerichtManager.OptionsMenu
 			// laName
 			// 
 			this.laName.AutoSize = true;
-			this.laName.Location = new System.Drawing.Point(63, 240);
+			this.laName.Location = new System.Drawing.Point(45, 26);
 			this.laName.Name = "laName";
 			this.laName.Size = new System.Drawing.Size(35, 13);
 			this.laName.TabIndex = 18;
@@ -231,9 +239,9 @@ namespace BerichtManager.OptionsMenu
 			// 
 			this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbName.Location = new System.Drawing.Point(104, 237);
+			this.tbName.Location = new System.Drawing.Point(86, 23);
 			this.tbName.Name = "tbName";
-			this.tbName.Size = new System.Drawing.Size(684, 20);
+			this.tbName.Size = new System.Drawing.Size(708, 20);
 			this.tbName.TabIndex = 19;
 			this.toolTip1.SetToolTip(this.tbName, "Your name (Last name, First name)");
 			this.tbName.TextChanged += new System.EventHandler(this.MarkAsDirty);
@@ -241,7 +249,7 @@ namespace BerichtManager.OptionsMenu
 			// laNumber
 			// 
 			this.laNumber.AutoSize = true;
-			this.laNumber.Location = new System.Drawing.Point(19, 265);
+			this.laNumber.Location = new System.Drawing.Point(1, 111);
 			this.laNumber.Name = "laNumber";
 			this.laNumber.Size = new System.Drawing.Size(79, 13);
 			this.laNumber.TabIndex = 20;
@@ -249,7 +257,7 @@ namespace BerichtManager.OptionsMenu
 			// 
 			// nudNumber
 			// 
-			this.nudNumber.Location = new System.Drawing.Point(104, 263);
+			this.nudNumber.Location = new System.Drawing.Point(86, 104);
 			this.nudNumber.Name = "nudNumber";
 			this.nudNumber.Size = new System.Drawing.Size(120, 20);
 			this.nudNumber.TabIndex = 21;
@@ -259,7 +267,7 @@ namespace BerichtManager.OptionsMenu
 			// laTheme
 			// 
 			this.laTheme.AutoSize = true;
-			this.laTheme.Location = new System.Drawing.Point(58, 185);
+			this.laTheme.Location = new System.Drawing.Point(40, 80);
 			this.laTheme.Name = "laTheme";
 			this.laTheme.Size = new System.Drawing.Size(40, 13);
 			this.laTheme.TabIndex = 22;
@@ -268,7 +276,7 @@ namespace BerichtManager.OptionsMenu
 			// btCreateTheme
 			// 
 			this.btCreateTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btCreateTheme.Location = new System.Drawing.Point(708, 182);
+			this.btCreateTheme.Location = new System.Drawing.Point(714, 77);
 			this.btCreateTheme.Name = "btCreateTheme";
 			this.btCreateTheme.Size = new System.Drawing.Size(80, 21);
 			this.btCreateTheme.TabIndex = 24;
@@ -280,7 +288,7 @@ namespace BerichtManager.OptionsMenu
 			// btEditTheme
 			// 
 			this.btEditTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btEditTheme.Location = new System.Drawing.Point(627, 182);
+			this.btEditTheme.Location = new System.Drawing.Point(633, 77);
 			this.btEditTheme.Name = "btEditTheme";
 			this.btEditTheme.Size = new System.Drawing.Size(75, 21);
 			this.btEditTheme.TabIndex = 25;
@@ -292,7 +300,7 @@ namespace BerichtManager.OptionsMenu
 			// laFolder
 			// 
 			this.laFolder.AutoSize = true;
-			this.laFolder.Location = new System.Drawing.Point(62, 292);
+			this.laFolder.Location = new System.Drawing.Point(40, 47);
 			this.laFolder.Name = "laFolder";
 			this.laFolder.Size = new System.Drawing.Size(36, 13);
 			this.laFolder.TabIndex = 26;
@@ -302,10 +310,10 @@ namespace BerichtManager.OptionsMenu
 			// 
 			this.tbFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbFolder.Location = new System.Drawing.Point(104, 289);
+			this.tbFolder.Location = new System.Drawing.Point(82, 44);
 			this.tbFolder.Name = "tbFolder";
 			this.tbFolder.ReadOnly = true;
-			this.tbFolder.Size = new System.Drawing.Size(684, 20);
+			this.tbFolder.Size = new System.Drawing.Size(712, 20);
 			this.tbFolder.TabIndex = 27;
 			this.toolTip1.SetToolTip(this.tbFolder, "Path to folder containing reports");
 			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
@@ -313,7 +321,7 @@ namespace BerichtManager.OptionsMenu
 			// laUpdate
 			// 
 			this.laUpdate.AutoSize = true;
-			this.laUpdate.Location = new System.Drawing.Point(32, 318);
+			this.laUpdate.Location = new System.Drawing.Point(10, 73);
 			this.laUpdate.Name = "laUpdate";
 			this.laUpdate.Size = new System.Drawing.Size(66, 13);
 			this.laUpdate.TabIndex = 28;
@@ -323,10 +331,10 @@ namespace BerichtManager.OptionsMenu
 			// 
 			this.tbUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbUpdate.Location = new System.Drawing.Point(104, 315);
+			this.tbUpdate.Location = new System.Drawing.Point(82, 70);
 			this.tbUpdate.Name = "tbUpdate";
 			this.tbUpdate.ReadOnly = true;
-			this.tbUpdate.Size = new System.Drawing.Size(684, 20);
+			this.tbUpdate.Size = new System.Drawing.Size(712, 20);
 			this.tbUpdate.TabIndex = 29;
 			this.toolTip1.SetToolTip(this.tbUpdate, "Path to check if an update is available");
 			this.tbUpdate.Click += new System.EventHandler(this.tbUpdate_Click);
@@ -334,7 +342,7 @@ namespace BerichtManager.OptionsMenu
 			// laTabStop
 			// 
 			this.laTabStop.AutoSize = true;
-			this.laTabStop.Location = new System.Drawing.Point(286, 265);
+			this.laTabStop.Location = new System.Drawing.Point(22, 22);
 			this.laTabStop.Name = "laTabStop";
 			this.laTabStop.Size = new System.Drawing.Size(54, 13);
 			this.laTabStop.TabIndex = 30;
@@ -342,7 +350,7 @@ namespace BerichtManager.OptionsMenu
 			// 
 			// nudTabStops
 			// 
-			this.nudTabStops.Location = new System.Drawing.Point(346, 263);
+			this.nudTabStops.Location = new System.Drawing.Point(82, 19);
 			this.nudTabStops.Name = "nudTabStops";
 			this.nudTabStops.Size = new System.Drawing.Size(120, 20);
 			this.nudTabStops.TabIndex = 31;
@@ -353,9 +361,9 @@ namespace BerichtManager.OptionsMenu
 			// 
 			this.tbNamingPattern.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbNamingPattern.Location = new System.Drawing.Point(104, 341);
+			this.tbNamingPattern.Location = new System.Drawing.Point(86, 130);
 			this.tbNamingPattern.Name = "tbNamingPattern";
-			this.tbNamingPattern.Size = new System.Drawing.Size(684, 20);
+			this.tbNamingPattern.Size = new System.Drawing.Size(708, 20);
 			this.tbNamingPattern.TabIndex = 32;
 			this.toolTip1.SetToolTip(this.tbNamingPattern, "~+KW+~ = Calendar week\r\n~+RN+~ = Report number");
 			this.tbNamingPattern.TextChanged += new System.EventHandler(this.MarkAsDirty);
@@ -363,7 +371,7 @@ namespace BerichtManager.OptionsMenu
 			// laNamingPattern
 			// 
 			this.laNamingPattern.AutoSize = true;
-			this.laNamingPattern.Location = new System.Drawing.Point(19, 344);
+			this.laNamingPattern.Location = new System.Drawing.Point(1, 133);
 			this.laNamingPattern.Name = "laNamingPattern";
 			this.laNamingPattern.Size = new System.Drawing.Size(79, 13);
 			this.laNamingPattern.TabIndex = 33;
@@ -376,6 +384,78 @@ namespace BerichtManager.OptionsMenu
 			this.toolTip1.OwnerDraw = true;
 			this.toolTip1.ReshowDelay = 100;
 			this.toolTip1.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this.toolTip1_Draw);
+			// 
+			// gbWebUntis
+			// 
+			this.gbWebUntis.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.gbWebUntis.Controls.Add(this.cbShouldUseUntis);
+			this.gbWebUntis.Controls.Add(this.btLogin);
+			this.gbWebUntis.Controls.Add(this.tbServer);
+			this.gbWebUntis.Controls.Add(this.laServer);
+			this.gbWebUntis.Controls.Add(this.tbSchool);
+			this.gbWebUntis.Controls.Add(this.laSchool);
+			this.gbWebUntis.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbWebUntis.Location = new System.Drawing.Point(0, 0);
+			this.gbWebUntis.Name = "gbWebUntis";
+			this.gbWebUntis.Size = new System.Drawing.Size(800, 94);
+			this.gbWebUntis.TabIndex = 34;
+			this.gbWebUntis.TabStop = false;
+			this.gbWebUntis.Text = "Webuntis";
+			// 
+			// gbPrefix
+			// 
+			this.gbPrefix.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.gbPrefix.Controls.Add(this.cbUseCustomPrefix);
+			this.gbPrefix.Controls.Add(this.tbCustomPrefix);
+			this.gbPrefix.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbPrefix.Location = new System.Drawing.Point(0, 94);
+			this.gbPrefix.Name = "gbPrefix";
+			this.gbPrefix.Size = new System.Drawing.Size(800, 72);
+			this.gbPrefix.TabIndex = 35;
+			this.gbPrefix.TabStop = false;
+			this.gbPrefix.Text = "Prefix";
+			// 
+			// gbConfig
+			// 
+			this.gbConfig.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.gbConfig.Controls.Add(this.cbEndOfWeek);
+			this.gbConfig.Controls.Add(this.tbName);
+			this.gbConfig.Controls.Add(this.laName);
+			this.gbConfig.Controls.Add(this.laNamingPattern);
+			this.gbConfig.Controls.Add(this.tbTemplate);
+			this.gbConfig.Controls.Add(this.tbNamingPattern);
+			this.gbConfig.Controls.Add(this.laTemplate);
+			this.gbConfig.Controls.Add(this.coTheme);
+			this.gbConfig.Controls.Add(this.laTheme);
+			this.gbConfig.Controls.Add(this.btEditTheme);
+			this.gbConfig.Controls.Add(this.btCreateTheme);
+			this.gbConfig.Controls.Add(this.nudNumber);
+			this.gbConfig.Controls.Add(this.laNumber);
+			this.gbConfig.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbConfig.Location = new System.Drawing.Point(0, 166);
+			this.gbConfig.Name = "gbConfig";
+			this.gbConfig.Size = new System.Drawing.Size(800, 156);
+			this.gbConfig.TabIndex = 36;
+			this.gbConfig.TabStop = false;
+			this.gbConfig.Text = "Report";
+			// 
+			// gbManagerOptions
+			// 
+			this.gbManagerOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.gbManagerOptions.Controls.Add(this.laTabStop);
+			this.gbManagerOptions.Controls.Add(this.nudTabStops);
+			this.gbManagerOptions.Controls.Add(this.cbLegacyEdit);
+			this.gbManagerOptions.Controls.Add(this.tbFolder);
+			this.gbManagerOptions.Controls.Add(this.laUpdate);
+			this.gbManagerOptions.Controls.Add(this.tbUpdate);
+			this.gbManagerOptions.Controls.Add(this.laFolder);
+			this.gbManagerOptions.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbManagerOptions.Location = new System.Drawing.Point(0, 322);
+			this.gbManagerOptions.Name = "gbManagerOptions";
+			this.gbManagerOptions.Size = new System.Drawing.Size(800, 96);
+			this.gbManagerOptions.TabIndex = 37;
+			this.gbManagerOptions.TabStop = false;
+			this.gbManagerOptions.Text = "Manager";
 			// 
 			// coTheme
 			// 
@@ -390,10 +470,10 @@ namespace BerichtManager.OptionsMenu
 			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.coTheme.FormattingEnabled = true;
 			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
-			this.coTheme.Location = new System.Drawing.Point(104, 182);
+			this.coTheme.Location = new System.Drawing.Point(86, 77);
 			this.coTheme.Name = "coTheme";
 			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.Size = new System.Drawing.Size(517, 21);
+			this.coTheme.Size = new System.Drawing.Size(541, 21);
 			this.coTheme.TabIndex = 23;
 			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
 			this.toolTip1.SetToolTip(this.coTheme, "Selected theme");
@@ -403,44 +483,27 @@ namespace BerichtManager.OptionsMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 450);
-			this.Controls.Add(this.laNamingPattern);
-			this.Controls.Add(this.tbNamingPattern);
-			this.Controls.Add(this.nudTabStops);
-			this.Controls.Add(this.laTabStop);
-			this.Controls.Add(this.tbUpdate);
-			this.Controls.Add(this.laUpdate);
-			this.Controls.Add(this.tbFolder);
-			this.Controls.Add(this.laFolder);
-			this.Controls.Add(this.btEditTheme);
-			this.Controls.Add(this.btCreateTheme);
-			this.Controls.Add(this.coTheme);
-			this.Controls.Add(this.laTheme);
-			this.Controls.Add(this.nudNumber);
-			this.Controls.Add(this.laNumber);
-			this.Controls.Add(this.tbName);
-			this.Controls.Add(this.laName);
-			this.Controls.Add(this.tbTemplate);
-			this.Controls.Add(this.laTemplate);
-			this.Controls.Add(this.btLogin);
-			this.Controls.Add(this.cbLegacyEdit);
-			this.Controls.Add(this.cbEndOfWeek);
-			this.Controls.Add(this.cbShouldUseUntis);
-			this.Controls.Add(this.laSchool);
-			this.Controls.Add(this.tbSchool);
-			this.Controls.Add(this.tbServer);
-			this.Controls.Add(this.laServer);
-			this.Controls.Add(this.tbCustomPrefix);
-			this.Controls.Add(this.cbUseCustomPrefix);
+			this.ClientSize = new System.Drawing.Size(800, 459);
+			this.Controls.Add(this.gbManagerOptions);
+			this.Controls.Add(this.gbConfig);
+			this.Controls.Add(this.gbPrefix);
+			this.Controls.Add(this.gbWebUntis);
 			this.Controls.Add(this.btSave);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(495, 364);
+			this.MinimumSize = new System.Drawing.Size(495, 498);
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).EndInit();
+			this.gbWebUntis.ResumeLayout(false);
+			this.gbWebUntis.PerformLayout();
+			this.gbPrefix.ResumeLayout(false);
+			this.gbPrefix.PerformLayout();
+			this.gbConfig.ResumeLayout(false);
+			this.gbConfig.PerformLayout();
+			this.gbManagerOptions.ResumeLayout(false);
+			this.gbManagerOptions.PerformLayout();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
@@ -477,5 +540,9 @@ namespace BerichtManager.OptionsMenu
 		private System.Windows.Forms.TextBox tbNamingPattern;
 		private System.Windows.Forms.Label laNamingPattern;
 		private System.Windows.Forms.ToolTip toolTip1;
+		private System.Windows.Forms.GroupBox gbWebUntis;
+		private System.Windows.Forms.GroupBox gbPrefix;
+		private System.Windows.Forms.GroupBox gbConfig;
+		private System.Windows.Forms.GroupBox gbManagerOptions;
 	}
 }
