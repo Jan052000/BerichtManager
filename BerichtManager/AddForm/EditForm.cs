@@ -58,6 +58,7 @@ namespace BerichtManager.AddForm
 					if (float.TryParse(nudFontSize.Text , out float size)) 
 					{
 						handler.EditorFontSize(size);
+						handler.SaveConfig();
 					}
 				}
 			}
@@ -70,6 +71,7 @@ namespace BerichtManager.AddForm
 				if (MessageBox.Show("Do you want to change the font of following reports to " + cbFontFamily.Text + "?\n(Standard: \"Arial\")", "Change Font?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					handler.EditorFont(rtInput.Font.FontFamily.Name);
+					handler.SaveConfig();
 				}
 			}
 			SaveSize();

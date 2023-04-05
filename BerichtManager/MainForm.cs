@@ -40,7 +40,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.10.4.1";
+		public const string VersionNumber = "1.10.4.2";
 
 		/// <summary>
 		/// String to be printed
@@ -305,6 +305,7 @@ namespace BerichtManager
 					if (form.ShowDialog() == DialogResult.OK)
 					{
 						configHandler.ReportUserName(form.Result);
+						configHandler.SaveConfig();
 						((Word.FormField)enumerator.Current).Result = configHandler.ReportUserName();
 					}
 					else
