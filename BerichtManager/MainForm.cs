@@ -559,12 +559,7 @@ namespace BerichtManager
 
 		private void btCreate_Click(object sender, EventArgs e)
 		{
-			//Check if word has started
-			if (!WordInitialized)
-			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-				return;
-			}
+			if (!HasWordStarted()) return;
 
 			//Check if report for this week was already created
 			int currentWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
@@ -619,12 +614,7 @@ namespace BerichtManager
 
 		private void btEdit_Click(object sender, EventArgs e)
 		{
-			//Check if word has started
-			if (!WordInitialized)
-			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-				return;
-			}
+			if (!HasWordStarted()) return;
 
 			if (DocIsSamePathAsSelected())
 				return;
@@ -637,12 +627,7 @@ namespace BerichtManager
 
 		private void btPrint_Click(object sender, EventArgs e)
 		{
-			//Check if word has started
-			if (!WordInitialized)
-			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-				return;
-			}
+			if (!HasWordStarted()) return;
 
 			if (tvReports.SelectedNode == null)
 			{
@@ -654,12 +639,7 @@ namespace BerichtManager
 
 		private void btPrintAll_Click(object sender, EventArgs e)
 		{
-			//Check if word has started
-			if (!WordInitialized)
-			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-				return;
-			}
+			if (!HasWordStarted()) return;
 
 			if (Directory.Exists(ActivePath))
 			{
@@ -1091,9 +1071,9 @@ namespace BerichtManager
 
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
-			//Check if word has started
+			if (!HasWordStarted()) return;
 			string path = Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath);
-			if (!WordInitialized && Path.GetExtension(path) == ".docx" && !Path.GetFileName(path).StartsWith("~$"))
+			if (Path.GetExtension(path) == ".docx" && !Path.GetFileName(path).StartsWith("~$"))
 			{
 				MessageBox.Show("Word is still starting, please try again", "Please try again");
 				return;
@@ -1132,12 +1112,7 @@ namespace BerichtManager
 
 		private void miEdit_Click(object sender, EventArgs e)
 		{
-			//Check if word has started
-			if (!WordInitialized)
-			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-				return;
-			}
+			if (!HasWordStarted()) return;
 
 			SaveOrExit();
 			Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
@@ -1145,24 +1120,14 @@ namespace BerichtManager
 
 		private void miPrint_Click(object sender, EventArgs e)
 		{
-			//Check if word has started
-			if (!WordInitialized)
-			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-				return;
-			}
+			if (!HasWordStarted()) return;
 
 			PrintDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 		}
 
 		private void miQuickEditWork_Click(object sender, EventArgs e)
 		{
-			//Check if word has started
-			if (!WordInitialized)
-			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-				return;
-			}
+			if (!HasWordStarted()) return;
 
 			SaveOrExit();
 			Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 6, quickEditTitle: "Edit work");
@@ -1170,12 +1135,7 @@ namespace BerichtManager
 
 		private void miQuickEditSchool_Click(object sender, EventArgs e)
 		{
-			//Check if word has started
-			if (!WordInitialized)
-			{
-				MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-				return;
-			}
+			if (!HasWordStarted()) return;
 
 			SaveOrExit();
 			Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 8, quickEditTitle: "Edit school");
@@ -1303,13 +1263,7 @@ namespace BerichtManager
 			switch (e.KeyCode)
 			{
 				case Keys.Enter:
-					//Check if word has started
-					if (!WordInitialized)
-					{
-						MessageBox.Show("Word is still starting, please try again shortly", "Please try again");
-						return;
-					}
-
+					if (!HasWordStarted()) return;
 					EditInTb(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
 					break;
 				case Keys.Delete:
@@ -1321,6 +1275,19 @@ namespace BerichtManager
 		private void MiRefresh_Click(object sender, EventArgs e)
 		{
 			UpdateTree();
+		}
+
+		/// <summary>
+		/// Checks if Word has started
+		/// </summary>
+		/// <returns>Has Word finished starting</returns>
+		private bool HasWordStarted()
+		{
+			if (!WordInitialized)
+			{
+				MessageBox.Show("Word is still starting, please try again", "Please try again");
+			}
+			return WordInitialized;
 		}
 	}
 }
