@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -97,15 +97,130 @@ namespace BerichtManager.OwnControls
 			}
 		}
 
+		/// <summary>
+		/// Color to be used when control is disabled
+		/// </summary>
+		private Color disabledColor = SystemColors.Control;
+		/// <summary>
+		/// Color to be used when control is disabled
+		/// </summary>
+		[Category("Colored Combo Box")]
+		public Color DisabledColor
+		{
+			get => disabledColor;
+			set
+			{
+				if (disabledColor != value)
+				{
+					disabledColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Color to be used for text when control is disabled
+		/// </summary>
+		private Color disabledTextColor = SystemColors.GrayText;
+		/// <summary>
+		/// Color to be used for text when control is disabled
+		/// </summary>
+		[Category("Colored Combo Box")]
+		public Color DisabledTextColor
+		{
+			get => disabledTextColor;
+			set
+			{
+				if (disabledTextColor != value)
+				{
+					disabledTextColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Color of displayed text
+		/// </summary>
+		private Color textColor = SystemColors.WindowText;
+		/// <summary>
+		/// Color of displayed text
+		/// </summary>
+		[Category("Colored Combo Box")]
+		public Color TextColor
+		{
+			get => textColor;
+			set
+			{
+				if (textColor != value)
+				{
+					textColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Color of hilighted item from drop down list
+		/// </summary>
+		private Color highlightColor = SystemColors.Highlight;
+		/// <summary>
+		/// Color of hilighted item from drop down list
+		/// </summary>
+		[Category("Colored Combo Box")]
+		public Color HighlightColor
+		{
+			get => highlightColor;
+			set
+			{
+				if (highlightColor != value)
+				{
+					highlightColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		private ComboBoxStyle dropDownStyle = ComboBoxStyle.DropDownList;
+		public new ComboBoxStyle DropDownStyle
+		{
+			get => dropDownStyle;
+			set
+			{
+				if (base.DropDownStyle != value)
+					base.DropDownStyle = value;
+				if (dropDownStyle != value)
+				{
+					dropDownStyle = value;
+					Invalidate();
+				}
+			}
+		}
+
+		private DrawMode drawMode = DrawMode.OwnerDrawFixed;
+		public new DrawMode DrawMode
+		{
+			get => drawMode;
+			set
+			{
+				if (base.DrawMode != value)
+					base.DrawMode = value;
+				if (drawMode != value)
+				{
+					drawMode = value;
+					Invalidate();
+				}
+			}
+		}
+
 		public ColoredComboBox()
 		{
-			SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+			SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.CacheText, true);
 		}
 
 		protected override void WndProc(ref Message m)
 		{
-			base.WndProc(ref m);
-			if (m.Msg == WM_PAINT)
+			if (m.Msg == WM_PAINT && DropDownStyle != ComboBoxStyle.Simple)
 			{
 				var clientRect = ClientRectangle;
 				var dropDownButtonWidth = SystemInformation.HorizontalScrollBarArrowWidth;
@@ -123,23 +238,43 @@ namespace BerichtManager.OwnControls
 				new Point(middle.X + 4, middle.Y - 2),
 				new Point(middle.X, middle.Y + 2)
 				};
+				DefWndProc(ref m);
 				using (Graphics g = Graphics.FromHwnd(m.HWnd))
 				{
-					g.Clear(borderColor);
-					using (Brush b = new SolidBrush(dropDownButtonColor))
+					g.Clear(Enabled ? borderColor : disabledColor);
+					using (Brush b = Enabled ? new SolidBrush(dropDownButtonColor) : new SolidBrush(disabledColor))
 					{
 						g.FillRectangle(b, dropDownRect);
 					}
 					using (Pen pen = new Pen(outlineColor))
 					{
 						g.DrawRectangle(pen, outerBorder);
+
 					}
 					using (Brush b = new SolidBrush(arrowColor))
 					{
 						g.FillPolygon(b, arrow);
 					}
+					if (DropDownStyle == ComboBoxStyle.DropDownList)
+						TextRenderer.DrawText(g, Text, Font, new Point(innerBorder.X, innerBorder.Y + 3), Enabled ? textColor : disabledTextColor);
 				}
 			}
+			else
+				base.WndProc(ref m);
+		}
+
+		protected override void OnDrawItem(DrawItemEventArgs e)
+		{
+			e.DrawBackground();
+			if (e.Index >= 0)
+			{
+				using (Brush b = (e.State & DrawItemState.Selected) == DrawItemState.Selected ? new SolidBrush(highlightColor) : new SolidBrush(BackColor))
+				{
+					e.Graphics.FillRectangle(b, e.Bounds);
+				}
+				TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), Font, new Point(e.Bounds.X, e.Bounds.Y), textColor);
+			}
+			e.DrawFocusRectangle();
 		}
 	}
 }
