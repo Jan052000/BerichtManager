@@ -122,6 +122,9 @@
     <Compile Include="OwnControls\ColoredComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="OwnControls\ColoredGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ThemeManagement\CreateTheme.cs">
       <SubType>Form</SubType>
     </Compile>
