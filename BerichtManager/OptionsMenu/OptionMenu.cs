@@ -13,11 +13,12 @@ namespace BerichtManager.OptionsMenu
 		/// Value if the form has been edited
 		/// </summary>
 		private bool isDirty { get; set; }
-		private readonly OptionConfigHandler configHandler = new OptionConfigHandler();
-		public OptionMenu()
+		private readonly OptionConfigHandler configHandler;
+		public OptionMenu(OptionConfigHandler optionConfigHandler)
 		{
 			InitializeComponent();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
+			configHandler = optionConfigHandler;
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
 			cbShouldUseUntis.Checked = configHandler.UseWebUntis();
@@ -25,11 +26,13 @@ namespace BerichtManager.OptionsMenu
 			tbCustomPrefix.Text = configHandler.GetCustomPrefix();
 			tbServer.Text = configHandler.GetWebUntisServer();
 			tbSchool.Text = configHandler.GetSchoolName();
+			cbLegacyEdit.Checked = configHandler.LegacyEdit();
 			isDirty = false;
 			btSave.Enabled = false;
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
+			
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -59,6 +62,7 @@ namespace BerichtManager.OptionsMenu
 						configHandler.SetSchoolName(tbSchool.Text);
 					}
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
+					configHandler.LegacyEdit(cbLegacyEdit.Checked);
 					try
 					{
 						configHandler.SaveConfig();
@@ -96,6 +100,7 @@ namespace BerichtManager.OptionsMenu
 					}
 					configHandler.SetUseWebUntis(cbShouldUseUntis.Checked);
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
+					configHandler.LegacyEdit(cbLegacyEdit.Checked);
 				}
 				configHandler.SaveConfig();
 			}
@@ -108,7 +113,7 @@ namespace BerichtManager.OptionsMenu
 			isDirty = false;
 		}
 
-		private void tbCustomPrefix_TextChanged(object sender, EventArgs e)
+		private void MarkAsDirty(object sender, EventArgs e)
 		{
 			isDirty = true;
 			btSave.Enabled = true;
@@ -120,12 +125,6 @@ namespace BerichtManager.OptionsMenu
 			btSave.Enabled = true;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
-		}
-
-		private void cbEndOfWeek_CheckedChanged(object sender, EventArgs e)
-		{
-			isDirty = true;
-			btSave.Enabled = true;
 		}
 	}
 }

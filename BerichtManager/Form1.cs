@@ -17,20 +17,64 @@ namespace BerichtManager
 		private Word.Document doc = null;
 		private Word.Application wordApp = null;
 		private readonly ConfigHandler handler = new ConfigHandler();
-		private readonly Client client = new Client();
+		private readonly Client client;
 		private readonly DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
 		private bool visible = false;
 		private readonly CultureInfo culture = new CultureInfo("de-DE");
 		private readonly OptionConfigHandler optionConfigHandler = new OptionConfigHandler();
+		private int tvReportsMaxWidth = 50;
+		private bool editMode = false;
+		private bool wasEdited = false;
 
 		public FormManager()
 		{
 			InitializeComponent();
+			foreach (Control control in this.Controls)
+				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			UpdateTree();
 			if (handler.LoadActive() == "")
 			{
 				btEdit.Enabled = false;
+			}
+			SetComponentPositions();
+			
+			client = new Client(optionConfigHandler);
+		}
+
+		/// <summary>
+		/// Sets sizes and width for components
+		/// </summary>
+		public void SetComponentPositions()
+		{
+			tvReports.ExpandAll();
+			foreach (TreeNode node in tvReports.Nodes)
+				TvReportsMaxWidth(node);
+			tvReports.CollapseAll();
+			splitterTreeBoxes.SplitPosition = tvReportsMaxWidth + 1;
+			Rectangle bounds = paTextBoxes.Bounds;
+			bounds.X = paFileTree.Bounds.Right + 1;
+			bounds.Width = btCreate.Bounds.X - 6;
+			paTextBoxes.Bounds = bounds;
+		}
+
+		/// <summary>
+		/// Calculates the max size the tree view should have
+		/// </summary>
+		/// <param name="treeNode">root nodes of tree</param>
+		private void TvReportsMaxWidth(TreeNode treeNode)
+		{
+			foreach(TreeNode node in treeNode.Nodes)
+			{
+				if(node.Nodes.Count > 0)
+				{
+					TvReportsMaxWidth(node);
+				}
+				else
+				{
+					if (tvReportsMaxWidth < node.Bounds.Right + 1)
+						tvReportsMaxWidth = node.Bounds.Right + 1 - 25;
+				}
 			}
 		}
 
@@ -132,8 +176,6 @@ namespace BerichtManager
 		{
 			try
 			{
-				Word.Document doc = null;
-
 				if (File.Exists(templatePath))
 				{
 					int weekOfYear = culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
@@ -143,6 +185,7 @@ namespace BerichtManager
 					{
 						MessageBox.Show("Invalid template");
 						doc.Close(SaveChanges: false);
+						doc = null;
 						app.Quit(SaveChanges: false);
 						return;
 					}
@@ -216,6 +259,7 @@ namespace BerichtManager
 							if (form.DialogResult == DialogResult.Abort)
 							{
 								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+								doc = null;
 								if (isSingle)
 									app.Quit(SaveChanges: false);
 								return;
@@ -246,6 +290,7 @@ namespace BerichtManager
 							if (form.DialogResult == DialogResult.Abort)
 							{
 								doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+								doc= null;
 								if (isSingle)
 									app.Quit(SaveChanges: false);
 								return;
@@ -261,7 +306,17 @@ namespace BerichtManager
 					enumerator.MoveNext();
 					if (isSingle)
 					{
-						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", school: true, isCreate: true);
+						string classes = "";
+						try
+						{
+							client.GetClassesFromWebUntis().ForEach(c => classes += c);
+						}
+						catch (AggregateException e)
+						{
+							MessageBox.Show("Unable to process classes from web\n(try to cancel the creation process and start again)");
+							HelperClasses.Logger.LogError(e);
+						}
+						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", school: true, isCreate: true, text: classes);
 					}
 					else
 					{
@@ -277,6 +332,7 @@ namespace BerichtManager
 						if (form.DialogResult == DialogResult.Abort)
 						{
 							doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+							doc = null;
 							if (isSingle)
 								app.Quit(SaveChanges: false);
 							return;
@@ -308,6 +364,7 @@ namespace BerichtManager
 					MessageBox.Show("Created Document at: " + Path.GetFullPath(".\\..\\" + today.Year) + "\\WochenberichtKW" + weekOfYear + ".docx");
 
 					doc.Close();
+					doc = null;
 					UpdateTree();
 
 					//If single report close app
@@ -342,6 +399,7 @@ namespace BerichtManager
 						//Document already fit on page
 						doc.Save();
 						doc.Close();
+						doc = null;
 						break;
 					case -2146233088:
 						MessageBox.Show("Connection refused by remotehost");
@@ -366,13 +424,21 @@ namespace BerichtManager
 		{
 			try
 			{
+				if (editMode && wasEdited)
+					if (MessageBox.Show("Do you want to save unsaved changes?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					{
+						SaveFromTb();
+						Close();
+					}
 				if (doc != null)
 				{
 					doc.Close();
+					doc = null;
 				}
 				if (wordApp != null)
 				{
 					wordApp.Quit(SaveChanges: false);
+					wordApp = null;
 				}
 				Close();
 			}
@@ -441,6 +507,7 @@ namespace BerichtManager
 			try
 			{
 				wordApp.Quit(SaveChanges: false);
+				wordApp = null;
 			}
 			catch
 			{
@@ -522,7 +589,13 @@ namespace BerichtManager
 
 		private void btEdit_Click(object sender, EventArgs e)
 		{
-			Edit(handler.LoadActive());
+			if (DocIsSamePathAsSelected())
+				return;
+			SaveOrExit();
+			if (optionConfigHandler.LegacyEdit())
+				Edit(handler.LoadActive());
+			else
+				EditInTb(handler.LoadActive());
 		}
 
 		private void btTest_Click(object sender, EventArgs e)
@@ -600,6 +673,7 @@ namespace BerichtManager
 							});
 						}
 						wordApp.Quit(SaveChanges: false);
+						wordApp = null;
 
 						foreach (string key in unPrintedFiles.Keys)
 						{
@@ -618,6 +692,7 @@ namespace BerichtManager
 						try
 						{
 							wordApp.Quit(false);
+							wordApp = null;
 						}
 						catch
 						{
@@ -640,6 +715,7 @@ namespace BerichtManager
 			{
 				MessageBox.Show("You may only edit Documents(*.docx) files");
 			}
+			SaveOrExit();
 			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 		}
 
@@ -700,7 +776,9 @@ namespace BerichtManager
 					{
 						MessageBox.Show("Invalid document (you will have to manually edit)");
 						doc.Close(SaveChanges: false);
+						doc = null;
 						wordApp.Quit();
+						wordApp = null;
 						return;
 					}
 
@@ -769,7 +847,9 @@ namespace BerichtManager
 					SetFontInDoc(doc, wordApp);
 					doc.Save();
 					doc.Close();
+					doc = null;
 					wordApp.Quit();
+					wordApp = null;
 				}
 				else
 				{
@@ -790,7 +870,9 @@ namespace BerichtManager
 						//Document is only one page long
 						doc.Save();
 						doc.Close();
+						doc = null;
 						wordApp.Quit();
+						wordApp = null;
 						break;
 					case -2146233088:
 						MessageBox.Show("Connection refused by remotehost");
@@ -804,12 +886,179 @@ namespace BerichtManager
 				try
 				{
 					wordApp.Quit(false);
+					wordApp = null;
 				}
 				catch
 				{
 
 				}
 			}
+		}
+
+		/// <summary>
+		/// Opens the ontents for work and school form fields in textboxes
+		/// </summary>
+		/// <param name="path">document to open</param>
+		private void EditInTb(string path)
+		{
+			if (doc != null)
+				if (path == doc.Path)
+					return;
+			try
+			{
+				if (!File.Exists(path))
+					return;
+				if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
+					return;
+				wordApp = new Word.Application();
+				wordApp.Visible = visible;
+				doc = wordApp.Documents.Open(path);
+				if (doc.FormFields.Count != 10)
+				{
+					MessageBox.Show("Invalid document (you will have to manually edit)");
+					doc.Close(SaveChanges: false);
+					doc = null;
+					wordApp.Quit();
+					wordApp = null;
+					return;
+				}
+				rtbWork.Text = doc.FormFields[6].Result;
+				rtbSchool.Text = doc.FormFields[8].Result;
+				editMode = true;
+				wasEdited = false;
+			}
+			catch (Exception ex)
+			{
+				switch (ex.HResult)
+				{
+					case -2147023174:
+						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						break;
+					case -2146823679:
+						MessageBox.Show("Word closed unexpectedly");
+						break;
+					case -2146822750:
+						//Document is only one page long
+						doc.Save();
+						doc.Close();
+						doc = null;
+						wordApp.Quit();
+						wordApp = null;
+						break;
+					case -2146233088:
+						MessageBox.Show("Connection refused by remotehost");
+						break;
+					default:
+						HelperClasses.Logger.LogError(ex);
+						MessageBox.Show(ex.StackTrace);
+						Console.Write(ex.StackTrace);
+						break;
+				}
+				try
+				{
+					wordApp.Quit(false);
+					wordApp = null;
+				}
+				catch
+				{
+
+				}
+			}
+		}
+
+		/// <summary>
+		/// Saves active document
+		/// </summary>
+		private void SaveFromTb()
+		{
+			try
+			{
+				if(doc == null || wordApp == null)
+					return;
+				FillText(wordApp, doc.FormFields[6], rtbWork.Text);
+				FillText(wordApp, doc.FormFields[8], rtbSchool.Text);
+				doc.Close(SaveChanges: true);
+				doc = null;
+				wordApp.Quit(SaveChanges: false);
+				wordApp = null;
+				editMode = false;
+				MessageBox.Show("Saved changes", "Saved");
+			}
+			catch(Exception ex)
+			{
+				switch (ex.HResult)
+				{
+					case -2147023174:
+						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						break;
+					case -2146823679:
+						MessageBox.Show("Word closed unexpectedly");
+						break;
+					case -2146822750:
+						//Document is only one page long
+						doc.Save();
+						doc.Close();
+						doc = null;
+						wordApp.Quit();
+						wordApp = null;
+						break;
+					case -2146233088:
+						MessageBox.Show("Connection refused by remotehost");
+						break;
+					default:
+						HelperClasses.Logger.LogError(ex);
+						MessageBox.Show(ex.StackTrace);
+						Console.Write(ex.StackTrace);
+						break;
+				}
+				try
+				{
+					wordApp.Quit(false);
+					wordApp = null;
+				}
+				catch
+				{
+
+				}
+			}
+		}
+
+		/// <summary>
+		/// Either saves the changes or quits word
+		/// </summary>
+		private void SaveOrExit()
+		{
+			if (!editMode)
+				return;
+			if (!wasEdited)
+			{
+				wordApp.Quit(SaveChanges: false);
+				doc = null;
+				wordApp = null;
+				return;
+			}
+			if (DocIsSamePathAsSelected())
+				return;
+
+			if (MessageBox.Show("Save unsaved changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				SaveFromTb();
+			else
+			{
+				wordApp.Quit(SaveChanges: false);
+				doc = null;
+				wordApp = null;
+			}
+		}
+
+		/// <summary>
+		/// Checks if the document path is the same as the selected report path
+		/// </summary>
+		/// <returns>is document path same as selected report path</returns>
+		private bool DocIsSamePathAsSelected()
+		{
+			if (doc == null)
+				return false;
+			return Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath) == doc.Path + "\\" + doc.Name;
 		}
 
 		/**
@@ -850,6 +1099,7 @@ namespace BerichtManager
 						document.PrintOut(Background: false);
 						wordApp.Documents.Close();
 						wordApp.Quit(false);
+						wordApp = null;
 						if (printed.Name != "Gedruckt")
 						{
 							File.Move(Path.GetFullPath(".\\..\\..\\" + path),
@@ -865,6 +1115,7 @@ namespace BerichtManager
 						try
 						{
 							wordApp.Quit(false);
+							wordApp = null;
 						}
 						catch
 						{
@@ -929,7 +1180,17 @@ namespace BerichtManager
 		{
 			if (tvReports.SelectedNode == null)
 				return;
-			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+			if (DocIsSamePathAsSelected())
+				return;
+			SaveOrExit();
+			if (optionConfigHandler.LegacyEdit())
+			{
+				Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+			}
+			else
+			{
+				EditInTb(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
+			}
 		}
 
 		private void tvReports_Click(object sender, EventArgs e)
@@ -947,6 +1208,7 @@ namespace BerichtManager
 
 		private void miEdit_Click(object sender, EventArgs e)
 		{
+			SaveOrExit();
 			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath));
 		}
 
@@ -957,11 +1219,13 @@ namespace BerichtManager
 
 		private void miQuickEditWork_Click(object sender, EventArgs e)
 		{
+			SaveOrExit();
 			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 6, quickEditTitle: "Edit work");
 		}
 
 		private void miQuickEditSchool_Click(object sender, EventArgs e)
 		{
+			SaveOrExit();
 			Edit(Path.GetFullPath(".\\..\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 8, quickEditTitle: "Edit school");
 		}
 
@@ -994,8 +1258,25 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			Form optionsForm = new OptionMenu();
-			optionsForm.ShowDialog();
+			new OptionMenu(optionConfigHandler).ShowDialog();
+		}
+
+		private void DetectKeys(object sender, KeyEventArgs e)
+		{
+			if(e.Control && e.KeyCode == Keys.S && editMode)
+			{
+				SaveFromTb();
+			}
+		}
+
+		private void EditRichTextBox(object sender, EventArgs e)
+		{
+			wasEdited = true;
+		}
+
+		private void paTextBoxes_Resize(object sender, EventArgs e)
+		{
+			splitterBoxes.SplitPosition = ((Panel)sender).Height / 2;
 		}
 	}
 }

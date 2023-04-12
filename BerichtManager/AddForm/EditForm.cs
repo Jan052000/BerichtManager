@@ -12,7 +12,6 @@ namespace BerichtManager.AddForm
 	{
 		public string Result { get; set; }
 		private readonly ConfigHandler handler = new ConfigHandler();
-		private readonly Client client = new Client();
 
 		public EditForm(string title, string text = "", bool school = false, bool isCreate = false)
 		{
@@ -36,29 +35,7 @@ namespace BerichtManager.AddForm
 				tabstops.Add(i * 14);
 			}
 			rtInput.SelectionTabs = tabstops.ToArray();
-			if (school)
-			{
-				//https://borys.webuntis.com/WebUntis/?school=pictorus-bk#/basic/login
-				//https://webuntis.com/
-				try
-				{
-					List<string> classes = client.GetClassesFromWebUntis();
-					classes.ForEach((c) =>
-					{
-						rtInput.Text += c;
-					});
-				}
-				catch (AggregateException e)
-				{
-					MessageBox.Show("Unable to process classes from web\n(try to cancel the creation process and start again)");
-					HelperClasses.Logger.LogError(e);
-				}
-
-			}
-			else
-			{
-				rtInput.Text = text;
-			}
+			rtInput.Text = text;
 			if (isCreate) 
 			{
 				btSaveAndQuit.Enabled = false;

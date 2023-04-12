@@ -45,7 +45,6 @@ namespace BerichtManager
 			this.btCreate = new System.Windows.Forms.Button();
 			this.btSetNumber = new System.Windows.Forms.Button();
 			this.btEdit = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
 			this.tvReports = new System.Windows.Forms.TreeView();
 			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +62,18 @@ namespace BerichtManager
 			this.cbVisible = new System.Windows.Forms.CheckBox();
 			this.btOptions = new System.Windows.Forms.Button();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
+			this.rtbWork = new System.Windows.Forms.RichTextBox();
+			this.rtbSchool = new System.Windows.Forms.RichTextBox();
+			this.button1 = new System.Windows.Forms.Button();
+			this.paMainView = new System.Windows.Forms.Panel();
+			this.paTextBoxes = new System.Windows.Forms.Panel();
+			this.splitterBoxes = new System.Windows.Forms.Splitter();
+			this.paFileTree = new System.Windows.Forms.Panel();
+			this.splitterTreeBoxes = new System.Windows.Forms.Splitter();
 			this.toRightClickMenu.SuspendLayout();
+			this.paMainView.SuspendLayout();
+			this.paTextBoxes.SuspendLayout();
+			this.paFileTree.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btClose
@@ -125,31 +135,19 @@ namespace BerichtManager
 			this.btEdit.UseVisualStyleBackColor = true;
 			this.btEdit.Click += new System.EventHandler(this.btEdit_Click);
 			// 
-			// button1
-			// 
-			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.button1.Enabled = false;
-			this.button1.Location = new System.Drawing.Point(203, 415);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 5;
-			this.button1.Text = "Test";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Visible = false;
-			this.button1.Click += new System.EventHandler(this.btTest_Click);
-			// 
 			// tvReports
 			// 
-			this.tvReports.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
-			this.tvReports.Location = new System.Drawing.Point(12, 12);
+			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvReports.Location = new System.Drawing.Point(0, 0);
+			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
 			this.tvReports.Name = "tvReports";
-			this.tvReports.Size = new System.Drawing.Size(686, 397);
+			this.tvReports.Size = new System.Drawing.Size(235, 409);
 			this.tvReports.TabIndex = 6;
 			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
 			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
+			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
 			// 
 			// toRightClickMenu
 			// 
@@ -303,11 +301,108 @@ namespace BerichtManager
 			this.btOptions.UseVisualStyleBackColor = true;
 			this.btOptions.Click += new System.EventHandler(this.btOptions_Click);
 			// 
+			// rtbWork
+			// 
+			this.rtbWork.AcceptsTab = true;
+			this.rtbWork.Dock = System.Windows.Forms.DockStyle.Top;
+			this.rtbWork.Location = new System.Drawing.Point(0, 0);
+			this.rtbWork.Margin = new System.Windows.Forms.Padding(0);
+			this.rtbWork.Name = "rtbWork";
+			this.rtbWork.Size = new System.Drawing.Size(460, 202);
+			this.rtbWork.TabIndex = 4;
+			this.rtbWork.Text = "";
+			this.ttTips.SetToolTip(this.rtbWork, "Work");
+			this.rtbWork.WordWrap = false;
+			this.rtbWork.TextChanged += new System.EventHandler(this.EditRichTextBox);
+			this.rtbWork.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
+			// 
+			// rtbSchool
+			// 
+			this.rtbSchool.AcceptsTab = true;
+			this.rtbSchool.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.rtbSchool.Location = new System.Drawing.Point(0, 202);
+			this.rtbSchool.Margin = new System.Windows.Forms.Padding(0);
+			this.rtbSchool.Name = "rtbSchool";
+			this.rtbSchool.Size = new System.Drawing.Size(460, 207);
+			this.rtbSchool.TabIndex = 4;
+			this.rtbSchool.Text = "";
+			this.ttTips.SetToolTip(this.rtbSchool, "School");
+			this.rtbSchool.WordWrap = false;
+			this.rtbSchool.TextChanged += new System.EventHandler(this.EditRichTextBox);
+			this.rtbSchool.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
+			// 
+			// button1
+			// 
+			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.button1.Enabled = false;
+			this.button1.Location = new System.Drawing.Point(203, 415);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.TabIndex = 5;
+			this.button1.Text = "Test";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Visible = false;
+			this.button1.Click += new System.EventHandler(this.btTest_Click);
+			// 
+			// paMainView
+			// 
+			this.paMainView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.paMainView.Controls.Add(this.paTextBoxes);
+			this.paMainView.Controls.Add(this.splitterTreeBoxes);
+			this.paMainView.Controls.Add(this.paFileTree);
+			this.paMainView.Location = new System.Drawing.Point(0, 0);
+			this.paMainView.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
+			this.paMainView.Name = "paMainView";
+			this.paMainView.Size = new System.Drawing.Size(698, 409);
+			this.paMainView.TabIndex = 15;
+			// 
+			// paTextBoxes
+			// 
+			this.paTextBoxes.Controls.Add(this.splitterBoxes);
+			this.paTextBoxes.Controls.Add(this.rtbSchool);
+			this.paTextBoxes.Controls.Add(this.rtbWork);
+			this.paTextBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.paTextBoxes.Location = new System.Drawing.Point(238, 0);
+			this.paTextBoxes.Name = "paTextBoxes";
+			this.paTextBoxes.Size = new System.Drawing.Size(460, 409);
+			this.paTextBoxes.TabIndex = 1;
+			this.paTextBoxes.Resize += new System.EventHandler(this.paTextBoxes_Resize);
+			// 
+			// splitterBoxes
+			// 
+			this.splitterBoxes.Dock = System.Windows.Forms.DockStyle.Top;
+			this.splitterBoxes.Location = new System.Drawing.Point(0, 202);
+			this.splitterBoxes.Name = "splitterBoxes";
+			this.splitterBoxes.Size = new System.Drawing.Size(460, 3);
+			this.splitterBoxes.TabIndex = 5;
+			this.splitterBoxes.TabStop = false;
+			// 
+			// paFileTree
+			// 
+			this.paFileTree.Controls.Add(this.tvReports);
+			this.paFileTree.Dock = System.Windows.Forms.DockStyle.Left;
+			this.paFileTree.Location = new System.Drawing.Point(0, 0);
+			this.paFileTree.Name = "paFileTree";
+			this.paFileTree.Size = new System.Drawing.Size(235, 409);
+			this.paFileTree.TabIndex = 0;
+			// 
+			// splitterTreeBoxes
+			// 
+			this.splitterTreeBoxes.Location = new System.Drawing.Point(235, 0);
+			this.splitterTreeBoxes.Name = "splitterTreeBoxes";
+			this.splitterTreeBoxes.Size = new System.Drawing.Size(3, 409);
+			this.splitterTreeBoxes.TabIndex = 1;
+			this.splitterTreeBoxes.TabStop = false;
+			// 
 			// FormManager
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.SystemColors.Window;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.paMainView);
 			this.Controls.Add(this.btOptions);
 			this.Controls.Add(this.cbVisible);
 			this.Controls.Add(this.btEditName);
@@ -316,7 +411,6 @@ namespace BerichtManager
 			this.Controls.Add(this.btPrint);
 			this.Controls.Add(this.btDelete);
 			this.Controls.Add(this.btEditExisting);
-			this.Controls.Add(this.tvReports);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.btEdit);
 			this.Controls.Add(this.btSetNumber);
@@ -326,7 +420,11 @@ namespace BerichtManager
 			this.MinimumSize = new System.Drawing.Size(545, 289);
 			this.Name = "FormManager";
 			this.Text = "Bericht Manager";
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
 			this.toRightClickMenu.ResumeLayout(false);
+			this.paMainView.ResumeLayout(false);
+			this.paTextBoxes.ResumeLayout(false);
+			this.paFileTree.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -339,7 +437,6 @@ namespace BerichtManager
 		private System.Windows.Forms.Button btCreate;
 		private System.Windows.Forms.Button btSetNumber;
 		private System.Windows.Forms.Button btEdit;
-		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.TreeView tvReports;
 		private System.Windows.Forms.Button btEditExisting;
 		private System.Windows.Forms.Button btDelete;
@@ -357,6 +454,14 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miQuickEditOptions;
 		private System.Windows.Forms.ToolStripMenuItem tiQuickEditWork;
 		private System.Windows.Forms.ToolStripMenuItem miQuickEditSchool;
+		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.RichTextBox rtbWork;
+		private System.Windows.Forms.RichTextBox rtbSchool;
+		private System.Windows.Forms.Panel paMainView;
+		private System.Windows.Forms.Panel paTextBoxes;
+		private System.Windows.Forms.Splitter splitterBoxes;
+		private System.Windows.Forms.Panel paFileTree;
+		private System.Windows.Forms.Splitter splitterTreeBoxes;
 	}
 }
 
