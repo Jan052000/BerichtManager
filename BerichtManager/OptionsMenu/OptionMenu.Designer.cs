@@ -236,6 +236,7 @@ namespace BerichtManager.OptionsMenu
 			this.tbTemplate.Size = new System.Drawing.Size(696, 20);
 			this.tbTemplate.TabIndex = 17;
 			this.toolTip1.SetToolTip(this.tbTemplate, "Path to word template");
+			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
 			// 
 			// btEditTheme
 			// 
