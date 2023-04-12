@@ -68,6 +68,7 @@ namespace BerichtManager
 			if (activeTheme == null)
 				activeTheme = new DarkMode();
 			ThemeSetter.SetThemes(this, activeTheme);
+			ThemeSetter.SetThemes(toRightClickMenu, activeTheme);
 			nodeDrawer = new CustomNodeDrawer(activeTheme);
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
