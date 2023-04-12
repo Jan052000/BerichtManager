@@ -16,7 +16,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Color of the inner border
 		/// </summary>
-		private Color borderColor = Color.Black;
+		private Color borderColor = SystemColors.Window;
 		/// <summary>
 		/// Color of the inner border
 		/// </summary>
@@ -50,6 +50,27 @@ namespace BerichtManager.OwnControls
 				if (outlineColor != value)
 				{
 					outlineColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Color of the drop down button background
+		/// </summary>
+		private Color dropDownButtonColor = SystemColors.Menu;
+		/// <summary>
+		/// Color of the drop down button background
+		/// </summary>
+		[Category("Colored Combo Box")]
+		public Color DropDownButtonColor
+		{
+			get => dropDownButtonColor;
+			set
+			{
+				if (dropDownButtonColor != value)
+				{
+					dropDownButtonColor = value;
 					Invalidate();
 				}
 			}
@@ -105,7 +126,7 @@ namespace BerichtManager.OwnControls
 				using (Graphics g = Graphics.FromHwnd(m.HWnd))
 				{
 					g.Clear(borderColor);
-					using (Brush b = new SolidBrush(outlineColor))
+					using (Brush b = new SolidBrush(dropDownButtonColor))
 					{
 						g.FillRectangle(b, dropDownRect);
 					}
