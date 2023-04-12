@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -121,8 +121,18 @@
     <Compile Include="OwnControls\ColoredComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ThemeManagement\CreateTheme.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThemeManagement\CreateTheme.Designer.cs">
+      <DependentUpon>CreateTheme.cs</DependentUpon>
+    </Compile>
     <Compile Include="ThemeManagement\CustomNodeDrawer.cs" />
     <Compile Include="HelperClasses\Logger.cs" />
+    <Compile Include="ThemeManagement\DefaultThemes\DarkMode.cs" />
+    <Compile Include="ThemeManagement\DefaultThemes\LightMode.cs" />
+    <Compile Include="ThemeManagement\ITheme.cs" />
+    <Compile Include="ThemeManagement\ThemeManager.cs" />
     <Compile Include="ThemeManagement\ThemeSetter.cs" />
     <Compile Include="HelperClasses\TreeNodeSorter.cs" />
     <Compile Include="OptionsMenu\OptionMenu.cs">
@@ -158,6 +168,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ThemeManagement\CreateTheme.resx">
+      <DependentUpon>CreateTheme.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -216,5 +229,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

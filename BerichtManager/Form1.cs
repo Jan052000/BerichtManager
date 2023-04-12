@@ -11,6 +11,7 @@ using System.Collections;
 using BerichtManager.OptionsMenu;
 using BerichtManager.HelperClasses;
 using BerichtManager.ThemeManagement;
+using BerichtManager.ThemeManagement.DefaultThemes;
 
 namespace BerichtManager
 {
@@ -18,7 +19,7 @@ namespace BerichtManager
 	{
 		private Word.Document doc = null;
 		private Word.Application wordApp = null;
-		private readonly ConfigHandler configHandler = new ConfigHandler();
+		private readonly ConfigHandler configHandler = new ConfigHandler(themeManager);
 		private readonly Client client;
 		private readonly DirectoryInfo info = new DirectoryInfo(Path.GetFullPath(".\\.."));
 		private bool visible = false;
@@ -26,17 +27,19 @@ namespace BerichtManager
 		private int tvReportsMaxWidth = 50;
 		private bool editMode = false;
 		private bool wasEdited = false;
-		public bool darkMode = false;
 		private CustomNodeDrawer nodeDrawer;
+		private static readonly ThemeManager themeManager = new ThemeManager();
+		private ITheme activeTheme;
 		private static readonly string VersionNumber = "v1.9";
 
 		public FormManager()
 		{
 			InitializeComponent();
-			nodeDrawer = new CustomNodeDrawer(ilTreeViewIcons);
-			darkMode = configHandler.DarkMode();
-			if (darkMode)
-				tvReports.DrawMode = TreeViewDrawMode.OwnerDrawAll;
+			activeTheme = themeManager.GetTheme(configHandler.ActiveTheme());
+			if (activeTheme == null)
+				activeTheme = new DarkMode();
+			ThemeSetter.SetThemes(this, activeTheme);
+			nodeDrawer = new CustomNodeDrawer(ilTreeViewIcons, activeTheme);
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
@@ -47,8 +50,6 @@ namespace BerichtManager
 				miEditLatest.Enabled = false;
 			}
 			SetComponentPositions();
-			if (darkMode)
-				ThemeSetter.SetThemes(this);
 			client = new Client(configHandler);
 		}
 
@@ -211,7 +212,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Enter your name", text: "Name Vorname", useDark: darkMode);
+						form = new EditForm("Enter your name", activeTheme, text: "Name Vorname");
 						if (form.ShowDialog() == DialogResult.OK)
 						{
 							configHandler.SaveName(form.Result);
@@ -259,7 +260,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", isCreate: true, useDark: darkMode);
+						form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", activeTheme, isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -290,7 +291,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: "-Keine-", isCreate: true, useDark: darkMode);
+						form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", activeTheme, text: "-Keine-", isCreate: true);
 						form.ShowDialog();
 						if (form.DialogResult == DialogResult.OK)
 						{
@@ -327,11 +328,11 @@ namespace BerichtManager
 							MessageBox.Show("Unable to process classes from web\n(try to cancel the creation process and start again)");
 							HelperClasses.Logger.LogError(e);
 						}
-						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", school: true, isCreate: true, text: classes, useDark: darkMode);
+						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", activeTheme, school: true, isCreate: true, text: classes);
 					}
 					else
 					{
-						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", text: client.getHolidaysForDate(baseDate), isCreate: true, useDark: darkMode);
+						form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", activeTheme, text: client.getHolidaysForDate(baseDate), isCreate: true);
 					}
 					form.ShowDialog();
 					if (form.DialogResult == DialogResult.OK)
@@ -727,7 +728,7 @@ namespace BerichtManager
 
 							}
 						}
-						EditForm edit = new EditForm(quickEditTitle, text: ((Word.FormField)enumerator.Current).Result, useDark: darkMode);
+						EditForm edit = new EditForm(quickEditTitle, activeTheme, text: ((Word.FormField)enumerator.Current).Result);
 						if (edit.ShowDialog() == DialogResult.OK)
 						{
 							FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
@@ -742,7 +743,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						SelectEditFrom selectEdit = new SelectEditFrom(useDark: darkMode);
+						SelectEditFrom selectEdit = new SelectEditFrom(activeTheme);
 						if (selectEdit.ShowDialog() == DialogResult.OK)
 						{
 							IEnumerator enumerator = doc.FormFields.GetEnumerator();
@@ -753,7 +754,7 @@ namespace BerichtManager
 								{
 									if (si.ShouldEdit)
 									{
-										edit = new EditForm(si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result, useDark: darkMode);
+										edit = new EditForm(si.EditorTitle, activeTheme, text: ((Word.FormField)enumerator.Current).Result);
 										edit.ShowDialog();
 										if (edit.DialogResult == DialogResult.OK)
 										{
@@ -1178,7 +1179,10 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			new OptionMenu(configHandler).ShowDialog();
+			OptionMenu optionMenu = new OptionMenu(configHandler, activeTheme, themeManager);
+			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
+			optionMenu.ShowDialog();
+			optionMenu.ActiveThemeChanged -= ActiveThemeChanged;
 		}
 
 		private void DetectKeys(object sender, KeyEventArgs e)
@@ -1229,6 +1233,14 @@ namespace BerichtManager
 			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
 				return;
 			nodeDrawer.DrawNode(e);
+		}
+
+		private void ActiveThemeChanged(object sender, ITheme theme)
+		{
+			activeTheme = theme;
+			ThemeSetter.SetThemes(this, theme);
+			nodeDrawer.SetTheme(activeTheme);
+			tvReports.Refresh();
 		}
 
 		private void menuStrip1_Paint(object sender, PaintEventArgs e)

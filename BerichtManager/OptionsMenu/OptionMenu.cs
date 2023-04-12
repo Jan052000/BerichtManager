@@ -1,5 +1,7 @@
 ﻿using BerichtManager.AddForm;
 using BerichtManager.Config;
+using BerichtManager.ThemeManagement;
+using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
 using System.Drawing;
 using System.IO;
@@ -14,13 +16,25 @@ namespace BerichtManager.OptionsMenu
 		/// </summary>
 		private bool isDirty { get; set; }
 		private readonly ConfigHandler configHandler;
-		public OptionMenu(ConfigHandler configHandler)
+		/// <summary>
+		/// Name of the active theme
+		/// </summary>
+		public string ThemeName;
+		/// <summary>
+		/// Emits when the active theme changes
+		/// </summary>
+		public event activeThemeChanged ActiveThemeChanged;
+		private ThemeManager ThemeManager;
+		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
 		{
 			InitializeComponent();
-			if (configHandler.DarkMode())
-				ThemeManagement.ThemeSetter.SetThemes(this);
+			if (theme == null)
+				theme = new DarkMode();
+			ThemeSetter.SetThemes(this, theme);
+			ThemeName = theme.Name;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.configHandler = configHandler;
+			ThemeManager = themeManager;
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
 			cbShouldUseUntis.Checked = configHandler.UseWebUntis();
@@ -29,7 +43,12 @@ namespace BerichtManager.OptionsMenu
 			tbServer.Text = configHandler.GetWebUntisServer();
 			tbSchool.Text = configHandler.GetSchoolName();
 			cbLegacyEdit.Checked = configHandler.LegacyEdit();
-			cbUseDarkMode.Checked = configHandler.DarkMode();
+
+			themeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
+			int selectedIndex = coTheme.Items.IndexOf(configHandler.ActiveTheme());
+			coTheme.SelectedIndex = selectedIndex;
+			ThemeName = coTheme.Text;
+
 			tbTemplate.Text = configHandler.LoadPath();
 			tbName.Text = configHandler.LoadName();
 			if (int.TryParse(configHandler.LoadNumber(), out int value))
@@ -39,7 +58,6 @@ namespace BerichtManager.OptionsMenu
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
-			
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -70,10 +88,17 @@ namespace BerichtManager.OptionsMenu
 					}
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
-					configHandler.DarkMode(cbUseDarkMode.Checked);
 					configHandler.SaveName(tbName.Text);
 					configHandler.EditNumber("" + nudNumber.Value);
 					configHandler.Save(tbTemplate.Text);
+					configHandler.ActiveTheme(coTheme.Text);
+					if(ThemeName != (string)coTheme.SelectedValue)
+					{
+						ThemeName = coTheme.Text;
+						ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
+						ThemeSetter.SetThemes(this, activeTheme);
+						ActiveThemeChanged(this, activeTheme);
+					}
 					try
 					{
 						configHandler.SaveConfig();
@@ -112,10 +137,17 @@ namespace BerichtManager.OptionsMenu
 					configHandler.SetUseWebUntis(cbShouldUseUntis.Checked);
 					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
-					configHandler.DarkMode(cbUseDarkMode.Checked);
 					configHandler.SaveName(tbName.Text);
 					configHandler.EditNumber("" + nudNumber.Value);
 					configHandler.Save(tbTemplate.Text);
+					configHandler.ActiveTheme(coTheme.Text);
+					if (ThemeName != coTheme.Text)
+					{
+						ThemeName = coTheme.Text;
+						ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
+						ThemeSetter.SetThemes(this, activeTheme);
+						ActiveThemeChanged(this, activeTheme);
+					}
 				}
 				configHandler.SaveConfig();
 			}
@@ -145,6 +177,11 @@ namespace BerichtManager.OptionsMenu
 			btSave.Enabled = true;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
+			ITheme theme = ThemeManager.GetTheme(ThemeName);
+			if (theme == null)
+				return;
+			ThemeSetter.SetThemes(tbSchool, theme);
+			ThemeSetter.SetThemes(tbServer, theme);
 		}
 
 		private void btLogin_Click(object sender, EventArgs e)
@@ -160,6 +197,37 @@ namespace BerichtManager.OptionsMenu
 			{
 				tbTemplate.Text = dialog.FileName;
 				MarkAsDirty(sender, e);
+			}
+		}
+
+		public delegate void activeThemeChanged(object sender, ITheme theme);
+
+		//https://stackoverflow.com/questions/2612487/how-to-fix-the-flickering-in-user-controls
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams cp = base.CreateParams;
+				cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+				return cp;
+			}
+		}
+
+		private void btCreateTheme_Click(object sender, EventArgs e)
+		{
+			new CreateTheme(configHandler, ThemeManager.GetTheme(ThemeName), ThemeManager).ShowDialog();
+			coTheme.Items.Clear();
+			ThemeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
+		}
+
+		private void btEditTheme_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog fileDialog = new OpenFileDialog();
+			fileDialog.Filter = "Themes (*.bmtheme)|*.bmtheme";
+			fileDialog.InitialDirectory = Path.GetFullPath(".\\Config\\Themes");
+			if(fileDialog.ShowDialog() == DialogResult.OK)
+			{
+				new CreateTheme(configHandler, ThemeManager.GetTheme(ThemeName), ThemeManager, ThemeManager.GetTheme(Path.GetFileNameWithoutExtension(fileDialog.FileName))).ShowDialog();
 			}
 		}
 	}

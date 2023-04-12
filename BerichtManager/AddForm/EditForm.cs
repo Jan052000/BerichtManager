@@ -1,4 +1,6 @@
 ﻿using BerichtManager.Config;
+using BerichtManager.ThemeManagement;
+using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,13 +13,14 @@ namespace BerichtManager.AddForm
 	public partial class EditForm : Form
 	{
 		public string Result { get; set; }
-		private readonly ConfigHandler handler = new ConfigHandler();
+		private readonly ConfigHandler handler = new ConfigHandler(null);
 
-		public EditForm(string title, string text = "", bool school = false, bool isCreate = false, bool useDark = false)
+		public EditForm(string title, ITheme theme, string text = "", bool school = false, bool isCreate = false)
 		{
 			InitializeComponent();
-			if (useDark)
-				ThemeManagement.ThemeSetter.SetThemes(this);
+			if (theme == null)
+				theme = new DarkMode();
+			ThemeSetter.SetThemes(this, theme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
 			//rtInput.Multiline = true;

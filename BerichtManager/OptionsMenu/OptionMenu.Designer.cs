@@ -1,4 +1,4 @@
-﻿namespace BerichtManager.OptionsMenu
+namespace BerichtManager.OptionsMenu
 {
 	partial class OptionMenu
 	{
@@ -39,7 +39,6 @@
 			this.cbShouldUseUntis = new System.Windows.Forms.CheckBox();
 			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
 			this.cbLegacyEdit = new System.Windows.Forms.CheckBox();
-			this.cbUseDarkMode = new System.Windows.Forms.CheckBox();
 			this.btLogin = new System.Windows.Forms.Button();
 			this.laTemplate = new System.Windows.Forms.Label();
 			this.tbTemplate = new System.Windows.Forms.TextBox();
@@ -47,6 +46,10 @@
 			this.tbName = new System.Windows.Forms.TextBox();
 			this.laNumber = new System.Windows.Forms.Label();
 			this.nudNumber = new System.Windows.Forms.NumericUpDown();
+			this.laTheme = new System.Windows.Forms.Label();
+			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
+			this.btCreateTheme = new System.Windows.Forms.Button();
+			this.btEditTheme = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -165,22 +168,11 @@
 			this.cbLegacyEdit.UseVisualStyleBackColor = true;
 			this.cbLegacyEdit.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
-			// cbUseDarkMode
-			// 
-			this.cbUseDarkMode.AutoSize = true;
-			this.cbUseDarkMode.Location = new System.Drawing.Point(12, 182);
-			this.cbUseDarkMode.Name = "cbUseDarkMode";
-			this.cbUseDarkMode.Size = new System.Drawing.Size(97, 17);
-			this.cbUseDarkMode.TabIndex = 11;
-			this.cbUseDarkMode.Text = "Use Darkmode";
-			this.cbUseDarkMode.UseVisualStyleBackColor = true;
-			this.cbUseDarkMode.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
 			// btLogin
 			// 
-			this.btLogin.Location = new System.Drawing.Point(230, 247);
+			this.btLogin.Location = new System.Drawing.Point(230, 263);
 			this.btLogin.Name = "btLogin";
-			this.btLogin.Size = new System.Drawing.Size(75, 23);
+			this.btLogin.Size = new System.Drawing.Size(75, 21);
 			this.btLogin.TabIndex = 15;
 			this.btLogin.Text = "Login";
 			this.btLogin.UseVisualStyleBackColor = true;
@@ -189,7 +181,7 @@
 			// laTemplate
 			// 
 			this.laTemplate.AutoSize = true;
-			this.laTemplate.Location = new System.Drawing.Point(47, 202);
+			this.laTemplate.Location = new System.Drawing.Point(47, 212);
 			this.laTemplate.Name = "laTemplate";
 			this.laTemplate.Size = new System.Drawing.Size(51, 13);
 			this.laTemplate.TabIndex = 16;
@@ -199,7 +191,7 @@
 			// 
 			this.tbTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbTemplate.Location = new System.Drawing.Point(104, 199);
+			this.tbTemplate.Location = new System.Drawing.Point(104, 209);
 			this.tbTemplate.Name = "tbTemplate";
 			this.tbTemplate.Size = new System.Drawing.Size(684, 20);
 			this.tbTemplate.TabIndex = 17;
@@ -208,7 +200,7 @@
 			// laName
 			// 
 			this.laName.AutoSize = true;
-			this.laName.Location = new System.Drawing.Point(63, 227);
+			this.laName.Location = new System.Drawing.Point(63, 240);
 			this.laName.Name = "laName";
 			this.laName.Size = new System.Drawing.Size(35, 13);
 			this.laName.TabIndex = 18;
@@ -218,7 +210,7 @@
 			// 
 			this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbName.Location = new System.Drawing.Point(104, 224);
+			this.tbName.Location = new System.Drawing.Point(104, 237);
 			this.tbName.Name = "tbName";
 			this.tbName.Size = new System.Drawing.Size(684, 20);
 			this.tbName.TabIndex = 19;
@@ -227,7 +219,7 @@
 			// laNumber
 			// 
 			this.laNumber.AutoSize = true;
-			this.laNumber.Location = new System.Drawing.Point(54, 252);
+			this.laNumber.Location = new System.Drawing.Point(54, 267);
 			this.laNumber.Name = "laNumber";
 			this.laNumber.Size = new System.Drawing.Size(44, 13);
 			this.laNumber.TabIndex = 20;
@@ -235,17 +227,73 @@
 			// 
 			// nudNumber
 			// 
-			this.nudNumber.Location = new System.Drawing.Point(104, 250);
+			this.nudNumber.Location = new System.Drawing.Point(104, 263);
 			this.nudNumber.Name = "nudNumber";
 			this.nudNumber.Size = new System.Drawing.Size(120, 20);
 			this.nudNumber.TabIndex = 21;
 			this.nudNumber.ValueChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laTheme
+			// 
+			this.laTheme.AutoSize = true;
+			this.laTheme.Location = new System.Drawing.Point(58, 185);
+			this.laTheme.Name = "laTheme";
+			this.laTheme.Size = new System.Drawing.Size(40, 13);
+			this.laTheme.TabIndex = 22;
+			this.laTheme.Text = "Theme";
+			// 
+			// coTheme
+			// 
+			this.coTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
+			this.coTheme.DisabledColor = System.Drawing.SystemColors.Control;
+			this.coTheme.DisabledTextColor = System.Drawing.SystemColors.GrayText;
+			this.coTheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
+			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.coTheme.FormattingEnabled = true;
+			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
+			this.coTheme.Location = new System.Drawing.Point(104, 182);
+			this.coTheme.Name = "coTheme";
+			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.coTheme.Size = new System.Drawing.Size(517, 21);
+			this.coTheme.TabIndex = 23;
+			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
+			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// btCreateTheme
+			// 
+			this.btCreateTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btCreateTheme.Location = new System.Drawing.Point(708, 182);
+			this.btCreateTheme.Name = "btCreateTheme";
+			this.btCreateTheme.Size = new System.Drawing.Size(80, 21);
+			this.btCreateTheme.TabIndex = 24;
+			this.btCreateTheme.Text = "Create theme";
+			this.btCreateTheme.UseVisualStyleBackColor = true;
+			this.btCreateTheme.Click += new System.EventHandler(this.btCreateTheme_Click);
+			// 
+			// btEditTheme
+			// 
+			this.btEditTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btEditTheme.Location = new System.Drawing.Point(627, 182);
+			this.btEditTheme.Name = "btEditTheme";
+			this.btEditTheme.Size = new System.Drawing.Size(75, 21);
+			this.btEditTheme.TabIndex = 25;
+			this.btEditTheme.Text = "Edit theme";
+			this.btEditTheme.UseVisualStyleBackColor = true;
+			this.btEditTheme.Click += new System.EventHandler(this.btEditTheme_Click);
 			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btEditTheme);
+			this.Controls.Add(this.btCreateTheme);
+			this.Controls.Add(this.coTheme);
+			this.Controls.Add(this.laTheme);
 			this.Controls.Add(this.nudNumber);
 			this.Controls.Add(this.laNumber);
 			this.Controls.Add(this.tbName);
@@ -253,7 +301,6 @@
 			this.Controls.Add(this.tbTemplate);
 			this.Controls.Add(this.laTemplate);
 			this.Controls.Add(this.btLogin);
-			this.Controls.Add(this.cbUseDarkMode);
 			this.Controls.Add(this.cbLegacyEdit);
 			this.Controls.Add(this.cbEndOfWeek);
 			this.Controls.Add(this.cbShouldUseUntis);
@@ -287,7 +334,6 @@
 		private System.Windows.Forms.CheckBox cbShouldUseUntis;
 		private System.Windows.Forms.CheckBox cbEndOfWeek;
 		private System.Windows.Forms.CheckBox cbLegacyEdit;
-		private System.Windows.Forms.CheckBox cbUseDarkMode;
 		private System.Windows.Forms.Button btLogin;
 		private System.Windows.Forms.Label laTemplate;
 		private System.Windows.Forms.TextBox tbTemplate;
@@ -295,5 +341,9 @@
 		private System.Windows.Forms.TextBox tbName;
 		private System.Windows.Forms.Label laNumber;
 		private System.Windows.Forms.NumericUpDown nudNumber;
+		private System.Windows.Forms.Label laTheme;
+		private OwnControls.ColoredComboBox coTheme;
+		private System.Windows.Forms.Button btCreateTheme;
+		private System.Windows.Forms.Button btEditTheme;
 	}
 }

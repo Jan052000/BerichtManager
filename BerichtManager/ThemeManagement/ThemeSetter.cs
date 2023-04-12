@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using BerichtManager.OwnControls;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace BerichtManager.ThemeManagement
@@ -12,70 +13,90 @@ namespace BerichtManager.ThemeManagement
 		/// Sets dark mode theme
 		/// </summary>
 		/// <param name="control">Top control to set darkmode for</param>
-		public static void SetThemes(Control control)
+		/// <param name="theme">Theme to be used for styling</param>
+		public static void SetThemes(Control control, ITheme theme)
 		{
 			switch (control)
 			{
 				case RichTextBox rtb:
-					rtb.BackColor = Color.FromArgb(70, 70, 70);
+					rtb.BackColor = theme.TextBoxBackColor;
 					rtb.BorderStyle = BorderStyle.None;
 					break;
 				case TextBox tb:
 					if(tb.Enabled)
-						tb.BackColor = Color.FromArgb(70, 70, 70);
+						tb.BackColor = theme.TextBoxBackColor;
 					else
-						tb.BackColor = Color.FromArgb(64, 64, 64);
-					tb.BorderStyle = BorderStyle.FixedSingle;
+						tb.BackColor = theme.TextBoxDisabledBackColor;
+						tb.BorderStyle = BorderStyle.FixedSingle;
+					break;
+				case ColoredComboBox comboBox:
+					comboBox.BackColor = theme.TextBoxBackColor;
+					comboBox.BorderColor = theme.TextBoxBorderColor;
+					comboBox.ArrowColor = theme.TextBoxArrowColor;
+					comboBox.DropDownButtonColor = theme.ColoredComboBoxDropDownButtonBackColor;
+					comboBox.TextColor = theme.ColoredComboBoxTextColor;
+					comboBox.DisabledColor = theme.ColoredComboBoxDisabledColor;
+					comboBox.DisabledTextColor = theme.ColoredComboBoxDisabledTextColor;
+					comboBox.HighlightColor = theme.ColoredComboBoxHighlightColor;
 					break;
 				case TreeView treeView:
-					treeView.BackColor = Color.FromArgb(64, 64, 64);
+					treeView.BackColor = theme.BackColor;
 					break;
 				case Form form:
-					form.BackColor = Color.FromArgb(64, 64, 64);
+					form.BackColor = theme.BackColor;
 					break;
 				case Button button:
-					button.BackColor = Color.DimGray;
+					if (button.Enabled)
+						button.BackColor = theme.ButtonColor;
+					else
+						button.BackColor = theme.ButtonDisabledColor;
 					button.FlatStyle = FlatStyle.Flat;
 					button.FlatAppearance.BorderSize = 0;
 					break;
 				case SplitContainer splitContainer:
 				case Splitter splitter:
-					control.BackColor = Color.DimGray;
+					control.BackColor = theme.SplitterColor;
 					break;
 				case MenuStrip menuStrip:
-					menuStrip.BackColor = Color.FromArgb(50, 50, 50);
-					menuStrip.Renderer = new DarkModeRenderer(new DarkModeTheme());
+					menuStrip.BackColor = theme.MenuStripBackColor;
+					menuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(theme), theme);
 					break;
 			}
-			control.ForeColor = Color.White;
+			control.ForeColor = theme.ForeColor;
 			foreach (Control control1 in control.Controls)
 			{
-				SetThemes(control1);
+				SetThemes(control1, theme);
 			}
 		}
 	}
 
 	/// <summary>
-	/// Color table for dark mode
+	/// Color table for theme renderer
 	/// </summary>
-	internal class DarkModeTheme : ProfessionalColorTable
+	internal class ThemeColorTable : ProfessionalColorTable
 	{
-		public override Color ToolStripDropDownBackground => Color.FromArgb(50, 50, 50);
+		private ITheme theme;
+		public ThemeColorTable(ITheme theme)
+		{
+			this.theme = theme;
+		}
+		public override Color ToolStripDropDownBackground => theme.MenuStripDropdownBackColor;
 	}
 
 	/// <summary>
-	/// Renderer for dark mode
+	/// Renderer for themes of menu strips
 	/// </summary>
-	internal class DarkModeRenderer : ToolStripProfessionalRenderer
+	internal class ThemeRenderer : ToolStripProfessionalRenderer
 	{
-		public DarkModeRenderer(ProfessionalColorTable table): base(table)
+		private ITheme theme;
+		public ThemeRenderer(ProfessionalColorTable table, ITheme theme): base(table)
 		{
-
+			this.theme = theme;
 		}
 
 		protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
 		{
-			e.TextColor = Color.White;
+			e.TextColor = theme.ForeColor;
 			base.OnRenderItemText(e);
 		}
 
@@ -83,9 +104,9 @@ namespace BerichtManager.ThemeManagement
 		{
 			base.OnRenderMenuItemBackground(e);
 			if (e.Item.Selected)
-				e.Graphics.Clear(Color.FromArgb(60, 60, 60));
+				e.Graphics.Clear(theme.MenuStripSelectedDropDownBackColor);
 			else
-				e.Graphics.Clear(Color.FromArgb(50, 50, 50));
+				e.Graphics.Clear(theme.MenuStripBackColor);
 		}
 	}
 }

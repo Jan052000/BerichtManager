@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BerichtManager.ThemeManagement;
+using BerichtManager.ThemeManagement.DefaultThemes;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -10,11 +12,12 @@ namespace BerichtManager.AddForm
 		public string Username;
 		public string Password;
 		public bool KeepLoggedIn;
-		public Login(bool useDark = false)
+		public Login(ITheme theme)
 		{
 			InitializeComponent();
-			if (useDark)
-				ThemeManagement.ThemeSetter.SetThemes(this);
+			if (theme == null)
+				theme = new DarkMode();
+			ThemeSetter.SetThemes(this, theme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 		}
 

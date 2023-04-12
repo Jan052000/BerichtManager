@@ -11,11 +11,11 @@ namespace BerichtManager.ThemeManagement
 		/// <summary>
 		/// Pen for drawing dottet lines
 		/// </summary>
-		private Pen dottedLines = new Pen(Color.White);
+		private Pen dottedLines;
 		/// <summary>
 		/// Brush for filling the highlighted node
 		/// </summary>
-		private Brush hilightSelected = new SolidBrush(Color.FromArgb(90, 90, 90));
+		private Brush hilightSelected;
 		/// <summary>
 		/// List of icons for folders
 		/// </summary>
@@ -24,10 +24,23 @@ namespace BerichtManager.ThemeManagement
 		/// Creates a CustomDrawer object
 		/// </summary>
 		/// <param name="icons">list of icons to be used in treeview [0] closed [1] open</param>
-		public CustomNodeDrawer(ImageList icons)
+		public CustomNodeDrawer(ImageList icons, ITheme theme)
 		{
+			dottedLines = new Pen(theme.TreeViewDottedLineColor);
+			hilightSelected = new SolidBrush(theme.TreeViewHighlightedNodeColor);
 			dottedLines.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
 			treeIcons = icons;
+		}
+
+		/// <summary>
+		/// Changes color to theme
+		/// </summary>
+		/// <param name="theme">Theme to draw with</param>
+		public void SetTheme(ITheme theme)
+		{
+			dottedLines = new Pen(theme.TreeViewDottedLineColor);
+			hilightSelected = new SolidBrush(theme.TreeViewHighlightedNodeColor);
+			dottedLines.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
 		}
 
 		/// <summary>
