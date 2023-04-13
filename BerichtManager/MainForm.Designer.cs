@@ -54,6 +54,8 @@ namespace BerichtManager
 			this.rtbSchool = new System.Windows.Forms.RichTextBox();
 			this.paMainView = new System.Windows.Forms.Panel();
 			this.scTextBoxes = new System.Windows.Forms.SplitContainer();
+			this.paPadding1 = new System.Windows.Forms.Panel();
+			this.paPadding2 = new System.Windows.Forms.Panel();
 			this.splitterTreeBoxes = new System.Windows.Forms.Splitter();
 			this.paFileTree = new System.Windows.Forms.Panel();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -65,18 +67,17 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.paPadding1 = new System.Windows.Forms.Panel();
-			this.paPadding2 = new System.Windows.Forms.Panel();
+			this.miRevealInExplorer = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
 			this.scTextBoxes.Panel1.SuspendLayout();
 			this.scTextBoxes.Panel2.SuspendLayout();
 			this.scTextBoxes.SuspendLayout();
-			this.paFileTree.SuspendLayout();
-			this.menuStrip1.SuspendLayout();
 			this.paPadding1.SuspendLayout();
 			this.paPadding2.SuspendLayout();
+			this.paFileTree.SuspendLayout();
+			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tvReports
@@ -222,6 +223,26 @@ namespace BerichtManager
 			this.scTextBoxes.SplitterWidth = 1;
 			this.scTextBoxes.TabIndex = 2;
 			// 
+			// paPadding1
+			// 
+			this.paPadding1.Controls.Add(this.rtbWork);
+			this.paPadding1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.paPadding1.Location = new System.Drawing.Point(0, 0);
+			this.paPadding1.Name = "paPadding1";
+			this.paPadding1.Padding = new System.Windows.Forms.Padding(0, 3, 3, 0);
+			this.paPadding1.Size = new System.Drawing.Size(562, 212);
+			this.paPadding1.TabIndex = 0;
+			// 
+			// paPadding2
+			// 
+			this.paPadding2.Controls.Add(this.rtbSchool);
+			this.paPadding2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.paPadding2.Location = new System.Drawing.Point(0, 0);
+			this.paPadding2.Name = "paPadding2";
+			this.paPadding2.Padding = new System.Windows.Forms.Padding(0, 0, 3, 3);
+			this.paPadding2.Size = new System.Drawing.Size(562, 213);
+			this.paPadding2.TabIndex = 0;
+			// 
 			// splitterTreeBoxes
 			// 
 			this.splitterTreeBoxes.Location = new System.Drawing.Point(235, 0);
@@ -257,7 +278,8 @@ namespace BerichtManager
 			this.miFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miCreate,
             this.miEditLatest,
-            this.miPrintAll});
+            this.miPrintAll,
+            this.miRevealInExplorer});
 			this.miFile.Name = "miFile";
 			this.miFile.Size = new System.Drawing.Size(37, 20);
 			this.miFile.Text = "File";
@@ -265,21 +287,21 @@ namespace BerichtManager
 			// miCreate
 			// 
 			this.miCreate.Name = "miCreate";
-			this.miCreate.Size = new System.Drawing.Size(125, 22);
+			this.miCreate.Size = new System.Drawing.Size(180, 22);
 			this.miCreate.Text = "Create";
 			this.miCreate.Click += new System.EventHandler(this.btCreate_Click);
 			// 
 			// miEditLatest
 			// 
 			this.miEditLatest.Name = "miEditLatest";
-			this.miEditLatest.Size = new System.Drawing.Size(125, 22);
+			this.miEditLatest.Size = new System.Drawing.Size(180, 22);
 			this.miEditLatest.Text = "Edit latest";
 			this.miEditLatest.Click += new System.EventHandler(this.btEdit_Click);
 			// 
 			// miPrintAll
 			// 
 			this.miPrintAll.Name = "miPrintAll";
-			this.miPrintAll.Size = new System.Drawing.Size(125, 22);
+			this.miPrintAll.Size = new System.Drawing.Size(180, 22);
 			this.miPrintAll.Text = "Print all";
 			this.miPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
 			// 
@@ -317,25 +339,12 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// paPadding1
+			// miRevealInExplorer
 			// 
-			this.paPadding1.Controls.Add(this.rtbWork);
-			this.paPadding1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.paPadding1.Location = new System.Drawing.Point(0, 0);
-			this.paPadding1.Name = "paPadding1";
-			this.paPadding1.Padding = new System.Windows.Forms.Padding(0, 3, 3, 0);
-			this.paPadding1.Size = new System.Drawing.Size(562, 212);
-			this.paPadding1.TabIndex = 0;
-			// 
-			// paPadding2
-			// 
-			this.paPadding2.Controls.Add(this.rtbSchool);
-			this.paPadding2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.paPadding2.Location = new System.Drawing.Point(0, 0);
-			this.paPadding2.Name = "paPadding2";
-			this.paPadding2.Padding = new System.Windows.Forms.Padding(0, 0, 3, 3);
-			this.paPadding2.Size = new System.Drawing.Size(562, 213);
-			this.paPadding2.TabIndex = 0;
+			this.miRevealInExplorer.Name = "miRevealInExplorer";
+			this.miRevealInExplorer.Size = new System.Drawing.Size(180, 22);
+			this.miRevealInExplorer.Text = "Reveal in explorer";
+			this.miRevealInExplorer.Click += new System.EventHandler(this.miRevealInExplorer_Click);
 			// 
 			// MainForm
 			// 
@@ -357,11 +366,11 @@ namespace BerichtManager
 			this.scTextBoxes.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).EndInit();
 			this.scTextBoxes.ResumeLayout(false);
+			this.paPadding1.ResumeLayout(false);
+			this.paPadding2.ResumeLayout(false);
 			this.paFileTree.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
-			this.paPadding1.ResumeLayout(false);
-			this.paPadding2.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -395,6 +404,7 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miRefresh;
 		private System.Windows.Forms.Panel paPadding1;
 		private System.Windows.Forms.Panel paPadding2;
+		private System.Windows.Forms.ToolStripMenuItem miRevealInExplorer;
 	}
 }
 

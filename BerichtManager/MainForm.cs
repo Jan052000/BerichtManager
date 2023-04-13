@@ -1289,5 +1289,13 @@ namespace BerichtManager
 			}
 			return WordInitialized;
 		}
+
+		private void miRevealInExplorer_Click(object sender, EventArgs e)
+		{
+			if (Directory.Exists(ActivePath))
+				Process.Start(ActivePath);
+			else
+				MessageBox.Show("The working directory has been deleted from an external source", "You may have a problem");
+		}
 	}
 }
