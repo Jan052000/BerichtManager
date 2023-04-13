@@ -302,6 +302,7 @@ namespace BerichtManager
 				else
 				{
 					form = new EditForm("Enter your name", activeTheme, text: "Name Vorname");
+					form.RefreshConfigs += RefreshConfig;
 					if (form.ShowDialog() == DialogResult.OK)
 					{
 						configHandler.ReportUserName(form.Result);
@@ -313,6 +314,7 @@ namespace BerichtManager
 						MessageBox.Show("Cannot proceed without a name!", "Name required!");
 						return;
 					}
+					form.RefreshConfigs -= RefreshConfig;
 				}
 				enumerator.MoveNext();
 
@@ -356,7 +358,9 @@ namespace BerichtManager
 				else
 				{
 					form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", activeTheme, isCreate: true);
+					form.RefreshConfigs += RefreshConfig;
 					form.ShowDialog();
+					form.RefreshConfigs -= RefreshConfig;
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(app, (Word.FormField)enumerator.Current, form.Result);
@@ -385,7 +389,9 @@ namespace BerichtManager
 				else
 				{
 					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", activeTheme, text: "-Keine-", isCreate: true);
+					form.RefreshConfigs += RefreshConfig;
 					form.ShowDialog();
+					form.RefreshConfigs -= RefreshConfig;
 					if (form.DialogResult == DialogResult.OK)
 					{
 						FillText(app, (Word.FormField)enumerator.Current, form.Result);
@@ -425,7 +431,9 @@ namespace BerichtManager
 				{
 					form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", activeTheme, text: client.getHolidaysForDate(baseDate), isCreate: true);
 				}
+				form.RefreshConfigs += RefreshConfig;
 				form.ShowDialog();
+				form.RefreshConfigs -= RefreshConfig;
 				if (form.DialogResult == DialogResult.OK)
 				{
 					FillText(app, (Word.FormField)enumerator.Current, form.Result);
@@ -753,6 +761,7 @@ namespace BerichtManager
 							}
 						}
 						EditForm edit = new EditForm(quickEditTitle, activeTheme, text: ((Word.FormField)enumerator.Current).Result);
+						edit.RefreshConfigs += RefreshConfig;
 						if (edit.ShowDialog() == DialogResult.OK)
 						{
 							FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
@@ -764,6 +773,7 @@ namespace BerichtManager
 								FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
 							}
 						}
+						edit.RefreshConfigs -= RefreshConfig;
 					}
 					else
 					{
@@ -779,7 +789,9 @@ namespace BerichtManager
 									if (si.ShouldEdit)
 									{
 										edit = new EditForm(si.EditorTitle, activeTheme, text: ((Word.FormField)enumerator.Current).Result);
+										edit.RefreshConfigs += RefreshConfig;
 										edit.ShowDialog();
+										edit.RefreshConfigs -= RefreshConfig;
 										if (edit.DialogResult == DialogResult.OK)
 										{
 											FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
@@ -1296,6 +1308,14 @@ namespace BerichtManager
 				Process.Start(ActivePath);
 			else
 				MessageBox.Show("The working directory has been deleted from an external source", "You may have a problem");
+		}
+
+		/// <summary>
+		/// Reloads <see cref="configHandler"/>
+		/// </summary>
+		public void RefreshConfig()
+		{
+			configHandler.ReloadConfig();
 		}
 	}
 }

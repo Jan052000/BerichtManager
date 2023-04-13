@@ -18,6 +18,10 @@ namespace BerichtManager.AddForm
 		/// Stops calls to ConfigHandler being made
 		/// </summary>
 		private bool stopConfigCalls { get; set; }
+		/// <summary>
+		/// Event that is called when config should be reloaded
+		/// </summary>
+		public event TriggerUpdate RefreshConfigs;
 
 		/// <summary>
 		/// Creates a new <see cref="EditForm"/> object
@@ -71,6 +75,11 @@ namespace BerichtManager.AddForm
 			}
 		}
 
+		/// <summary>
+		/// Delegate for signaling updates to properties
+		/// </summary>
+		public delegate void TriggerUpdate();
+
 		private void SaveSize()
 		{
 			if (handler == null)
@@ -83,6 +92,7 @@ namespace BerichtManager.AddForm
 					{
 						handler.EditorFontSize(size);
 						handler.SaveConfig();
+						RefreshConfigs();
 					}
 				}
 			}
@@ -98,6 +108,7 @@ namespace BerichtManager.AddForm
 				{
 					handler.EditorFont(rtInput.Font.FontFamily.Name);
 					handler.SaveConfig();
+					RefreshConfigs();
 				}
 			}
 			SaveSize();

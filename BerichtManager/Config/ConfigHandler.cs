@@ -13,11 +13,25 @@ namespace BerichtManager.Config
 {
 	public class ConfigHandler
 	{
+		/// <summary>
+		/// Path to directory containing config file
+		/// </summary>
 		private readonly static string path = Environment.CurrentDirectory + "\\Config";
+		/// <summary>
+		/// Name of config file
+		/// </summary>
 		private readonly static string FileName = "Config.json";
+		/// <summary>
+		/// Full path of config file
+		/// </summary>
 		private readonly string FullPath = path + "\\" + FileName;
-		private readonly JObject configObject;
-		public bool loginAborted = false;
+		/// <summary>
+		/// Internal object to reduce number of IO calls
+		/// </summary>
+		private JObject configObject { get; set; }
+		/// <summary>
+		/// <see cref="ThemeManager"/> for getting theme when completing config
+		/// </summary>
 		private ThemeManager themeManager;
 		public ConfigHandler(ThemeManager themeManager)
 		{
@@ -219,6 +233,14 @@ namespace BerichtManager.Config
 		public void SaveConfig()
 		{
 			File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
+		}
+
+		/// <summary>
+		/// Reloads config from file
+		/// </summary>
+		public void ReloadConfig()
+		{
+			configObject = JObject.Parse(File.ReadAllText(FullPath));
 		}
 
 		/// <summary>
