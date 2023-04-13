@@ -13,35 +13,57 @@ namespace BerichtManager.AddForm
 	public partial class EditForm : Form
 	{
 		public string Result { get; set; }
-		private readonly ConfigHandler handler = new ConfigHandler(null);
+		private readonly ConfigHandler handler;
+		/// <summary>
+		/// Stops calls to ConfigHandler being made
+		/// </summary>
+		private bool stopConfigCalls { get; set; }
 
-		public EditForm(string title, ITheme theme, string text = "", bool school = false, bool isCreate = false)
+		/// <summary>
+		/// Creates a new <see cref="EditForm"/> object
+		/// </summary>
+		/// <param name="title">Title displayed in title bar</param>
+		/// <param name="theme">Theme to be used</param>
+		/// <param name="text">Text to b set in input</param>
+		/// <param name="isCreate"><see cref="bool"/> if form is in creation mode which changes button texts, enabled status and tool tips</param>
+		/// <param name="isConfigHandlerInitializing">if <see cref="ConfigHandler"/> is completing config file, no calls to it are made</param>
+		public EditForm(string title, ITheme theme, string text = "", bool school = false, bool isCreate = false, bool isConfigHandlerInitializing = false)
 		{
 			InitializeComponent();
+			stopConfigCalls = isConfigHandlerInitializing;
+			if (!stopConfigCalls)
+				handler = new ConfigHandler(null);
 			if (theme == null)
 				theme = new DarkMode();
 			ThemeSetter.SetThemes(this, theme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
-			//rtInput.Multiline = true;
-			nudFontSize.Value = (decimal)handler.EditorFontSize();
+			if (handler == null)
+			{
+				nudFontSize.Value = (decimal)8.25f;
+				cbFontFamily.Text = "Arial";
+			}
+			else
+			{
+				nudFontSize.Value = (decimal)handler.EditorFontSize();
+				cbFontFamily.Text = handler.EditorFont();
+			}
 			foreach (FontFamily family in (new InstalledFontCollection()).Families)
 			{
 				cbFontFamily.Items.Add(family.Name);
 			}
-			cbFontFamily.Text = handler.EditorFont();
 			cbFontFamily.Enabled = false;
 
 			rtInput.Font = new Font(cbFontFamily.Text, (float)nudFontSize.Value);
 
 			List<int> tabstops = new List<int>();
-			for (int i = 1; i * 14 < rtInput.Size.Width && tabstops.Count < 32; i++) 
+			for (int i = 1; i * 14 < rtInput.Size.Width && tabstops.Count < 32; i++)
 			{
 				tabstops.Add(i * 14);
 			}
 			rtInput.SelectionTabs = tabstops.ToArray();
 			rtInput.Text = text;
-			if (isCreate) 
+			if (isCreate)
 			{
 				btSaveAndQuit.Enabled = false;
 				btQuit.Text = "Cancel";
@@ -49,13 +71,15 @@ namespace BerichtManager.AddForm
 			}
 		}
 
-		private void SaveSize() 
+		private void SaveSize()
 		{
-			if (((float)nudFontSize.Value) != handler.EditorFontSize()) 
+			if (handler == null)
+				return;
+			if (((float)nudFontSize.Value) != handler.EditorFontSize())
 			{
-				if (MessageBox.Show("Do you want to save the font size of the editor?", "Save font size", MessageBoxButtons.YesNo) == DialogResult.Yes) 
+				if (MessageBox.Show("Do you want to save the font size of the editor?", "Save font size", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-					if (float.TryParse(nudFontSize.Text , out float size)) 
+					if (float.TryParse(nudFontSize.Text, out float size))
 					{
 						handler.EditorFontSize(size);
 						handler.SaveConfig();
@@ -64,8 +88,10 @@ namespace BerichtManager.AddForm
 			}
 		}
 
-		private void ChangeFont() 
+		private void ChangeFont()
 		{
+			if (handler == null)
+				return;
 			if (rtInput.Font.FontFamily.Name != handler.EditorFont())
 			{
 				if (MessageBox.Show("Do you want to change the font of following reports to " + cbFontFamily.Text + "?\n(Standard: \"Arial\")", "Change Font?", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -92,7 +118,7 @@ namespace BerichtManager.AddForm
 			{
 				Result = "-Keine-";
 			}
-			else 
+			else
 			{
 				Result = rtInput.Text;
 			}
@@ -108,7 +134,7 @@ namespace BerichtManager.AddForm
 
 		private void nudFontSize_ValueChanged(object sender, EventArgs e)
 		{
-			if (nudFontSize.Value > 0) 
+			if (nudFontSize.Value > 0)
 			{
 				rtInput.Font = new Font(rtInput.Font.FontFamily, (float)nudFontSize.Value);
 			}
@@ -132,7 +158,7 @@ namespace BerichtManager.AddForm
 					}
 				}
 			}
-			else 
+			else
 			{
 				cbFontFamily.Text = "Arial";
 				cbFontFamily.Enabled = false;

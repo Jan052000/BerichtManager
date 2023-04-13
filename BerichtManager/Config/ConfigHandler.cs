@@ -61,11 +61,15 @@ namespace BerichtManager.Config
 				}
 				if (!configObject.ContainsKey("ReportNR"))
 				{
-					EditForm form = new EditForm("Edit Number of Report", themeManager.GetTheme(ActiveTheme()), "", false);
+					EditForm form = new EditForm("Edit Number of Report", themeManager.GetTheme(ActiveTheme()),text: "1", isConfigHandlerInitializing: true);
 					form.ShowDialog();
-					if (form.DialogResult == DialogResult.OK)
+					if (form.DialogResult == (DialogResult.OK | DialogResult.Cancel))
 					{
-						ReportNumber(form.Result);
+						configObject.Add(new JProperty("ReportNR", form.Result));
+					}
+					else
+					{
+						configObject.Add(new JProperty("ReportNR", "1"));
 					}
 					isComplete = false;
 				}
@@ -86,8 +90,8 @@ namespace BerichtManager.Config
 				}
 				if (!configObject.ContainsKey("Name"))
 				{
-					EditForm form = new EditForm("Enter your name", themeManager.GetTheme(ActiveTheme()), "Name Vorname", false);
-					if (form.ShowDialog() == DialogResult.OK)
+					EditForm form = new EditForm("Enter your name", themeManager.GetTheme(ActiveTheme()), "Name Vorname", isConfigHandlerInitializing: true);
+					if (form.ShowDialog() == (DialogResult.OK | DialogResult.Cancel))
 					{
 						configObject.Add(new JProperty("Name", form.Result));
 					}
