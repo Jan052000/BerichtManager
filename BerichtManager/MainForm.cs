@@ -40,7 +40,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.10.5.1";
+		public const string VersionNumber = "1.10.5.2";
 
 		/// <summary>
 		/// String to be printed
@@ -1228,7 +1228,8 @@ namespace BerichtManager
 
 		private void miWordVisible_Click(object sender, EventArgs e)
 		{
-			wordApp.Visible = miWordVisible.Checked;
+			if (WordInitialized)
+				wordApp.Visible = miWordVisible.Checked;
 		}
 
 		private void FormManager_FormClosing(object sender, FormClosingEventArgs e)
