@@ -40,7 +40,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.10.5";
+		public const string VersionNumber = "1.10.5.1";
 
 		/// <summary>
 		/// String to be printed
@@ -55,7 +55,7 @@ namespace BerichtManager
 		/// <summary>
 		/// Status if the word app has finished loading
 		/// </summary>
-		private bool WordInitialized = false;
+		private bool WordInitialized { get; set; } = false;
 
 		/// <summary>
 		/// Thread that contains the word app, it is forcefully terminated when form closes
@@ -1085,11 +1085,6 @@ namespace BerichtManager
 		{
 			if (!HasWordStarted()) return;
 			string path = Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath);
-			if (Path.GetExtension(path) == ".docx" && !Path.GetFileName(path).StartsWith("~$"))
-			{
-				MessageBox.Show("Word is still starting, please try again", "Please try again");
-				return;
-			}
 
 			if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
 				return;
