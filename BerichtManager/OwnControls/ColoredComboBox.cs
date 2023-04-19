@@ -21,6 +21,7 @@ namespace BerichtManager.OwnControls
 		/// Color of the inner border
 		/// </summary>
 		[Category("Colored Combo Box")]
+		[DefaultValue("Window")]
 		public Color BorderColor
 		{
 			get => borderColor;
@@ -42,6 +43,7 @@ namespace BerichtManager.OwnControls
 		/// Color of the outer line border
 		/// </summary>
 		[Category("Colored Combo Box")]
+		[DefaultValue(typeof(Color), "100; 100; 100")]
 		public Color OutlineColor
 		{
 			get => outlineColor;
@@ -63,6 +65,7 @@ namespace BerichtManager.OwnControls
 		/// Color of the drop down button background
 		/// </summary>
 		[Category("Colored Combo Box")]
+		[DefaultValue("Menu")]
 		public Color DropDownButtonColor
 		{
 			get => dropDownButtonColor;
@@ -84,6 +87,7 @@ namespace BerichtManager.OwnControls
 		/// Color of the arrow drawn in dropdown button
 		/// </summary>
 		[Category("Colored Combo Box")]
+		[DefaultValue(typeof(Color), "100; 100; 100")]
 		public Color ArrowColor
 		{
 			get => arrowColor;
@@ -105,6 +109,7 @@ namespace BerichtManager.OwnControls
 		/// Color to be used when control is disabled
 		/// </summary>
 		[Category("Colored Combo Box")]
+		[DefaultValue("Control")]
 		public Color DisabledColor
 		{
 			get => disabledColor;
@@ -126,6 +131,7 @@ namespace BerichtManager.OwnControls
 		/// Color to be used for text when control is disabled
 		/// </summary>
 		[Category("Colored Combo Box")]
+		[DefaultValue("GrayText")]
 		public Color DisabledTextColor
 		{
 			get => disabledTextColor;
@@ -147,6 +153,7 @@ namespace BerichtManager.OwnControls
 		/// Color of displayed text
 		/// </summary>
 		[Category("Colored Combo Box")]
+		[DefaultValue("WindowText")]
 		public Color TextColor
 		{
 			get => textColor;
@@ -168,6 +175,7 @@ namespace BerichtManager.OwnControls
 		/// Color of hilighted item from drop down list
 		/// </summary>
 		[Category("Colored Combo Box")]
+		[DefaultValue("Highlight")]
 		public Color HighlightColor
 		{
 			get => highlightColor;
@@ -182,6 +190,7 @@ namespace BerichtManager.OwnControls
 		}
 
 		private ComboBoxStyle dropDownStyle = ComboBoxStyle.DropDownList;
+		[DefaultValue("DropDownList")]
 		public new ComboBoxStyle DropDownStyle
 		{
 			get => dropDownStyle;
@@ -198,6 +207,7 @@ namespace BerichtManager.OwnControls
 		}
 
 		private DrawMode drawMode = DrawMode.OwnerDrawFixed;
+		[DefaultValue("OwnerDrawFixed")]
 		public new DrawMode DrawMode
 		{
 			get => drawMode;

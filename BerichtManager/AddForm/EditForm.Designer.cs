@@ -34,10 +34,10 @@
 			this.rtInput = new System.Windows.Forms.RichTextBox();
 			this.btQuit = new System.Windows.Forms.Button();
 			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
-			this.cbFontFamily = new System.Windows.Forms.ComboBox();
 			this.cbEditorFont = new System.Windows.Forms.CheckBox();
 			this.btSaveAndQuit = new System.Windows.Forms.Button();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
+			this.cbFontFamily = new BerichtManager.OwnControls.ColoredComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -93,25 +93,12 @@
 			// 
 			this.nudFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.nudFontSize.DecimalPlaces = 2;
-			this.nudFontSize.Location = new System.Drawing.Point(407, 415);
+			this.nudFontSize.Location = new System.Drawing.Point(390, 415);
 			this.nudFontSize.Name = "nudFontSize";
-			this.nudFontSize.Size = new System.Drawing.Size(47, 20);
+			this.nudFontSize.Size = new System.Drawing.Size(64, 20);
 			this.nudFontSize.TabIndex = 5;
 			this.ttTips.SetToolTip(this.nudFontSize, "Changes local font size");
 			this.nudFontSize.ValueChanged += new System.EventHandler(this.nudFontSize_ValueChanged);
-			// 
-			// cbFontFamily
-			// 
-			this.cbFontFamily.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.cbFontFamily.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbFontFamily.FormattingEnabled = true;
-			this.cbFontFamily.Location = new System.Drawing.Point(95, 415);
-			this.cbFontFamily.Name = "cbFontFamily";
-			this.cbFontFamily.Size = new System.Drawing.Size(306, 21);
-			this.cbFontFamily.TabIndex = 6;
-			this.ttTips.SetToolTip(this.cbFontFamily, "Changes font in editor and report");
-			this.cbFontFamily.SelectedValueChanged += new System.EventHandler(this.cbFontFamily_SelectedValueChanged);
 			// 
 			// cbEditorFont
 			// 
@@ -137,6 +124,28 @@
 			this.ttTips.SetToolTip(this.btSaveAndQuit, "Saves input and closes this window");
 			this.btSaveAndQuit.UseVisualStyleBackColor = true;
 			this.btSaveAndQuit.Click += new System.EventHandler(this.btSaveAndQuit_Click);
+			// 
+			// cbFontFamily
+			// 
+			this.cbFontFamily.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.cbFontFamily.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.cbFontFamily.BorderColor = System.Drawing.SystemColors.Window;
+			this.cbFontFamily.DisabledColor = System.Drawing.SystemColors.Control;
+			this.cbFontFamily.DisabledTextColor = System.Drawing.SystemColors.GrayText;
+			this.cbFontFamily.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.cbFontFamily.DropDownButtonColor = System.Drawing.SystemColors.Menu;
+			this.cbFontFamily.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cbFontFamily.FormattingEnabled = true;
+			this.cbFontFamily.HighlightColor = System.Drawing.SystemColors.Highlight;
+			this.cbFontFamily.Location = new System.Drawing.Point(95, 415);
+			this.cbFontFamily.Name = "cbFontFamily";
+			this.cbFontFamily.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.cbFontFamily.Size = new System.Drawing.Size(289, 21);
+			this.cbFontFamily.TabIndex = 6;
+			this.cbFontFamily.TextColor = System.Drawing.SystemColors.WindowText;
+			this.ttTips.SetToolTip(this.cbFontFamily, "Changes font in editor and report");
+			this.cbFontFamily.SelectedValueChanged += new System.EventHandler(this.cbFontFamily_SelectedValueChanged);
 			// 
 			// EditForm
 			// 
@@ -167,7 +176,7 @@
 		private System.Windows.Forms.RichTextBox rtInput;
 		private System.Windows.Forms.Button btQuit;
 		private System.Windows.Forms.NumericUpDown nudFontSize;
-		private System.Windows.Forms.ComboBox cbFontFamily;
+		private OwnControls.ColoredComboBox cbFontFamily;
 		private System.Windows.Forms.CheckBox cbEditorFont;
 		private System.Windows.Forms.Button btSaveAndQuit;
 		private System.Windows.Forms.ToolTip ttTips;
