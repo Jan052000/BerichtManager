@@ -1057,17 +1057,17 @@ namespace BerichtManager
 		/// <param name="path">Path of file to delete</param>
 		private void DeleteDocument(string path)
 		{
-			if (!File.Exists(path))
-			{
-				MessageBox.Show(path + " not Found (was it moved or deleted?)");
-				return;
-			}
 			if (File.GetAttributes(path) == FileAttributes.Directory)
 			{
 				MessageBox.Show("You may not delete folders using the manager");
 				return;
 			}
-			if (Path.GetExtension(path) != ".docx" && !Path.GetFileName(path).StartsWith("~$") && path.Split('\\')[path.Split('\\').Length - 2] != "Logs" && !path.EndsWith(".txt"))
+			if (!File.Exists(path))
+			{
+				MessageBox.Show(path + " not Found (was it moved or deleted?)");
+				return;
+			}
+			if (Path.GetExtension(path) != ".docx" && !Path.GetFileName(path).StartsWith("~$") && !path.Contains("\\Logs"))
 			{
 				MessageBox.Show("You may only delete Documents(*.docx) or their temporary files");
 				return;
