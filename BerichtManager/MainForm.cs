@@ -353,7 +353,10 @@ namespace BerichtManager
 				enumerator.MoveNext();
 				if (vacation)
 				{
-					FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
+					if (configHandler.UseUserPrefix())
+						FillText(app, (Word.FormField)enumerator.Current, configHandler.CustomPrefix() + "Urlaub");
+					else
+						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 				}
 				else
 				{
@@ -384,7 +387,10 @@ namespace BerichtManager
 				enumerator.MoveNext();
 				if (vacation)
 				{
-					FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
+					if (configHandler.UseUserPrefix())
+						FillText(app, (Word.FormField)enumerator.Current, configHandler.CustomPrefix() + "Urlaub");
+					else
+						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 				}
 				else
 				{
