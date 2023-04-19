@@ -58,7 +58,7 @@ namespace BerichtManager.AddForm
 			}
 			cbFontFamily.Enabled = false;
 
-			rtInput.Font = new Font(cbFontFamily.Text, (float)nudFontSize.Value);
+			rtInput.Font = new Font(handler.EditorFont(), (float)nudFontSize.Value);
 
 			List<int> tabstops = new List<int>();
 			for (int i = 1; i * 14 < rtInput.Size.Width && tabstops.Count < 32; i++)
