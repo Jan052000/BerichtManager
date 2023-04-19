@@ -1067,9 +1067,9 @@ namespace BerichtManager
 				MessageBox.Show(path + " not Found (was it moved or deleted?)");
 				return;
 			}
-			if (Path.GetExtension(path) != ".docx" && !Path.GetFileName(path).StartsWith("~$") && !path.Contains("\\Logs"))
+			if (Path.GetExtension(path) != ".docx" && !path.Contains("\\Logs"))
 			{
-				MessageBox.Show("You may only delete Documents(*.docx) or their temporary files");
+				MessageBox.Show("You may only delete Word documents (*.docx) or their temporary files");
 				return;
 			}
 			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
