@@ -62,6 +62,14 @@ namespace BerichtManager
 		/// </summary>
 		private Thread WordThread;
 
+		/// <summary>
+		/// Generates path to file from selected node
+		/// </summary>
+		private string FullSelectedPath
+		{
+			get => Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath);
+		}
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -648,7 +656,7 @@ namespace BerichtManager
 				MessageBox.Show("No report selected");
 				return;
 			}
-			PrintDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
+			PrintDocument(FullSelectedPath);
 		}
 
 		private void btPrintAll_Click(object sender, EventArgs e)
@@ -988,7 +996,7 @@ namespace BerichtManager
 		{
 			if (doc == null)
 				return false;
-			return Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath) == doc.Path + "\\" + doc.Name;
+			return FullSelectedPath == doc.Path + "\\" + doc.Name;
 		}
 
 		/**
@@ -1090,7 +1098,7 @@ namespace BerichtManager
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
 			if (!HasWordStarted()) return;
-			string path = Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath);
+			string path = FullSelectedPath;
 
 			if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
 				return;
@@ -1102,11 +1110,11 @@ namespace BerichtManager
 			SaveOrExit();
 			if (configHandler.LegacyEdit())
 			{
-				Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
+				Edit(FullSelectedPath);
 			}
 			else
 			{
-				EditInTb(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
+				EditInTb(FullSelectedPath);
 			}
 		}
 
@@ -1120,7 +1128,7 @@ namespace BerichtManager
 
 		private void miDelete_Click(object sender, EventArgs e)
 		{
-			DeleteDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
+			DeleteDocument(FullSelectedPath);
 		}
 
 		private void miEdit_Click(object sender, EventArgs e)
@@ -1128,14 +1136,14 @@ namespace BerichtManager
 			if (!HasWordStarted()) return;
 
 			SaveOrExit();
-			Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
+			Edit(FullSelectedPath);
 		}
 
 		private void miPrint_Click(object sender, EventArgs e)
 		{
 			if (!HasWordStarted()) return;
 
-			PrintDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
+			PrintDocument(FullSelectedPath);
 		}
 
 		private void miQuickEditWork_Click(object sender, EventArgs e)
@@ -1143,7 +1151,7 @@ namespace BerichtManager
 			if (!HasWordStarted()) return;
 
 			SaveOrExit();
-			Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 6, quickEditTitle: "Edit work");
+			Edit(FullSelectedPath, quickEditFieldNr: 6, quickEditTitle: "Edit work");
 		}
 
 		private void miQuickEditSchool_Click(object sender, EventArgs e)
@@ -1151,7 +1159,7 @@ namespace BerichtManager
 			if (!HasWordStarted()) return;
 
 			SaveOrExit();
-			Edit(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath), quickEditFieldNr: 8, quickEditTitle: "Edit school");
+			Edit(FullSelectedPath, quickEditFieldNr: 8, quickEditTitle: "Edit school");
 		}
 
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1278,10 +1286,10 @@ namespace BerichtManager
 			{
 				case Keys.Enter:
 					if (!HasWordStarted()) return;
-					EditInTb(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
+					EditInTb(FullSelectedPath);
 					break;
 				case Keys.Delete:
-					DeleteDocument(Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath));
+					DeleteDocument(FullSelectedPath);
 					break;
 			}
 		}
