@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace BerichtManager.AddForm
+namespace BerichtManager.Forms
 {
 	public partial class Login : Form
 	{

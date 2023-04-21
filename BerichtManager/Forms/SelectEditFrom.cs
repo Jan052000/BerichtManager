@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace BerichtManager.AddForm
+namespace BerichtManager.Forms
 {
 	public partial class SelectEditFrom : Form
 	{

@@ -6,7 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace BerichtManager.OptionsMenu
+namespace BerichtManager.Forms
 {
 	public partial class OptionMenu : Form
 	{

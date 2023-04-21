@@ -1,4 +1,4 @@
-namespace BerichtManager.OptionsMenu
+namespace BerichtManager.Forms
 {
 	partial class OptionMenu
 	{

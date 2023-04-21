@@ -1,4 +1,4 @@
-﻿namespace BerichtManager.AddForm
+﻿namespace BerichtManager.Forms
 {
 	partial class Login
 	{
