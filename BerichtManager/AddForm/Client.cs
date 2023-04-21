@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Windows.Forms;
@@ -19,7 +20,7 @@ namespace BerichtManager.AddForm
 		public Client(ConfigHandler configHandler = null)
 		{
 			this.configHandler = configHandler;
-			if(configHandler == null)
+			if (configHandler == null)
 				configHandler = new ConfigHandler(null);
 			//Get school and server
 			schoolName = configHandler.SchoolName();
@@ -34,14 +35,28 @@ namespace BerichtManager.AddForm
 			}
 
 			List<string> classes = new List<string>();
-			HttpClient client = new HttpClient();
+
+			//Enable cookies to get JSESSION token from WebUntis server
+			HttpClientHandler httpClientHandler = new HttpClientHandler();
+			httpClientHandler.CookieContainer = new CookieContainer();
+			httpClientHandler.UseCookies = true;
+			HttpClient client = new HttpClient(httpClientHandler);
+			HttpResponseMessage responseMessage;
+			string jSpringURL = "https://" + configHandler.WebUntisServer() + ".webuntis.com/WebUntis/j_spring_security_check";
 
 			//Generate Headers and Login
-			HttpResponseMessage responseMessage;
 			Config.User user = null;
 			if (configHandler.StayLoggedIn())
 			{
-				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.WebUntisUsername() + "&j_password=" + configHandler.WebUntisPassword()).Result;
+				//Obtain JSessionId
+				Dictionary<string, string> content = new Dictionary<string, string>()
+				{
+					{ "school", configHandler.SchoolName() },
+					{ "j_username", configHandler.WebUntisUsername() },
+					{ "j_password", configHandler.WebUntisPassword() },
+					{ "token", "" }
+				};
+				responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(content)).Result;
 			}
 			else
 			{
@@ -53,10 +68,41 @@ namespace BerichtManager.AddForm
 				}
 				else
 				{
-					responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + user.Username + "&j_password=" + user.Password).Result;
+					Dictionary<string, string> content = new Dictionary<string, string>()
+					{
+						{ "school", configHandler.SchoolName() },
+						{ "j_username", user.Username },
+						{ "j_password", user.Password },
+						{ "token", "" }
+					};
+					responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(content)).Result;
 				}
 			}
 			//HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
+
+			//Set cookie data
+			string newCookie = "schoolname=\"_" + System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(configHandler.SchoolName())) + "\"; ";
+			if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
+			{
+				List<string> cookieHeaders = new List<string>();
+				IEnumerator<string> cookieEnumerator = setCookies.GetEnumerator();
+				while (cookieEnumerator.MoveNext())
+				{
+					if (cookieEnumerator.Current.Contains("traceId"))
+						cookieHeaders = cookieEnumerator.Current.Split(';').ToList<string>();
+				}
+				cookieHeaders.ForEach(header =>
+				{
+					if (header.Trim().Contains("traceId"))
+						newCookie += header + "; ";
+				});
+			}
+			foreach (Cookie cookie in httpClientHandler.CookieContainer.GetCookies(new Uri(jSpringURL)))
+			{
+				if (cookie.Name.Equals("JSESSIONID"))
+					newCookie += cookie.Name + "=" + cookie.Value;
+			}
+			client.DefaultRequestHeaders.Add("Cookie", newCookie);
 
 			//Obtain Api Key
 			string apiKey = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
@@ -70,7 +116,11 @@ namespace BerichtManager.AddForm
 				return new List<string>();
 			}
 
-			//Guarantee complete Header
+			//Set accept to application/json
+			client.DefaultRequestHeaders.Accept.Clear();
+			client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+			//Get account data
 			responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
 			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result);
 
@@ -78,8 +128,24 @@ namespace BerichtManager.AddForm
 			DateTime baseDate = DateTime.Today;
 			string date = baseDate.ToString("yyyy-MM-dd");
 
+			//Check account privilages
+			if (!Enum.TryParse<ElementTypes>(yearData.user.roles[0], out ElementTypes elementType))
+			{
+				MessageBox.Show("Could not resolve the rights your account has\non the WebUntis server of your school", "Unknown account type");
+				return new List<string>();
+			}
+
 			//Stundenplan api https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=2022-09-28&formatId=2
-			responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
+			if (yearData.user.roles.Count > 0)
+			{
+				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=" + (int)elementType + "&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=1"/* + pageConfigData.data.selectedFormatId*/).Result;
+			}
+			else
+			{
+				MessageBox.Show("Your account does not have the rights to view its timetable", "Insifficient permissions");
+				return new List<string>();
+			}
+			//responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=" + configHandler.TableElementType() + "&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
 			string jsonResponse = responseMessage.Content.ReadAsStringAsync().Result;
 
 			//Deserialize Root from response
@@ -285,6 +351,18 @@ namespace BerichtManager.AddForm
 		private void btTest_Click(object sender, EventArgs e)
 		{
 			List<string> test = GetClassesFromWebUntis();
+		}
+
+		/// <summary>
+		/// Enum for types of WebUntis accounts
+		/// </summary>
+		public enum ElementTypes
+		{
+			KLASSE = 1,
+			TEACHER = 2,
+			SUBJECT = 3,
+			ROOM = 4,
+			STUDENT = 5
 		}
 	}
 
