@@ -10,10 +10,10 @@ using System.Drawing;
 using System.Collections;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
-using System.Threading;
 using System.Diagnostics;
 using BerichtManager.HelperClasses;
 using BerichtManager.WebUntisClient;
+using System.Threading.Tasks;
 
 namespace BerichtManager
 {
@@ -58,9 +58,9 @@ namespace BerichtManager
 		private bool WordInitialized { get; set; } = false;
 
 		/// <summary>
-		/// Thread that contains the word app, it is forcefully terminated when form closes
+		/// Factory for creating tasks that start word
 		/// </summary>
-		private Thread WordThread;
+		private readonly TaskFactory WordTaskFactory = Task.Factory;
 
 		/// <summary>
 		/// Generates path to file from selected node
@@ -96,15 +96,7 @@ namespace BerichtManager
 			if (File.Exists(configHandler.PublishPath()))
 				if (CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(configHandler.PublishPath()).FileVersion) > 0)
 					VersionString += "*";
-			WordThread = new Thread(new ThreadStart(() =>
-			{
-				wordApp = new Word.Application()
-				{
-					Visible = false
-				};
-				WordInitialized = true;
-			}));
-			WordThread.Start();
+			WordTaskFactory.StartNew(RestartWord);
 		}
 
 		/// <summary>
@@ -498,8 +490,10 @@ namespace BerichtManager
 					case -2147023174:
 						MessageBox.Show("an unexpected problem occured this progam will now close!");
 						break;
+					case -2147467262:
 					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly");
+						MessageBox.Show("Word closed unexpectedly and is restarting please try again shortly");
+						RestartWord();
 						break;
 					case -2146822750:
 						//Document already fit on page
@@ -847,8 +841,10 @@ namespace BerichtManager
 					case -2147023174:
 						MessageBox.Show("an unexpected problem occured this progam will now close!");
 						break;
+					case -2147467262:
 					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly");
+						MessageBox.Show("Word closed unexpectedly and is restarting please try again shortly");
+						RestartWord();
 						break;
 					case -2146822750:
 						//Document is only one page long
@@ -905,8 +901,10 @@ namespace BerichtManager
 					case -2147023174:
 						MessageBox.Show("an unexpected problem occured this progam will now close!");
 						break;
+					case -2147467262:
 					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly");
+						MessageBox.Show("Word closed unexpectedly and is restarting please try again shortly");
+						RestartWord();
 						break;
 					case -2146822750:
 						//Document is only one page long
@@ -948,8 +946,10 @@ namespace BerichtManager
 					case -2147023174:
 						MessageBox.Show("an unexpected problem occured this progam will now close!");
 						break;
+					case -2147467262:
 					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly");
+						MessageBox.Show("Word closed unexpectedly and is restarting please try again shortly");
+						RestartWord();
 						break;
 					case -2146822750:
 						break;
@@ -995,6 +995,14 @@ namespace BerichtManager
 		{
 			if (doc == null)
 				return false;
+			try
+			{
+				string path = doc.Path;
+			}
+			catch
+			{
+				return false;
+			}
 			return FullSelectedPath == doc.Path + "\\" + doc.Name;
 		}
 
@@ -1258,7 +1266,6 @@ namespace BerichtManager
 					doc.Close(SaveChanges: false);
 					doc = null;
 				}
-				WordThread.Join();
 			}
 			catch (Exception ex)
 			{
@@ -1325,6 +1332,34 @@ namespace BerichtManager
 		public void RefreshConfig()
 		{
 			configHandler.ReloadConfig();
+		}
+
+		/// <summary>
+		/// Restarts word if it has been closed
+		/// </summary>
+		private void RestartWord()
+		{
+			if (wordApp == null)
+			{
+				wordApp = new Word.Application();
+				WordInitialized = true;
+				return;
+			}
+
+			//Check if word is still open
+			if (!typeof(Word.Application).IsAssignableFrom(wordApp.GetType()))
+				return;
+			WordInitialized = false;
+			//try
+			//{
+			//	wordApp.Quit(SaveChanges: false);
+			//}
+			//catch
+			//{
+
+			//}
+			wordApp = new Word.Application();
+			WordInitialized = true;
 		}
 	}
 }
