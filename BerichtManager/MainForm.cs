@@ -937,8 +937,7 @@ namespace BerichtManager
 					return;
 				FillText(wordApp, doc.FormFields[6], rtbWork.Text);
 				FillText(wordApp, doc.FormFields[8], rtbSchool.Text);
-				doc.Close(SaveChanges: true);
-				doc = null;
+				doc.Save();
 				MessageBox.Show("Saved changes", "Saved");
 				wasEdited = false;
 			}
