@@ -984,7 +984,17 @@ namespace BerichtManager
 			if (MessageBox.Show("Save unsaved changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				SaveFromTb();
 			else
+			{
+				try
+				{
+					doc.Close();
+				}
+				catch
+				{
+
+				}
 				doc = null;
+			}
 		}
 
 		/// <summary>
@@ -1292,6 +1302,7 @@ namespace BerichtManager
 			{
 				case Keys.Enter:
 					if (!HasWordStarted()) return;
+					SaveOrExit();
 					EditInTb(FullSelectedPath);
 					break;
 				case Keys.Delete:
