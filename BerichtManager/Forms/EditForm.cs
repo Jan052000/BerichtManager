@@ -111,7 +111,7 @@ namespace BerichtManager.Forms
 					RefreshConfigs();
 				}
 			}
-			SaveSize();
+			//SaveSize();
 		}
 
 		private void btClose_Click(object sender, EventArgs e)

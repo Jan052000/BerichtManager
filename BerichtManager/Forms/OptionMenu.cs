@@ -13,7 +13,7 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// Value if the form has been edited
 		/// </summary>
-		private bool isDirty { get; set; }
+		private bool IsDirty { get; set; }
 		private readonly ConfigHandler configHandler;
 
 		/// <summary>
@@ -35,8 +35,13 @@ namespace BerichtManager.Forms
 		/// Emits when tab stops change
 		/// </summary>
 		public event tabStopsChanged TabStopsChanged;
-		private ThemeManager ThemeManager;
-		private ITheme Theme;
+
+		/// <summary>
+		/// Emits when font size setting is changed
+		/// </summary>
+		public event fontSizeChanged FontSizeChanged;
+		private ThemeManager ThemeManager { get; set; }
+		private ITheme Theme { get; set; }
 		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
 		{
 			InitializeComponent();
@@ -67,11 +72,12 @@ namespace BerichtManager.Forms
 			if (int.TryParse(configHandler.ReportNumber(), out int value))
 				nudNumber.Value = value;
 			nudTabStops.Value = configHandler.TabStops();
+			nudFontSize.Value = (decimal)configHandler.EditorFontSize();
 			tbFolder.Text = configHandler.ReportPath();
 			tbUpdate.Text = configHandler.PublishPath();
 			tbNamingPattern.Text = configHandler.NamingPattern();
 
-			isDirty = false;
+			IsDirty = false;
 			btSave.Enabled = false;
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
@@ -93,15 +99,21 @@ namespace BerichtManager.Forms
 		public delegate void activeThemeChanged(object sender, ITheme theme);
 
 		/// <summary>
-		/// Delegat fo the <see cref="TabStopsChanged"/> event
+		/// Delegat for the <see cref="TabStopsChanged"/> event
 		/// </summary>
 		/// <param name="sender">Event sender</param>
 		/// <param name="tabStops">Number of spaces per tab</param>
 		public delegate void tabStopsChanged(object sender, int tabStops);
 
+		/// <summary>
+		/// Delegate for the <see cref="FontSizeChanged"/> event
+		/// </summary>
+		/// <param name="fontSize">Size to change font to</param>
+		public delegate void fontSizeChanged(float fontSize);
+
 		private void btClose_Click(object sender, EventArgs e)
 		{
-			if (isDirty)
+			if (IsDirty)
 			{
 				if (MessageBox.Show("Save changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
@@ -129,6 +141,12 @@ namespace BerichtManager.Forms
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
 					configHandler.ReportUserName(tbName.Text);
 					configHandler.ReportNumber("" + nudNumber.Value);
+					if (nudFontSize.Value != (decimal)configHandler.EditorFontSize())
+					{
+						configHandler.EditorFontSize((float)nudFontSize.Value);
+						FontSizeChanged((float)nudFontSize.Value);
+
+					}
 					configHandler.TemplatePath(tbTemplate.Text);
 					configHandler.ActiveTheme(coTheme.Text);
 					if (ThemeName != (string)coTheme.SelectedValue)
@@ -154,7 +172,7 @@ namespace BerichtManager.Forms
 					configHandler.NamingPattern(tbNamingPattern.Text);
 					try
 					{
-						if (isDirty)
+						if (IsDirty)
 							configHandler.SaveConfig();
 					}
 					catch (Exception ex)
@@ -169,7 +187,7 @@ namespace BerichtManager.Forms
 
 		private void cbUseCustomPrefix_CheckedChanged(object sender, EventArgs e)
 		{
-			isDirty = true;
+			IsDirty = true;
 			btSave.Enabled = true;
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
 		}
@@ -178,7 +196,7 @@ namespace BerichtManager.Forms
 		{
 			try
 			{
-				if (isDirty)
+				if (IsDirty)
 				{
 					configHandler.UseUserPrefix(cbUseCustomPrefix.Checked);
 					if (cbUseCustomPrefix.Checked)
@@ -193,6 +211,12 @@ namespace BerichtManager.Forms
 					configHandler.LegacyEdit(cbLegacyEdit.Checked);
 					configHandler.ReportUserName(tbName.Text);
 					configHandler.ReportNumber("" + nudNumber.Value);
+					if (nudFontSize.Value != (decimal)configHandler.EditorFontSize())
+					{
+						configHandler.EditorFontSize((float)nudFontSize.Value);
+						FontSizeChanged((float)nudFontSize.Value);
+
+					}
 					configHandler.TemplatePath(tbTemplate.Text);
 					configHandler.ActiveTheme(coTheme.Text);
 					if (ThemeName != coTheme.Text)
@@ -225,7 +249,7 @@ namespace BerichtManager.Forms
 				MessageBox.Show(ex.StackTrace);
 			}
 			btSave.Enabled = false;
-			isDirty = false;
+			IsDirty = false;
 		}
 
 		/// <summary>
@@ -235,13 +259,13 @@ namespace BerichtManager.Forms
 		/// <param name="e">event</param>
 		private void MarkAsDirty(object sender, EventArgs e)
 		{
-			isDirty = true;
+			IsDirty = true;
 			btSave.Enabled = true;
 		}
 
 		private void cbShouldUseUntis_CheckedChanged(object sender, EventArgs e)
 		{
-			isDirty = true;
+			IsDirty = true;
 			btSave.Enabled = true;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;

@@ -1209,10 +1209,12 @@ namespace BerichtManager
 			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
 			optionMenu.ReportFolderChanged += ReportFolderChanged;
 			optionMenu.TabStopsChanged += UpdateTabStops;
+			optionMenu.FontSizeChanged += ChangeFontSize;
 			optionMenu.ShowDialog();
 			optionMenu.ActiveThemeChanged -= ActiveThemeChanged;
 			optionMenu.ReportFolderChanged -= ReportFolderChanged;
 			optionMenu.TabStopsChanged -= UpdateTabStops;
+			optionMenu.FontSizeChanged -= ChangeFontSize;
 		}
 
 		private void ReportFolderChanged(object sender, string folderPath)
@@ -1373,6 +1375,16 @@ namespace BerichtManager
 			//}
 			wordApp = new Word.Application();
 			WordInitialized = true;
+		}
+
+		/// <summary>
+		/// Changes font size of editing text boxes
+		/// </summary>
+		/// <param name="fontSize">Size to set font to</param>
+		private void ChangeFontSize(float fontSize)
+		{
+			rtbSchool.Font = new Font(rtbSchool.Font.FontFamily, fontSize);
+			rtbWork.Font = new Font(rtbWork.Font.FontFamily, fontSize);
 		}
 	}
 }
