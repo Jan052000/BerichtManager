@@ -153,6 +153,8 @@ namespace BerichtManager
 			bounds.X = paFileTree.Bounds.Right + 1;
 			bounds.Width = Width - 1 - paFileTree.Bounds.Width;
 			scTextBoxes.Bounds = bounds;
+			rtbSchool.Font = new Font(rtbSchool.Font.FontFamily, configHandler.EditorFontSize());
+			rtbWork.Font = new Font(rtbWork.Font.FontFamily, configHandler.EditorFontSize());
 		}
 
 		/// <summary>
