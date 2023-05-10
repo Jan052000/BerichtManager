@@ -1116,12 +1116,10 @@ namespace BerichtManager
 
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
-			if (!HasWordStarted()) return;
 			string path = FullSelectedPath;
-
-			if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
+			if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))// || (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory)
 				return;
-
+			if (!HasWordStarted()) return;
 			if (tvReports.SelectedNode == null)
 				return;
 			if (DocIsSamePathAsSelected())
