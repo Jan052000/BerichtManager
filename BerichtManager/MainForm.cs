@@ -889,6 +889,8 @@ namespace BerichtManager
 					MessageBox.Show("Invalid document (you will have to manually edit)");
 					doc.Close(SaveChanges: false);
 					doc = null;
+					editMode = false;
+					wasEdited = false;
 					return;
 				}
 				rtbWork.Text = doc.FormFields[6].Result;
