@@ -853,9 +853,9 @@ namespace BerichtManager
 						break;
 					case -2146822750:
 						//Document is only one page long
-						doc.Save();
+						/*doc.Save();
 						doc.Close();
-						doc = null;
+						doc = null;*/
 						break;
 					case -2146233088:
 						MessageBox.Show("Connection refused by remotehost");
@@ -917,9 +917,9 @@ namespace BerichtManager
 						break;
 					case -2146822750:
 						//Document is only one page long
-						doc.Save();
+						/*doc.Save();
 						doc.Close();
-						doc = null;
+						doc = null;*/
 						break;
 					case -2146233088:
 						MessageBox.Show("Connection refused by remotehost");
