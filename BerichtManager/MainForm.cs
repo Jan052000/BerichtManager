@@ -238,7 +238,7 @@ namespace BerichtManager
 
 		/**
 		 * <summary>
-		 * Sets the global font in a document
+		 * Sets the global font in a document and fits document to pages
 		 * </summary>
 		 * <param name="app">The Wordapp containing the document</param>
 		 * <param name="doc">The Document which needs a font change</param>
@@ -944,6 +944,7 @@ namespace BerichtManager
 					return;
 				FillText(wordApp, doc.FormFields[6], rtbWork.Text);
 				FillText(wordApp, doc.FormFields[8], rtbSchool.Text);
+				SetFontInDoc(doc, wordApp);
 				doc.Save();
 				MessageBox.Show("Saved changes", "Saved");
 				wasEdited = false;
@@ -961,6 +962,7 @@ namespace BerichtManager
 						RestartWord();
 						break;
 					case -2146822750:
+						//Document is one page already
 						break;
 					case -2146233088:
 						MessageBox.Show("Connection refused by remotehost");
