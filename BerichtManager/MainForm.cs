@@ -829,8 +829,10 @@ namespace BerichtManager
 					}
 					SetFontInDoc(doc, wordApp);
 					doc.Save();
-					doc.Close();
-					doc = null;
+					rtbWork.Text = doc.FormFields[6].Result;
+					rtbSchool.Text = doc.FormFields[8].Result;
+					wasEdited = false;
+					MessageBox.Show("Saved changes", "Saved");
 				}
 				else
 				{
