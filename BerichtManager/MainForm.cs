@@ -972,6 +972,8 @@ namespace BerichtManager
 		/// </summary>
 		private void SaveOrExit()
 		{
+			if (doc == null)
+				return;
 			if (!editMode)
 				return;
 			if (!wasEdited)
@@ -987,14 +989,7 @@ namespace BerichtManager
 				SaveFromTb();
 			else
 			{
-				try
-				{
-					doc.Close();
-				}
-				catch
-				{
-
-				}
+				doc.Close();
 				doc = null;
 			}
 		}
