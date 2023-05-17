@@ -750,7 +750,8 @@ namespace BerichtManager
 				{
 					if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
 						return;
-					doc = wordApp.Documents.Open(path);
+					if (!DocIsSamePathAsSelected())
+						doc = wordApp.Documents.Open(path);
 
 					if (doc.FormFields.Count != 10)
 					{
@@ -873,8 +874,10 @@ namespace BerichtManager
 		private void EditInTb(string path)
 		{
 			if (doc != null)
-				if (path == doc.Path)
+				if (DocIsSamePathAsSelected())
 					return;
+				else
+					SaveOrExit();
 			try
 			{
 				if ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory)
@@ -970,7 +973,7 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Either saves the changes or quits word
+		/// Either saves the changes and closes report or just closes report
 		/// </summary>
 		private void SaveOrExit()
 		{
@@ -978,22 +981,21 @@ namespace BerichtManager
 				return;
 			if (!editMode)
 				return;
+			if (DocIsSamePathAsSelected())
+				return;
 			if (!wasEdited)
 			{
 				doc.Close(SaveChanges: false);
 				doc = null;
 				return;
 			}
-			if (DocIsSamePathAsSelected())
-				return;
 
 			if (MessageBox.Show("Save unsaved changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				SaveFromTb();
-			else
-			{
-				doc.Close();
-				doc = null;
-			}
+			doc.Close(SaveChanges: false);
+			doc = null;
+			editMode = false;
+			wasEdited = false;
 		}
 
 		/// <summary>
