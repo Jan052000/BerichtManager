@@ -42,29 +42,31 @@ namespace BerichtManager.Forms
 			ThemeSetter.SetThemes(this, theme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
+			List<int> tabstops = new List<int>();
 			if (handler == null)
 			{
 				nudFontSize.Value = (decimal)8.25f;
 				cbFontFamily.Text = "Arial";
+				for (int i = 1; i * 14 < rtInput.Size.Width && tabstops.Count < 32; i++)
+				{
+					tabstops.Add(i * 14);
+				}
 			}
 			else
 			{
 				nudFontSize.Value = (decimal)handler.EditorFontSize();
 				cbFontFamily.Text = handler.EditorFont();
+				rtInput.Font = new Font(handler.EditorFont(), (float)nudFontSize.Value);
+				for (int i = 1; tabstops.Count < 32; i++)
+				{
+					tabstops.Add(i * handler.TabStops());
+				}
 			}
 			foreach (FontFamily family in (new InstalledFontCollection()).Families)
 			{
 				cbFontFamily.Items.Add(family.Name);
 			}
 			cbFontFamily.Enabled = false;
-
-			rtInput.Font = new Font(handler.EditorFont(), (float)nudFontSize.Value);
-
-			List<int> tabstops = new List<int>();
-			for (int i = 1; i * 14 < rtInput.Size.Width && tabstops.Count < 32; i++)
-			{
-				tabstops.Add(i * 14);
-			}
 			rtInput.SelectionTabs = tabstops.ToArray();
 			rtInput.Text = text;
 			if (isCreate)
@@ -84,6 +86,8 @@ namespace BerichtManager.Forms
 		{
 			if (handler == null)
 				return;
+			if (stopConfigCalls)
+				return;
 			if (((float)nudFontSize.Value) != handler.EditorFontSize())
 			{
 				if (MessageBox.Show("Do you want to save the font size of the editor?", "Save font size", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -102,6 +106,8 @@ namespace BerichtManager.Forms
 		{
 			if (handler == null)
 				return;
+			if (stopConfigCalls)
+				return;
 			if (rtInput.Font.FontFamily.Name != handler.EditorFont())
 			{
 				if (MessageBox.Show("Do you want to change the font of following reports to " + cbFontFamily.Text + "?\n(Standard: \"Arial\")", "Change Font?", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -111,7 +117,7 @@ namespace BerichtManager.Forms
 					RefreshConfigs();
 				}
 			}
-			//SaveSize();
+			SaveSize();
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
