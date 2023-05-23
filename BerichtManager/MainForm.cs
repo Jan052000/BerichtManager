@@ -831,6 +831,7 @@ namespace BerichtManager
 					doc.Save();
 					rtbWork.Text = doc.FormFields[6].Result;
 					rtbSchool.Text = doc.FormFields[8].Result;
+					editMode = true;
 					wasEdited = false;
 					MessageBox.Show("Saved changes", "Saved");
 				}
