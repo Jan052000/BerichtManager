@@ -1400,8 +1400,10 @@ namespace BerichtManager
 		/// <param name="fontSize">Size to set font to</param>
 		private void ChangeFontSize(float fontSize)
 		{
+			bool wasEdited = this.wasEdited;
 			rtbSchool.Font = new Font(rtbSchool.Font.FontFamily, fontSize);
 			rtbWork.Font = new Font(rtbWork.Font.FontFamily, fontSize);
+			this.wasEdited = wasEdited;
 		}
 	}
 }
