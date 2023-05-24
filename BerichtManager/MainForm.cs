@@ -1120,8 +1120,8 @@ namespace BerichtManager
 
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
-			string path = FullSelectedPath;
-			if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))// || (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory)
+			if ((File.GetAttributes(FullSelectedPath) & FileAttributes.Directory) == FileAttributes.Directory) return;
+			if (Path.GetExtension(FullSelectedPath) != ".docx" || Path.GetFileName(FullSelectedPath).StartsWith("~$"))
 				return;
 			if (!HasWordStarted()) return;
 			if (tvReports.SelectedNode == null)
@@ -1307,7 +1307,22 @@ namespace BerichtManager
 			switch (e.KeyCode)
 			{
 				case Keys.Enter:
+					if (tvReports.SelectedNode == null) return;
+					if ((File.GetAttributes(FullSelectedPath) & FileAttributes.Directory) == FileAttributes.Directory)
+					{
+						if (tvReports.SelectedNode.Nodes.Count > 0)
+						{
+
+							if (tvReports.SelectedNode.IsExpanded)
+								tvReports.SelectedNode.Collapse();
+							else
+								tvReports.SelectedNode.Expand();
+						}
+						return;
+					}
+					if (Path.GetExtension(FullSelectedPath) != ".docx" || Path.GetFileName(FullSelectedPath).StartsWith("~$")) return;
 					if (!HasWordStarted()) return;
+					if (DocIsSamePathAsSelected()) return;
 					SaveOrExit();
 					EditInTb(FullSelectedPath);
 					break;
