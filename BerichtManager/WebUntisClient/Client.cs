@@ -259,7 +259,10 @@ namespace BerichtManager.WebUntisClient
 					bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
 					if (isInWeek || isStarting || isEnding || weekInEvent)
 					{
-						classes.Add("-" + holiday.longName + "\n");
+						if (configHandler.UseUserPrefix())
+							classes.Add(configHandler.CustomPrefix() + holiday.longName + "\n");
+						else
+							classes.Add("-" + holiday.longName + "\n");
 					}
 				});
 			}
@@ -341,7 +344,10 @@ namespace BerichtManager.WebUntisClient
 				bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
 				if (isInWeek || isStarting || isEnding || weekInEvent)
 				{
-					str += "-" + holiday.longName + "\n";
+					if (configHandler.UseUserPrefix())
+						str += configHandler.CustomPrefix() + holiday.longName + "\n";
+					else
+						str += "-" + holiday.longName + "\n";
 				}
 			});
 			return str;
