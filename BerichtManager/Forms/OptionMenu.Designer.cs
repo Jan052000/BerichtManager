@@ -43,9 +43,9 @@ namespace BerichtManager.Forms
 			this.btCreateTheme = new System.Windows.Forms.Button();
 			this.tbUpdate = new System.Windows.Forms.TextBox();
 			this.laTheme = new System.Windows.Forms.Label();
-			this.tbFolder = new System.Windows.Forms.TextBox();
-			this.btEditTheme = new System.Windows.Forms.Button();
 			this.laUpdate = new System.Windows.Forms.Label();
+			this.btEditTheme = new System.Windows.Forms.Button();
+			this.tbFolder = new System.Windows.Forms.TextBox();
 			this.gbConfig = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
 			this.tbNamingPattern = new System.Windows.Forms.TextBox();
@@ -242,17 +242,14 @@ namespace BerichtManager.Forms
 			this.laTheme.TabIndex = 22;
 			this.laTheme.Text = "Theme";
 			// 
-			// tbFolder
+			// laUpdate
 			// 
-			this.tbFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbFolder.Location = new System.Drawing.Point(98, 65);
-			this.tbFolder.Name = "tbFolder";
-			this.tbFolder.ReadOnly = true;
-			this.tbFolder.Size = new System.Drawing.Size(696, 20);
-			this.tbFolder.TabIndex = 27;
-			this.toolTip1.SetToolTip(this.tbFolder, "Path to folder containing reports");
-			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
+			this.laUpdate.AutoSize = true;
+			this.laUpdate.Location = new System.Drawing.Point(26, 94);
+			this.laUpdate.Name = "laUpdate";
+			this.laUpdate.Size = new System.Drawing.Size(66, 13);
+			this.laUpdate.TabIndex = 28;
+			this.laUpdate.Text = "Update path";
 			// 
 			// btEditTheme
 			// 
@@ -266,14 +263,17 @@ namespace BerichtManager.Forms
 			this.btEditTheme.UseVisualStyleBackColor = true;
 			this.btEditTheme.Click += new System.EventHandler(this.btEditTheme_Click);
 			// 
-			// laUpdate
+			// tbFolder
 			// 
-			this.laUpdate.AutoSize = true;
-			this.laUpdate.Location = new System.Drawing.Point(26, 94);
-			this.laUpdate.Name = "laUpdate";
-			this.laUpdate.Size = new System.Drawing.Size(66, 13);
-			this.laUpdate.TabIndex = 28;
-			this.laUpdate.Text = "Update path";
+			this.tbFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbFolder.Location = new System.Drawing.Point(98, 65);
+			this.tbFolder.Name = "tbFolder";
+			this.tbFolder.ReadOnly = true;
+			this.tbFolder.Size = new System.Drawing.Size(696, 20);
+			this.tbFolder.TabIndex = 27;
+			this.toolTip1.SetToolTip(this.tbFolder, "Path to folder containing reports");
+			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
 			// 
 			// gbConfig
 			// 
@@ -517,7 +517,7 @@ namespace BerichtManager.Forms
 			this.Controls.Add(this.gbPrefix);
 			this.Controls.Add(this.btSave);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(495, 485);
+			this.MinimumSize = new System.Drawing.Size(586, 485);
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			this.gbManagerOptions.ResumeLayout(false);
