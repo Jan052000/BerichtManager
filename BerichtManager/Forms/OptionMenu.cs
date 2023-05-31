@@ -117,63 +117,9 @@ namespace BerichtManager.Forms
 			{
 				if (MessageBox.Show("Save changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-					configHandler.UseUserPrefix(cbUseCustomPrefix.Checked);
-					if (cbUseCustomPrefix.Checked)
-						configHandler.CustomPrefix(tbCustomPrefix.Text);
-					if (cbShouldUseUntis.Checked && (tbServer.Text == "" || tbSchool.Text == ""))
-					{
-						if (MessageBox.Show("Either Webuntis server or school name is empty if you continue to save these changes, \nUse Web Untis will be unchecked and automatic query of timetable will not work", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-						{
-							configHandler.UseWebUntis(false);
-						}
-						else
-						{
-							return;
-						}
-					}
-					else
-					{
-						configHandler.UseWebUntis(false);
-						configHandler.WebUntisServer(tbServer.Text);
-						configHandler.SchoolName(tbSchool.Text);
-					}
-					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
-					configHandler.LegacyEdit(cbLegacyEdit.Checked);
-					configHandler.ReportUserName(tbName.Text);
-					configHandler.ReportNumber("" + nudNumber.Value);
-					if (nudFontSize.Value != (decimal)configHandler.EditorFontSize())
-					{
-						configHandler.EditorFontSize((float)nudFontSize.Value);
-						FontSizeChanged((float)nudFontSize.Value);
-
-					}
-					configHandler.TemplatePath(tbTemplate.Text);
-					configHandler.ActiveTheme(coTheme.Text);
-					if (ThemeName != (string)coTheme.SelectedValue)
-					{
-						ThemeName = coTheme.Text;
-						ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
-						ThemeSetter.SetThemes(this, activeTheme);
-						ActiveThemeChanged(this, activeTheme);
-					}
-					if (configHandler.ReportPath() != tbFolder.Text)
-					{
-						if (MessageBox.Show("Do you want to switch over imediately?", "Change directory?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-							ReportFolderChanged(this, tbFolder.Text);
-						configHandler.ReportPath(tbFolder.Text);
-					}
-					if (configHandler.PublishPath() != tbUpdate.Text)
-						configHandler.PublishPath(tbUpdate.Text);
-					if (configHandler.TabStops() != (int)nudTabStops.Value)
-					{
-						configHandler.TabStops((int)nudTabStops.Value);
-						TabStopsChanged(this, (int)nudTabStops.Value);
-					}
-					configHandler.NamingPattern(tbNamingPattern.Text);
 					try
 					{
-						if (IsDirty)
-							configHandler.SaveConfig();
+						SaveConfigChanges();
 					}
 					catch (Exception ex)
 					{
@@ -194,62 +140,74 @@ namespace BerichtManager.Forms
 
 		private void btSave_Click(object sender, EventArgs e)
 		{
-			try
+			if (IsDirty)
 			{
-				if (IsDirty)
+				try
 				{
-					configHandler.UseUserPrefix(cbUseCustomPrefix.Checked);
-					if (cbUseCustomPrefix.Checked)
-						configHandler.CustomPrefix(tbCustomPrefix.Text);
-					if (cbShouldUseUntis.Checked)
-					{
-						configHandler.WebUntisServer(tbServer.Text);
-						configHandler.SchoolName(tbSchool.Text);
-					}
-					configHandler.UseWebUntis(cbShouldUseUntis.Checked);
-					configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
-					configHandler.LegacyEdit(cbLegacyEdit.Checked);
-					configHandler.ReportUserName(tbName.Text);
-					configHandler.ReportNumber("" + nudNumber.Value);
-					if (nudFontSize.Value != (decimal)configHandler.EditorFontSize())
-					{
-						configHandler.EditorFontSize((float)nudFontSize.Value);
-						FontSizeChanged((float)nudFontSize.Value);
-
-					}
-					configHandler.TemplatePath(tbTemplate.Text);
-					configHandler.ActiveTheme(coTheme.Text);
-					if (ThemeName != coTheme.Text)
-					{
-						ThemeName = coTheme.Text;
-						ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
-						ThemeSetter.SetThemes(this, activeTheme);
-						ActiveThemeChanged(this, activeTheme);
-					}
-					if (configHandler.ReportPath() != tbFolder.Text)
-					{
-						if (MessageBox.Show("Do you want to switch over imediately?", "Change directory?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-							ReportFolderChanged(this, tbFolder.Text);
-						configHandler.ReportPath(tbFolder.Text);
-					}
-					if (configHandler.PublishPath() != tbUpdate.Text)
-						configHandler.PublishPath(tbUpdate.Text);
-					if (configHandler.TabStops() != (int)nudTabStops.Value)
-					{
-						configHandler.TabStops((int)nudTabStops.Value);
-						TabStopsChanged(this, (int)nudTabStops.Value);
-					}
-					configHandler.NamingPattern(tbNamingPattern.Text);
+					SaveConfigChanges();
 				}
-				configHandler.SaveConfig();
-			}
-			catch (Exception ex)
-			{
-				HelperClasses.Logger.LogError(ex);
-				MessageBox.Show(ex.StackTrace);
+				catch (Exception ex)
+				{
+					HelperClasses.Logger.LogError(ex);
+					MessageBox.Show(ex.StackTrace);
+				}
 			}
 			btSave.Enabled = false;
 			IsDirty = false;
+		}
+
+		/// <summary>
+		/// Saves changes to config
+		/// </summary>
+		private void SaveConfigChanges()
+		{
+			//Prefix
+			configHandler.UseUserPrefix(cbUseCustomPrefix.Checked);
+			if (cbUseCustomPrefix.Checked)
+				configHandler.CustomPrefix(tbCustomPrefix.Text);
+			//WebUntis
+			configHandler.UseWebUntis(cbShouldUseUntis.Checked);
+			if (cbShouldUseUntis.Checked)
+			{
+				configHandler.WebUntisServer(tbServer.Text);
+				configHandler.SchoolName(tbSchool.Text);
+			}
+			//Report
+			configHandler.ReportUserName(tbName.Text);
+			configHandler.TemplatePath(tbTemplate.Text);
+			configHandler.ActiveTheme(coTheme.Text);
+			if (ThemeName != coTheme.Text)
+			{
+				ThemeName = coTheme.Text;
+				ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
+				ThemeSetter.SetThemes(this, activeTheme);
+				ActiveThemeChanged(this, activeTheme);
+			}
+			configHandler.ReportNumber("" + nudNumber.Value);
+			configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
+			configHandler.NamingPattern(tbNamingPattern.Text);
+			//Manager
+			if (configHandler.TabStops() != (int)nudTabStops.Value)
+			{
+				configHandler.TabStops((int)nudTabStops.Value);
+				TabStopsChanged(this, (int)nudTabStops.Value);
+			}
+			configHandler.LegacyEdit(cbLegacyEdit.Checked);
+			if (nudFontSize.Value != (decimal)configHandler.EditorFontSize())
+			{
+				configHandler.EditorFontSize((float)nudFontSize.Value);
+				FontSizeChanged((float)nudFontSize.Value);
+
+			}
+			if (configHandler.ReportPath() != tbFolder.Text)
+			{
+				if (MessageBox.Show("Do you want to switch over imediately?", "Change directory?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					ReportFolderChanged(this, tbFolder.Text);
+				configHandler.ReportPath(tbFolder.Text);
+			}
+			if (configHandler.PublishPath() != tbUpdate.Text)
+				configHandler.PublishPath(tbUpdate.Text);
+			configHandler.SaveConfig();
 		}
 
 		/// <summary>
