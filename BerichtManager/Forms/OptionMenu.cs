@@ -175,14 +175,6 @@ namespace BerichtManager.Forms
 			//Report
 			configHandler.ReportUserName(tbName.Text);
 			configHandler.TemplatePath(tbTemplate.Text);
-			configHandler.ActiveTheme(coTheme.Text);
-			if (ThemeName != coTheme.Text)
-			{
-				ThemeName = coTheme.Text;
-				ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
-				ThemeSetter.SetThemes(this, activeTheme);
-				ActiveThemeChanged(this, activeTheme);
-			}
 			configHandler.ReportNumber("" + nudNumber.Value);
 			configHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 			configHandler.NamingPattern(tbNamingPattern.Text);
@@ -198,6 +190,14 @@ namespace BerichtManager.Forms
 				configHandler.EditorFontSize((float)nudFontSize.Value);
 				FontSizeChanged((float)nudFontSize.Value);
 
+			}
+			configHandler.ActiveTheme(coTheme.Text);
+			if (ThemeName != coTheme.Text)
+			{
+				ThemeName = coTheme.Text;
+				ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
+				ThemeSetter.SetThemes(this, activeTheme);
+				ActiveThemeChanged(this, activeTheme);
 			}
 			if (configHandler.ReportPath() != tbFolder.Text)
 			{
