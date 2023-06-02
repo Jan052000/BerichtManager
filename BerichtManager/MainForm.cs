@@ -37,6 +37,11 @@ namespace BerichtManager
 		private ITheme activeTheme;
 
 		/// <summary>
+		/// Value if word has a visible window or not
+		/// </summary>
+		private bool WordVisible { get; set; } = false;
+
+		/// <summary>
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
@@ -706,19 +711,23 @@ namespace BerichtManager
 					{
 						foreach (string key in unPrintedFiles.Keys)
 						{
-							unPrintedFiles[key].ForEach((f) =>
+							unPrintedFiles[key].ForEach((filePath) =>
 							{
-								Word.Document document = wordApp.Documents.Open(FileName: f, ReadOnly: true);
+								bool isSameAsOpened;
+								if (doc != null)
+									isSameAsOpened = filePath == doc.Path + "\\" + doc.Name;
+								else isSameAsOpened = false;
+								if (isSameAsOpened) SaveOrExit();
+								Word.Document document = wordApp.Documents.Open(FileName: filePath, ReadOnly: true);
+								wordApp.Visible = WordVisible;
 								document.PrintOut(Background: false);
-								wordApp.Documents.Close();
-							});
-						}
-
-						foreach (string key in unPrintedFiles.Keys)
-						{
-							unPrintedFiles[key].ForEach((f) =>
-							{
-								File.Move(f, key + "\\Gedruckt\\" + Path.GetFileName(f));
+								document.Close();
+								File.Move(filePath, key + "\\Gedruckt\\" + Path.GetFileName(filePath));
+								if (isSameAsOpened)
+								{
+									doc = wordApp.Documents.Open(filePath.Substring(0, filePath.Length - Path.GetFileName(filePath).Length) + "\\Gedruckt\\" + Path.GetFileName(filePath));
+									editMode = true;
+								}
 							});
 						}
 						UpdateTree();
@@ -1054,14 +1063,25 @@ namespace BerichtManager
 					}
 					try
 					{
+						bool isSameAsOpened;
+						if (doc != null)
+							isSameAsOpened = path == doc.Path + "\\" + doc.Name;
+						else isSameAsOpened = false;
+						if (isSameAsOpened) SaveOrExit();
 						Word.Document document = wordApp.Documents.Open(path, ReadOnly: true);
+						wordApp.Visible = WordVisible;
 						document.PrintOut(Background: false);
-						wordApp.Documents.Close();
+						document.Close();
 						if (printed.Name != "Gedruckt")
 						{
 							File.Move(path,
 							path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path));
 							UpdateTree();
+						}
+						if (isSameAsOpened)
+						{
+							doc = wordApp.Documents.Open(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path));
+							editMode = true;
 						}
 					}
 					catch (Exception ex)
@@ -1267,6 +1287,7 @@ namespace BerichtManager
 		{
 			if (WordInitialized)
 				wordApp.Visible = miWordVisible.Checked;
+			WordVisible = miWordVisible.Checked;
 		}
 
 		private void FormManager_FormClosing(object sender, FormClosingEventArgs e)
