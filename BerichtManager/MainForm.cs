@@ -707,11 +707,12 @@ namespace BerichtManager
 							}
 						}
 					}
-					try
+					foreach (string key in unPrintedFiles.Keys)
 					{
-						foreach (string key in unPrintedFiles.Keys)
+						unPrintedFiles[key].ForEach((filePath) =>
 						{
-							unPrintedFiles[key].ForEach((filePath) =>
+
+							try
 							{
 								bool isSameAsOpened;
 								if (doc != null)
@@ -728,17 +729,16 @@ namespace BerichtManager
 									doc = wordApp.Documents.Open(filePath.Substring(0, filePath.Length - Path.GetFileName(filePath).Length) + "\\Gedruckt\\" + Path.GetFileName(filePath));
 									editMode = true;
 								}
-							});
-						}
-						UpdateTree();
+							}
+							catch (Exception ex)
+							{
+								Logger.LogError(ex);
+								MessageBox.Show(ex.StackTrace, "Error while printing" + filePath);
+								Console.Write(ex.StackTrace);
+							}
+						});
 					}
-					catch (Exception ex)
-					{
-						Logger.LogError(ex);
-						MessageBox.Show(ex.StackTrace);
-						Console.Write(ex.StackTrace);
-					}
-
+					UpdateTree();
 				}
 			}
 		}
