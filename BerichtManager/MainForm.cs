@@ -718,17 +718,18 @@ namespace BerichtManager
 								if (doc != null)
 									isSameAsOpened = filePath == doc.Path + "\\" + doc.Name;
 								else isSameAsOpened = false;
-								if (isSameAsOpened) SaveOrExit();
+								if (isSameAsOpened)
+								{
+									SaveOrExit();
+									rtbSchool.Text = "";
+									rtbWork.Text = "";
+									wasEdited = false;
+								};
 								Word.Document document = wordApp.Documents.Open(FileName: filePath, ReadOnly: true);
 								wordApp.Visible = WordVisible;
 								document.PrintOut(Background: false);
 								document.Close();
 								File.Move(filePath, key + "\\Gedruckt\\" + Path.GetFileName(filePath));
-								if (isSameAsOpened)
-								{
-									doc = wordApp.Documents.Open(filePath.Substring(0, filePath.Length - Path.GetFileName(filePath).Length) + "\\Gedruckt\\" + Path.GetFileName(filePath));
-									editMode = true;
-								}
 							}
 							catch (Exception ex)
 							{
@@ -1067,7 +1068,13 @@ namespace BerichtManager
 						if (doc != null)
 							isSameAsOpened = path == doc.Path + "\\" + doc.Name;
 						else isSameAsOpened = false;
-						if (isSameAsOpened) SaveOrExit();
+						if (isSameAsOpened)
+						{
+							SaveOrExit();
+							rtbSchool.Text = "";
+							rtbWork.Text = "";
+							wasEdited = false;
+						};
 						Word.Document document = wordApp.Documents.Open(path, ReadOnly: true);
 						wordApp.Visible = WordVisible;
 						document.PrintOut(Background: false);
@@ -1077,11 +1084,6 @@ namespace BerichtManager
 							File.Move(path,
 							path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path));
 							UpdateTree();
-						}
-						if (isSameAsOpened)
-						{
-							doc = wordApp.Documents.Open(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path));
-							editMode = true;
 						}
 					}
 					catch (Exception ex)
