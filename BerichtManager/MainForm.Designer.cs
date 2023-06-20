@@ -63,11 +63,12 @@ namespace BerichtManager
 			this.miCreate = new System.Windows.Forms.ToolStripMenuItem();
 			this.miEditLatest = new System.Windows.Forms.ToolStripMenuItem();
 			this.miPrintAll = new System.Windows.Forms.ToolStripMenuItem();
+			this.miRevealInExplorer = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRevealInExplorer = new System.Windows.Forms.ToolStripMenuItem();
+			this.miCloseReport = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -279,7 +280,8 @@ namespace BerichtManager
             this.miCreate,
             this.miEditLatest,
             this.miPrintAll,
-            this.miRevealInExplorer});
+            this.miRevealInExplorer,
+            this.miCloseReport});
 			this.miFile.Name = "miFile";
 			this.miFile.Size = new System.Drawing.Size(37, 20);
 			this.miFile.Text = "File";
@@ -304,6 +306,13 @@ namespace BerichtManager
 			this.miPrintAll.Size = new System.Drawing.Size(180, 22);
 			this.miPrintAll.Text = "Print all";
 			this.miPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
+			// 
+			// miRevealInExplorer
+			// 
+			this.miRevealInExplorer.Name = "miRevealInExplorer";
+			this.miRevealInExplorer.Size = new System.Drawing.Size(180, 22);
+			this.miRevealInExplorer.Text = "Reveal in explorer";
+			this.miRevealInExplorer.Click += new System.EventHandler(this.miRevealInExplorer_Click);
 			// 
 			// miOptions
 			// 
@@ -339,12 +348,12 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// miRevealInExplorer
+			// miCloseReport
 			// 
-			this.miRevealInExplorer.Name = "miRevealInExplorer";
-			this.miRevealInExplorer.Size = new System.Drawing.Size(180, 22);
-			this.miRevealInExplorer.Text = "Reveal in explorer";
-			this.miRevealInExplorer.Click += new System.EventHandler(this.miRevealInExplorer_Click);
+			this.miCloseReport.Name = "miCloseReport";
+			this.miCloseReport.Size = new System.Drawing.Size(180, 22);
+			this.miCloseReport.Text = "Close Report";
+			this.miCloseReport.Click += new System.EventHandler(this.miCloseReport_Click);
 			// 
 			// MainForm
 			// 
@@ -405,6 +414,7 @@ namespace BerichtManager
 		private System.Windows.Forms.Panel paPadding1;
 		private System.Windows.Forms.Panel paPadding2;
 		private System.Windows.Forms.ToolStripMenuItem miRevealInExplorer;
+		private System.Windows.Forms.ToolStripMenuItem miCloseReport;
 	}
 }
 

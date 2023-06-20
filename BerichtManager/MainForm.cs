@@ -1428,5 +1428,21 @@ namespace BerichtManager
 			rtbWork.Font = new Font(rtbWork.Font.FontFamily, fontSize);
 			this.wasEdited = wasEdited;
 		}
+
+		private void miCloseReport_Click(object sender, EventArgs e)
+		{
+			if (doc == null || !editMode)
+			{
+				MessageBox.Show("No opened report to close", "Could not close");
+				return;
+			}
+			SaveOrExit();
+			doc.Close(SaveChanges: false);
+			doc = null;
+			rtbSchool.Text = "";
+			rtbWork.Text = "";
+			wasEdited = false;
+			editMode = false;
+		}
 	}
 }
