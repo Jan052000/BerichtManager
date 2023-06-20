@@ -55,7 +55,7 @@ namespace BerichtManager
 		/// <summary>
 		/// Full path to report folder
 		/// </summary>
-		private string ActivePath = Path.GetFullPath(".\\..");
+		private string ActivePath { get; set; } = Path.GetFullPath(".\\..");
 
 		/// <summary>
 		/// Status if the word app has finished loading
@@ -1102,14 +1102,21 @@ namespace BerichtManager
 		/// <param name="path">Path of file to delete</param>
 		private void DeleteDocument(string path)
 		{
+			if (!File.Exists(path))
+			{
+				MessageBox.Show(path + " not Found (was it moved or deleted?)");
+				return;
+			}
 			if (File.GetAttributes(path) == FileAttributes.Directory)
 			{
 				MessageBox.Show("You may not delete folders using the manager");
 				return;
 			}
-			if (!File.Exists(path))
+			if (Path.GetFileName(path).StartsWith("~$"))
 			{
-				MessageBox.Show(path + " not Found (was it moved or deleted?)");
+				File.Delete(path);
+				UpdateTree();
+				MessageBox.Show(path + " was deleted successfully!", "File was deleted");
 				return;
 			}
 			if (Path.GetExtension(path) != ".docx" && !path.Contains("\\Logs"))
