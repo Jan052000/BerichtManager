@@ -1359,6 +1359,20 @@ namespace BerichtManager
 				case Keys.Delete:
 					DeleteDocument(FullSelectedPath);
 					break;
+				case Keys.Escape:
+					if (doc == null || !editMode)
+					{
+						MessageBox.Show("No opened report to close", "Could not close");
+						return;
+					}
+					SaveOrExit();
+					doc.Close(SaveChanges: false);
+					doc = null;
+					rtbSchool.Text = "";
+					rtbWork.Text = "";
+					wasEdited = false;
+					editMode = false;
+					break;
 			}
 		}
 
