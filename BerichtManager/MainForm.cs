@@ -1023,13 +1023,12 @@ namespace BerichtManager
 				return false;
 			try
 			{
-				string path = doc.Path;
+				return FullSelectedPath == doc.Path + "\\" + doc.Name;
 			}
 			catch
 			{
 				return false;
 			}
-			return FullSelectedPath == doc.Path + "\\" + doc.Name;
 		}
 
 		/**
@@ -1112,20 +1111,22 @@ namespace BerichtManager
 				MessageBox.Show("You may not delete folders using the manager");
 				return;
 			}
-			if (Path.GetFileName(path).StartsWith("~$"))
-			{
-				File.Delete(path);
-				UpdateTree();
-				MessageBox.Show(path + " was deleted successfully!", "File was deleted");
-				return;
-			}
-			if (Path.GetExtension(path) != ".docx" && !path.Contains("\\Logs"))
+			if (Path.GetExtension(path) != ".docx" && !path.Contains("\\Logs") && !Path.GetFileName(path).StartsWith("~$"))
 			{
 				MessageBox.Show("You may only delete Word documents (*.docx) or their temporary files");
 				return;
 			}
 			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
+			if(path == doc.Path + "\\" + doc.Name)
+			{
+				doc.Close(SaveChanges: false);
+				doc = null;
+				rtbSchool.Text = "";
+				rtbWork.Text = "";
+				editMode = false;
+				wasEdited = false;
+			}
 			if (path == configHandler.LastCreated())
 			{
 				if (configHandler.LastReportKW() == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
