@@ -1002,6 +1002,7 @@ namespace BerichtManager
 			{
 				doc.Close(SaveChanges: false);
 				doc = null;
+				editMode = false;
 				return;
 			}
 
