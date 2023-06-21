@@ -1367,8 +1367,6 @@ namespace BerichtManager
 						return;
 					}
 					SaveOrExit();
-					doc.Close(SaveChanges: false);
-					doc = null;
 					rtbSchool.Text = "";
 					rtbWork.Text = "";
 					wasEdited = false;
@@ -1459,8 +1457,6 @@ namespace BerichtManager
 				return;
 			}
 			SaveOrExit();
-			doc.Close(SaveChanges: false);
-			doc = null;
 			rtbSchool.Text = "";
 			rtbWork.Text = "";
 			wasEdited = false;
