@@ -1118,7 +1118,7 @@ namespace BerichtManager
 			}
 			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
-			if(path == doc.Path + "\\" + doc.Name)
+			if (path == doc.Path + "\\" + doc.Name)
 			{
 				doc.Close(SaveChanges: false);
 				doc = null;
@@ -1366,11 +1366,7 @@ namespace BerichtManager
 						MessageBox.Show("No opened report to close", "Could not close");
 						return;
 					}
-					SaveOrExit();
-					rtbSchool.Text = "";
-					rtbWork.Text = "";
-					wasEdited = false;
-					editMode = false;
+					CloseOpenDocument();
 					break;
 			}
 		}
@@ -1456,6 +1452,16 @@ namespace BerichtManager
 				MessageBox.Show("No opened report to close", "Could not close");
 				return;
 			}
+			CloseOpenDocument();
+		}
+
+		/// <summary>
+		/// Closes the opened report
+		/// </summary>
+		private void CloseOpenDocument()
+		{
+			if (doc == null)
+				return;
 			SaveOrExit();
 			rtbSchool.Text = "";
 			rtbWork.Text = "";
