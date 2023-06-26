@@ -26,6 +26,10 @@ namespace BerichtManager.WebUntisClient
 			server = configHandler.WebUntisServer();
 		}
 
+		/// <summary>
+		/// Requests time table from WebUntis server
+		/// </summary>
+		/// <returns>List containing names of classes in time table</returns>
 		public List<string> GetClassesFromWebUntis()
 		{
 			if (!configHandler.UseWebUntis())
@@ -345,6 +349,11 @@ namespace BerichtManager.WebUntisClient
 			return JsonConvert.DeserializeObject<Holidays>(response1.Content.ReadAsStringAsync().Result);
 		}
 
+		/// <summary>
+		/// Requests holidays and vacations from WebUntis jsonrpc server and filters for a specific date
+		/// </summary>
+		/// <param name="time">Date to filter for</param>
+		/// <returns>Contatinated string containing all holidays and vacations for the provided date</returns>
 		public string getHolidaysForDate(DateTime time)
 		{
 			string str = "";
