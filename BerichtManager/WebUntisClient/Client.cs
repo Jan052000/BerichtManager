@@ -250,7 +250,7 @@ namespace BerichtManager.WebUntisClient
 				if (int.TryParse(thisWeekStart.ToString("yyyyMMdd"), out int weekStart)) { }
 				if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
 
-				Holidays holidays = GetHolidays(user);
+				Holidays holidays = GetHolidays(user, client);
 				if (holidays.result == null)
 				{
 					MessageBox.Show("An error has occurred on the web untis server", "Server did not respond");
@@ -277,53 +277,57 @@ namespace BerichtManager.WebUntisClient
 			return classes;
 		}
 
-		private Holidays GetHolidays(Config.User user = null)
+		private Holidays GetHolidays(Config.User user = null, HttpClient useClient = null)
 		{
 			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
-			HttpClient client = new HttpClient();
-
-			//Ensure complete headers
-			HttpResponseMessage responseMessage;
-			if (configHandler.StayLoggedIn())
-			{
-				responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.WebUntisUsername() + "&j_password=" + configHandler.WebUntisPassword()).Result;
-			}
+			HttpClient client;
+			IEnumerable<string> id;
+			if (useClient != null) client = useClient;
 			else
 			{
-				if (user == null)
+				client = new HttpClient();
+
+				//Ensure complete headers
+				HttpResponseMessage responseMessage;
+				if (configHandler.StayLoggedIn())
 				{
-					user = configHandler.doLogin();
-				}
-				if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
-				{
-					MessageBox.Show("You need to login to automatically enter classes");
-					return new Holidays();
+					responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + configHandler.WebUntisUsername() + "&j_password=" + configHandler.WebUntisPassword()).Result;
 				}
 				else
 				{
-					responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + user.Username + "&j_password=" + user.Password).Result;
+					if (user == null)
+					{
+						user = configHandler.doLogin();
+					}
+					if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
+					{
+						MessageBox.Show("You need to login to automatically enter classes");
+						return new Holidays();
+					}
+					else
+					{
+						responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + schoolName + "&j_username=" + user.Username + "&j_password=" + user.Password).Result;
+					}
+				}
+
+				//Obtain Api Key
+				if (client.DefaultRequestHeaders.Authorization == null)
+				{
+					string apiKey = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
+					if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
+					{
+						client.DefaultRequestHeaders.Authorization = authorize;
+					}
+					else
+					{
+						MessageBox.Show("There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+					}
 				}
 			}
 
-			//Obtain Api Key
-			if (client.DefaultRequestHeaders.Authorization == null)
-			{
-				string apiKey = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
-				if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
-				{
-					client.DefaultRequestHeaders.Authorization = authorize;
-				}
-				else
-				{
-					MessageBox.Show("There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
-				}
-			}
-
-			//var trash = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 			//https://borys.webuntis.com/WebUntis/jsonrpc.do
 			HttpResponseMessage response = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/jsonrpc.do").Result;
-			var id = response.Headers.GetValues("requestId");
-
+			id = response.Headers.GetValues("requestId");
 			JObject cont = new JObject(new JProperty("id", id.ToString()), new JProperty("method", "getHolidays"), new JProperty("jsonrpc", "2.0"));
 
 			HttpContent content = new StringContent(cont.ToString());
