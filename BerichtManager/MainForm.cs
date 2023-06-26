@@ -489,6 +489,13 @@ namespace BerichtManager
 
 				ldoc.Close();
 				UpdateTree();
+
+				SaveOrExit();
+				doc = wordApp.Documents.Open(path);
+				rtbWork.Text = doc.FormFields[6].Result;
+				rtbSchool.Text = doc.FormFields[8].Result;
+				editMode = true;
+				wasEdited = false;
 			}
 			catch (Exception ex)
 			{
@@ -995,8 +1002,6 @@ namespace BerichtManager
 			if (doc == null)
 				return;
 			if (!editMode)
-				return;
-			if (DocIsSamePathAsSelected())
 				return;
 			if (!wasEdited)
 			{
