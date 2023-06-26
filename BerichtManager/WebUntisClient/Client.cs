@@ -277,6 +277,13 @@ namespace BerichtManager.WebUntisClient
 			return classes;
 		}
 
+		/// <summary>
+		/// Requests public holidays and vacations from WebUntis jsonrpc server
+		/// if no client is provided a new client will be created for the method call
+		/// </summary>
+		/// <param name="user"><see cref="User"/> object containing login information</param>
+		/// <param name="useClient"><see cref="HttpClient"/> to be used for requests</param>
+		/// <returns><see cref="Holidays"/> object if request was successful or null if not</returns>
 		private Holidays GetHolidays(Config.User user = null, HttpClient useClient = null)
 		{
 			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
@@ -328,7 +335,9 @@ namespace BerichtManager.WebUntisClient
 			//https://borys.webuntis.com/WebUntis/jsonrpc.do
 			HttpResponseMessage response = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/jsonrpc.do").Result;
 			id = response.Headers.GetValues("requestId");
-			JObject cont = new JObject(new JProperty("id", id.ToString()), new JProperty("method", "getHolidays"), new JProperty("jsonrpc", "2.0"));
+			if (id.Count() == 0)
+				return null;
+			JObject cont = new JObject(new JProperty("id", id.ElementAt(0)), new JProperty("method", "getHolidays"), new JProperty("jsonrpc", "2.0"));
 
 			HttpContent content = new StringContent(cont.ToString());
 			client.DefaultRequestHeaders.Add("Accept", "application/json");
