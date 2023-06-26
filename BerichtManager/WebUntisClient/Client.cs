@@ -251,6 +251,11 @@ namespace BerichtManager.WebUntisClient
 				if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
 
 				Holidays holidays = GetHolidays(user);
+				if (holidays.result == null)
+				{
+					MessageBox.Show("An error has occurred on the web untis server", "Server did not respond");
+					return new List<string>();
+				}
 				holidays.result.ForEach((holiday) =>
 				{
 					bool isInWeek = (holiday.startDate >= weekStart && holiday.endDate <= weekEnd);
