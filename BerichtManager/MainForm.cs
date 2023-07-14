@@ -562,7 +562,7 @@ namespace BerichtManager
 			{
 				//Missing reports in current year
 				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
-				for (int i = 0; i < weekOfYear - reportNr; i++)
+				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
 					CreateDocument(configHandler.TemplatePath(), today.AddDays(i * 7), wordApp, vacation: vacation);
 				}
@@ -580,7 +580,7 @@ namespace BerichtManager
 				DateTime today = DateTime.Today.AddDays(-(repeats * 7));
 
 				//Generate reports for missing reports over 2 years
-				for (int i = 0; i < repeats; i++)
+				for (int i = 1; i < repeats; i++)
 				{
 					CreateDocument(configHandler.TemplatePath(), today.AddDays(i * 7), wordApp, vacation: vacation);
 				}
