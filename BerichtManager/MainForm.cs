@@ -1124,7 +1124,7 @@ namespace BerichtManager
 			}
 			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
-			if (path == doc.Path + "\\" + doc.Name)
+			if (path == doc?.Path + "\\" + doc?.Name)
 			{
 				doc.Close(SaveChanges: false);
 				doc = null;
