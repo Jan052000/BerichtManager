@@ -19,22 +19,22 @@ namespace BerichtManager
 {
 	public partial class MainForm : Form
 	{
-		private Word.Document doc = null;
-		private Word.Application wordApp;
+		private Word.Document doc { get; set; } = null;
+		private Word.Application wordApp { get; set; }
 		private readonly ConfigHandler configHandler = new ConfigHandler(themeManager);
 		private readonly Client client;
 
 		/// <summary>
 		/// Directory containing all reports
 		/// </summary>
-		private DirectoryInfo info;
+		private DirectoryInfo info { get; set; }
 		private readonly CultureInfo culture = new CultureInfo("de-DE");
-		private int tvReportsMaxWidth = 50;
-		private bool editMode = false;
-		private bool wasEdited = false;
-		private CustomNodeDrawer nodeDrawer;
+		private int tvReportsMaxWidth { get; set; } = 50;
+		private bool editMode { get; set; } = false;
+		private bool wasEdited { get; set; } = false;
+		private CustomNodeDrawer nodeDrawer { get; set; }
 		private static readonly ThemeManager themeManager = new ThemeManager();
-		private ITheme activeTheme;
+		private ITheme activeTheme { get; set; }
 
 		/// <summary>
 		/// Value if word has a visible window or not
@@ -50,7 +50,7 @@ namespace BerichtManager
 		/// <summary>
 		/// String to be printed
 		/// </summary>
-		private string VersionString = "v" + VersionNumber;
+		private string VersionString { get; } = "v" + VersionNumber;
 
 		/// <summary>
 		/// Full path to report folder
@@ -233,7 +233,7 @@ namespace BerichtManager
 				app.Selection.Text = text.Replace("\n", "\v").Substring(0, 200);
 				field.Result = field.Result.Trim() + " ";
 				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
-				app.Selection.TypeText(text.Substring(201));
+				app.Selection.TypeText(text.Substring(200));
 			}
 			else
 			{
