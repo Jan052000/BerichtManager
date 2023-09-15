@@ -125,6 +125,11 @@ namespace BerichtManager.WebUntisClient
 
 			//Get account data
 			responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
+			if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+			{
+				MessageBox.Show("Your account is unauthorized", "Unauthorized");
+				return new List<string>();
+			}
 			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result);
 
 			//Request Timetable for the week
