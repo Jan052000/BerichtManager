@@ -200,7 +200,7 @@ namespace BerichtManager.WebUntisClient
 
 			//Crosscheck ClassIds to Coursenames
 			bool useUserPrefix = configHandler.UseUserPrefix();
-			testRoot.result.data.elements.ForEach((Action<Courses>)((element) =>
+			testRoot.result.data.elements.ForEach((element) =>
 			{
 				if (element.type == 3 && classids.Contains(element.id))
 				{
@@ -208,21 +208,21 @@ namespace BerichtManager.WebUntisClient
 					{
 						if (cancelled[element.id])
 						{
-							if (!classes.Contains((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "\n")))
+							if (!classes.Contains(configHandler.CustomPrefix() + element.name + "\n\t" + configHandler.CustomPrefix() + "\n"))
 							{
-								classes.Add((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "Ausgefallen\n"));
+								classes.Add(configHandler.CustomPrefix() + element.name + "\n\t" + configHandler.CustomPrefix() + "Ausgefallen\n");
 							}
 						}
 						else
 						{
-							if (classes.Contains((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "Ausgefallen\n")))
+							if (classes.Contains(configHandler.CustomPrefix() + element.name + "\n\t" + configHandler.CustomPrefix() + "Ausgefallen\n"))
 							{
-								classes.Remove((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "Ausgefallen\n"));
-								classes.Add((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "\n"));
+								classes.Remove(configHandler.CustomPrefix() + element.name + "\n\t" + configHandler.CustomPrefix() + "Ausgefallen\n");
+								classes.Add(configHandler.CustomPrefix() + element.name + "\n\t" + configHandler.CustomPrefix() + "\n");
 							}
 							else
 							{
-								classes.Add((string)(this.configHandler.CustomPrefix() + element.name + "\n\t" + this.configHandler.CustomPrefix() + "\n"));
+								classes.Add(configHandler.CustomPrefix() + element.name + "\n\t" + configHandler.CustomPrefix() + "\n");
 							}
 						}
 					}
@@ -249,7 +249,7 @@ namespace BerichtManager.WebUntisClient
 						}
 					}
 				}
-			}));
+			});
 
 			//Check for Holidays if list empty
 			if (classes.Count == 0)
@@ -386,11 +386,6 @@ namespace BerichtManager.WebUntisClient
 				}
 			});
 			return str;
-		}
-
-		private void btTest_Click(object sender, EventArgs e)
-		{
-			List<string> test = GetClassesFromWebUntis();
 		}
 
 		/// <summary>
