@@ -19,6 +19,17 @@ namespace BerichtManager.WebUntisClient
 		public Client(ConfigHandler configHandler)
 		{
 			ConfigHandler = configHandler;
+			UpdateConfigData();
+		}
+
+		/// <summary>
+		/// Updates the <see cref="Server"/> and <see cref="SchoolName"/> variables
+		/// </summary>
+		private void UpdateConfigData()
+		{
+			//Get school and server
+			SchoolName = ConfigHandler.SchoolName();
+			Server = ConfigHandler.WebUntisServer();
 		}
 
 		/// <summary>
@@ -32,9 +43,7 @@ namespace BerichtManager.WebUntisClient
 				return new List<string>();
 			}
 
-			//Get school and server
-			SchoolName = ConfigHandler.SchoolName();
-			Server = ConfigHandler.WebUntisServer();
+			UpdateConfigData();
 
 			List<string> classes = new List<string>();
 
@@ -44,7 +53,7 @@ namespace BerichtManager.WebUntisClient
 			httpClientHandler.UseCookies = true;
 			HttpClient client = new HttpClient(httpClientHandler);
 			HttpResponseMessage responseMessage;
-			string jSpringURL = "https://" + ConfigHandler.WebUntisServer() + ".webuntis.com/WebUntis/j_spring_security_check";
+			string jSpringURL = "https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check";
 
 			//Generate Headers and Login
 			Config.User user = null;
@@ -53,7 +62,7 @@ namespace BerichtManager.WebUntisClient
 				//Obtain JSessionId
 				Dictionary<string, string> content = new Dictionary<string, string>()
 				{
-					{ "school", ConfigHandler.SchoolName() },
+					{ "school", SchoolName },
 					{ "j_username", ConfigHandler.WebUntisUsername() },
 					{ "j_password", ConfigHandler.WebUntisPassword() },
 					{ "token", "" }
@@ -72,7 +81,7 @@ namespace BerichtManager.WebUntisClient
 				{
 					Dictionary<string, string> content = new Dictionary<string, string>()
 					{
-						{ "school", ConfigHandler.SchoolName() },
+						{ "school", SchoolName },
 						{ "j_username", user.Username },
 						{ "j_password", user.Password },
 						{ "token", "" }
@@ -83,7 +92,7 @@ namespace BerichtManager.WebUntisClient
 			//HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 
 			//Set cookie data
-			string newCookie = "schoolname=\"_" + System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(ConfigHandler.SchoolName())) + "\"; ";
+			string newCookie = "schoolname=\"_" + System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
 			if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
 			{
 				List<string> cookieHeaders = new List<string>();
@@ -294,6 +303,7 @@ namespace BerichtManager.WebUntisClient
 		/// <returns><see cref="Holidays"/> object if request was successful or null if not</returns>
 		private Holidays GetHolidays(Config.User user = null, HttpClient useClient = null)
 		{
+			UpdateConfigData();
 			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
 			HttpClient client;
 			IEnumerable<string> id;
