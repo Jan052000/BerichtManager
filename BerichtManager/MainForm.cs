@@ -671,84 +671,77 @@ namespace BerichtManager
 		{
 			if (!HasWordStarted()) return;
 
-			if (Directory.Exists(ActivePath))
+			if (!Directory.Exists(ActivePath)) return;
+			Dictionary<string, List<string>> unPrintedFiles = new Dictionary<string, List<string>>();
+			foreach (string dirName in Directory.GetDirectories(ActivePath))
 			{
-				Dictionary<string, List<string>> unPrintedFiles = new Dictionary<string, List<string>>();
-				foreach (string dirName in Directory.GetDirectories(ActivePath))
+				foreach (string file in Directory.GetFiles(dirName))
 				{
-					foreach (string file in Directory.GetFiles(dirName))
+					if (Path.GetExtension(file) == ".docx")
 					{
-						if (Path.GetExtension(file) == ".docx")
+						if (!Directory.Exists(dirName + "\\Gedruckt"))
 						{
-							if (!Directory.Exists(dirName + "\\Gedruckt"))
-							{
-								Directory.CreateDirectory(dirName + "\\Gedruckt");
-							}
-							if (!unPrintedFiles.ContainsKey(dirName))
-							{
-								unPrintedFiles.Add(dirName, new List<string>());
-							}
-							unPrintedFiles[dirName].Add(file);
+							Directory.CreateDirectory(dirName + "\\Gedruckt");
 						}
-					}
-				}
-
-				PrintDialog printDialog = new PrintDialog();
-				if (printDialog.ShowDialog() == DialogResult.OK)
-				{
-					if (unPrintedFiles.Count == 0)
-					{
-						MessageBox.Show("No unprinted reports found");
-						return;
-					}
-					else
-					{
-						foreach (string key in unPrintedFiles.Keys)
+						if (!unPrintedFiles.ContainsKey(dirName))
 						{
-							if (unPrintedFiles[key].Contains(configHandler.LastCreated()))
-							{
-								if (MessageBox.Show("Do you want to also print the last created report?\n(" + configHandler.LastCreated() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
-								{
-									unPrintedFiles[key].Remove(configHandler.LastCreated());
-								}
-							}
+							unPrintedFiles.Add(dirName, new List<string>());
 						}
+						unPrintedFiles[dirName].Add(file);
 					}
-					foreach (string key in unPrintedFiles.Keys)
-					{
-						unPrintedFiles[key].ForEach((filePath) =>
-						{
-
-							try
-							{
-								bool isSameAsOpened;
-								if (doc != null)
-									isSameAsOpened = filePath == doc.Path + "\\" + doc.Name;
-								else isSameAsOpened = false;
-								if (isSameAsOpened)
-								{
-									SaveOrExit();
-									rtbSchool.Text = "";
-									rtbWork.Text = "";
-									wasEdited = false;
-								};
-								Word.Document document = wordApp.Documents.Open(FileName: filePath, ReadOnly: true);
-								wordApp.Visible = WordVisible;
-								document.PrintOut(Background: false);
-								document.Close();
-								File.Move(filePath, key + "\\Gedruckt\\" + Path.GetFileName(filePath));
-							}
-							catch (Exception ex)
-							{
-								Logger.LogError(ex);
-								MessageBox.Show(ex.StackTrace, "Error while printing" + filePath);
-								Console.Write(ex.StackTrace);
-							}
-						});
-					}
-					UpdateTree();
 				}
 			}
+			if (unPrintedFiles.Count == 0)
+			{
+				MessageBox.Show("No unprinted reports found");
+				return;
+			}
+
+			PrintDialog printDialog = new PrintDialog();
+			if (printDialog.ShowDialog() != DialogResult.OK) return;
+			foreach (string key in unPrintedFiles.Keys)
+			{
+				if (unPrintedFiles[key].Contains(configHandler.LastCreated()))
+				{
+					if (MessageBox.Show("Do you want to also print the last created report?\n(" + configHandler.LastCreated() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
+					{
+						unPrintedFiles[key].Remove(configHandler.LastCreated());
+					}
+				}
+			}
+			foreach (string key in unPrintedFiles.Keys)
+			{
+				unPrintedFiles[key].ForEach((filePath) =>
+				{
+
+					try
+					{
+						bool isSameAsOpened;
+						if (doc != null)
+							isSameAsOpened = filePath == doc.Path + "\\" + doc.Name;
+						else isSameAsOpened = false;
+						if (isSameAsOpened)
+						{
+							SaveOrExit();
+							rtbSchool.Text = "";
+							rtbWork.Text = "";
+							wasEdited = false;
+						};
+						Word.Document document = wordApp.Documents.Open(FileName: filePath, ReadOnly: true);
+						wordApp.Visible = WordVisible;
+						document.PrintOut(Background: false);
+						document.Close();
+						File.Move(filePath, key + "\\Gedruckt\\" + Path.GetFileName(filePath));
+					}
+					catch (Exception ex)
+					{
+						Logger.LogError(ex);
+						MessageBox.Show(ex.StackTrace, "Error while printing" + filePath);
+						Console.Write(ex.StackTrace);
+					}
+				});
+			}
+			UpdateTree();
 		}
 
 		/**
@@ -1059,45 +1052,41 @@ namespace BerichtManager
 				}
 			}
 			PrintDialog printDialog = new PrintDialog();
-			if (printDialog.ShowDialog() == DialogResult.OK)
+			if (printDialog.ShowDialog() != DialogResult.OK) return;
+			if (!File.Exists(path)) return;
+			if (!Directory.Exists(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt"))
 			{
-				if (File.Exists(path))
+				Directory.CreateDirectory(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt");
+			}
+			try
+			{
+				bool isSameAsOpened;
+				if (doc != null)
+					isSameAsOpened = path == doc.Path + "\\" + doc.Name;
+				else isSameAsOpened = false;
+				if (isSameAsOpened)
 				{
-					if (!Directory.Exists(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt"))
-					{
-						Directory.CreateDirectory(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt");
-					}
-					try
-					{
-						bool isSameAsOpened;
-						if (doc != null)
-							isSameAsOpened = path == doc.Path + "\\" + doc.Name;
-						else isSameAsOpened = false;
-						if (isSameAsOpened)
-						{
-							SaveOrExit();
-							rtbSchool.Text = "";
-							rtbWork.Text = "";
-							wasEdited = false;
-						};
-						Word.Document document = wordApp.Documents.Open(path, ReadOnly: true);
-						wordApp.Visible = WordVisible;
-						document.PrintOut(Background: false);
-						document.Close();
-						if (printed.Name != "Gedruckt")
-						{
-							File.Move(path,
-							path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path));
-							UpdateTree();
-						}
-					}
-					catch (Exception ex)
-					{
-						Logger.LogError(ex);
-						MessageBox.Show(ex.StackTrace);
-						Console.Write(ex.StackTrace);
-					}
+					SaveOrExit();
+					rtbSchool.Text = "";
+					rtbWork.Text = "";
+					wasEdited = false;
+				};
+				Word.Document document = wordApp.Documents.Open(path, ReadOnly: true);
+				wordApp.Visible = WordVisible;
+				document.PrintOut(Background: false);
+				document.Close();
+				if (printed.Name != "Gedruckt")
+				{
+					File.Move(path,
+					path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path));
+					UpdateTree();
 				}
+			}
+			catch (Exception ex)
+			{
+				Logger.LogError(ex);
+				MessageBox.Show(ex.StackTrace);
+				Console.Write(ex.StackTrace);
 			}
 		}
 
