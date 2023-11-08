@@ -12,7 +12,13 @@ namespace BerichtManager.Forms
 {
 	public partial class EditForm : Form
 	{
+		/// <summary>
+		/// Text from <see cref="rtInput"/> after form closed
+		/// </summary>
 		public string Result { get; set; }
+		/// <summary>
+		/// Cache object to reduce number of .Instance in code
+		/// </summary>
 		private ConfigHandler ConfigHandler { get; }
 		/// <summary>
 		/// Stops calls to ConfigHandler being made
@@ -30,19 +36,18 @@ namespace BerichtManager.Forms
 		/// <param name="theme">Theme to be used</param>
 		/// <param name="text">Text to b set in input</param>
 		/// <param name="isCreate"><see cref="bool"/> If form is in creation mode which changes button texts, enabled status and tool tips</param>
-		/// <param name="isConfigHandlerInitializing">If <see cref="EditForm"/> is called while completing config no calls to <see cref="ConfigHandler"/> are made</param>
+		/// <param name="stopConfigCalls">If <see cref="EditForm"/> is called while completing config no calls to <see cref="ConfigHandler"/> are made</param>
 		public EditForm(string title, ITheme theme, string text = "", bool isCreate = false, bool stopConfigCalls = false)
 		{
 			InitializeComponent();
-			if(!stopConfigCalls)
-				ConfigHandler = new ConfigHandler();
+			if (!stopConfigCalls) ConfigHandler = ConfigHandler.Instance;
 			if (theme == null)
 				theme = new DarkMode();
 			ThemeSetter.SetThemes(this, theme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
 			List<int> tabstops = new List<int>();
-			if (ConfigHandler == null)
+			if (stopConfigCalls)
 			{
 				nudFontSize.Value = (decimal)8.25f;
 				cbFontFamily.Text = "Arial";

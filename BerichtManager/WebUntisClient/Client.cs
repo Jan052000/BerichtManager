@@ -13,12 +13,20 @@ namespace BerichtManager.WebUntisClient
 {
 	public partial class Client
 	{
-		private ConfigHandler ConfigHandler { get; }
+		/// <summary>
+		/// Cache object to reduce number of .Instance in code
+		/// </summary>
+		private ConfigHandler ConfigHandler { get; } = ConfigHandler.Instance;
+		/// <summary>
+		/// Server part of the url
+		/// </summary>
 		private string Server { get; set; }
+		/// <summary>
+		/// Name of school in clear text
+		/// </summary>
 		private string SchoolName { get; set; }
-		public Client(ConfigHandler configHandler)
+		public Client()
 		{
-			ConfigHandler = configHandler;
 			UpdateConfigData();
 		}
 

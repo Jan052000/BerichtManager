@@ -30,7 +30,20 @@ namespace BerichtManager.Config
 		/// </summary>
 		private JObject ConfigObject { get; set; }
 
-		public ConfigHandler()
+		#region Singleton
+		private static ConfigHandler Singleton;
+		public static ConfigHandler Instance
+		{
+			get
+			{
+				if (Singleton == null)
+					Singleton = new ConfigHandler();
+				return Singleton;
+			}
+		}
+		#endregion
+
+		private ConfigHandler()
 		{
 			bool isComplete = true;
 			if (!ConfigExists())
