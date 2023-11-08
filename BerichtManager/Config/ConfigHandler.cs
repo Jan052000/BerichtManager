@@ -29,14 +29,9 @@ namespace BerichtManager.Config
 		/// Internal object to reduce number of IO calls
 		/// </summary>
 		private JObject ConfigObject { get; set; }
-		/// <summary>
-		/// <see cref="ThemeManagement.ThemeManager"/> for getting theme when completing config
-		/// </summary>
-		private ThemeManager ThemeManager { get; set; }
 
-		public ConfigHandler(ThemeManager themeManager)
+		public ConfigHandler()
 		{
-			ThemeManager = themeManager;
 			bool isComplete = true;
 			if (!ConfigExists())
 			{
@@ -76,7 +71,7 @@ namespace BerichtManager.Config
 				}
 				if (!ConfigObject.ContainsKey("ReportNR"))
 				{
-					EditForm form = new EditForm("Edit Number of Report", themeManager.GetTheme(ActiveTheme()), text: "1", isConfigHandlerInitializing: true);
+					EditForm form = new EditForm("Edit Number of Report", ThemeManager.Instance.GetTheme(ActiveTheme()), text: "1", stopConfigCalls: true);
 					form.ShowDialog();
 					if (form.DialogResult == (DialogResult.OK | DialogResult.Cancel))
 					{
@@ -105,7 +100,7 @@ namespace BerichtManager.Config
 				}
 				if (!ConfigObject.ContainsKey("Name"))
 				{
-					EditForm form = new EditForm("Enter your name", themeManager.GetTheme(ActiveTheme()), "Name Vorname", isConfigHandlerInitializing: true);
+					EditForm form = new EditForm("Enter your name", ThemeManager.Instance.GetTheme(ActiveTheme()), text: "Name Vorname", stopConfigCalls: true);
 					if (form.ShowDialog() == (DialogResult.OK | DialogResult.Cancel))
 					{
 						ConfigObject.Add(new JProperty("Name", form.Result));
@@ -340,7 +335,7 @@ namespace BerichtManager.Config
 		/// <returns><see cref="User"/> object containing username and password</returns>
 		public User DoLogin()
 		{
-			Login form = new Login(ThemeManager.GetTheme(ActiveTheme()));
+			Login form = new Login(ThemeManager.Instance.GetTheme(ActiveTheme()));
 			form.ShowDialog();
 			if (form.DialogResult == DialogResult.OK)
 			{

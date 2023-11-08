@@ -13,7 +13,7 @@ namespace BerichtManager.Forms
 	public partial class EditForm : Form
 	{
 		public string Result { get; set; }
-		private readonly ConfigHandler ConfigHandler;
+		private ConfigHandler ConfigHandler { get; }
 		/// <summary>
 		/// Stops calls to ConfigHandler being made
 		/// </summary>
@@ -31,12 +31,11 @@ namespace BerichtManager.Forms
 		/// <param name="text">Text to b set in input</param>
 		/// <param name="isCreate"><see cref="bool"/> If form is in creation mode which changes button texts, enabled status and tool tips</param>
 		/// <param name="isConfigHandlerInitializing">If <see cref="EditForm"/> is called while completing config no calls to <see cref="ConfigHandler"/> are made</param>
-		public EditForm(string title, ITheme theme, string text = "", bool isCreate = false, bool isConfigHandlerInitializing = false)
+		public EditForm(string title, ITheme theme, string text = "", bool isCreate = false, bool stopConfigCalls = false)
 		{
 			InitializeComponent();
-			StopConfigCalls = isConfigHandlerInitializing;
-			if (!StopConfigCalls)
-				ConfigHandler = new ConfigHandler(null);
+			if(!stopConfigCalls)
+				ConfigHandler = new ConfigHandler();
 			if (theme == null)
 				theme = new DarkMode();
 			ThemeSetter.SetThemes(this, theme);

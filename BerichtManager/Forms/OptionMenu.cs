@@ -40,10 +40,9 @@ namespace BerichtManager.Forms
 		/// Emits when font size setting is changed
 		/// </summary>
 		public event fontSizeChanged FontSizeChanged;
-		private ThemeManager ThemeManager { get; set; }
 		private ITheme Theme { get; set; }
 
-		public OptionMenu(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager)
+		public OptionMenu(ConfigHandler configHandler, ITheme theme)
 		{
 			InitializeComponent();
 			if (theme == null)
@@ -53,7 +52,6 @@ namespace BerichtManager.Forms
 			ThemeName = theme.Name;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.ConfigHandler = configHandler;
-			ThemeManager = themeManager;
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = configHandler.UseUserPrefix();
 			cbShouldUseUntis.Checked = configHandler.UseWebUntis();
@@ -63,11 +61,11 @@ namespace BerichtManager.Forms
 			tbSchool.Text = configHandler.SchoolName();
 			cbLegacyEdit.Checked = configHandler.LegacyEdit();
 
-			themeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
+			ThemeManager.Instance.ThemeNames.ForEach(name => coTheme.Items.Add(name));
 			int selectedIndex = coTheme.Items.IndexOf(configHandler.ActiveTheme());
 			coTheme.SelectedIndex = selectedIndex;
 			ThemeName = coTheme.Text;
-			ThemeManager.UpdatedThemesList += UpdateThemesList;
+			ThemeManager.Instance.UpdatedThemesList += UpdateThemesList;
 
 			tbTemplate.Text = configHandler.TemplatePath();
 			tbName.Text = configHandler.ReportUserName();
@@ -197,7 +195,7 @@ namespace BerichtManager.Forms
 			if (ThemeName != coTheme.Text)
 			{
 				ThemeName = coTheme.Text;
-				ITheme activeTheme = ThemeManager.GetTheme(ThemeName);
+				ITheme activeTheme = ThemeManager.Instance.GetTheme(ThemeName);
 				ThemeSetter.SetThemes(this, activeTheme);
 				ActiveThemeChanged(this, activeTheme);
 			}
@@ -229,7 +227,7 @@ namespace BerichtManager.Forms
 			btSave.Enabled = true;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
-			ITheme theme = ThemeManager.GetTheme(ThemeName);
+			ITheme theme = ThemeManager.Instance.GetTheme(ThemeName);
 			if (theme == null)
 				return;
 			ThemeSetter.SetThemes(tbSchool, theme);
@@ -265,9 +263,9 @@ namespace BerichtManager.Forms
 
 		private void btCreateTheme_Click(object sender, EventArgs e)
 		{
-			new CreateTheme(ConfigHandler, ThemeManager.GetTheme(ThemeName), ThemeManager).ShowDialog();
+			new CreateTheme(ConfigHandler, ThemeManager.Instance.GetTheme(ThemeName)).ShowDialog();
 			coTheme.Items.Clear();
-			ThemeManager.ThemeNames.ForEach(name => coTheme.Items.Add(name));
+			ThemeManager.Instance.ThemeNames.ForEach(name => coTheme.Items.Add(name));
 		}
 
 		private void btEditTheme_Click(object sender, EventArgs e)
@@ -277,7 +275,7 @@ namespace BerichtManager.Forms
 			fileDialog.InitialDirectory = Path.GetFullPath(".\\Config\\Themes");
 			if (fileDialog.ShowDialog() == DialogResult.OK)
 			{
-				new CreateTheme(ConfigHandler, ThemeManager.GetTheme(ThemeName), ThemeManager, ThemeManager.GetTheme(Path.GetFileNameWithoutExtension(fileDialog.FileName))).ShowDialog();
+				new CreateTheme(ConfigHandler, ThemeManager.Instance.GetTheme(ThemeName), ThemeManager.Instance.GetTheme(Path.GetFileNameWithoutExtension(fileDialog.FileName))).ShowDialog();
 			}
 		}
 
@@ -308,12 +306,12 @@ namespace BerichtManager.Forms
 		private void UpdateThemesList()
 		{
 			coTheme.Items.Clear();
-			coTheme.Items.AddRange(ThemeManager.ThemeNames.ToArray());
+			coTheme.Items.AddRange(ThemeManager.Instance.ThemeNames.ToArray());
 		}
 
 		private void OptionMenu_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			ThemeManager.UpdatedThemesList -= UpdateThemesList;
+			ThemeManager.Instance.UpdatedThemesList -= UpdateThemesList;
 		}
 	}
 }

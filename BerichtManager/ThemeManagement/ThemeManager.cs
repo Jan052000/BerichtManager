@@ -1,4 +1,4 @@
-using BerichtManager.ThemeManagement.DefaultThemes;
+﻿using BerichtManager.ThemeManagement.DefaultThemes;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -34,7 +34,20 @@ namespace BerichtManager.ThemeManagement
 		/// </summary>
 		public delegate void UpdateThemesListDelegate();
 
-		public ThemeManager()
+		#region Singleton
+		private static ThemeManager Singleton;
+		public static ThemeManager Instance
+		{
+			get
+			{
+				if (Singleton == null)
+					Singleton = new ThemeManager();
+				return Singleton;
+			}
+		}
+		#endregion
+
+		private ThemeManager()
 		{
 			if (!Directory.Exists(themesFolderPath))
 				Directory.CreateDirectory(themesFolderPath);

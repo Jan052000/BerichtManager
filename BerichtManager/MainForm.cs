@@ -27,7 +27,7 @@ namespace BerichtManager
 		/// Global instance of Word
 		/// </summary>
 		private Word.Application WordApp { get; set; }
-		private ConfigHandler ConfigHandler { get; } = new ConfigHandler(ThemeManager);
+		private ConfigHandler ConfigHandler { get; } = new ConfigHandler();
 		private Client Client { get; }
 
 		/// <summary>
@@ -45,7 +45,6 @@ namespace BerichtManager
 		/// </summary>
 		private bool WasEdited { get; set; } = false;
 		private CustomNodeDrawer NodeDrawer { get; set; }
-		private static readonly ThemeManager ThemeManager = new ThemeManager();
 		private ITheme ActiveTheme { get; set; }
 
 		/// <summary>
@@ -90,7 +89,7 @@ namespace BerichtManager
 		public MainForm()
 		{
 			InitializeComponent();
-			ActiveTheme = ThemeManager.GetTheme(ConfigHandler.ActiveTheme());
+			ActiveTheme = ThemeManager.Instance.GetTheme(ConfigHandler.ActiveTheme());
 			if (ActiveTheme == null)
 				ActiveTheme = new DarkMode();
 			ThemeSetter.SetThemes(this, ActiveTheme);
@@ -1239,7 +1238,7 @@ namespace BerichtManager
 		private void btOptions_Click(object sender, EventArgs e)
 		{
 			int tabStops = ConfigHandler.TabStops();
-			OptionMenu optionMenu = new OptionMenu(ConfigHandler, ActiveTheme, ThemeManager);
+			OptionMenu optionMenu = new OptionMenu(ConfigHandler, ActiveTheme);
 			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
 			optionMenu.ReportFolderChanged += ReportFolderChanged;
 			optionMenu.TabStopsChanged += UpdateTabStops;
