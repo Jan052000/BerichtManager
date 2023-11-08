@@ -7,15 +7,11 @@ namespace BerichtManager.ThemeManagement
 {
 	public partial class CreateTheme : Form
 	{
-		private readonly ConfigHandler ConfigHandler;
-		private readonly ThemeManager ThemeManager;
-		public CreateTheme(ConfigHandler configHandler, ITheme theme, ThemeManager themeManager, ITheme edit = null)
+		public CreateTheme(ITheme theme, ITheme edit = null)
 		{
 			InitializeComponent();
 			InitializeEdit(edit);
 			ThemeSetter.SetThemes(this, theme);
-			ConfigHandler = configHandler;
-			ThemeManager = themeManager;
 			btSave.Focus();
 			ColorConverter colorConverter = new ColorConverter();
 			foreach (Control control in Controls)
@@ -62,15 +58,13 @@ namespace BerichtManager.ThemeManagement
 
 		private void btSave_Click(object sender, EventArgs e)
 		{
-			if (ConfigHandler == null || ThemeManager == null)
-				return;
 			if (string.IsNullOrEmpty(tbName.Text))
 			{
 				MessageBox.Show("Name may not be left empty", "Name empty");
 				return;
 			}
 			ColorConverter colorConverter = new ColorConverter();
-			SaveStatusCodes code = ThemeManager.SaveTheme(new ThemeSerialization()
+			SaveStatusCodes code = ThemeManager.Instance.SaveTheme(new ThemeSerialization()
 			{
 				BackColor = (Color)colorConverter.ConvertFromString(tbBack.Text),
 				ButtonColor = (Color)colorConverter.ConvertFromString(tbBt.Text),
