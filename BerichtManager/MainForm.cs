@@ -19,22 +19,34 @@ namespace BerichtManager
 {
 	public partial class MainForm : Form
 	{
-		private Word.Document doc { get; set; } = null;
-		private Word.Application wordApp { get; set; }
-		private readonly ConfigHandler configHandler = new ConfigHandler(themeManager);
-		private readonly Client client;
+		/// <summary>
+		/// The currently open word document
+		/// </summary>
+		private Word.Document Doc { get; set; } = null;
+		/// <summary>
+		/// Global instance of Word
+		/// </summary>
+		private Word.Application WordApp { get; set; }
+		private ConfigHandler ConfigHandler { get; } = new ConfigHandler(ThemeManager);
+		private Client Client { get; }
 
 		/// <summary>
 		/// Directory containing all reports
 		/// </summary>
-		private DirectoryInfo info { get; set; }
-		private readonly CultureInfo culture = new CultureInfo("de-DE");
-		private int tvReportsMaxWidth { get; set; } = 50;
-		private bool editMode { get; set; } = false;
-		private bool wasEdited { get; set; } = false;
-		private CustomNodeDrawer nodeDrawer { get; set; }
-		private static readonly ThemeManager themeManager = new ThemeManager();
-		private ITheme activeTheme { get; set; }
+		private DirectoryInfo Info { get; set; }
+		private CultureInfo Culture { get; } = new CultureInfo("de-DE");
+		private int TvReportsMaxWidth { get; set; } = 50;
+		/// <summary>
+		/// If a word document is opened
+		/// </summary>
+		private bool EditMode { get; set; } = false;
+		/// <summary>
+		/// If <see cref="rtbSchool"/> or <see cref="rtbWork"/> have been edited
+		/// </summary>
+		private bool WasEdited { get; set; } = false;
+		private CustomNodeDrawer NodeDrawer { get; set; }
+		private static readonly ThemeManager ThemeManager = new ThemeManager();
+		private ITheme ActiveTheme { get; set; }
 
 		/// <summary>
 		/// Value if word has a visible window or not
@@ -78,29 +90,28 @@ namespace BerichtManager
 		public MainForm()
 		{
 			InitializeComponent();
-			activeTheme = themeManager.GetTheme(configHandler.ActiveTheme());
-			if (activeTheme == null)
-				activeTheme = new DarkMode();
-			ThemeSetter.SetThemes(this, activeTheme);
-			ThemeSetter.SetThemes(toRightClickMenu, activeTheme);
-			nodeDrawer = new CustomNodeDrawer(activeTheme);
+			ActiveTheme = ThemeManager.GetTheme(ConfigHandler.ActiveTheme());
+			if (ActiveTheme == null)
+				ActiveTheme = new DarkMode();
+			ThemeSetter.SetThemes(this, ActiveTheme);
+			ThemeSetter.SetThemes(toRightClickMenu, ActiveTheme);
+			NodeDrawer = new CustomNodeDrawer(ActiveTheme);
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
-			info = new DirectoryInfo(configHandler.ReportPath());
-			ActivePath = configHandler.ReportPath();
+			Info = new DirectoryInfo(ConfigHandler.ReportPath());
+			ActivePath = ConfigHandler.ReportPath();
 			UpdateTree();
-			if (configHandler.LastCreated() == "")
+			if (ConfigHandler.LastCreated() == "")
 			{
 				miEditLatest.Enabled = false;
 			}
 			SetComponentPositions();
-			UpdateTabStops(this, configHandler.TabStops());
-			client = new Client(configHandler);
-			if (File.Exists(configHandler.PublishPath()))
-				if (CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(configHandler.PublishPath()).FileVersion) > 0)
-					VersionString += "*";
+			UpdateTabStops(this, ConfigHandler.TabStops());
+			Client = new Client(ConfigHandler);
+			if (File.Exists(ConfigHandler.PublishPath()) && CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(ConfigHandler.PublishPath()).FileVersion) > 0)
+				VersionString += "*";
 			WordTaskFactory.StartNew(RestartWord);
 		}
 
@@ -151,33 +162,33 @@ namespace BerichtManager
 		{
 			tvReports.ExpandAll();
 			foreach (TreeNode node in tvReports.Nodes)
-				TvReportsMaxWidth(node);
+				TvReportsCalcMaxWidth(node);
 			tvReports.CollapseAll();
-			splitterTreeBoxes.SplitPosition = tvReportsMaxWidth + 5;
+			splitterTreeBoxes.SplitPosition = TvReportsMaxWidth + 5;
 			Rectangle bounds = scTextBoxes.Bounds;
 			bounds.X = paFileTree.Bounds.Right + 1;
 			bounds.Width = Width - 1 - paFileTree.Bounds.Width;
 			scTextBoxes.Bounds = bounds;
-			rtbSchool.Font = new Font(rtbSchool.Font.FontFamily, configHandler.EditorFontSize());
-			rtbWork.Font = new Font(rtbWork.Font.FontFamily, configHandler.EditorFontSize());
+			rtbSchool.Font = new Font(rtbSchool.Font.FontFamily, ConfigHandler.EditorFontSize());
+			rtbWork.Font = new Font(rtbWork.Font.FontFamily, ConfigHandler.EditorFontSize());
 		}
 
 		/// <summary>
 		/// Calculates the max size the tree view should have
 		/// </summary>
 		/// <param name="treeNode">root nodes of tree</param>
-		private void TvReportsMaxWidth(TreeNode treeNode)
+		private void TvReportsCalcMaxWidth(TreeNode treeNode)
 		{
 			foreach (TreeNode node in treeNode.Nodes)
 			{
 				if (node.Nodes.Count > 0)
 				{
-					TvReportsMaxWidth(node);
+					TvReportsCalcMaxWidth(node);
 				}
 				else
 				{
-					if (tvReportsMaxWidth < node.Bounds.Right + 1)
-						tvReportsMaxWidth = node.Bounds.Right + 20;
+					if (TvReportsMaxWidth < node.Bounds.Right + 1)
+						TvReportsMaxWidth = node.Bounds.Right + 20;
 				}
 			}
 		}
@@ -188,7 +199,7 @@ namespace BerichtManager
 		private void UpdateTree()
 		{
 			tvReports.Nodes.Clear();
-			tvReports.Nodes.Add(CreateDirectoryNode(info));
+			tvReports.Nodes.Add(CreateDirectoryNode(Info));
 			tvReports.Sort();
 		}
 
@@ -251,10 +262,10 @@ namespace BerichtManager
 		private void SetFontInDoc(Word.Document doc, Word.Application app)
 		{
 			doc.Content.Select();
-			if (app.Selection.Font.Name != configHandler.EditorFont())
+			if (app.Selection.Font.Name != ConfigHandler.EditorFont())
 			{
-				app.Selection.Font.Name = configHandler.EditorFont();
-				MessageBox.Show("Changed report Font to: " + configHandler.EditorFont(), "Font changed!");
+				app.Selection.Font.Name = ConfigHandler.EditorFont();
+				MessageBox.Show("Changed report Font to: " + ConfigHandler.EditorFont(), "Font changed!");
 			}
 			try
 			{
@@ -282,12 +293,12 @@ namespace BerichtManager
 			Word.Document ldoc = null;
 			if (!File.Exists(templatePath))
 			{
-				MessageBox.Show(configHandler.TemplatePath() + " was not found was it moved or deleted?");
+				MessageBox.Show(ConfigHandler.TemplatePath() + " was not found was it moved or deleted?");
 				return;
 			}
 			try
 			{
-				int weekOfYear = culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				int weekOfYear = Culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 				ldoc = app.Documents.Add(Template: templatePath);
 
 				if (ldoc.FormFields.Count != 10)
@@ -302,19 +313,19 @@ namespace BerichtManager
 				//Fill name
 				IEnumerator enumerator = ldoc.FormFields.GetEnumerator();
 				enumerator.MoveNext();
-				if (!string.IsNullOrEmpty(configHandler.ReportUserName()))
+				if (!string.IsNullOrEmpty(ConfigHandler.ReportUserName()))
 				{
-					((Word.FormField)enumerator.Current).Result = configHandler.ReportUserName();
+					((Word.FormField)enumerator.Current).Result = ConfigHandler.ReportUserName();
 				}
 				else
 				{
-					form = new EditForm("Enter your name", activeTheme, text: "Name Vorname");
+					form = new EditForm("Enter your name", ActiveTheme, text: "Name Vorname");
 					form.RefreshConfigs += RefreshConfig;
 					if (form.ShowDialog() == DialogResult.OK)
 					{
-						configHandler.ReportUserName(form.Result);
-						configHandler.SaveConfig();
-						((Word.FormField)enumerator.Current).Result = configHandler.ReportUserName();
+						ConfigHandler.ReportUserName(form.Result);
+						ConfigHandler.SaveConfig();
+						((Word.FormField)enumerator.Current).Result = ConfigHandler.ReportUserName();
 					}
 					else
 					{
@@ -326,7 +337,7 @@ namespace BerichtManager
 				enumerator.MoveNext();
 
 				//Enter report nr.
-				if (int.TryParse(configHandler.ReportNumber(), out int number))
+				if (int.TryParse(ConfigHandler.ReportNumber(), out int number))
 				{
 					FillText(app, ((Word.FormField)enumerator.Current), (number + reportDifference).ToString());
 				}
@@ -343,7 +354,7 @@ namespace BerichtManager
 				enumerator.MoveNext();
 				((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
 				enumerator.MoveNext();
-				if (configHandler.EndWeekOnFriday())
+				if (ConfigHandler.EndWeekOnFriday())
 				{
 					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
 				}
@@ -360,14 +371,14 @@ namespace BerichtManager
 				enumerator.MoveNext();
 				if (vacation)
 				{
-					if (configHandler.UseUserPrefix())
-						FillText(app, (Word.FormField)enumerator.Current, configHandler.CustomPrefix() + "Urlaub");
+					if (ConfigHandler.UseUserPrefix())
+						FillText(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix() + "Urlaub");
 					else
 						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 				}
 				else
 				{
-					form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", activeTheme, isCreate: true);
+					form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", ActiveTheme, isCreate: true);
 					form.RefreshConfigs += RefreshConfig;
 					form.ShowDialog();
 					form.RefreshConfigs -= RefreshConfig;
@@ -394,14 +405,14 @@ namespace BerichtManager
 				enumerator.MoveNext();
 				if (vacation)
 				{
-					if (configHandler.UseUserPrefix())
-						FillText(app, (Word.FormField)enumerator.Current, configHandler.CustomPrefix() + "Urlaub");
+					if (ConfigHandler.UseUserPrefix())
+						FillText(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix() + "Urlaub");
 					else
 						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 				}
 				else
 				{
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", activeTheme, text: "-Keine-", isCreate: true);
+					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", ActiveTheme, text: "-Keine-", isCreate: true);
 					form.RefreshConfigs += RefreshConfig;
 					form.ShowDialog();
 					form.RefreshConfigs -= RefreshConfig;
@@ -431,18 +442,18 @@ namespace BerichtManager
 					string classes = "";
 					try
 					{
-						client.GetClassesFromWebUntis().ForEach(c => classes += c);
+						Client.GetClassesFromWebUntis().ForEach(c => classes += c);
 					}
 					catch (AggregateException e)
 					{
 						MessageBox.Show("Unable to process classes from web\n(try to cancel the creation process and start again)");
 						Logger.LogError(e);
 					}
-					form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", activeTheme, school: true, isCreate: true, text: classes);
+					form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", ActiveTheme, isCreate: true, text: classes);
 				}
 				else
 				{
-					form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", activeTheme, text: client.getHolidaysForDate(baseDate), isCreate: true);
+					form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", ActiveTheme, text: Client.GetHolidaysForDate(baseDate), isCreate: true);
 				}
 				form.RefreshConfigs += RefreshConfig;
 				form.ShowDialog();
@@ -475,15 +486,15 @@ namespace BerichtManager
 
 
 				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
-				string name = configHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, configHandler.ReportNumber());
+				string name = ConfigHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, ConfigHandler.ReportNumber());
 				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
 				SetFontInDoc(ldoc, app);
 				ldoc.SaveAs2(FileName: path);
 
-				if (int.TryParse(configHandler.ReportNumber(), out int i)) configHandler.ReportNumber("" + (i + 1));
-				configHandler.LastReportKW(culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-				configHandler.LastCreated(path);
-				configHandler.SaveConfig();
+				if (int.TryParse(ConfigHandler.ReportNumber(), out int i)) ConfigHandler.ReportNumber("" + (i + 1));
+				ConfigHandler.LastReportKW(Culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
+				ConfigHandler.LastCreated(path);
+				ConfigHandler.SaveConfig();
 				miEditLatest.Enabled = true;
 				MessageBox.Show("Created Document at: " + path);
 
@@ -491,11 +502,11 @@ namespace BerichtManager
 				UpdateTree();
 
 				SaveOrExit();
-				doc = wordApp.Documents.Open(path);
-				rtbWork.Text = doc.FormFields[6].Result;
-				rtbSchool.Text = doc.FormFields[8].Result;
-				editMode = true;
-				wasEdited = false;
+				Doc = WordApp.Documents.Open(path);
+				rtbWork.Text = Doc.FormFields[6].Result;
+				rtbSchool.Text = Doc.FormFields[8].Result;
+				EditMode = true;
+				WasEdited = false;
 			}
 			catch (Exception ex)
 			{
@@ -552,28 +563,24 @@ namespace BerichtManager
 		*/
 		private void CreateMissing(bool vacation = false)
 		{
-			DateTimeFormatInfo dfi = culture.DateTimeFormat;
-			DateTime date1 = new DateTime(DateTime.Today.Year, 12, 31);
+			DateTimeFormatInfo dfi = Culture.DateTimeFormat;
+			int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			int reportNr = ConfigHandler.LastReportKW();
 
-			int weekOfYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-			int reportNr = configHandler.LastReportKW();
-
-			if (configHandler.LastReportKW() < weekOfYear)
+			if (ConfigHandler.LastReportKW() < weekOfYear)
 			{
 				//Missing reports in current year
 				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					CreateDocument(configHandler.TemplatePath(), today.AddDays(i * 7), wordApp, vacation: vacation);
+					CreateDocument(ConfigHandler.TemplatePath(), today.AddDays(i * 7), WordApp, vacation: vacation);
 				}
 			}
 			else
 			{
 				//Missing missing reports over multiple years
-				int nrOfWeeksLastYear = culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
-				int weekOfCurrentYear = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-
-				DateTime endOfLastYear = new DateTime(DateTime.Today.Year - 1, 12, 31);
+				int nrOfWeeksLastYear = Culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+				int weekOfCurrentYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 
 				int repeats = nrOfWeeksLastYear - reportNr + weekOfCurrentYear;
 
@@ -582,7 +589,7 @@ namespace BerichtManager
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					CreateDocument(configHandler.TemplatePath(), today.AddDays(i * 7), wordApp, vacation: vacation);
+					CreateDocument(ConfigHandler.TemplatePath(), today.AddDays(i * 7), WordApp, vacation: vacation);
 				}
 			}
 		}
@@ -592,17 +599,17 @@ namespace BerichtManager
 			if (!HasWordStarted()) return;
 
 			//Check if report for this week was already created
-			int currentWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			int currentWeek = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			if (File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
 			{
 				MessageBox.Show("A report has already been created for this week");
 				return;
 			}
 			//Check if a report was created
-			if (configHandler.LastReportKW() > 0)
+			if (ConfigHandler.LastReportKW() > 0)
 			{
 				//Check if report for last week was created
-				if (getDistanceToToday() > 1)
+				if (GetDistanceToToday() > 1)
 				{
 					if (MessageBox.Show("You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
@@ -618,17 +625,17 @@ namespace BerichtManager
 				}
 			}
 
-			CreateDocument(configHandler.TemplatePath(), baseDate: DateTime.Today, wordApp, isSingle: true);
+			CreateDocument(ConfigHandler.TemplatePath(), baseDate: DateTime.Today, WordApp, isSingle: true);
 		}
 
 		/// <summary>
-		/// Returns the distance between the last created date in the config and today
+		/// Calculates the number of weeks since last report creation
 		/// </summary>
 		/// <returns>The number of weeks since last report creation</returns>
-		private int getDistanceToToday()
+		private int GetDistanceToToday()
 		{
-			int lastReportKW = configHandler.LastReportKW();
-			int todaysWeek = culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			int lastReportKW = ConfigHandler.LastReportKW();
+			int todaysWeek = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			//Both weeks are in the same year
 			if (lastReportKW <= todaysWeek)
 			{
@@ -637,7 +644,7 @@ namespace BerichtManager
 			//Both weeks are in different years
 			else
 			{
-				int lastWeekOfLastYear = culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				int lastWeekOfLastYear = Culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 				return lastWeekOfLastYear - lastReportKW + todaysWeek;
 			}
 		}
@@ -649,10 +656,10 @@ namespace BerichtManager
 			if (DocIsSamePathAsSelected())
 				return;
 			SaveOrExit();
-			if (configHandler.LegacyEdit())
-				Edit(configHandler.LastCreated());
+			if (ConfigHandler.LegacyEdit())
+				Edit(ConfigHandler.LastCreated());
 			else
-				EditInTb(configHandler.LastCreated());
+				EditInTb(ConfigHandler.LastCreated());
 		}
 
 		private void btPrint_Click(object sender, EventArgs e)
@@ -701,11 +708,11 @@ namespace BerichtManager
 			if (printDialog.ShowDialog() != DialogResult.OK) return;
 			foreach (string key in unPrintedFiles.Keys)
 			{
-				if (unPrintedFiles[key].Contains(configHandler.LastCreated()))
+				if (unPrintedFiles[key].Contains(ConfigHandler.LastCreated()))
 				{
-					if (MessageBox.Show("Do you want to also print the last created report?\n(" + configHandler.LastCreated() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
+					if (MessageBox.Show("Do you want to also print the last created report?\n(" + ConfigHandler.LastCreated() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
 					{
-						unPrintedFiles[key].Remove(configHandler.LastCreated());
+						unPrintedFiles[key].Remove(ConfigHandler.LastCreated());
 					}
 				}
 			}
@@ -717,18 +724,18 @@ namespace BerichtManager
 					try
 					{
 						bool isSameAsOpened;
-						if (doc != null)
-							isSameAsOpened = filePath == doc.Path + "\\" + doc.Name;
+						if (Doc != null)
+							isSameAsOpened = filePath == Doc.Path + "\\" + Doc.Name;
 						else isSameAsOpened = false;
 						if (isSameAsOpened)
 						{
 							SaveOrExit();
 							rtbSchool.Text = "";
 							rtbWork.Text = "";
-							wasEdited = false;
+							WasEdited = false;
 						};
-						Word.Document document = wordApp.Documents.Open(FileName: filePath, ReadOnly: true);
-						wordApp.Visible = WordVisible;
+						Word.Document document = WordApp.Documents.Open(FileName: filePath, ReadOnly: true);
+						WordApp.Visible = WordVisible;
 						document.PrintOut(Background: false);
 						document.Close();
 						File.Move(filePath, key + "\\Gedruckt\\" + Path.GetFileName(filePath));
@@ -761,19 +768,19 @@ namespace BerichtManager
 					if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
 						return;
 					if (!DocIsSamePathAsSelected())
-						doc = wordApp.Documents.Open(path);
+						Doc = WordApp.Documents.Open(path);
 
-					if (doc.FormFields.Count != 10)
+					if (Doc.FormFields.Count != 10)
 					{
 						MessageBox.Show("Invalid document (you will have to manually edit)");
-						doc.Close(SaveChanges: false);
-						doc = null;
+						Doc.Close(SaveChanges: false);
+						Doc = null;
 						return;
 					}
 
 					if (quickEditFieldNr > -1)
 					{
-						IEnumerator enumerator = doc.FormFields.GetEnumerator();
+						IEnumerator enumerator = Doc.FormFields.GetEnumerator();
 						for (int i = 0; i < quickEditFieldNr; i++)
 						{
 							if (enumerator.MoveNext())
@@ -781,27 +788,27 @@ namespace BerichtManager
 
 							}
 						}
-						EditForm edit = new EditForm(quickEditTitle, activeTheme, text: ((Word.FormField)enumerator.Current).Result);
+						EditForm edit = new EditForm(quickEditTitle, ActiveTheme, text: ((Word.FormField)enumerator.Current).Result);
 						edit.RefreshConfigs += RefreshConfig;
 						if (edit.ShowDialog() == DialogResult.OK)
 						{
-							FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
+							FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
 						}
 						else
 						{
 							if (edit.DialogResult == DialogResult.Ignore)
 							{
-								FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
+								FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
 							}
 						}
 						edit.RefreshConfigs -= RefreshConfig;
 					}
 					else
 					{
-						SelectEditFrom selectEdit = new SelectEditFrom(activeTheme);
+						SelectEditFrom selectEdit = new SelectEditFrom(ActiveTheme);
 						if (selectEdit.ShowDialog() == DialogResult.OK)
 						{
-							IEnumerator enumerator = doc.FormFields.GetEnumerator();
+							IEnumerator enumerator = Doc.FormFields.GetEnumerator();
 							EditForm edit;
 							foreach (EditState si in selectEdit.SelectedItems)
 							{
@@ -809,13 +816,13 @@ namespace BerichtManager
 								{
 									if (si.ShouldEdit)
 									{
-										edit = new EditForm(si.EditorTitle, activeTheme, text: ((Word.FormField)enumerator.Current).Result);
+										edit = new EditForm(si.EditorTitle, ActiveTheme, text: ((Word.FormField)enumerator.Current).Result);
 										edit.RefreshConfigs += RefreshConfig;
 										edit.ShowDialog();
 										edit.RefreshConfigs -= RefreshConfig;
 										if (edit.DialogResult == DialogResult.OK)
 										{
-											FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
+											FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
 										}
 										else
 										{
@@ -827,7 +834,7 @@ namespace BerichtManager
 											{
 												if (edit.DialogResult == DialogResult.Ignore)
 												{
-													FillText(wordApp, (Word.FormField)enumerator.Current, edit.Result);
+													FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
 													break;
 												}
 											}
@@ -837,12 +844,12 @@ namespace BerichtManager
 							}
 						}
 					}
-					SetFontInDoc(doc, wordApp);
-					doc.Save();
-					rtbWork.Text = doc.FormFields[6].Result;
-					rtbSchool.Text = doc.FormFields[8].Result;
-					editMode = true;
-					wasEdited = false;
+					SetFontInDoc(Doc, WordApp);
+					Doc.Save();
+					rtbWork.Text = Doc.FormFields[6].Result;
+					rtbSchool.Text = Doc.FormFields[8].Result;
+					EditMode = true;
+					WasEdited = false;
 					MessageBox.Show("Saved changes", "Saved");
 				}
 				else
@@ -886,7 +893,7 @@ namespace BerichtManager
 		/// <param name="path">document to open</param>
 		private void EditInTb(string path)
 		{
-			if (doc != null)
+			if (Doc != null)
 				if (DocIsSamePathAsSelected())
 					return;
 				else
@@ -899,20 +906,20 @@ namespace BerichtManager
 					return;
 				if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
 					return;
-				doc = wordApp.Documents.Open(path);
-				if (doc.FormFields.Count != 10)
+				Doc = WordApp.Documents.Open(path);
+				if (Doc.FormFields.Count != 10)
 				{
 					MessageBox.Show("Invalid document (you will have to manually edit)");
-					doc.Close(SaveChanges: false);
-					doc = null;
-					editMode = false;
-					wasEdited = false;
+					Doc.Close(SaveChanges: false);
+					Doc = null;
+					EditMode = false;
+					WasEdited = false;
 					return;
 				}
-				rtbWork.Text = doc.FormFields[6].Result;
-				rtbSchool.Text = doc.FormFields[8].Result;
-				editMode = true;
-				wasEdited = false;
+				rtbWork.Text = Doc.FormFields[6].Result;
+				rtbSchool.Text = Doc.FormFields[8].Result;
+				EditMode = true;
+				WasEdited = false;
 			}
 			catch (Exception ex)
 			{
@@ -951,14 +958,14 @@ namespace BerichtManager
 		{
 			try
 			{
-				if (doc == null || wordApp == null)
+				if (Doc == null || WordApp == null)
 					return;
-				FillText(wordApp, doc.FormFields[6], rtbWork.Text);
-				FillText(wordApp, doc.FormFields[8], rtbSchool.Text);
-				SetFontInDoc(doc, wordApp);
-				doc.Save();
+				FillText(WordApp, Doc.FormFields[6], rtbWork.Text);
+				FillText(WordApp, Doc.FormFields[8], rtbSchool.Text);
+				SetFontInDoc(Doc, WordApp);
+				Doc.Save();
 				MessageBox.Show("Saved changes", "Saved");
-				wasEdited = false;
+				WasEdited = false;
 			}
 			catch (Exception ex)
 			{
@@ -992,24 +999,24 @@ namespace BerichtManager
 		/// </summary>
 		private void SaveOrExit()
 		{
-			if (doc == null)
+			if (Doc == null)
 				return;
-			if (!editMode)
+			if (!EditMode)
 				return;
-			if (!wasEdited)
+			if (!WasEdited)
 			{
-				doc.Close(SaveChanges: false);
-				doc = null;
-				editMode = false;
+				Doc.Close(SaveChanges: false);
+				Doc = null;
+				EditMode = false;
 				return;
 			}
 
 			if (MessageBox.Show("Save unsaved changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				SaveFromTb();
-			doc.Close(SaveChanges: false);
-			doc = null;
-			editMode = false;
-			wasEdited = false;
+			Doc.Close(SaveChanges: false);
+			Doc = null;
+			EditMode = false;
+			WasEdited = false;
 		}
 
 		/// <summary>
@@ -1018,11 +1025,11 @@ namespace BerichtManager
 		/// <returns>is document path same as selected report path</returns>
 		private bool DocIsSamePathAsSelected()
 		{
-			if (doc == null)
+			if (Doc == null)
 				return false;
 			try
 			{
-				return FullSelectedPath == doc.Path + "\\" + doc.Name;
+				return FullSelectedPath == Doc.Path + "\\" + Doc.Name;
 			}
 			catch
 			{
@@ -1061,18 +1068,18 @@ namespace BerichtManager
 			try
 			{
 				bool isSameAsOpened;
-				if (doc != null)
-					isSameAsOpened = path == doc.Path + "\\" + doc.Name;
+				if (Doc != null)
+					isSameAsOpened = path == Doc.Path + "\\" + Doc.Name;
 				else isSameAsOpened = false;
 				if (isSameAsOpened)
 				{
 					SaveOrExit();
 					rtbSchool.Text = "";
 					rtbWork.Text = "";
-					wasEdited = false;
+					WasEdited = false;
 				};
-				Word.Document document = wordApp.Documents.Open(path, ReadOnly: true);
-				wordApp.Visible = WordVisible;
+				Word.Document document = WordApp.Documents.Open(path, ReadOnly: true);
+				WordApp.Visible = WordVisible;
 				document.PrintOut(Background: false);
 				document.Close();
 				if (printed.Name != "Gedruckt")
@@ -1113,24 +1120,24 @@ namespace BerichtManager
 			}
 			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
-			if (path == doc?.Path + "\\" + doc?.Name)
+			if (path == Doc?.Path + "\\" + Doc?.Name)
 			{
-				doc.Close(SaveChanges: false);
-				doc = null;
+				Doc.Close(SaveChanges: false);
+				Doc = null;
 				rtbSchool.Text = "";
 				rtbWork.Text = "";
-				editMode = false;
-				wasEdited = false;
+				EditMode = false;
+				WasEdited = false;
 			}
-			if (path == configHandler.LastCreated())
+			if (path == ConfigHandler.LastCreated())
 			{
-				if (configHandler.LastReportKW() == culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
+				if (ConfigHandler.LastReportKW() == Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
 				{
-					if (int.TryParse(configHandler.ReportNumber(), out int number))
+					if (int.TryParse(ConfigHandler.ReportNumber(), out int number))
 					{
-						configHandler.ReportNumber("" + (number - 1));
-						configHandler.LastReportKW(culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1);
-						configHandler.SaveConfig();
+						ConfigHandler.ReportNumber("" + (number - 1));
+						ConfigHandler.LastReportKW(Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1);
+						ConfigHandler.SaveConfig();
 					}
 					else
 					{
@@ -1154,7 +1161,7 @@ namespace BerichtManager
 			if (DocIsSamePathAsSelected())
 				return;
 			SaveOrExit();
-			if (configHandler.LegacyEdit())
+			if (ConfigHandler.LegacyEdit())
 			{
 				Edit(FullSelectedPath);
 			}
@@ -1231,8 +1238,8 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			int tabStops = configHandler.TabStops();
-			OptionMenu optionMenu = new OptionMenu(configHandler, activeTheme, themeManager);
+			int tabStops = ConfigHandler.TabStops();
+			OptionMenu optionMenu = new OptionMenu(ConfigHandler, ActiveTheme, ThemeManager);
 			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
 			optionMenu.ReportFolderChanged += ReportFolderChanged;
 			optionMenu.TabStopsChanged += UpdateTabStops;
@@ -1246,7 +1253,7 @@ namespace BerichtManager
 
 		private void ReportFolderChanged(object sender, string folderPath)
 		{
-			info = new DirectoryInfo(folderPath);
+			Info = new DirectoryInfo(folderPath);
 			UpdateTree();
 		}
 
@@ -1269,15 +1276,15 @@ namespace BerichtManager
 
 		private void ActiveThemeChanged(object sender, ITheme theme)
 		{
-			activeTheme = theme;
+			ActiveTheme = theme;
 			ThemeSetter.SetThemes(this, theme);
-			nodeDrawer.SetTheme(activeTheme);
+			NodeDrawer.SetTheme(ActiveTheme);
 			tvReports.Refresh();
 		}
 
 		private void DetectKeys(object sender, KeyEventArgs e)
 		{
-			if (e.Control && e.KeyCode == Keys.S && editMode)
+			if (e.Control && e.KeyCode == Keys.S && EditMode)
 			{
 				SaveFromTb();
 			}
@@ -1285,13 +1292,13 @@ namespace BerichtManager
 
 		private void EditRichTextBox(object sender, EventArgs e)
 		{
-			wasEdited = true;
+			WasEdited = true;
 		}
 
 		private void miWordVisible_Click(object sender, EventArgs e)
 		{
 			if (WordInitialized)
-				wordApp.Visible = miWordVisible.Checked;
+				WordApp.Visible = miWordVisible.Checked;
 			WordVisible = miWordVisible.Checked;
 		}
 
@@ -1299,14 +1306,14 @@ namespace BerichtManager
 		{
 			try
 			{
-				if (editMode && wasEdited && MessageBox.Show("Do you want to save unsaved changes?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (EditMode && WasEdited && MessageBox.Show("Do you want to save unsaved changes?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					SaveFromTb();
 				}
-				if (doc != null)
+				if (Doc != null)
 				{
-					doc.Close(SaveChanges: false);
-					doc = null;
+					Doc.Close(SaveChanges: false);
+					Doc = null;
 				}
 			}
 			catch (Exception ex)
@@ -1319,7 +1326,7 @@ namespace BerichtManager
 		{
 			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
 				return;
-			nodeDrawer.DrawNode(e);
+			NodeDrawer.DrawNode(e);
 		}
 
 		private void menuStrip1_Paint(object sender, PaintEventArgs e)
@@ -1356,7 +1363,7 @@ namespace BerichtManager
 					DeleteDocument(FullSelectedPath);
 					break;
 				case Keys.Escape:
-					if (doc == null || !editMode)
+					if (Doc == null || !EditMode)
 					{
 						MessageBox.Show("No opened report to close", "Could not close");
 						return;
@@ -1393,11 +1400,11 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Reloads <see cref="configHandler"/>
+		/// Reloads <see cref="ConfigHandler"/>
 		/// </summary>
 		public void RefreshConfig()
 		{
-			configHandler.ReloadConfig();
+			ConfigHandler.ReloadConfig();
 		}
 
 		/// <summary>
@@ -1405,15 +1412,15 @@ namespace BerichtManager
 		/// </summary>
 		private void RestartWord()
 		{
-			if (wordApp == null)
+			if (WordApp == null)
 			{
-				wordApp = new Word.Application();
+				WordApp = new Word.Application();
 				WordInitialized = true;
 				return;
 			}
 
 			//Check if word is still open
-			if (!typeof(Word.Application).IsAssignableFrom(wordApp.GetType()))
+			if (!typeof(Word.Application).IsAssignableFrom(WordApp.GetType()))
 				return;
 			WordInitialized = false;
 			//try
@@ -1424,7 +1431,7 @@ namespace BerichtManager
 			//{
 
 			//}
-			wordApp = new Word.Application();
+			WordApp = new Word.Application();
 			WordInitialized = true;
 		}
 
@@ -1434,15 +1441,15 @@ namespace BerichtManager
 		/// <param name="fontSize">Size to set font to</param>
 		private void ChangeFontSize(float fontSize)
 		{
-			bool wasEdited = this.wasEdited;
+			bool wasEdited = this.WasEdited;
 			rtbSchool.Font = new Font(rtbSchool.Font.FontFamily, fontSize);
 			rtbWork.Font = new Font(rtbWork.Font.FontFamily, fontSize);
-			this.wasEdited = wasEdited;
+			this.WasEdited = wasEdited;
 		}
 
 		private void miCloseReport_Click(object sender, EventArgs e)
 		{
-			if (doc == null || !editMode)
+			if (Doc == null || !EditMode)
 			{
 				MessageBox.Show("No opened report to close", "Could not close");
 				return;
@@ -1455,13 +1462,13 @@ namespace BerichtManager
 		/// </summary>
 		private void CloseOpenDocument()
 		{
-			if (doc == null)
+			if (Doc == null)
 				return;
 			SaveOrExit();
 			rtbSchool.Text = "";
 			rtbWork.Text = "";
-			wasEdited = false;
-			editMode = false;
+			WasEdited = false;
+			EditMode = false;
 		}
 	}
 }

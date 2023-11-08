@@ -38,10 +38,7 @@ namespace BerichtManager.WebUntisClient
 		/// <returns>List containing names of classes in time table</returns>
 		public List<string> GetClassesFromWebUntis()
 		{
-			if (!ConfigHandler.UseWebUntis())
-			{
-				return new List<string>();
-			}
+			if (!ConfigHandler.UseWebUntis()) return new List<string>();
 
 			UpdateConfigData();
 
@@ -71,7 +68,7 @@ namespace BerichtManager.WebUntisClient
 			}
 			else
 			{
-				user = ConfigHandler.doLogin();
+				user = ConfigHandler.DoLogin();
 				if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 				{
 					MessageBox.Show("You need to login to automatically enter classes");
@@ -322,7 +319,7 @@ namespace BerichtManager.WebUntisClient
 				{
 					if (user == null)
 					{
-						user = ConfigHandler.doLogin();
+						user = ConfigHandler.DoLogin();
 					}
 					if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 					{
@@ -368,7 +365,7 @@ namespace BerichtManager.WebUntisClient
 		/// </summary>
 		/// <param name="time">Date to filter for</param>
 		/// <returns>Contatinated string containing all holidays and vacations for the provided date</returns>
-		public string getHolidaysForDate(DateTime time)
+		public string GetHolidaysForDate(DateTime time)
 		{
 			string str = "";
 			DateTime thisWeekStart = time.AddDays(-(int)time.DayOfWeek + 1);

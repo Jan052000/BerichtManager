@@ -18,9 +18,9 @@ namespace BerichtManager
 				components.Dispose();
 				try
 				{
-					if (this.wordApp != null) 
+					if (this.WordApp != null) 
 					{
-						this.wordApp.Quit(SaveChanges: false);
+						this.WordApp.Quit(SaveChanges: false);
 					}
 				}
 				catch 

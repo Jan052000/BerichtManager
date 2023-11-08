@@ -10,9 +10,9 @@ namespace BerichtManager.ThemeManagement
 	internal class ThemeSetter
 	{
 		/// <summary>
-		/// Sets dark mode theme
+		/// Sets theme for <see href="control"/> and its children
 		/// </summary>
-		/// <param name="control">Top control to set darkmode for</param>
+		/// <param name="control">Top control to set theme for</param>
 		/// <param name="theme">Theme to be used for styling</param>
 		public static void SetThemes(Control control, ITheme theme)
 		{

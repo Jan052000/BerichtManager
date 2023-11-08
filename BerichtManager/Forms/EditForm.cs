@@ -13,11 +13,11 @@ namespace BerichtManager.Forms
 	public partial class EditForm : Form
 	{
 		public string Result { get; set; }
-		private readonly ConfigHandler handler;
+		private readonly ConfigHandler ConfigHandler;
 		/// <summary>
 		/// Stops calls to ConfigHandler being made
 		/// </summary>
-		private bool stopConfigCalls { get; set; }
+		private bool StopConfigCalls { get; set; }
 		/// <summary>
 		/// Event that is called when config should be reloaded
 		/// </summary>
@@ -29,21 +29,21 @@ namespace BerichtManager.Forms
 		/// <param name="title">Title displayed in title bar</param>
 		/// <param name="theme">Theme to be used</param>
 		/// <param name="text">Text to b set in input</param>
-		/// <param name="isCreate"><see cref="bool"/> if form is in creation mode which changes button texts, enabled status and tool tips</param>
-		/// <param name="isConfigHandlerInitializing">if <see cref="ConfigHandler"/> is completing config file, no calls to it are made</param>
-		public EditForm(string title, ITheme theme, string text = "", bool school = false, bool isCreate = false, bool isConfigHandlerInitializing = false)
+		/// <param name="isCreate"><see cref="bool"/> If form is in creation mode which changes button texts, enabled status and tool tips</param>
+		/// <param name="isConfigHandlerInitializing">If <see cref="EditForm"/> is called while completing config no calls to <see cref="ConfigHandler"/> are made</param>
+		public EditForm(string title, ITheme theme, string text = "", bool isCreate = false, bool isConfigHandlerInitializing = false)
 		{
 			InitializeComponent();
-			stopConfigCalls = isConfigHandlerInitializing;
-			if (!stopConfigCalls)
-				handler = new ConfigHandler(null);
+			StopConfigCalls = isConfigHandlerInitializing;
+			if (!StopConfigCalls)
+				ConfigHandler = new ConfigHandler(null);
 			if (theme == null)
 				theme = new DarkMode();
 			ThemeSetter.SetThemes(this, theme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
 			List<int> tabstops = new List<int>();
-			if (handler == null)
+			if (ConfigHandler == null)
 			{
 				nudFontSize.Value = (decimal)8.25f;
 				cbFontFamily.Text = "Arial";
@@ -54,12 +54,12 @@ namespace BerichtManager.Forms
 			}
 			else
 			{
-				nudFontSize.Value = (decimal)handler.EditorFontSize();
-				cbFontFamily.Text = handler.EditorFont();
-				rtInput.Font = new Font(handler.EditorFont(), (float)nudFontSize.Value);
+				nudFontSize.Value = (decimal)ConfigHandler.EditorFontSize();
+				cbFontFamily.Text = ConfigHandler.EditorFont();
+				rtInput.Font = new Font(ConfigHandler.EditorFont(), (float)nudFontSize.Value);
 				for (int i = 1; tabstops.Count < 32; i++)
 				{
-					tabstops.Add(i * handler.TabStops());
+					tabstops.Add(i * ConfigHandler.TabStops());
 				}
 			}
 			foreach (FontFamily family in (new InstalledFontCollection()).Families)
@@ -84,18 +84,18 @@ namespace BerichtManager.Forms
 
 		private void SaveSize()
 		{
-			if (handler == null)
+			if (ConfigHandler == null)
 				return;
-			if (stopConfigCalls)
+			if (StopConfigCalls)
 				return;
-			if (((float)nudFontSize.Value) != handler.EditorFontSize())
+			if (((float)nudFontSize.Value) != ConfigHandler.EditorFontSize())
 			{
 				if (MessageBox.Show("Do you want to save the font size of the editor?", "Save font size", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					if (float.TryParse(nudFontSize.Text, out float size))
 					{
-						handler.EditorFontSize(size);
-						handler.SaveConfig();
+						ConfigHandler.EditorFontSize(size);
+						ConfigHandler.SaveConfig();
 						RefreshConfigs();
 					}
 				}
@@ -104,16 +104,16 @@ namespace BerichtManager.Forms
 
 		private void ChangeFont()
 		{
-			if (handler == null)
+			if (ConfigHandler == null)
 				return;
-			if (stopConfigCalls)
+			if (StopConfigCalls)
 				return;
-			if (rtInput.Font.FontFamily.Name != handler.EditorFont())
+			if (rtInput.Font.FontFamily.Name != ConfigHandler.EditorFont())
 			{
 				if (MessageBox.Show("Do you want to change the font of following reports to " + cbFontFamily.Text + "?\n(Standard: \"Arial\")", "Change Font?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-					handler.EditorFont(rtInput.Font.FontFamily.Name);
-					handler.SaveConfig();
+					ConfigHandler.EditorFont(rtInput.Font.FontFamily.Name);
+					ConfigHandler.SaveConfig();
 					RefreshConfigs();
 				}
 			}

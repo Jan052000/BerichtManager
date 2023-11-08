@@ -16,50 +16,51 @@ namespace BerichtManager.Config
 		/// <summary>
 		/// Path to directory containing config file
 		/// </summary>
-		private readonly static string path = Environment.CurrentDirectory + "\\Config";
+		private static string ConfigFolderPath { get; } = Environment.CurrentDirectory + "\\Config";
 		/// <summary>
 		/// Name of config file
 		/// </summary>
-		private readonly static string FileName = "Config.json";
+		private static string FileName { get; } = "Config.json";
 		/// <summary>
 		/// Full path of config file
 		/// </summary>
-		private readonly string FullPath = path + "\\" + FileName;
+		private string FullPath { get; } = ConfigFolderPath + "\\" + FileName;
 		/// <summary>
 		/// Internal object to reduce number of IO calls
 		/// </summary>
-		private JObject configObject { get; set; }
+		private JObject ConfigObject { get; set; }
 		/// <summary>
-		/// <see cref="ThemeManager"/> for getting theme when completing config
+		/// <see cref="ThemeManagement.ThemeManager"/> for getting theme when completing config
 		/// </summary>
-		private ThemeManager themeManager;
+		private ThemeManager ThemeManager { get; set; }
+
 		public ConfigHandler(ThemeManager themeManager)
 		{
-			this.themeManager = themeManager;
+			ThemeManager = themeManager;
 			bool isComplete = true;
 			if (!ConfigExists())
 			{
-				Directory.CreateDirectory(path);
+				Directory.CreateDirectory(ConfigFolderPath);
 				File.Create(FullPath).Close();
-				configObject = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
+				ConfigObject = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
 					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1),
 					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
 					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"),
 					new JProperty("ReportPath", Path.GetFullPath(".\\..")), new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"),
 					new JProperty("TabStops", 20), new JProperty("NamingPattern", "WochenberichtKW~+CW+~"));
-				File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
+				File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
 			}
 			else
 			{
 				if (new FileInfo(FullPath).Length == 0)
 				{
-					configObject = new JObject();
+					ConfigObject = new JObject();
 				}
 				else
 				{
-					configObject = JObject.Parse(File.ReadAllText(FullPath));
+					ConfigObject = JObject.Parse(File.ReadAllText(FullPath));
 				}
-				if (!configObject.ContainsKey("TemplatePath"))
+				if (!ConfigObject.ContainsKey("TemplatePath"))
 				{
 					OpenFileDialog dialog = new OpenFileDialog();
 					dialog.Filter = "Word Templates (*.dotx)|*.dotx";
@@ -68,131 +69,131 @@ namespace BerichtManager.Config
 					MessageBox.Show("Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("ActiveTheme"))
+				if (!ConfigObject.ContainsKey("ActiveTheme"))
 				{
-					configObject.Add(new JProperty("ActiveTheme", "Dark Mode"));
+					ConfigObject.Add(new JProperty("ActiveTheme", "Dark Mode"));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("ReportNR"))
+				if (!ConfigObject.ContainsKey("ReportNR"))
 				{
-					EditForm form = new EditForm("Edit Number of Report", themeManager.GetTheme(ActiveTheme()),text: "1", isConfigHandlerInitializing: true);
+					EditForm form = new EditForm("Edit Number of Report", themeManager.GetTheme(ActiveTheme()), text: "1", isConfigHandlerInitializing: true);
 					form.ShowDialog();
 					if (form.DialogResult == (DialogResult.OK | DialogResult.Cancel))
 					{
-						configObject.Add(new JProperty("ReportNR", form.Result));
+						ConfigObject.Add(new JProperty("ReportNR", form.Result));
 					}
 					else
 					{
-						configObject.Add(new JProperty("ReportNR", "1"));
+						ConfigObject.Add(new JProperty("ReportNR", "1"));
 					}
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("Active"))
+				if (!ConfigObject.ContainsKey("Active"))
 				{
-					configObject.Add(new JProperty("Active", ""));
+					ConfigObject.Add(new JProperty("Active", ""));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("Username"))
+				if (!ConfigObject.ContainsKey("Username"))
 				{
-					configObject.Add(new JProperty("Username", ""));
+					ConfigObject.Add(new JProperty("Username", ""));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("Password"))
+				if (!ConfigObject.ContainsKey("Password"))
 				{
-					configObject.Add(new JProperty("Password", ""));
+					ConfigObject.Add(new JProperty("Password", ""));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("Name"))
+				if (!ConfigObject.ContainsKey("Name"))
 				{
 					EditForm form = new EditForm("Enter your name", themeManager.GetTheme(ActiveTheme()), "Name Vorname", isConfigHandlerInitializing: true);
 					if (form.ShowDialog() == (DialogResult.OK | DialogResult.Cancel))
 					{
-						configObject.Add(new JProperty("Name", form.Result));
+						ConfigObject.Add(new JProperty("Name", form.Result));
 					}
 					else
 					{
-						configObject.Add(new JProperty("Name", ""));
+						ConfigObject.Add(new JProperty("Name", ""));
 					}
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("Font"))
+				if (!ConfigObject.ContainsKey("Font"))
 				{
-					configObject.Add(new JProperty("Font", "Arial"));
+					ConfigObject.Add(new JProperty("Font", "Arial"));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("EditorFontSize"))
+				if (!ConfigObject.ContainsKey("EditorFontSize"))
 				{
-					configObject.Add(new JProperty("EditorFontSize", 8.25f));
+					ConfigObject.Add(new JProperty("EditorFontSize", 8.25f));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("LastReportWeekOfYear"))
+				if (!ConfigObject.ContainsKey("LastReportWeekOfYear"))
 				{
-					configObject.Add(new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1));
+					ConfigObject.Add(new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("StayLoggedIn"))
+				if (!ConfigObject.ContainsKey("StayLoggedIn"))
 				{
-					configObject.Add(new JProperty("StayLoggedIn", false));
+					ConfigObject.Add(new JProperty("StayLoggedIn", false));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("UseCustomPrefix"))
+				if (!ConfigObject.ContainsKey("UseCustomPrefix"))
 				{
-					configObject.Add(new JProperty("UseCustomPrefix", false));
+					ConfigObject.Add(new JProperty("UseCustomPrefix", false));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("CustomPrefix"))
+				if (!ConfigObject.ContainsKey("CustomPrefix"))
 				{
-					configObject.Add(new JProperty("CustomPrefix", "-"));
+					ConfigObject.Add(new JProperty("CustomPrefix", "-"));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("WebUntisServer"))
+				if (!ConfigObject.ContainsKey("WebUntisServer"))
 				{
-					configObject.Add(new JProperty("WebUntisServer", "borys"));
+					ConfigObject.Add(new JProperty("WebUntisServer", "borys"));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("SchoolName"))
+				if (!ConfigObject.ContainsKey("SchoolName"))
 				{
-					configObject.Add(new JProperty("SchoolName", "pictorus-bk"));
+					ConfigObject.Add(new JProperty("SchoolName", "pictorus-bk"));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("UseWebUntis"))
+				if (!ConfigObject.ContainsKey("UseWebUntis"))
 				{
-					configObject.Add(new JProperty("UseWebUntis", true));
+					ConfigObject.Add(new JProperty("UseWebUntis", true));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("EndWeekOnFriday"))
+				if (!ConfigObject.ContainsKey("EndWeekOnFriday"))
 				{
-					configObject.Add(new JProperty("EndWeekOnFriday", false));
+					ConfigObject.Add(new JProperty("EndWeekOnFriday", false));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("EnableLegacyEdit"))
+				if (!ConfigObject.ContainsKey("EnableLegacyEdit"))
 				{
-					configObject.Add(new JProperty("EnableLegacyEdit", false));
+					ConfigObject.Add(new JProperty("EnableLegacyEdit", false));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("ReportPath"))
+				if (!ConfigObject.ContainsKey("ReportPath"))
 				{
-					configObject.Add(new JProperty("ReportPath", Path.GetFullPath(".\\..")));
+					ConfigObject.Add(new JProperty("ReportPath", System.IO.Path.GetFullPath(".\\..")));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("PublishPath"))
+				if (!ConfigObject.ContainsKey("PublishPath"))
 				{
-					configObject.Add(new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"));
+					ConfigObject.Add(new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("TabStops"))
+				if (!ConfigObject.ContainsKey("TabStops"))
 				{
-					configObject.Add(new JProperty("TabStops", 20));
+					ConfigObject.Add(new JProperty("TabStops", 20));
 					isComplete = false;
 				}
-				if (!configObject.ContainsKey("NamingPattern"))
+				if (!ConfigObject.ContainsKey("NamingPattern"))
 				{
-					configObject.Add(new JProperty("NamingPattern", "WochenberichtKW~+CW+~"));
+					ConfigObject.Add(new JProperty("NamingPattern", "WochenberichtKW~+CW+~"));
 					isComplete = false;
 				}
 			}
 			if (!isComplete)
-				File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
+				File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
 		}
 
 		/// <summary>
@@ -212,7 +213,7 @@ namespace BerichtManager.Config
 		/// <returns></returns>
 		private T GenericGet<T>(string key)
 		{
-			return configObject.Value<T>(key);
+			return ConfigObject.Value<T>(key);
 		}
 
 		/// <summary>
@@ -223,8 +224,8 @@ namespace BerichtManager.Config
 		/// <param name="value">Value to set</param>
 		private void GenericSet<T>(string key, T value)
 		{
-			configObject.Remove(key);
-			configObject.Add(new JProperty(key, value));
+			ConfigObject.Remove(key);
+			ConfigObject.Add(new JProperty(key, value));
 		}
 
 		/// <summary>
@@ -232,7 +233,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public void SaveConfig()
 		{
-			File.WriteAllText(FullPath, JsonConvert.SerializeObject(configObject, Formatting.Indented));
+			File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
 		}
 
 		/// <summary>
@@ -240,7 +241,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public void ReloadConfig()
 		{
-			configObject = JObject.Parse(File.ReadAllText(FullPath));
+			ConfigObject = JObject.Parse(File.ReadAllText(FullPath));
 		}
 
 		/// <summary>
@@ -337,9 +338,9 @@ namespace BerichtManager.Config
 		/// Starts the login process for the user
 		/// </summary>
 		/// <returns><see cref="User"/> object containing username and password</returns>
-		public User doLogin()
+		public User DoLogin()
 		{
-			Login form = new Login(themeManager.GetTheme(ActiveTheme()));
+			Login form = new Login(ThemeManager.GetTheme(ActiveTheme()));
 			form.ShowDialog();
 			if (form.DialogResult == DialogResult.OK)
 			{
