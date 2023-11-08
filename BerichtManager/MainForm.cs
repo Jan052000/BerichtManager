@@ -293,7 +293,7 @@ namespace BerichtManager
 			Word.Document ldoc = null;
 			if (!File.Exists(templatePath))
 			{
-				MessageBox.Show(ConfigHandler.TemplatePath() + " was not found was it moved or deleted?");
+				MessageBox.Show(ConfigHandler.TemplatePath() + " was not found was it moved or deleted?", "Template not found");
 				return;
 			}
 			try
