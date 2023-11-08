@@ -85,15 +85,10 @@ namespace BerichtManager.Config
 				if (!ConfigObject.ContainsKey("ReportNR"))
 				{
 					EditForm form = new EditForm("Edit Number of Report", ThemeManager.Instance.GetTheme(ActiveTheme()), text: "1", stopConfigCalls: true);
-					form.ShowDialog();
-					if (form.DialogResult == (DialogResult.OK | DialogResult.Cancel))
-					{
+					if (form.ShowDialog() == DialogResult.OK)
 						ConfigObject.Add(new JProperty("ReportNR", form.Result));
-					}
 					else
-					{
 						ConfigObject.Add(new JProperty("ReportNR", "1"));
-					}
 					isComplete = false;
 				}
 				if (!ConfigObject.ContainsKey("Active"))
@@ -114,14 +109,10 @@ namespace BerichtManager.Config
 				if (!ConfigObject.ContainsKey("Name"))
 				{
 					EditForm form = new EditForm("Enter your name", ThemeManager.Instance.GetTheme(ActiveTheme()), text: "Name Vorname", stopConfigCalls: true);
-					if (form.ShowDialog() == (DialogResult.OK | DialogResult.Cancel))
-					{
+					if (form.ShowDialog() == DialogResult.OK)
 						ConfigObject.Add(new JProperty("Name", form.Result));
-					}
 					else
-					{
 						ConfigObject.Add(new JProperty("Name", ""));
-					}
 					isComplete = false;
 				}
 				if (!ConfigObject.ContainsKey("Font"))
