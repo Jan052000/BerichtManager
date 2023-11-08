@@ -1,4 +1,4 @@
-﻿using BerichtManager.ThemeManagement.DefaultThemes;
+using BerichtManager.ThemeManagement.DefaultThemes;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -25,6 +25,14 @@ namespace BerichtManager.ThemeManagement
 		/// Path to themes folder
 		/// </summary>
 		private readonly string themesFolderPath = Path.GetFullPath(".\\Config\\Themes");
+		/// <summary>
+		/// Event that is called when the themes list has been updated
+		/// </summary>
+		public event UpdateThemesListDelegate UpdatedThemesList;
+		/// <summary>
+		/// Delegate for <see cref="UpdatedThemesList"/> event
+		/// </summary>
+		public delegate void UpdateThemesListDelegate();
 
 		public ThemeManager()
 		{
@@ -61,11 +69,12 @@ namespace BerichtManager.ThemeManagement
 		/// <summary>
 		/// Updates themes list from folder
 		/// </summary>
-		public void UpdateThemesList()
+		private void UpdateThemesList()
 		{
 			ThemeNames = new List<string>() { "Dark Mode", "Light Mode" };
 			AvailableThemes = new List<ITheme>() { new DarkMode(), new LightMode() };
 			AvailableThemes.AddRange(GetThemes());
+			UpdatedThemesList();
 		}
 
 		/// <summary>
@@ -79,10 +88,10 @@ namespace BerichtManager.ThemeManagement
 		}
 
 		/// <summary>
-		/// Saves a theme to file
+		/// Saves a theme to file and triggers <see cref="UpdatedThemesList"/> event
 		/// </summary>
 		/// <param name="theme">Theme to save</param>
-		/// <returns></returns>
+		/// <returns>status code for save operation</returns>
 		public SaveStatusCodes SaveTheme(ITheme theme)
 		{
 			if (File.Exists(themesFolderPath + theme.Name + ".bmtheme") || ThemeNames.Contains(theme.Name))

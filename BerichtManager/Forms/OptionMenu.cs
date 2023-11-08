@@ -67,6 +67,7 @@ namespace BerichtManager.Forms
 			int selectedIndex = coTheme.Items.IndexOf(configHandler.ActiveTheme());
 			coTheme.SelectedIndex = selectedIndex;
 			ThemeName = coTheme.Text;
+			ThemeManager.UpdatedThemesList += UpdateThemesList;
 
 			tbTemplate.Text = configHandler.TemplatePath();
 			tbName.Text = configHandler.ReportUserName();
@@ -302,6 +303,17 @@ namespace BerichtManager.Forms
 		{
 			e.Graphics.Clear(Theme.BackColor);
 			TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, Theme.ForeColor);
+		}
+
+		private void UpdateThemesList()
+		{
+			coTheme.Items.Clear();
+			coTheme.Items.AddRange(ThemeManager.ThemeNames.ToArray());
+		}
+
+		private void OptionMenu_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			ThemeManager.UpdatedThemesList -= UpdateThemesList;
 		}
 	}
 }
