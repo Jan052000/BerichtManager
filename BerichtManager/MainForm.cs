@@ -191,9 +191,9 @@ namespace BerichtManager
 			}
 		}
 
-		/**
-		 *<summary>Fills the TreeView of the main form with nodes of the upper directory</summary> 
-		*/
+		/// <summary>
+		/// Fills the TreeView of the main form with nodes of the upper directory</summary>
+		/// </summary>
 		private void UpdateTree()
 		{
 			tvReports.Nodes.Clear();
@@ -201,13 +201,11 @@ namespace BerichtManager
 			tvReports.Sort();
 		}
 
-		/**
-		 * <summary>
-		 * Generates TreeNodes from files and directorys contained in the upper directory
-		 * </summary>
-		 * <param name="directoryInfo">The target directory</param>
-		 * <returns>A Treenode representing the contents of <paramref name="directoryInfo"/></returns>
-		*/
+		/// <summary>
+		/// Generates TreeNodes from files and directorys contained in the upper directory
+		/// </summary>
+		/// <param name="directoryInfo">The target directory</param>
+		/// <returns>A Treenode representing the contents of <paramref name="directoryInfo"/></returns>
 		//https://stackoverflow.com/questions/6239544/populate-treeview-with-file-system-directory-structure
 		private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
 		{
@@ -219,14 +217,12 @@ namespace BerichtManager
 			return directoryNode;
 		}
 
-		/**
-		 * <summary>
-		 * Fills a WordInterop TextField with text
-		 * </summary>
-		 * <param name="app">The Word Application containing the documents with FormFields to fill</param>
-		 * <param name="field">The FormField to fill with Text</param>
-		 * <param name="text">The Text to Fill</param>
-		*/
+		/// <summary>
+		/// Fills a WordInterop TextField with text
+		/// </summary>
+		/// <param name="app">The Word Application containing the documents with FormFields to fill</param>
+		/// <param name="field">The FormField to fill with Text</param>
+		/// <param name="text">The Text to Fill</param>
 		private void FillText(Word.Application app, Word.FormField field, string text)
 		{
 			field.Select();
@@ -255,13 +251,11 @@ namespace BerichtManager
 			}
 		}
 
-		/**
-		 * <summary>
-		 * Sets the global font in a document and fits document to pages
-		 * </summary>
-		 * <param name="app">The Wordapp containing the document</param>
-		 * <param name="doc">The Document which needs a font change</param>
-		*/
+		/// <summary>
+		/// Sets the global font in a document and fits document to pages
+		/// </summary>
+		/// <param name="doc">The Document which needs a font change</param>
+		/// <param name="app">The Wordapp containing the document</param>
 		private void SetFontInDoc(Word.Document doc, Word.Application app)
 		{
 			doc.Content.Select();
@@ -280,17 +274,15 @@ namespace BerichtManager
 			}
 		}
 
-		/**
-		 * <summary>
-		 * Creates a new Word document from a given template for a given time.
-		 * </summary>
-		 * <param name="templatePath">The full path of the template to be used</param>
-		 * <param name="baseDate">The date of the report to be created</param>
-		 * <param name="app">The Wordapp that is used to create the document</param>
-		 * <param name="vacation">If you missed reports due to vacation</param>
-		 * <param name="reportDifference">The reportnumber difference between the report to create and the would be current report number</param>
-		 * <param name="isSingle">Used to tell the method that this is a regular create job</param>
-		*/
+		/// <summary>
+		/// Creates a new Word document from a given template for a given time.
+		/// </summary>
+		/// <param name="templatePath">The full path of the template to be used</param>
+		/// <param name="baseDate">The date of the report to be created</param>
+		/// <param name="app">The Wordapp that is used to create the document</param>
+		/// <param name="vacation">If you missed reports due to vacation</param>
+		/// <param name="reportDifference">The reportnumber difference between the report to create and the would be current report number</param>
+		/// <param name="isSingle">Used to tell the method that this is a regular create job</param>
 		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application app, bool vacation = false, int reportDifference = 0, bool isSingle = false)
 		{
 			Word.Document ldoc = null;
@@ -558,12 +550,10 @@ namespace BerichtManager
 			Close();
 		}
 
-		/**
-		 * <summary>
-		 * Used for detecting missing reports and initiating their creation
-		 * </summary>
-		 * 
-		*/
+		/// <summary>
+		/// Used for detecting missing reports and initiating their creation
+		/// </summary>
+		/// <param name="vacation">Passed on to <see cref="CreateDocument(string, DateTime, Word.Application, bool, int, bool)"/> for if you were on vacation</param>
 		private void CreateMissing(bool vacation = false)
 		{
 			DateTimeFormatInfo dfi = Culture.DateTimeFormat;
@@ -754,14 +744,12 @@ namespace BerichtManager
 			UpdateTree();
 		}
 
-		/**
-		<summary>
-		Method for editing a Word document at a path relative to the working directory
-		</summary> 
-		<param name="path">The path relative to the working directory</param>
-		<param name="quickEditFieldNr">The number of the field to quick edit</param>
-		<param name="quickEditTitle">Title of the editor window</param>
-		*/
+		/// <summary>
+		/// Method for editing a Word document at a path relative to the working directory
+		/// </summary>
+		/// <param name="path">The path relative to the working directory</param>
+		/// <param name="quickEditFieldNr">The number of the field to quick edit</param>
+		/// <param name="quickEditTitle">Title of the editor window</param>
 		public void Edit(string path, int quickEditFieldNr = -1, string quickEditTitle = "")
 		{
 			try
@@ -1040,12 +1028,10 @@ namespace BerichtManager
 			}
 		}
 
-		/**
-		<summary>
-		Method for printing a document located at the path
-		</summary> 
-		<param name="path">The path</param>
-		*/
+		/// <summary>
+		/// Method for printing a document located at the path
+		/// </summary>
+		/// <param name="path">Path of document to print out</param>
 		private void PrintDocument(string path)
 		{
 			if (Path.GetExtension(path) != ".docx")
