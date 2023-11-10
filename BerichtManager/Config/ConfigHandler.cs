@@ -72,9 +72,10 @@ namespace BerichtManager.Config
 				{
 					OpenFileDialog dialog = new OpenFileDialog();
 					dialog.Filter = "Word Templates (*.dotx)|*.dotx";
-					dialog.ShowDialog();
-					TemplatePath(Path.GetFullPath(dialog.FileName));
-					MessageBox.Show("Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
+					MessageBox.Show("Please select a word template to use", "Select a template");
+					if (dialog.ShowDialog() == DialogResult.OK)
+						MessageBox.Show("Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
+					ConfigObject.Add("TemplatePath", dialog.FileName);
 					isComplete = false;
 				}
 				if (!ConfigObject.ContainsKey("ActiveTheme"))
