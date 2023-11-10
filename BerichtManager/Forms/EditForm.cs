@@ -1,4 +1,5 @@
 ﻿using BerichtManager.Config;
+using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
@@ -94,7 +95,7 @@ namespace BerichtManager.Forms
 				return;
 			if (((float)nudFontSize.Value) != ConfigHandler.EditorFontSize())
 			{
-				if (MessageBox.Show("Do you want to save the font size of the editor?", "Save font size", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Do you want to save the font size of the editor?", "Save font size", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					if (float.TryParse(nudFontSize.Text, out float size))
 					{
@@ -114,7 +115,7 @@ namespace BerichtManager.Forms
 				return;
 			if (rtInput.Font.FontFamily.Name != ConfigHandler.EditorFont())
 			{
-				if (MessageBox.Show("Do you want to change the font of following reports to " + cbFontFamily.Text + "?\n(Standard: \"Arial\")", "Change Font?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Do you want to change the font of following reports to " + cbFontFamily.Text + "?\n(Standard: \"Arial\")", "Change Font?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					ConfigHandler.EditorFont(rtInput.Font.FontFamily.Name);
 					ConfigHandler.SaveConfig();

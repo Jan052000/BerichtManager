@@ -98,6 +98,7 @@
 			this.Controls.Add(this.paText);
 			this.Controls.Add(this.btNo);
 			this.Controls.Add(this.btCancel);
+			this.MaximumSize = new System.Drawing.Size(600, 500);
 			this.Name = "ThemedMessageBox";
 			this.Text = "ColoredMessageBox";
 			this.paText.ResumeLayout(false);

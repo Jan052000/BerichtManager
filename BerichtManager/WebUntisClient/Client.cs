@@ -1,4 +1,6 @@
 using BerichtManager.Config;
+using BerichtManager.OwnControls;
+using BerichtManager.ThemeManagement;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -79,7 +81,7 @@ namespace BerichtManager.WebUntisClient
 				user = ConfigHandler.DoLogin();
 				if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 				{
-					MessageBox.Show("You need to login to automatically enter classes");
+					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");
 					return classes;
 				}
 				else
@@ -128,7 +130,7 @@ namespace BerichtManager.WebUntisClient
 			}
 			else
 			{
-				MessageBox.Show("There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
 				return new List<string>();
 			}
 
@@ -140,7 +142,7 @@ namespace BerichtManager.WebUntisClient
 			responseMessage = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
 			if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
 			{
-				MessageBox.Show("Your account is unauthorized", "Unauthorized");
+				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Your account is unauthorized", "Unauthorized");
 				return new List<string>();
 			}
 			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result);
@@ -152,7 +154,7 @@ namespace BerichtManager.WebUntisClient
 			//Check account privilages
 			if (!Enum.TryParse<ElementTypes>(yearData.user.roles[0], out ElementTypes elementType))
 			{
-				MessageBox.Show("Could not resolve the rights your account has\non the WebUntis server of your school", "Unknown account type");
+				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Could not resolve the rights your account has\non the WebUntis server of your school", "Unknown account type");
 				return new List<string>();
 			}
 
@@ -163,7 +165,7 @@ namespace BerichtManager.WebUntisClient
 			}
 			else
 			{
-				MessageBox.Show("Your account does not have the rights to view its timetable", "Insifficient permissions");
+				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Your account does not have the rights to view its timetable", "Insifficient permissions");
 				return new List<string>();
 			}
 			//responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=" + configHandler.TableElementType() + "&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
@@ -275,7 +277,7 @@ namespace BerichtManager.WebUntisClient
 				Holidays holidays = GetHolidays(user, client);
 				if (holidays.result == null)
 				{
-					MessageBox.Show("An error has occurred on the web untis server", "Server did not respond");
+					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "An error has occurred on the web untis server", "Server did not respond");
 					return new List<string>();
 				}
 				holidays.result.ForEach((holiday) =>
@@ -331,7 +333,7 @@ namespace BerichtManager.WebUntisClient
 					}
 					if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 					{
-						MessageBox.Show("You need to login to automatically enter classes");
+						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");
 						return new Holidays();
 					}
 					else
@@ -350,7 +352,7 @@ namespace BerichtManager.WebUntisClient
 					}
 					else
 					{
-						MessageBox.Show("There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
 					}
 				}
 			}

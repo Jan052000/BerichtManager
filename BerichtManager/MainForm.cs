@@ -14,6 +14,7 @@ using System.Diagnostics;
 using BerichtManager.HelperClasses;
 using BerichtManager.WebUntisClient;
 using System.Threading.Tasks;
+using BerichtManager.OwnControls;
 
 namespace BerichtManager
 {
@@ -259,7 +260,7 @@ namespace BerichtManager
 			if (app.Selection.Font.Name != ConfigHandler.EditorFont())
 			{
 				app.Selection.Font.Name = ConfigHandler.EditorFont();
-				MessageBox.Show("Changed report Font to: " + ConfigHandler.EditorFont(), "Font changed!");
+				ThemedMessageBox.Show(ActiveTheme, "Changed report Font to: " + ConfigHandler.EditorFont(), "Font changed!");
 			}
 			try
 			{
@@ -285,7 +286,7 @@ namespace BerichtManager
 			Word.Document ldoc = null;
 			if (!File.Exists(templatePath))
 			{
-				MessageBox.Show(ConfigHandler.TemplatePath() + " was not found was it moved or deleted?", "Template not found");
+				ThemedMessageBox.Show(ActiveTheme, ConfigHandler.TemplatePath() + " was not found was it moved or deleted?", "Template not found");
 				return;
 			}
 			try
@@ -295,7 +296,7 @@ namespace BerichtManager
 
 				if (ldoc.FormFields.Count != 10)
 				{
-					MessageBox.Show("Invalid template");
+					ThemedMessageBox.Show(ActiveTheme, "Invalid template");
 					ldoc.Close(SaveChanges: false);
 					ldoc = null;
 					return;
@@ -321,7 +322,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						MessageBox.Show("Cannot proceed without a name!", "Name required!");
+						ThemedMessageBox.Show(ActiveTheme, "Cannot proceed without a name!", "Name required!");
 						return;
 					}
 					form.RefreshConfigs -= RefreshConfig;
@@ -430,7 +431,7 @@ namespace BerichtManager
 					}
 					catch (AggregateException e)
 					{
-						MessageBox.Show("Unable to process classes from web\n(try to cancel the creation process and start again)");
+						ThemedMessageBox.Show(ActiveTheme, "Unable to process classes from web\n(try to cancel the creation process and start again)");
 						Logger.LogError(e);
 					}
 					form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", ActiveTheme, isCreate: true, text: classes);
@@ -480,7 +481,7 @@ namespace BerichtManager
 				ConfigHandler.LastCreated(path);
 				ConfigHandler.SaveConfig();
 				miEditLatest.Enabled = true;
-				MessageBox.Show("Created Document at: " + path);
+				ThemedMessageBox.Show(ActiveTheme, "Created Document at: " + path);
 
 				ldoc.Close();
 				UpdateTree();
@@ -497,11 +498,11 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						ThemedMessageBox.Show(ActiveTheme, "an unexpected problem occured this progam will now close!");
 						break;
 					case -2147467262:
 					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly and is restarting please try again shortly");
+						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
 					case -2146822750:
@@ -516,11 +517,11 @@ namespace BerichtManager
 						}
 						break;
 					case -2146233088:
-						MessageBox.Show("Connection refused by remotehost");
+						ThemedMessageBox.Show(ActiveTheme, "Connection refused by remotehost");
 						break;
 					default:
 						Logger.LogError(ex);
-						MessageBox.Show(ex.StackTrace);
+						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
 						try
 						{
 							ldoc.Close(SaveChanges: false);
@@ -584,7 +585,7 @@ namespace BerichtManager
 			int currentWeek = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			if (File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
 			{
-				MessageBox.Show("A report has already been created for this week");
+				ThemedMessageBox.Show(ActiveTheme, "A report has already been created for this week");
 				return;
 			}
 			//Check if a report was created
@@ -593,13 +594,13 @@ namespace BerichtManager
 				//Check if report for last week was created
 				if (GetDistanceToToday() > 1)
 				{
-					if (MessageBox.Show("You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					if (ThemedMessageBox.Show(ActiveTheme, "You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
 						CreateMissing(vacation: true);
 					}
 					else
 					{
-						if (MessageBox.Show("Do you want to create empty reports then?", "Create?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						if (ThemedMessageBox.Show(ActiveTheme, "Do you want to create empty reports then?", "Create?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 						{
 							CreateMissing();
 						}
@@ -650,7 +651,7 @@ namespace BerichtManager
 
 			if (tvReports.SelectedNode == null)
 			{
-				MessageBox.Show("No report selected");
+				ThemedMessageBox.Show(ActiveTheme, "No report selected");
 				return;
 			}
 			PrintDocument(FullSelectedPath);
@@ -682,7 +683,7 @@ namespace BerichtManager
 			}
 			if (unPrintedFiles.Count == 0)
 			{
-				MessageBox.Show("No unprinted reports found");
+				ThemedMessageBox.Show(ActiveTheme, "No unprinted reports found");
 				return;
 			}
 
@@ -692,7 +693,7 @@ namespace BerichtManager
 			{
 				if (unPrintedFiles[key].Contains(ConfigHandler.LastCreated()))
 				{
-					if (MessageBox.Show("Do you want to also print the last created report?\n(" + ConfigHandler.LastCreated() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
+					if (ThemedMessageBox.Show(ActiveTheme, "Do you want to also print the last created report?\n(" + ConfigHandler.LastCreated() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
 					{
 						unPrintedFiles[key].Remove(ConfigHandler.LastCreated());
 					}
@@ -725,7 +726,7 @@ namespace BerichtManager
 					catch (Exception ex)
 					{
 						Logger.LogError(ex);
-						MessageBox.Show(ex.StackTrace, "Error while printing" + filePath);
+						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace, "Error while printing" + filePath);
 						Console.Write(ex.StackTrace);
 					}
 				});
@@ -752,7 +753,7 @@ namespace BerichtManager
 
 					if (Doc.FormFields.Count != 10)
 					{
-						MessageBox.Show("Invalid document (you will have to manually edit)");
+						ThemedMessageBox.Show(ActiveTheme, "Invalid document (you will have to manually edit)");
 						Doc.Close(SaveChanges: false);
 						Doc = null;
 						return;
@@ -830,11 +831,11 @@ namespace BerichtManager
 					rtbSchool.Text = Doc.FormFields[8].Result;
 					EditMode = true;
 					WasEdited = false;
-					MessageBox.Show("Saved changes", "Saved");
+					ThemedMessageBox.Show(ActiveTheme, "Saved changes", "Saved");
 				}
 				else
 				{
-					MessageBox.Show(path + " not found was it deleted or moved?");
+					ThemedMessageBox.Show(ActiveTheme, path + " not found was it deleted or moved?");
 				}
 			}
 			catch (Exception ex)
@@ -842,11 +843,11 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						ThemedMessageBox.Show(ActiveTheme, "an unexpected problem occured this progam will now close!");
 						break;
 					case -2147467262:
 					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly and is restarting please try again shortly");
+						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
 					case -2146822750:
@@ -856,11 +857,11 @@ namespace BerichtManager
 						doc = null;*/
 						break;
 					case -2146233088:
-						MessageBox.Show("Connection refused by remotehost");
+						ThemedMessageBox.Show(ActiveTheme, "Connection refused by remotehost");
 						break;
 					default:
 						Logger.LogError(ex);
-						MessageBox.Show(ex.StackTrace);
+						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
 				}
@@ -889,7 +890,7 @@ namespace BerichtManager
 				Doc = WordApp.Documents.Open(path);
 				if (Doc.FormFields.Count != 10)
 				{
-					MessageBox.Show("Invalid document (you will have to manually edit)");
+					ThemedMessageBox.Show(ActiveTheme, "Invalid document (you will have to manually edit)");
 					Doc.Close(SaveChanges: false);
 					Doc = null;
 					EditMode = false;
@@ -906,11 +907,11 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						ThemedMessageBox.Show(ActiveTheme, "an unexpected problem occured this progam will now close!");
 						break;
 					case -2147467262:
 					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly and is restarting please try again shortly");
+						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
 					case -2146822750:
@@ -920,11 +921,11 @@ namespace BerichtManager
 						doc = null;*/
 						break;
 					case -2146233088:
-						MessageBox.Show("Connection refused by remotehost");
+						ThemedMessageBox.Show(ActiveTheme, "Connection refused by remotehost");
 						break;
 					default:
 						Logger.LogError(ex);
-						MessageBox.Show(ex.StackTrace);
+						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
 				}
@@ -944,7 +945,7 @@ namespace BerichtManager
 				FillText(WordApp, Doc.FormFields[8], rtbSchool.Text);
 				SetFontInDoc(Doc, WordApp);
 				Doc.Save();
-				MessageBox.Show("Saved changes", "Saved");
+				ThemedMessageBox.Show(ActiveTheme, "Saved changes", "Saved");
 				WasEdited = false;
 			}
 			catch (Exception ex)
@@ -952,22 +953,22 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						MessageBox.Show("an unexpected problem occured this progam will now close!");
+						ThemedMessageBox.Show(ActiveTheme, "an unexpected problem occured this progam will now close!");
 						break;
 					case -2147467262:
 					case -2146823679:
-						MessageBox.Show("Word closed unexpectedly and is restarting please try again shortly");
+						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
 					case -2146822750:
 						//Document is one page already
 						break;
 					case -2146233088:
-						MessageBox.Show("Connection refused by remotehost");
+						ThemedMessageBox.Show(ActiveTheme, "Connection refused by remotehost");
 						break;
 					default:
 						Logger.LogError(ex);
-						MessageBox.Show(ex.StackTrace);
+						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
 				}
@@ -991,7 +992,7 @@ namespace BerichtManager
 				return;
 			}
 
-			if (MessageBox.Show("Save unsaved changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			if (ThemedMessageBox.Show(ActiveTheme, "Save unsaved changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				SaveFromTb();
 			Doc.Close(SaveChanges: false);
 			Doc = null;
@@ -1025,13 +1026,13 @@ namespace BerichtManager
 		{
 			if (Path.GetExtension(path) != ".docx")
 			{
-				MessageBox.Show("You may only print Documents(*.docx) files");
+				ThemedMessageBox.Show(ActiveTheme, "You may only print Documents(*.docx) files");
 				return;
 			}
 			DirectoryInfo printed = new DirectoryInfo(Path.GetDirectoryName(path));
 			if (printed.Name == "Gedruckt")
 			{
-				if (MessageBox.Show("Report was already printed do you want to print it again?", "Reprint?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				if (ThemedMessageBox.Show(ActiveTheme, "Report was already printed do you want to print it again?", "Reprint?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				{
 					return;
 				}
@@ -1070,7 +1071,7 @@ namespace BerichtManager
 			catch (Exception ex)
 			{
 				Logger.LogError(ex);
-				MessageBox.Show(ex.StackTrace);
+				ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
 				Console.Write(ex.StackTrace);
 			}
 		}
@@ -1083,20 +1084,20 @@ namespace BerichtManager
 		{
 			if (!File.Exists(path))
 			{
-				MessageBox.Show(path + " not Found (was it moved or deleted?)");
+				ThemedMessageBox.Show(ActiveTheme, path + " not Found (was it moved or deleted?)");
 				return;
 			}
 			if (File.GetAttributes(path) == FileAttributes.Directory)
 			{
-				MessageBox.Show("You may not delete folders using the manager");
+				ThemedMessageBox.Show(ActiveTheme, "You may not delete folders using the manager");
 				return;
 			}
 			if (Path.GetExtension(path) != ".docx" && !path.Contains("\\Logs") && !Path.GetFileName(path).StartsWith("~$"))
 			{
-				MessageBox.Show("You may only delete Word documents (*.docx) or their temporary files");
+				ThemedMessageBox.Show(ActiveTheme, "You may only delete Word documents (*.docx) or their temporary files");
 				return;
 			}
-			if (MessageBox.Show("Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+			if (ThemedMessageBox.Show(ActiveTheme, "Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 			if (path == Doc?.Path + "\\" + Doc?.Name)
 			{
@@ -1119,7 +1120,7 @@ namespace BerichtManager
 			}
 			File.Delete(path);
 			UpdateTree();
-			MessageBox.Show("File deleted successfully");
+			ThemedMessageBox.Show(ActiveTheme, "File deleted successfully");
 		}
 
 		private void tvReports_DoubleClick(object sender, EventArgs e)
@@ -1277,7 +1278,7 @@ namespace BerichtManager
 		{
 			try
 			{
-				if (EditMode && WasEdited && MessageBox.Show("Do you want to save unsaved changes?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (EditMode && WasEdited && ThemedMessageBox.Show(ActiveTheme, "Do you want to save unsaved changes?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					SaveFromTb();
 				}
@@ -1336,7 +1337,7 @@ namespace BerichtManager
 				case Keys.Escape:
 					if (Doc == null || !EditMode)
 					{
-						MessageBox.Show("No opened report to close", "Could not close");
+						ThemedMessageBox.Show(ActiveTheme, "No opened report to close", "Could not close");
 						return;
 					}
 					CloseOpenDocument();
@@ -1357,7 +1358,7 @@ namespace BerichtManager
 		{
 			if (!WordInitialized)
 			{
-				MessageBox.Show("Word is still starting, please try again", "Please try again");
+				ThemedMessageBox.Show(ActiveTheme, "Word is still starting, please try again", "Please try again");
 			}
 			return WordInitialized;
 		}
@@ -1367,7 +1368,7 @@ namespace BerichtManager
 			if (Directory.Exists(ActivePath))
 				Process.Start(ActivePath);
 			else
-				MessageBox.Show("The working directory has been deleted from an external source", "You may have a problem");
+				ThemedMessageBox.Show(ActiveTheme, "The working directory has been deleted from an external source", "You may have a problem");
 		}
 
 		/// <summary>
@@ -1422,7 +1423,7 @@ namespace BerichtManager
 		{
 			if (Doc == null || !EditMode)
 			{
-				MessageBox.Show("No opened report to close", "Could not close");
+				ThemedMessageBox.Show(ActiveTheme, "No opened report to close", "Could not close");
 				return;
 			}
 			CloseOpenDocument();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BerichtManager.OwnControls;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -64,7 +65,7 @@ namespace BerichtManager.ThemeManagement
 		{
 			if (string.IsNullOrEmpty(tbName.Text))
 			{
-				MessageBox.Show("Name may not be left empty", "Name empty");
+				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Name may not be left empty", "Name empty");
 				return;
 			}
 			ColorConverter colorConverter = new ColorConverter();
@@ -96,7 +97,7 @@ namespace BerichtManager.ThemeManagement
 				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			MessageBox.Show("Changes saved", "Changes saved");
+			ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Changes saved", "Changes saved");
 			DialogResult = DialogResult.OK;
 			Close();
 		}
