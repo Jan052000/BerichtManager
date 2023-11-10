@@ -1,5 +1,4 @@
-﻿using BerichtManager.Config;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -23,6 +22,8 @@ namespace BerichtManager.ThemeManagement
 					case TextBox textBox:
 						Color backColor = (Color)colorConverter.ConvertFromString(textBox.Text);
 						textBox.BackColor = backColor;
+						//Invert textcolor if background is too dark
+						//https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
 						if ((backColor.R * 0.299 + backColor.G * 0.587 + backColor.B * 0.114) > 186)
 							textBox.ForeColor = Color.Black;
 						else
@@ -41,12 +42,15 @@ namespace BerichtManager.ThemeManagement
 
 		private void btClose_Click(object sender, EventArgs e)
 		{
+			DialogResult = DialogResult.Cancel;
 			Close();
 		}
 
 		private void TextBoxTextChanged(object sender, EventArgs e)
 		{
 			Color backColor = (Color)new ColorConverter().ConvertFromString(((TextBox)sender).Text);
+			//Invert textcolor if background is too dark
+			//https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
 			if ((backColor.R * 0.299 + backColor.G * 0.587 + backColor.B * 0.114) > 186)
 				((TextBox)sender).ForeColor = Color.Black;
 			else
@@ -88,8 +92,12 @@ namespace BerichtManager.ThemeManagement
 				TreeViewHighlightedNodeColor = (Color)colorConverter.ConvertFromString(tbHighlight.Text)
 			});
 			if (code == SaveStatusCodes.OverwriteDeclined)
+			{
+				DialogResult = DialogResult.Cancel;
 				return;
+			}
 			MessageBox.Show("Changes saved", "Changes saved");
+			DialogResult = DialogResult.OK;
 			Close();
 		}
 

@@ -101,18 +101,22 @@ namespace BerichtManager.ThemeManagement
 		}
 
 		/// <summary>
-		/// Saves a theme to file and triggers <see cref="UpdatedThemesList"/> event
+		/// Saves a theme to file and updates themes list
 		/// </summary>
 		/// <param name="theme">Theme to save</param>
 		/// <returns>status code for save operation</returns>
 		public SaveStatusCodes SaveTheme(ITheme theme)
 		{
+			SaveStatusCodes returnCode = SaveStatusCodes.Success;
 			if (File.Exists(themesFolderPath + theme.Name + ".bmtheme") || ThemeNames.Contains(theme.Name))
+			{
 				if (MessageBox.Show("Overwrite existing file: " + themesFolderPath + theme.Name + ".bmtheme ?", "Overwrite file?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 					return SaveStatusCodes.OverwriteDeclined;
+			}
+			else returnCode = SaveStatusCodes.NewThemeCreated;
 			File.WriteAllText(themesFolderPath + "\\" + theme.Name + ".bmtheme", JsonConvert.SerializeObject(theme, Formatting.Indented));
 			UpdateThemesList();
-			return SaveStatusCodes.Success;
+			return returnCode;
 		}
 	}
 
@@ -123,7 +127,8 @@ namespace BerichtManager.ThemeManagement
 	{
 		Success,
 		OverwriteDeclined,
-		InvalidThemeName
+		InvalidThemeName,
+		NewThemeCreated
 	}
 
 	/// <summary>
