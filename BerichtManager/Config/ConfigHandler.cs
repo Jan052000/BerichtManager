@@ -173,7 +173,7 @@ namespace BerichtManager.Config
 				}
 				if (!ConfigObject.ContainsKey("ReportPath"))
 				{
-					ConfigObject.Add(new JProperty("ReportPath", System.IO.Path.GetFullPath(".\\..")));
+					ConfigObject.Add(new JProperty("ReportPath", Path.GetFullPath(".\\..")));
 					isComplete = false;
 				}
 				if (!ConfigObject.ContainsKey("PublishPath"))
