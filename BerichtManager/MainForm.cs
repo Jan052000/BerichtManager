@@ -56,7 +56,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.12";
+		public const string VersionNumber = "1.13";
 
 		/// <summary>
 		/// String to be printed
@@ -238,11 +238,16 @@ namespace BerichtManager
 			app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
 			if (text.Length > 254)
 			{
-				field.Result = "";
+				field.Result = " ";
 				app.Selection.Text = text.Replace("\n", "\v").Substring(0, 200);
-				field.Result = field.Result.Trim() + " ";
+				field.Result = field.Result.TrimEnd() + " ";
 				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
 				app.Selection.TypeText(text.Substring(200));
+				//Remove first space before text
+				field.Select();
+				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
+				app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
+				app.Selection.TypeBackspace();
 			}
 			else
 			{
