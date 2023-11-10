@@ -50,7 +50,7 @@ namespace BerichtManager.Config
 			{
 				Directory.CreateDirectory(ConfigFolderPath);
 				File.Create(FullPath).Close();
-				ConfigObject = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", "1"), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
+				ConfigObject = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", 1), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
 					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1),
 					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
 					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"),
@@ -87,9 +87,17 @@ namespace BerichtManager.Config
 				{
 					EditForm form = new EditForm("Edit Number of Report", ThemeManager.Instance.GetTheme(ActiveTheme()), text: "1", stopConfigCalls: true);
 					if (form.ShowDialog() == DialogResult.OK)
-						ConfigObject.Add(new JProperty("ReportNR", form.Result));
+					{
+						if (int.TryParse(form.Result, out int value))
+							ConfigObject.Add(new JProperty("ReportNR", value));
+						else
+						{
+							MessageBox.Show("Invalid number, defaulting to 1! (This can be changed later in options menu)", "Invalid number!");
+							ConfigObject.Add(new JProperty("ReportNR", 1));
+						}
+					}
 					else
-						ConfigObject.Add(new JProperty("ReportNR", "1"));
+						ConfigObject.Add(new JProperty("ReportNR", 1));
 					isComplete = false;
 				}
 				if (!ConfigObject.ContainsKey("Active"))
@@ -266,16 +274,16 @@ namespace BerichtManager.Config
 		/// Loads the number of the next report
 		/// </summary>
 		/// <returns>The number of the next report</returns>
-		public string ReportNumber()
+		public int ReportNumber()
 		{
-			return GenericGet<string>("ReportNR");
+			return GenericGet<int>("ReportNR");
 		}
 
 		/// <summary>
 		/// Sets the number of the next report
 		/// </summary>
 		/// <param name="number">Number of the next report</param>
-		public void ReportNumber(string number)
+		public void ReportNumber(int number)
 		{
 			GenericSet("ReportNR", number);
 		}

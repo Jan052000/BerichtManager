@@ -56,7 +56,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.13";
+		public const string VersionNumber = "1.13.2";
 
 		/// <summary>
 		/// String to be printed
@@ -332,15 +332,7 @@ namespace BerichtManager
 				enumerator.MoveNext();
 
 				//Enter report nr.
-				if (int.TryParse(ConfigHandler.ReportNumber(), out int number))
-				{
-					FillText(app, ((Word.FormField)enumerator.Current), (number + reportDifference).ToString());
-				}
-				else
-				{
-					FillText(app, ((Word.FormField)enumerator.Current), "-1");
-					MessageBox.Show("Unable to load report number from config", "Error while loading report number");
-				}
+				FillText(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber() + reportDifference).ToString());
 
 				//Enter week start and end
 				DateTime today = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day);
@@ -481,12 +473,12 @@ namespace BerichtManager
 
 
 				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
-				string name = ConfigHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, ConfigHandler.ReportNumber());
+				string name = ConfigHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, ConfigHandler.ReportNumber().ToString());
 				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
 				SetFontInDoc(ldoc, app);
 				ldoc.SaveAs2(FileName: path);
 
-				if (int.TryParse(ConfigHandler.ReportNumber(), out int i)) ConfigHandler.ReportNumber("" + (i + 1));
+				ConfigHandler.ReportNumber(ConfigHandler.ReportNumber() + 1);
 				ConfigHandler.LastReportKW(Culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
 				ConfigHandler.LastCreated(path);
 				ConfigHandler.SaveConfig();
@@ -1122,16 +1114,10 @@ namespace BerichtManager
 			{
 				if (ConfigHandler.LastReportKW() == Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
 				{
-					if (int.TryParse(ConfigHandler.ReportNumber(), out int number))
-					{
-						ConfigHandler.ReportNumber("" + (number - 1));
-						ConfigHandler.LastReportKW(Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1);
-						ConfigHandler.SaveConfig();
-					}
-					else
-					{
-						MessageBox.Show("Could not reset current number of report");
-					}
+					if (ConfigHandler.ReportNumber() > 1)
+						ConfigHandler.ReportNumber(ConfigHandler.ReportNumber() - 1);
+					ConfigHandler.LastReportKW(Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1);
+					ConfigHandler.SaveConfig();
 				}
 			}
 			File.Delete(path);

@@ -71,8 +71,7 @@ namespace BerichtManager.Forms
 
 			tbTemplate.Text = ConfigHandler.TemplatePath();
 			tbName.Text = ConfigHandler.ReportUserName();
-			if (int.TryParse(ConfigHandler.ReportNumber(), out int value))
-				nudNumber.Value = value;
+			nudNumber.Value = ConfigHandler.ReportNumber();
 			nudTabStops.Value = ConfigHandler.TabStops();
 			nudFontSize.Value = (decimal)ConfigHandler.EditorFontSize();
 			tbFolder.Text = ConfigHandler.ReportPath();
@@ -177,7 +176,7 @@ namespace BerichtManager.Forms
 			//Report
 			ConfigHandler.ReportUserName(tbName.Text);
 			ConfigHandler.TemplatePath(tbTemplate.Text);
-			ConfigHandler.ReportNumber("" + nudNumber.Value);
+			ConfigHandler.ReportNumber((int)nudNumber.Value);
 			ConfigHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
 			ConfigHandler.NamingPattern(tbNamingPattern.Text);
 			//Manager
