@@ -1,4 +1,4 @@
-﻿using BerichtManager.ThemeManagement.DefaultThemes;
+using BerichtManager.ThemeManagement.DefaultThemes;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -33,6 +33,15 @@ namespace BerichtManager.ThemeManagement
 		/// Delegate for <see cref="UpdatedThemesList"/> event
 		/// </summary>
 		public delegate void UpdateThemesListDelegate();
+		public ITheme ActiveTheme
+		{
+			get
+			{
+				ITheme activeTheme = Singleton.GetTheme(Config.ConfigHandler.Instance.ActiveTheme());
+				if (activeTheme == null) activeTheme = new DarkMode();
+				return activeTheme;
+			}
+		}
 
 		#region Singleton
 		private static ThemeManager Singleton;

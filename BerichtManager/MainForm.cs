@@ -45,7 +45,7 @@ namespace BerichtManager
 		/// </summary>
 		private bool WasEdited { get; set; } = false;
 		private CustomNodeDrawer NodeDrawer { get; set; }
-		private ITheme ActiveTheme { get; set; }
+		private ITheme ActiveTheme { get => ThemeManager.Instance.ActiveTheme; }
 
 		/// <summary>
 		/// Value if word has a visible window or not
@@ -89,9 +89,6 @@ namespace BerichtManager
 		public MainForm()
 		{
 			InitializeComponent();
-			ActiveTheme = ThemeManager.Instance.GetTheme(ConfigHandler.ActiveTheme());
-			if (ActiveTheme == null)
-				ActiveTheme = new DarkMode();
 			ThemeSetter.SetThemes(this, ActiveTheme);
 			ThemeSetter.SetThemes(toRightClickMenu, ActiveTheme);
 			NodeDrawer = new CustomNodeDrawer(ActiveTheme);
@@ -1251,7 +1248,6 @@ namespace BerichtManager
 
 		private void ActiveThemeChanged(object sender, ITheme theme)
 		{
-			ActiveTheme = theme;
 			ThemeSetter.SetThemes(this, theme);
 			NodeDrawer.SetTheme(ActiveTheme);
 			tvReports.Refresh();
