@@ -1,4 +1,5 @@
 ﻿using BerichtManager.Config;
+using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
@@ -116,7 +117,7 @@ namespace BerichtManager.Forms
 		{
 			if (IsDirty)
 			{
-				if (MessageBox.Show("Save changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Save changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					try
 					{
@@ -125,7 +126,7 @@ namespace BerichtManager.Forms
 					catch (Exception ex)
 					{
 						HelperClasses.Logger.LogError(ex);
-						MessageBox.Show(ex.StackTrace);
+						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, ex.StackTrace);
 					}
 				}
 			}
@@ -150,7 +151,7 @@ namespace BerichtManager.Forms
 				catch (Exception ex)
 				{
 					HelperClasses.Logger.LogError(ex);
-					MessageBox.Show(ex.StackTrace);
+					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, ex.StackTrace);
 				}
 			}
 			btSave.Enabled = false;
@@ -202,7 +203,7 @@ namespace BerichtManager.Forms
 			}
 			if (ConfigHandler.ReportPath() != tbFolder.Text)
 			{
-				if (MessageBox.Show("Do you want to switch over imediately?", "Change directory?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Do you want to switch over imediately?", "Change directory?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 					ReportFolderChanged(this, tbFolder.Text);
 				ConfigHandler.ReportPath(tbFolder.Text);
 			}

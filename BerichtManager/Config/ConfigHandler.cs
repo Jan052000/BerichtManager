@@ -8,6 +8,7 @@ using BerichtManager.Forms;
 using System.Collections.Generic;
 using System.Globalization;
 using BerichtManager.ThemeManagement;
+using BerichtManager.OwnControls;
 
 namespace BerichtManager.Config
 {
@@ -72,9 +73,9 @@ namespace BerichtManager.Config
 				{
 					OpenFileDialog dialog = new OpenFileDialog();
 					dialog.Filter = "Word Templates (*.dotx)|*.dotx";
-					MessageBox.Show("Please select a word template to use", "Select a template");
+					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Please select a word template to use", "Select a template");
 					if (dialog.ShowDialog() == DialogResult.OK)
-						MessageBox.Show("Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
+						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
 					ConfigObject.Add("TemplatePath", dialog.FileName);
 					isComplete = false;
 				}
@@ -92,7 +93,7 @@ namespace BerichtManager.Config
 							ConfigObject.Add(new JProperty("ReportNR", value));
 						else
 						{
-							MessageBox.Show("Invalid number, defaulting to 1! (This can be changed later in options menu)", "Invalid number!");
+							ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Invalid number, defaulting to 1! (This can be changed later in options menu)", "Invalid number!");
 							ConfigObject.Add(new JProperty("ReportNR", 1));
 						}
 					}
