@@ -32,8 +32,8 @@
 			this.tbUsername = new System.Windows.Forms.TextBox();
 			this.tbPassword = new System.Windows.Forms.TextBox();
 			this.laPassword = new System.Windows.Forms.Label();
-			this.btClose = new System.Windows.Forms.Button();
-			this.btLogin = new System.Windows.Forms.Button();
+			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.laLogin = new System.Windows.Forms.Label();
 			this.cbKeepLogin = new System.Windows.Forms.CheckBox();
 			this.cbShowPassword = new System.Windows.Forms.CheckBox();

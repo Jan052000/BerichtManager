@@ -38,7 +38,7 @@
 			this.cbEditSchool = new System.Windows.Forms.CheckBox();
 			this.cbEditSignY = new System.Windows.Forms.CheckBox();
 			this.cbEditSign = new System.Windows.Forms.CheckBox();
-			this.btConfirm = new System.Windows.Forms.Button();
+			this.btConfirm = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.laInstructions = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 

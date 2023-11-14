@@ -28,33 +28,13 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.btCancel = new System.Windows.Forms.Button();
-			this.btNo = new System.Windows.Forms.Button();
 			this.paText = new System.Windows.Forms.Panel();
 			this.rtbText = new System.Windows.Forms.RichTextBox();
-			this.btYes = new System.Windows.Forms.Button();
+			this.btYes = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btNo = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btCancel = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.paText.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// btCancel
-			// 
-			this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btCancel.Location = new System.Drawing.Point(281, 159);
-			this.btCancel.Name = "btCancel";
-			this.btCancel.Size = new System.Drawing.Size(75, 20);
-			this.btCancel.TabIndex = 0;
-			this.btCancel.Text = "Cancel";
-			this.btCancel.UseVisualStyleBackColor = true;
-			// 
-			// btNo
-			// 
-			this.btNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btNo.Location = new System.Drawing.Point(200, 159);
-			this.btNo.Name = "btNo";
-			this.btNo.Size = new System.Drawing.Size(75, 20);
-			this.btNo.TabIndex = 1;
-			this.btNo.Text = "No";
-			this.btNo.UseVisualStyleBackColor = true;
 			// 
 			// paText
 			// 
@@ -64,7 +44,7 @@
 			this.paText.Controls.Add(this.rtbText);
 			this.paText.Location = new System.Drawing.Point(12, 12);
 			this.paText.Name = "paText";
-			this.paText.Size = new System.Drawing.Size(344, 138);
+			this.paText.Size = new System.Drawing.Size(344, 141);
 			this.paText.TabIndex = 2;
 			// 
 			// rtbText
@@ -75,25 +55,48 @@
 			this.rtbText.Location = new System.Drawing.Point(0, 0);
 			this.rtbText.Name = "rtbText";
 			this.rtbText.ReadOnly = true;
-			this.rtbText.Size = new System.Drawing.Size(344, 138);
+			this.rtbText.Size = new System.Drawing.Size(344, 141);
 			this.rtbText.TabIndex = 2;
 			this.rtbText.Text = "";
 			// 
 			// btYes
 			// 
 			this.btYes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btYes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btYes.Location = new System.Drawing.Point(119, 159);
 			this.btYes.Name = "btYes";
-			this.btYes.Size = new System.Drawing.Size(75, 20);
+			this.btYes.Size = new System.Drawing.Size(75, 23);
 			this.btYes.TabIndex = 3;
 			this.btYes.Text = "Yes";
 			this.btYes.UseVisualStyleBackColor = true;
+			// 
+			// btNo
+			// 
+			this.btNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btNo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btNo.Location = new System.Drawing.Point(200, 159);
+			this.btNo.Name = "btNo";
+			this.btNo.Size = new System.Drawing.Size(75, 23);
+			this.btNo.TabIndex = 1;
+			this.btNo.Text = "No";
+			this.btNo.UseVisualStyleBackColor = true;
+			// 
+			// btCancel
+			// 
+			this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btCancel.Location = new System.Drawing.Point(281, 159);
+			this.btCancel.Name = "btCancel";
+			this.btCancel.Size = new System.Drawing.Size(75, 23);
+			this.btCancel.TabIndex = 0;
+			this.btCancel.Text = "Cancel";
+			this.btCancel.UseVisualStyleBackColor = true;
 			// 
 			// ThemedMessageBox
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(368, 191);
+			this.ClientSize = new System.Drawing.Size(368, 194);
 			this.Controls.Add(this.btYes);
 			this.Controls.Add(this.paText);
 			this.Controls.Add(this.btNo);
@@ -109,11 +112,10 @@
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Button btCancel;
-		private System.Windows.Forms.Button btNo;
 		private System.Windows.Forms.Panel paText;
 		private System.Windows.Forms.RichTextBox rtbText;
-		private System.Windows.Forms.Button btYes;
+		private FocusColoredFlatButton btCancel;
+		private FocusColoredFlatButton btNo;
+		private FocusColoredFlatButton btYes;
 	}
 }

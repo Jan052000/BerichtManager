@@ -45,8 +45,8 @@
 			this.laBt = new System.Windows.Forms.Label();
 			this.laSplitter = new System.Windows.Forms.Label();
 			this.laTVDottedLine = new System.Windows.Forms.Label();
-			this.btClose = new System.Windows.Forms.Button();
-			this.btSave = new System.Windows.Forms.Button();
+			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.tbTVDottedLine = new System.Windows.Forms.TextBox();
 			this.tbSplitter = new System.Windows.Forms.TextBox();
 			this.tbBt = new System.Windows.Forms.TextBox();
