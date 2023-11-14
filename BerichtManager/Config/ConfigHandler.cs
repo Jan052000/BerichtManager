@@ -75,7 +75,7 @@ namespace BerichtManager.Config
 					dialog.Filter = "Word Templates (*.dotx)|*.dotx";
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Please select a word template to use", "Select a template");
 					if (dialog.ShowDialog() == DialogResult.OK)
-						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Muster auf: " + Path.GetFullPath(dialog.FileName) + " gesetzt");
+						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Template selected: " + dialog.FileName, "Info");
 					ConfigObject.Add("TemplatePath", dialog.FileName);
 					isComplete = false;
 				}
