@@ -102,6 +102,7 @@
 			this.Name = "ThemedMessageBox";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "ColoredMessageBox";
+			this.Shown += new System.EventHandler(this.FocusButton);
 			this.paText.ResumeLayout(false);
 			this.ResumeLayout(false);
 

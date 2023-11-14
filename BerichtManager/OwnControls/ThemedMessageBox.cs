@@ -139,6 +139,30 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
+		/// Sets button focus when message box is shown
+		/// </summary>
+		/// <param name="sender">This message box</param>
+		/// <param name="e">Event srguments of show event</param>
+		private void FocusButton(object sender, EventArgs e)
+		{
+			switch (Buttons)
+			{
+				case MessageBoxButtons.OK:
+					btCancel.Focus();
+					break;
+				case MessageBoxButtons.OKCancel:
+				case MessageBoxButtons.AbortRetryIgnore:
+				case MessageBoxButtons.YesNo:
+				case MessageBoxButtons.RetryCancel:
+					btNo.Focus();
+					break;
+				case MessageBoxButtons.YesNoCancel:
+					btYes.Focus();
+					break;
+			}
+		}
+
+		/// <summary>
 		/// Sets dialogresult
 		/// </summary>
 		private void OkClicked(object sender, EventArgs e)
