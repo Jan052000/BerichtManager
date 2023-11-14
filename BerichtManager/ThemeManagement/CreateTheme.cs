@@ -74,6 +74,8 @@ namespace BerichtManager.ThemeManagement
 				BackColor = (Color)colorConverter.ConvertFromString(tbBack.Text),
 				ButtonColor = (Color)colorConverter.ConvertFromString(tbBt.Text),
 				ButtonDisabledColor = (Color)colorConverter.ConvertFromString(tbBTDisabled.Text),
+				ButtonFocusedBorderColor = (Color)colorConverter.ConvertFromString(tbButtonFocusBorderColor.Text),
+				ButtonFocusBorderWidth = (float)nudButtonFocusBorderWidth.Value,
 				ColoredComboBoxDisabledColor = (Color)colorConverter.ConvertFromString(tbCCBDisabled.Text),
 				ColoredComboBoxDisabledTextColor = (Color)colorConverter.ConvertFromString(tbCCBDisabledText.Text),
 				ColoredComboBoxDropDownButtonBackColor = (Color)colorConverter.ConvertFromString(tbCCBDropDownButton.Text),

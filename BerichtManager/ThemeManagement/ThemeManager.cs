@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Drawing;
 using BerichtManager.OwnControls;
+using System.ComponentModel;
 
 namespace BerichtManager.ThemeManagement
 {
@@ -146,25 +147,49 @@ namespace BerichtManager.ThemeManagement
 	/// </summary>
 	public class ThemeSerialization : ITheme
 	{
+		[DefaultValue("Untitled")]
 		public string Name { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color TextBoxBackColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color TextBoxDisabledBackColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color TextBoxBorderColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color TextBoxArrowColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ColoredComboBoxDropDownButtonBackColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ColoredComboBoxTextColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ColoredComboBoxDisabledColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ColoredComboBoxDisabledTextColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ColoredComboBoxHighlightColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color MenuStripBackColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color MenuStripDropdownBackColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color MenuStripSelectedDropDownBackColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ForeColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color BackColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ButtonColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ButtonDisabledColor { get; set; }
+		[DefaultValue(typeof(Color), "Black")]
+		public Color ButtonFocusedBorderColor { get; set; }
+		[DefaultValue(1f)]
+		public float ButtonFocusBorderWidth { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color SplitterColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color TreeViewDottedLineColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color TreeViewHighlightedNodeColor { get; set; }
 	}
 }

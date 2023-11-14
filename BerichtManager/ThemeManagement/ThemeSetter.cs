@@ -1,5 +1,4 @@
 ﻿using BerichtManager.OwnControls;
-using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -24,11 +23,11 @@ namespace BerichtManager.ThemeManagement
 					rtb.BorderStyle = BorderStyle.None;
 					break;
 				case TextBox tb:
-					if(tb.Enabled)
+					if (tb.Enabled)
 						tb.BackColor = theme.TextBoxBackColor;
 					else
 						tb.BackColor = theme.TextBoxDisabledBackColor;
-						tb.BorderStyle = BorderStyle.FixedSingle;
+					tb.BorderStyle = BorderStyle.FixedSingle;
 					break;
 				case ColoredComboBox comboBox:
 					comboBox.BackColor = theme.TextBoxBackColor;
@@ -87,9 +86,9 @@ namespace BerichtManager.ThemeManagement
 		/// <param name="e">Arguments of paint event</param>
 		private static void PaintBorderIfFocused(object sender, PaintEventArgs e)
 		{
-			float boundsWidth = 1f;
+			float boundsWidth = ThemeManager.Instance.ActiveTheme.ButtonFocusBorderWidth;
 			Rectangle bounds = new Rectangle((int)e.Graphics.ClipBounds.X, (int)e.Graphics.ClipBounds.Y, (int)e.Graphics.ClipBounds.Width - (int)boundsWidth, (int)e.Graphics.ClipBounds.Height - (int)boundsWidth);
-			if (((Button)sender).Focused) using (Pen p = new Pen(SystemColors.ButtonHighlight, boundsWidth)) e.Graphics.DrawRectangle(p, bounds);
+			if (((Button)sender).Focused) using (Pen p = new Pen(ThemeManager.Instance.ActiveTheme.ButtonFocusedBorderColor, boundsWidth)) e.Graphics.DrawRectangle(p, bounds);
 		}
 	}
 
@@ -98,12 +97,12 @@ namespace BerichtManager.ThemeManagement
 	/// </summary>
 	internal class ThemeColorTable : ProfessionalColorTable
 	{
-		private ITheme theme;
+		private ITheme Theme { get; }
 		public ThemeColorTable(ITheme theme)
 		{
-			this.theme = theme;
+			this.Theme = theme;
 		}
-		public override Color ToolStripDropDownBackground => theme.MenuStripDropdownBackColor;
+		public override Color ToolStripDropDownBackground => Theme.MenuStripDropdownBackColor;
 	}
 
 	/// <summary>
@@ -111,15 +110,15 @@ namespace BerichtManager.ThemeManagement
 	/// </summary>
 	internal class ThemeRenderer : ToolStripProfessionalRenderer
 	{
-		private ITheme theme;
-		public ThemeRenderer(ProfessionalColorTable table, ITheme theme): base(table)
+		private ITheme Theme { get; }
+		public ThemeRenderer(ProfessionalColorTable table, ITheme theme) : base(table)
 		{
-			this.theme = theme;
+			this.Theme = theme;
 		}
 
 		protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
 		{
-			e.TextColor = theme.ForeColor;
+			e.TextColor = Theme.ForeColor;
 			base.OnRenderItemText(e);
 		}
 
@@ -127,9 +126,9 @@ namespace BerichtManager.ThemeManagement
 		{
 			base.OnRenderMenuItemBackground(e);
 			if (e.Item.Selected)
-				e.Graphics.Clear(theme.MenuStripSelectedDropDownBackColor);
+				e.Graphics.Clear(Theme.MenuStripSelectedDropDownBackColor);
 			else
-				e.Graphics.Clear(theme.MenuStripBackColor);
+				e.Graphics.Clear(Theme.MenuStripBackColor);
 		}
 	}
 }

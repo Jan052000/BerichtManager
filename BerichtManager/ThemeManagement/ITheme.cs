@@ -21,6 +21,8 @@ namespace BerichtManager.ThemeManagement
 		Color BackColor { get; }
 		Color ButtonColor { get; }
 		Color ButtonDisabledColor { get; }
+		Color ButtonFocusedBorderColor { get; }
+		float ButtonFocusBorderWidth { get; }
 		Color SplitterColor { get; }
 		Color TreeViewDottedLineColor { get; }
 		Color TreeViewHighlightedNodeColor { get; }

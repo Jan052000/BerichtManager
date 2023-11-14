@@ -68,6 +68,11 @@
 			this.laBTDisabled = new System.Windows.Forms.Label();
 			this.tbName = new System.Windows.Forms.TextBox();
 			this.laName = new System.Windows.Forms.Label();
+			this.laBTFocusColor = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.tbButtonFocusBorderColor = new System.Windows.Forms.TextBox();
+			this.nudButtonFocusBorderWidth = new System.Windows.Forms.NumericUpDown();
+			((System.ComponentModel.ISupportInitialize)(this.nudButtonFocusBorderWidth)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// laTBBackColor
@@ -208,7 +213,7 @@
 			// laSplitter
 			// 
 			this.laSplitter.AutoSize = true;
-			this.laSplitter.Location = new System.Drawing.Point(12, 454);
+			this.laSplitter.Location = new System.Drawing.Point(12, 509);
 			this.laSplitter.Name = "laSplitter";
 			this.laSplitter.Size = new System.Drawing.Size(65, 13);
 			this.laSplitter.TabIndex = 30;
@@ -217,7 +222,7 @@
 			// laTVDottedLine
 			// 
 			this.laTVDottedLine.AutoSize = true;
-			this.laTVDottedLine.Location = new System.Drawing.Point(12, 480);
+			this.laTVDottedLine.Location = new System.Drawing.Point(12, 535);
 			this.laTVDottedLine.Name = "laTVDottedLine";
 			this.laTVDottedLine.Size = new System.Drawing.Size(130, 13);
 			this.laTVDottedLine.TabIndex = 32;
@@ -226,7 +231,7 @@
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(294, 474);
+			this.btClose.Location = new System.Drawing.Point(294, 529);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 34;
@@ -237,7 +242,7 @@
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(294, 444);
+			this.btSave.Location = new System.Drawing.Point(294, 499);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
 			this.btSave.TabIndex = 35;
@@ -249,7 +254,7 @@
 			// 
 			this.tbTVDottedLine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbTVDottedLine.Location = new System.Drawing.Point(188, 477);
+			this.tbTVDottedLine.Location = new System.Drawing.Point(188, 532);
 			this.tbTVDottedLine.Name = "tbTVDottedLine";
 			this.tbTVDottedLine.ReadOnly = true;
 			this.tbTVDottedLine.Size = new System.Drawing.Size(100, 20);
@@ -262,7 +267,7 @@
 			// 
 			this.tbSplitter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSplitter.Location = new System.Drawing.Point(188, 451);
+			this.tbSplitter.Location = new System.Drawing.Point(188, 506);
 			this.tbSplitter.Name = "tbSplitter";
 			this.tbSplitter.ReadOnly = true;
 			this.tbSplitter.Size = new System.Drawing.Size(100, 20);
@@ -470,7 +475,7 @@
 			// 
 			this.tbBTDisabled.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbBTDisabled.Location = new System.Drawing.Point(188, 425);
+			this.tbBTDisabled.Location = new System.Drawing.Point(188, 428);
 			this.tbBTDisabled.Name = "tbBTDisabled";
 			this.tbBTDisabled.ReadOnly = true;
 			this.tbBTDisabled.Size = new System.Drawing.Size(100, 20);
@@ -482,7 +487,7 @@
 			// laBTDisabled
 			// 
 			this.laBTDisabled.AutoSize = true;
-			this.laBTDisabled.Location = new System.Drawing.Point(12, 428);
+			this.laBTDisabled.Location = new System.Drawing.Point(12, 431);
 			this.laBTDisabled.Name = "laBTDisabled";
 			this.laBTDisabled.Size = new System.Drawing.Size(106, 13);
 			this.laBTDisabled.TabIndex = 54;
@@ -506,11 +511,58 @@
 			this.laName.TabIndex = 56;
 			this.laName.Text = "Name";
 			// 
+			// laBTFocusColor
+			// 
+			this.laBTFocusColor.AutoSize = true;
+			this.laBTFocusColor.Location = new System.Drawing.Point(12, 457);
+			this.laBTFocusColor.Name = "laBTFocusColor";
+			this.laBTFocusColor.Size = new System.Drawing.Size(126, 13);
+			this.laBTFocusColor.TabIndex = 59;
+			this.laBTFocusColor.Text = "Button focus border color";
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(12, 483);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(131, 13);
+			this.label2.TabIndex = 60;
+			this.label2.Text = "Button focus border Width";
+			// 
+			// tbButtonFocusBorderColor
+			// 
+			this.tbButtonFocusBorderColor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbButtonFocusBorderColor.Location = new System.Drawing.Point(188, 454);
+			this.tbButtonFocusBorderColor.Name = "tbButtonFocusBorderColor";
+			this.tbButtonFocusBorderColor.ReadOnly = true;
+			this.tbButtonFocusBorderColor.Size = new System.Drawing.Size(100, 20);
+			this.tbButtonFocusBorderColor.TabIndex = 61;
+			this.tbButtonFocusBorderColor.Text = "-1";
+			// 
+			// nudButtonFocusBorderWidth
+			// 
+			this.nudButtonFocusBorderWidth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.nudButtonFocusBorderWidth.Location = new System.Drawing.Point(188, 480);
+			this.nudButtonFocusBorderWidth.Name = "nudButtonFocusBorderWidth";
+			this.nudButtonFocusBorderWidth.Size = new System.Drawing.Size(100, 20);
+			this.nudButtonFocusBorderWidth.TabIndex = 62;
+			this.nudButtonFocusBorderWidth.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			// 
 			// CreateTheme
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(381, 509);
+			this.ClientSize = new System.Drawing.Size(381, 564);
+			this.Controls.Add(this.nudButtonFocusBorderWidth);
+			this.Controls.Add(this.tbButtonFocusBorderColor);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.laBTFocusColor);
 			this.Controls.Add(this.laName);
 			this.Controls.Add(this.tbName);
 			this.Controls.Add(this.laBTDisabled);
@@ -554,6 +606,7 @@
 			this.Name = "CreateTheme";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "CreateTheme";
+			((System.ComponentModel.ISupportInitialize)(this.nudButtonFocusBorderWidth)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -601,5 +654,9 @@
 		private System.Windows.Forms.Label laBTDisabled;
 		private System.Windows.Forms.TextBox tbName;
 		private System.Windows.Forms.Label laName;
+		private System.Windows.Forms.Label laBTFocusColor;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.TextBox tbButtonFocusBorderColor;
+		private System.Windows.Forms.NumericUpDown nudButtonFocusBorderWidth;
 	}
 }
