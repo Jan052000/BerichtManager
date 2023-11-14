@@ -34,17 +34,14 @@ namespace BerichtManager.Forms
 		/// Creates a new <see cref="EditForm"/> object
 		/// </summary>
 		/// <param name="title">Title displayed in title bar</param>
-		/// <param name="theme">Theme to be used</param>
 		/// <param name="text">Text to b set in input</param>
 		/// <param name="isCreate"><see cref="bool"/> If form is in creation mode which changes button texts, enabled status and tool tips</param>
 		/// <param name="stopConfigCalls">If <see cref="EditForm"/> is called while completing config no calls to <see cref="ConfigHandler"/> are made</param>
-		public EditForm(string title, ITheme theme, string text = "", bool isCreate = false, bool stopConfigCalls = false)
+		public EditForm(string title = "", string text = "", bool isCreate = false, bool stopConfigCalls = false)
 		{
 			InitializeComponent();
 			if (!stopConfigCalls) ConfigHandler = ConfigHandler.Instance;
-			if (theme == null)
-				theme = new DarkMode();
-			ThemeSetter.SetThemes(this, theme);
+			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
 			List<int> tabstops = new List<int>();

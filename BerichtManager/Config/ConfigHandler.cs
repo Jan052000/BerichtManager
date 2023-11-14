@@ -86,7 +86,7 @@ namespace BerichtManager.Config
 				}
 				if (!ConfigObject.ContainsKey("ReportNR"))
 				{
-					EditForm form = new EditForm("Edit Number of Report", ThemeManager.Instance.GetTheme(ActiveTheme()), text: "1", stopConfigCalls: true);
+					EditForm form = new EditForm(title: "Edit Number of Report", text: "1", stopConfigCalls: true);
 					if (form.ShowDialog() == DialogResult.OK)
 					{
 						if (int.TryParse(form.Result, out int value))
@@ -118,7 +118,7 @@ namespace BerichtManager.Config
 				}
 				if (!ConfigObject.ContainsKey("Name"))
 				{
-					EditForm form = new EditForm("Enter your name", ThemeManager.Instance.GetTheme(ActiveTheme()), text: "Name Vorname", stopConfigCalls: true);
+					EditForm form = new EditForm(title: "Enter your name", text: "Name Vorname", stopConfigCalls: true);
 					if (form.ShowDialog() == DialogResult.OK)
 						ConfigObject.Add(new JProperty("Name", form.Result));
 					else

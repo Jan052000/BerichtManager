@@ -312,7 +312,7 @@ namespace BerichtManager
 				}
 				else
 				{
-					form = new EditForm("Enter your name", ActiveTheme, text: "Name Vorname");
+					form = new EditForm(title: "Enter your name", text: "Name Vorname");
 					form.RefreshConfigs += RefreshConfig;
 					if (form.ShowDialog() == DialogResult.OK)
 					{
@@ -363,7 +363,7 @@ namespace BerichtManager
 				}
 				else
 				{
-					form = new EditForm("Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", ActiveTheme, isCreate: true);
+					form = new EditForm(title: "Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", isCreate: true);
 					form.RefreshConfigs += RefreshConfig;
 					form.ShowDialog();
 					form.RefreshConfigs -= RefreshConfig;
@@ -397,7 +397,7 @@ namespace BerichtManager
 				}
 				else
 				{
-					form = new EditForm("Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", ActiveTheme, text: "-Keine-", isCreate: true);
+					form = new EditForm(title: "Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: "-Keine-", isCreate: true);
 					form.RefreshConfigs += RefreshConfig;
 					form.ShowDialog();
 					form.RefreshConfigs -= RefreshConfig;
@@ -434,11 +434,11 @@ namespace BerichtManager
 						ThemedMessageBox.Show(ActiveTheme, "Unable to process classes from web\n(try to cancel the creation process and start again)");
 						Logger.LogError(e);
 					}
-					form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", ActiveTheme, isCreate: true, text: classes);
+					form = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", isCreate: true, text: classes);
 				}
 				else
 				{
-					form = new EditForm("Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", ActiveTheme, text: Client.GetHolidaysForDate(baseDate), isCreate: true);
+					form = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", text: Client.GetHolidaysForDate(baseDate), isCreate: true);
 				}
 				form.RefreshConfigs += RefreshConfig;
 				form.ShowDialog();
@@ -769,7 +769,7 @@ namespace BerichtManager
 
 							}
 						}
-						EditForm edit = new EditForm(quickEditTitle, ActiveTheme, text: ((Word.FormField)enumerator.Current).Result);
+						EditForm edit = new EditForm(title: quickEditTitle, text: ((Word.FormField)enumerator.Current).Result);
 						edit.RefreshConfigs += RefreshConfig;
 						if (edit.ShowDialog() == DialogResult.OK)
 						{
@@ -797,7 +797,7 @@ namespace BerichtManager
 								{
 									if (si.ShouldEdit)
 									{
-										edit = new EditForm(si.EditorTitle, ActiveTheme, text: ((Word.FormField)enumerator.Current).Result);
+										edit = new EditForm(title: si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
 										edit.RefreshConfigs += RefreshConfig;
 										edit.ShowDialog();
 										edit.RefreshConfigs -= RefreshConfig;
