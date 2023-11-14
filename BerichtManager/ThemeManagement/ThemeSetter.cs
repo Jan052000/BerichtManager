@@ -1,4 +1,5 @@
 ﻿using BerichtManager.OwnControls;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -52,6 +53,7 @@ namespace BerichtManager.ThemeManagement
 						button.BackColor = theme.ButtonDisabledColor;
 					button.FlatStyle = FlatStyle.Flat;
 					button.FlatAppearance.BorderSize = 0;
+					button.Paint += PaintBorderIfFocused;
 					break;
 				case SplitContainer splitContainer:
 				case Splitter splitter:
@@ -76,6 +78,18 @@ namespace BerichtManager.ThemeManagement
 			{
 				SetThemes(control1, theme);
 			}
+		}
+
+		/// <summary>
+		/// Draws focus box arround buttons
+		/// </summary>
+		/// <param name="sender">Button that is being painted</param>
+		/// <param name="e">Arguments of paint event</param>
+		private static void PaintBorderIfFocused(object sender, PaintEventArgs e)
+		{
+			float boundsWidth = 1f;
+			Rectangle bounds = new Rectangle((int)e.Graphics.ClipBounds.X, (int)e.Graphics.ClipBounds.Y, (int)e.Graphics.ClipBounds.Width - (int)boundsWidth, (int)e.Graphics.ClipBounds.Height - (int)boundsWidth);
+			if (((Button)sender).Focused) using (Pen p = new Pen(SystemColors.ButtonHighlight, boundsWidth)) e.Graphics.DrawRectangle(p, bounds);
 		}
 	}
 
