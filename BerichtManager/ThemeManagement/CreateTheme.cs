@@ -74,6 +74,7 @@ namespace BerichtManager.ThemeManagement
 				BackColor = (Color)colorConverter.ConvertFromString(tbBack.Text),
 				ButtonColor = (Color)colorConverter.ConvertFromString(tbBt.Text),
 				ButtonDisabledColor = (Color)colorConverter.ConvertFromString(tbBTDisabled.Text),
+				ButtonDisabledTextColor = (Color)colorConverter.ConvertFromString(tbBtDisabledTextColor.Text),
 				ButtonFocusedBorderColor = (Color)colorConverter.ConvertFromString(tbButtonFocusBorderColor.Text),
 				ButtonFocusBorderWidth = (float)nudButtonFocusBorderWidth.Value,
 				ColoredComboBoxDisabledColor = (Color)colorConverter.ConvertFromString(tbCCBDisabled.Text),
@@ -116,6 +117,9 @@ namespace BerichtManager.ThemeManagement
 			tbBack.Text = ColorTranslator.ToHtml(theme.BackColor);
 			tbBt.Text = ColorTranslator.ToHtml(theme.ButtonColor);
 			tbBTDisabled.Text = ColorTranslator.ToHtml(theme.ButtonDisabledColor);
+			tbBtDisabledTextColor.Text = ColorTranslator.ToHtml(theme.ButtonDisabledTextColor);
+			tbButtonFocusBorderColor.Text = ColorTranslator.ToHtml(theme.ButtonFocusedBorderColor);
+			nudButtonFocusBorderWidth.Value = (decimal)theme.ButtonFocusBorderWidth;
 			tbCCBDisabled.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDisabledColor);
 			tbCCBDisabledText.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDisabledTextColor);
 			tbCCBDropDownButton.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDropDownButtonBackColor);
