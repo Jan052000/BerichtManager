@@ -349,7 +349,7 @@ namespace BerichtManager.Config
 		/// <returns><see cref="User"/> object containing username and password</returns>
 		public User DoLogin()
 		{
-			Login form = new Login(ThemeManager.Instance.GetTheme(ActiveTheme()));
+			Login form = new Login();
 			form.ShowDialog();
 			if (form.DialogResult == DialogResult.OK)
 			{

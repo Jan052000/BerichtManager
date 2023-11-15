@@ -1,7 +1,6 @@
 ﻿using BerichtManager.Config;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
-using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

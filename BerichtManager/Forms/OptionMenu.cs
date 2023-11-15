@@ -1,7 +1,6 @@
 ﻿using BerichtManager.Config;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
-using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
 using System.Drawing;
 using System.IO;
@@ -44,16 +43,12 @@ namespace BerichtManager.Forms
 		/// Emits when font size setting is changed
 		/// </summary>
 		public event fontSizeChanged FontSizeChanged;
-		private ITheme Theme { get; set; }
 
-		public OptionMenu(ITheme theme)
+		public OptionMenu()
 		{
 			InitializeComponent();
-			if (theme == null)
-				theme = new DarkMode();
-			Theme = theme;
-			ThemeSetter.SetThemes(this, theme);
-			ThemeName = theme.Name;
+			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			ThemeName = ThemeManager.Instance.ActiveTheme.Name;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = ConfigHandler.UseUserPrefix();
@@ -277,7 +272,7 @@ namespace BerichtManager.Forms
 			fileDialog.InitialDirectory = Path.GetFullPath(".\\Config\\Themes");
 			if (fileDialog.ShowDialog() == DialogResult.OK)
 			{
-				new CreateTheme(ThemeManager.Instance.GetTheme(ThemeName), ThemeManager.Instance.GetTheme(Path.GetFileNameWithoutExtension(fileDialog.FileName))).ShowDialog();
+				new CreateTheme(edit: ThemeManager.Instance.GetTheme(Path.GetFileNameWithoutExtension(fileDialog.FileName))).ShowDialog();
 			}
 		}
 
@@ -301,8 +296,8 @@ namespace BerichtManager.Forms
 
 		private void toolTip1_Draw(object sender, DrawToolTipEventArgs e)
 		{
-			e.Graphics.Clear(Theme.BackColor);
-			TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, Theme.ForeColor);
+			e.Graphics.Clear(ThemeManager.Instance.ActiveTheme.BackColor);
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, ThemeManager.Instance.ActiveTheme.ForeColor);
 		}
 
 		private void UpdateThemesList()

@@ -1,5 +1,4 @@
 ﻿using BerichtManager.ThemeManagement;
-using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
 using System.Drawing;
 using System.IO;
@@ -12,12 +11,10 @@ namespace BerichtManager.Forms
 		public string Username;
 		public string Password;
 		public bool KeepLoggedIn;
-		public Login(ITheme theme)
+		public Login()
 		{
 			InitializeComponent();
-			if (theme == null)
-				theme = new DarkMode();
-			ThemeSetter.SetThemes(this, theme);
+			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 		}
 
@@ -42,7 +39,7 @@ namespace BerichtManager.Forms
 			{
 				tbPassword.UseSystemPasswordChar = false;
 			}
-			else 
+			else
 			{
 				tbPassword.UseSystemPasswordChar = true;
 			}

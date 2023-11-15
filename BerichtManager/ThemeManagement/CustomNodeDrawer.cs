@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace BerichtManager.ThemeManagement
@@ -38,8 +37,9 @@ namespace BerichtManager.ThemeManagement
 		/// Creates a CustomDrawer object
 		/// </summary>
 		/// <param name="icons">list of icons to be used in treeview [0] closed [1] open</param>
-		public CustomNodeDrawer(ITheme theme)
+		public CustomNodeDrawer()
 		{
+			ITheme theme = ThemeManager.Instance.ActiveTheme;
 			dottedLines = new Pen(theme.TreeViewDottedLineColor);
 			hilightSelected = new SolidBrush(theme.TreeViewHighlightedNodeColor);
 			dottedLines.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;

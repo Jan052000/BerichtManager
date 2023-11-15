@@ -1,5 +1,4 @@
 ﻿using BerichtManager.ThemeManagement;
-using BerichtManager.ThemeManagement.DefaultThemes;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -10,12 +9,10 @@ namespace BerichtManager.Forms
 	{
 		public List<EditState> SelectedItems { get; set; }
 		private int Count = 0;
-		public SelectEditFrom(ITheme theme)
+		public SelectEditFrom()
 		{
 			InitializeComponent();
-			if (theme == null)
-				theme = new DarkMode();
-			ThemeSetter.SetThemes(this, theme);
+			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
 			SelectedItems = new List<EditState>();
 			btConfirm.Text = "Close";
 		}

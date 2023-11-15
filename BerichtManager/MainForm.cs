@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Collections;
 using BerichtManager.ThemeManagement;
-using BerichtManager.ThemeManagement.DefaultThemes;
 using System.Diagnostics;
 using BerichtManager.HelperClasses;
 using BerichtManager.WebUntisClient;
@@ -57,7 +56,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.14.1";
+		public const string VersionNumber = "1.15";
 
 		/// <summary>
 		/// String to be printed
@@ -92,7 +91,7 @@ namespace BerichtManager
 			InitializeComponent();
 			ThemeSetter.SetThemes(this, ActiveTheme);
 			ThemeSetter.SetThemes(toRightClickMenu, ActiveTheme);
-			NodeDrawer = new CustomNodeDrawer(ActiveTheme);
+			NodeDrawer = new CustomNodeDrawer();
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
@@ -786,7 +785,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						SelectEditFrom selectEdit = new SelectEditFrom(ActiveTheme);
+						SelectEditFrom selectEdit = new SelectEditFrom();
 						if (selectEdit.ShowDialog() == DialogResult.OK)
 						{
 							IEnumerator enumerator = Doc.FormFields.GetEnumerator();
@@ -1212,7 +1211,7 @@ namespace BerichtManager
 		private void btOptions_Click(object sender, EventArgs e)
 		{
 			int tabStops = ConfigHandler.TabStops();
-			OptionMenu optionMenu = new OptionMenu(ActiveTheme);
+			OptionMenu optionMenu = new OptionMenu();
 			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
 			optionMenu.ReportFolderChanged += ReportFolderChanged;
 			optionMenu.TabStopsChanged += UpdateTabStops;

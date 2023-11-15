@@ -7,11 +7,11 @@ namespace BerichtManager.ThemeManagement
 {
 	public partial class CreateTheme : Form
 	{
-		public CreateTheme(ITheme theme, ITheme edit = null)
+		public CreateTheme(ITheme edit = null)
 		{
 			InitializeComponent();
 			InitializeEdit(edit);
-			ThemeSetter.SetThemes(this, theme);
+			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
 			btSave.Focus();
 			ColorConverter colorConverter = new ColorConverter();
 			foreach (Control control in Controls)
