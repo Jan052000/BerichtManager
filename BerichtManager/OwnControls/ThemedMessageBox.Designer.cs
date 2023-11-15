@@ -62,7 +62,6 @@
 			// btYes
 			// 
 			this.btYes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btYes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btYes.Location = new System.Drawing.Point(119, 159);
 			this.btYes.Name = "btYes";
 			this.btYes.Size = new System.Drawing.Size(75, 23);
@@ -73,7 +72,6 @@
 			// btNo
 			// 
 			this.btNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btNo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btNo.Location = new System.Drawing.Point(200, 159);
 			this.btNo.Name = "btNo";
 			this.btNo.Size = new System.Drawing.Size(75, 23);
@@ -84,7 +82,6 @@
 			// btCancel
 			// 
 			this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btCancel.Location = new System.Drawing.Point(281, 159);
 			this.btCancel.Name = "btCancel";
 			this.btCancel.Size = new System.Drawing.Size(75, 23);

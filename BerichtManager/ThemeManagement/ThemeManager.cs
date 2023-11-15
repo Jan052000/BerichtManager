@@ -181,6 +181,8 @@ namespace BerichtManager.ThemeManagement
 		public Color ButtonColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color ButtonDisabledColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
+		public Color ButtonDisabledTextColor { get; set; }
 		[DefaultValue(typeof(Color), "Black")]
 		public Color ButtonFocusedBorderColor { get; set; }
 		[DefaultValue(1f)]

@@ -20,8 +20,9 @@ namespace BerichtManager.ThemeManagement.DefaultThemes
 		public Color ForeColor => Color.FromArgb(0, 0, 0);
 		public Color BackColor => Color.FromArgb(240, 240, 240);
 		public Color ButtonColor => Color.LightGray;
-		public Color ButtonDisabledColor => Color.Gray;
-		public Color ButtonFocusedBorderColor => SystemColors.ButtonHighlight;
+		public Color ButtonDisabledColor => Color.FromArgb(235, 235, 228);
+		public Color ButtonDisabledTextColor => Color.Gray;
+		public Color ButtonFocusedBorderColor => Color.FromArgb(0, 120 ,215);
 		public float ButtonFocusBorderWidth => 1f;
 		public Color SplitterColor => Color.FromArgb(150, 150, 150);
 		public Color TreeViewDottedLineColor => Color.Gray;
