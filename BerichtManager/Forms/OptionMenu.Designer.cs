@@ -29,15 +29,15 @@ namespace BerichtManager.Forms
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.btClose = new System.Windows.Forms.Button();
-			this.btSave = new System.Windows.Forms.Button();
+			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.nudTabStops = new System.Windows.Forms.NumericUpDown();
 			this.cbLegacyEdit = new System.Windows.Forms.CheckBox();
 			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
-			this.btCreateTheme = new System.Windows.Forms.Button();
+			this.btCreateTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.tbUpdate = new System.Windows.Forms.TextBox();
-			this.btEditTheme = new System.Windows.Forms.Button();
+			this.btEditTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.tbFolder = new System.Windows.Forms.TextBox();
 			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
 			this.tbNamingPattern = new System.Windows.Forms.TextBox();
@@ -46,7 +46,7 @@ namespace BerichtManager.Forms
 			this.tbTemplate = new System.Windows.Forms.TextBox();
 			this.cbShouldUseUntis = new System.Windows.Forms.CheckBox();
 			this.tbSchool = new System.Windows.Forms.TextBox();
-			this.btLogin = new System.Windows.Forms.Button();
+			this.btLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.tbServer = new System.Windows.Forms.TextBox();
 			this.cbUseCustomPrefix = new System.Windows.Forms.CheckBox();
 			this.tbCustomPrefix = new System.Windows.Forms.TextBox();

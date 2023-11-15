@@ -29,13 +29,13 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.btClose = new System.Windows.Forms.Button();
-			this.btConfirm = new System.Windows.Forms.Button();
+			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btConfirm = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.rtInput = new System.Windows.Forms.RichTextBox();
-			this.btQuit = new System.Windows.Forms.Button();
+			this.btQuit = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
 			this.cbEditorFont = new System.Windows.Forms.CheckBox();
-			this.btSaveAndQuit = new System.Windows.Forms.Button();
+			this.btSaveAndQuit = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
 			this.cbFontFamily = new BerichtManager.OwnControls.ColoredComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();

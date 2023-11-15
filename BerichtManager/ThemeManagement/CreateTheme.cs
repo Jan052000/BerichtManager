@@ -74,8 +74,10 @@ namespace BerichtManager.ThemeManagement
 				BackColor = (Color)colorConverter.ConvertFromString(tbBack.Text),
 				ButtonColor = (Color)colorConverter.ConvertFromString(tbBt.Text),
 				ButtonDisabledColor = (Color)colorConverter.ConvertFromString(tbBTDisabled.Text),
+				ButtonDisabledTextColor = (Color)colorConverter.ConvertFromString(tbBtDisabledTextColor.Text),
 				ButtonFocusedBorderColor = (Color)colorConverter.ConvertFromString(tbButtonFocusBorderColor.Text),
 				ButtonFocusBorderWidth = (float)nudButtonFocusBorderWidth.Value,
+				ButtonHoverColor = (Color)colorConverter.ConvertFromString(tbBtHoverColor.Text),
 				ColoredComboBoxDisabledColor = (Color)colorConverter.ConvertFromString(tbCCBDisabled.Text),
 				ColoredComboBoxDisabledTextColor = (Color)colorConverter.ConvertFromString(tbCCBDisabledText.Text),
 				ColoredComboBoxDropDownButtonBackColor = (Color)colorConverter.ConvertFromString(tbCCBDropDownButton.Text),
@@ -116,6 +118,10 @@ namespace BerichtManager.ThemeManagement
 			tbBack.Text = ColorTranslator.ToHtml(theme.BackColor);
 			tbBt.Text = ColorTranslator.ToHtml(theme.ButtonColor);
 			tbBTDisabled.Text = ColorTranslator.ToHtml(theme.ButtonDisabledColor);
+			tbBtDisabledTextColor.Text = ColorTranslator.ToHtml(theme.ButtonDisabledTextColor);
+			tbButtonFocusBorderColor.Text = ColorTranslator.ToHtml(theme.ButtonFocusedBorderColor);
+			nudButtonFocusBorderWidth.Value = (decimal)theme.ButtonFocusBorderWidth;
+			tbBtHoverColor.Text = ColorTranslator.ToHtml(theme.ButtonHoverColor);
 			tbCCBDisabled.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDisabledColor);
 			tbCCBDisabledText.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDisabledTextColor);
 			tbCCBDropDownButton.Text = ColorTranslator.ToHtml(theme.ColoredComboBoxDropDownButtonBackColor);

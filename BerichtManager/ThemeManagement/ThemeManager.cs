@@ -181,10 +181,14 @@ namespace BerichtManager.ThemeManagement
 		public Color ButtonColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color ButtonDisabledColor { get; set; }
-		[DefaultValue(typeof(Color), "Black")]
+		[DefaultValue(typeof(Color), "White")]
+		public Color ButtonDisabledTextColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ButtonFocusedBorderColor { get; set; }
 		[DefaultValue(1f)]
 		public float ButtonFocusBorderWidth { get; set; }
+		[DefaultValue(typeof(Color), "White")]
+		public Color ButtonHoverColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color SplitterColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
