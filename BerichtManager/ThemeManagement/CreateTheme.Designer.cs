@@ -74,6 +74,8 @@
 			this.tbButtonFocusBorderColor = new System.Windows.Forms.TextBox();
 			this.tbBtDisabledTextColor = new System.Windows.Forms.TextBox();
 			this.laDisabledButtonTextColor = new System.Windows.Forms.Label();
+			this.tbBtHoverColor = new System.Windows.Forms.TextBox();
+			this.laBtHoverColor = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.nudButtonFocusBorderWidth)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -215,7 +217,7 @@
 			// laSplitter
 			// 
 			this.laSplitter.AutoSize = true;
-			this.laSplitter.Location = new System.Drawing.Point(12, 535);
+			this.laSplitter.Location = new System.Drawing.Point(12, 561);
 			this.laSplitter.Name = "laSplitter";
 			this.laSplitter.Size = new System.Drawing.Size(65, 13);
 			this.laSplitter.TabIndex = 30;
@@ -224,7 +226,7 @@
 			// laTVDottedLine
 			// 
 			this.laTVDottedLine.AutoSize = true;
-			this.laTVDottedLine.Location = new System.Drawing.Point(12, 561);
+			this.laTVDottedLine.Location = new System.Drawing.Point(12, 587);
 			this.laTVDottedLine.Name = "laTVDottedLine";
 			this.laTVDottedLine.Size = new System.Drawing.Size(130, 13);
 			this.laTVDottedLine.TabIndex = 32;
@@ -233,7 +235,7 @@
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(294, 555);
+			this.btClose.Location = new System.Drawing.Point(294, 581);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 34;
@@ -244,7 +246,7 @@
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(294, 525);
+			this.btSave.Location = new System.Drawing.Point(294, 551);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
 			this.btSave.TabIndex = 35;
@@ -256,7 +258,7 @@
 			// 
 			this.tbTVDottedLine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbTVDottedLine.Location = new System.Drawing.Point(188, 558);
+			this.tbTVDottedLine.Location = new System.Drawing.Point(188, 584);
 			this.tbTVDottedLine.Name = "tbTVDottedLine";
 			this.tbTVDottedLine.ReadOnly = true;
 			this.tbTVDottedLine.Size = new System.Drawing.Size(100, 20);
@@ -269,7 +271,7 @@
 			// 
 			this.tbSplitter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSplitter.Location = new System.Drawing.Point(188, 532);
+			this.tbSplitter.Location = new System.Drawing.Point(188, 558);
 			this.tbSplitter.Name = "tbSplitter";
 			this.tbSplitter.ReadOnly = true;
 			this.tbSplitter.Size = new System.Drawing.Size(100, 20);
@@ -580,11 +582,35 @@
 			this.laDisabledButtonTextColor.TabIndex = 64;
 			this.laDisabledButtonTextColor.Text = "Button disabled text color";
 			// 
+			// tbBtHoverColor
+			// 
+			this.tbBtHoverColor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbBtHoverColor.Location = new System.Drawing.Point(188, 532);
+			this.tbBtHoverColor.Name = "tbBtHoverColor";
+			this.tbBtHoverColor.ReadOnly = true;
+			this.tbBtHoverColor.Size = new System.Drawing.Size(100, 20);
+			this.tbBtHoverColor.TabIndex = 65;
+			this.tbBtHoverColor.Text = "-1";
+			this.tbBtHoverColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+			this.tbBtHoverColor.Enter += new System.EventHandler(this.TextBox_Entered);
+			// 
+			// laBtHoverColor
+			// 
+			this.laBtHoverColor.AutoSize = true;
+			this.laBtHoverColor.Location = new System.Drawing.Point(12, 535);
+			this.laBtHoverColor.Name = "laBtHoverColor";
+			this.laBtHoverColor.Size = new System.Drawing.Size(94, 13);
+			this.laBtHoverColor.TabIndex = 66;
+			this.laBtHoverColor.Text = "Button hover color";
+			// 
 			// CreateTheme
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(381, 590);
+			this.ClientSize = new System.Drawing.Size(381, 616);
+			this.Controls.Add(this.laBtHoverColor);
+			this.Controls.Add(this.tbBtHoverColor);
 			this.Controls.Add(this.laDisabledButtonTextColor);
 			this.Controls.Add(this.tbBtDisabledTextColor);
 			this.Controls.Add(this.nudButtonFocusBorderWidth);
@@ -688,5 +714,7 @@
 		private OwnControls.FocusColoredFlatButton btSave;
 		private System.Windows.Forms.TextBox tbBtDisabledTextColor;
 		private System.Windows.Forms.Label laDisabledButtonTextColor;
+		private System.Windows.Forms.TextBox tbBtHoverColor;
+		private System.Windows.Forms.Label laBtHoverColor;
 	}
 }

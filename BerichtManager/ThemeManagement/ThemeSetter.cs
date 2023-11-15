@@ -55,6 +55,7 @@ namespace BerichtManager.ThemeManagement
 					flatButton.ButtonFocusBoxWidth = theme.ButtonFocusBorderWidth;
 					flatButton.ButtonDisabledColor = theme.ButtonDisabledColor;
 					flatButton.ButtonDisabledTextColor = theme.ButtonDisabledTextColor;
+					flatButton.ButtonHoverColor = theme.ButtonHoverColor;
 					break;
 				case Button button:
 					if (button.Enabled)
