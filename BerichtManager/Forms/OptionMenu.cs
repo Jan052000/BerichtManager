@@ -260,7 +260,7 @@ namespace BerichtManager.Forms
 
 		private void btCreateTheme_Click(object sender, EventArgs e)
 		{
-			if (new CreateTheme(ThemeManager.Instance.GetTheme(ThemeName)).ShowDialog() != DialogResult.OK) return;
+			if (new CreateTheme().ShowDialog() != DialogResult.OK) return;
 			coTheme.Items.Clear();
 			ThemeManager.Instance.ThemeNames.ForEach(name => coTheme.Items.Add(name));
 		}
