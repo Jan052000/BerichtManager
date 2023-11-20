@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -146,8 +146,11 @@ namespace BerichtManager.OwnControls
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			base.OnPaint(e);
-			if (FlatStyle != FlatStyle.Flat) return;
+			if (FlatStyle != FlatStyle.Flat)
+			{
+				base.OnPaint(e);
+				return;
+			}
 			Graphics g = e.Graphics;
 			if (IsMouseHovering)
 				g.Clear(ButtonHoverColor);
@@ -163,8 +166,9 @@ namespace BerichtManager.OwnControls
 
 			if (Focused)
 			{
-				Rectangle bounds = new Rectangle((int)e.Graphics.ClipBounds.X, (int)e.Graphics.ClipBounds.Y,
-				(int)e.Graphics.ClipBounds.Width - (int)buttonFocusBoxWidth, (int)e.Graphics.ClipBounds.Height - (int)buttonFocusBoxWidth);
+				Rectangle bounds = new Rectangle(0, 0, Width - (int)ButtonFocusBoxWidth, Height - (int)ButtonFocusBoxWidth);
+				//Rectangle bounds = new Rectangle((int)e.Graphics.ClipBounds.X, (int)e.Graphics.ClipBounds.Y,
+				//(int)e.Graphics.ClipBounds.Width - (int)buttonFocusBoxWidth, (int)e.Graphics.ClipBounds.Height - (int)buttonFocusBoxWidth);
 				using (Pen p = new Pen(buttonFocusBoxColor, buttonFocusBoxWidth))
 					e.Graphics.DrawRectangle(p, bounds);
 			}
