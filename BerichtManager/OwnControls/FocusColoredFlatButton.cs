@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -19,7 +19,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Width of the focus box arround edges of the button
 		/// </summary>
-		[Category("Focus Border")]
+		[Category("Style")]
 		[DefaultValue(1f)]
 		public float ButtonFocusBoxWidth
 		{
@@ -41,7 +41,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Color of the focus box arround edges of the button
 		/// </summary>
-		[Category("Focus Border")]
+		[Category("Style")]
 		[DefaultValue(typeof(Color), "MenuHighlight")]
 		public Color ButtonFocusBoxColor
 		{
@@ -141,7 +141,7 @@ namespace BerichtManager.OwnControls
 		public FocusColoredFlatButton()
 		{
 			//if (FlatStyle != FlatStyle.Flat)
-				//base.FlatAppearance.BorderSize = 1;
+			//base.FlatAppearance.BorderSize = 1;
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
