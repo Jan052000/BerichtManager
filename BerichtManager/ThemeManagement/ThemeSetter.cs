@@ -46,10 +46,8 @@ namespace BerichtManager.ThemeManagement
 					form.BackColor = theme.BackColor;
 					break;
 				case FocusColoredFlatButton flatButton:
-					if (flatButton.Enabled)
-						flatButton.BackColor = theme.ButtonColor;
-					else
-						flatButton.BackColor = theme.ButtonDisabledColor;
+					flatButton.BackColor = theme.ButtonColor;
+					flatButton.ButtonDisabledColor = theme.ButtonDisabledColor;
 					flatButton.FlatStyle = FlatStyle.Flat;
 					flatButton.ButtonFocusBoxColor = theme.ButtonFocusedBorderColor;
 					flatButton.ButtonFocusBoxWidth = theme.ButtonFocusBorderWidth;
