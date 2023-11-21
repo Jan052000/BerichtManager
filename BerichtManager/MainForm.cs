@@ -107,7 +107,8 @@ namespace BerichtManager
 			UpdateTabStops(this, ConfigHandler.TabStops());
 			if (File.Exists(ConfigHandler.PublishPath()) && CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(ConfigHandler.PublishPath()).FileVersion) > 0)
 				VersionString += "*";
-			WordTaskFactory.StartNew(RestartWord);
+			//WordTaskFactory.StartNew(RestartWord);
+			new BorderlessForm().ShowDialog();
 		}
 
 		/// <summary>
