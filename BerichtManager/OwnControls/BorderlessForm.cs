@@ -33,6 +33,53 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
+		/// Color of title bar when window is focused
+		/// </summary>
+		private Color titleBarColorActive { get; set; } = Color.Red;//SystemColors.ActiveBorder;
+		/// <summary>
+		/// Color of title bar when window is focused
+		/// </summary>
+		[Category("Style")]
+		[DefaultValue(typeof(Color), "ActiveBorder")]
+		public Color TitleBarColorActive
+		{
+			get => titleBarColorActive;
+			set
+			{
+				if (titleBarColorActive != value)
+				{
+					titleBarColorActive = value;
+					Invalidate();
+				}
+			}
+		}
+
+		private Color titleBarColorInactive { get; set; } = Color.Blue;//SystemColors.InactiveBorder;
+		[Category("Style")]
+		[DefaultValue(typeof(Color), "InactiveBorder")]
+		public Color TitleBarColorInactive
+		{
+			get => titleBarColorInactive;
+			set
+			{
+				if (titleBarColorInactive != value)
+				{
+					titleBarColorInactive = value;
+					Invalidate();
+				}
+			}
+		}
+
+		private bool IsActive { get; set; } = false;
+
+		/// <summary>
+		/// Indicates wether or not the close button in top right corner should be re when hovered
+		/// </summary>
+		[Category("Style")]
+		[DefaultValue(true)]
+		private bool RedCloseButtonHover { get; set; } = true;
+
+		/// <summary>
 		/// Sets region outside of form which is able to trigger resize
 		/// </summary>
 		private int resizeHitbox { get; set; } = 3;
@@ -56,15 +103,15 @@ namespace BerichtManager.OwnControls
 		#endregion
 
 		#region Windows message constants
-
-		public const int DCX_WINDOW = 0x00000001;
-		public const int DCX_INTERSECTRGN = 0x00000080;
-
 		/// <summary>
 		/// Message codes for windows message
 		/// </summary>
 		private enum WMMessageCodes
 		{
+			/// <summary>
+			/// Message code for windows message WM_ACIVATE
+			/// </summary>
+			WM_ACTIVATE = 0x6,
 			/// <summary>
 			/// Message code for painting
 			/// </summary>
@@ -84,7 +131,11 @@ namespace BerichtManager.OwnControls
 			/// <summary>
 			/// Message code for windows message WM_NCPAINT
 			/// </summary>
-			WM_NCPAINT = 0x85
+			WM_NCPAINT = 0x85,
+			/// <summary>
+			/// Sent if non client area needs to be updated when acive changed
+			/// </summary>
+			WM_NCACTIVATE = 0x86
 		}
 		/// <summary>
 		/// Return values for "WM_NCHITTEST" message
@@ -210,19 +261,26 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Paints the non client areas
 		/// </summary>
-		/// <param name="e"><see cref="PaintEventArgs"/> that contain the graphics object</param>
-		private void WM_NCPAINT(PaintEventArgs e)
+		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
+		private void WM_NCPAINT(ref Message m)
 		{
-			e.Graphics.Clear(BackColor);
+			BeginPaint(m.HWnd, out PAINTSTRUCT ncpaint);
+			using (Graphics graphics = Graphics.FromHdc(GetWindowDC(m.HWnd)))
+			{
+				graphics.ExcludeClip(new Rectangle(0, TitleBarHeight, Size.Width, Size.Height));
+				graphics.Clear(IsActive ? TitleBarColorActive : TitleBarColorInactive);
+			}
+			EndPaint(m.HWnd, ref ncpaint);
+			m.Result = (IntPtr)0;
 		}
 
 		/// <summary>
 		/// Evaluates which part of the window is being hit
 		/// </summary>
-		/// <param name="screenPoint"><see cref="Point"/> in screen coordinates</param>
-		/// <returns>result value of the hit type</returns>
-		private NCHitTestResult DoHitTest(Point screenPoint)
+		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
+		private void WM_NCHITTEST(ref Message m)
 		{
+			Point screenPoint = new Point(m.LParam.ToInt32());
 			Point windowPoint = ToWindowCoordinates(screenPoint);
 			NCHitTestResult result = NCHitTestResult.HT_CLIENT;
 			Rectangle titleBar = new Rectangle(Location.X, Location.Y, Size.Width, TitleBarHeight);
@@ -244,7 +302,7 @@ namespace BerichtManager.OwnControls
 				result = NCHitTestResult.HT_BOTTOMLEFT;
 			else if (windowPoint.X >= Size.Width - ResizeHitbox && windowPoint.Y >= Size.Height - ResizeHitbox)
 				result = NCHitTestResult.HT_BOTTOMRIGHT;
-			return result;
+			m.Result = (IntPtr)result;
 		}
 
 		/// <summary>
@@ -256,7 +314,7 @@ namespace BerichtManager.OwnControls
 			using (Pen p = new Pen(Color.Green))
 				g.DrawLine(p, 1, 1, 1, Size.Height - TitleBarHeight - 2);
 			using (Pen p = new Pen(Color.Blue))
-				g.DrawLine(p, 1, 1, Size.Width, 1);
+				g.DrawLine(p, 1, 1, Size.Width - 1, 1);
 			using (Pen p = new Pen(Color.Red))
 				g.DrawLine(p, Size.Width - 2, 1, Size.Width - 2, Size.Height - 2 - TitleBarHeight);
 			using (Pen p = new Pen(Color.Yellow))
@@ -293,35 +351,27 @@ namespace BerichtManager.OwnControls
 				return;
 			}
 
-			switch (m.Msg)
+			switch ((WMMessageCodes)m.Msg)
 			{
-				case (int)WMMessageCodes.WM_NCHITTEST:
-					Point screenPoint = new Point(m.LParam.ToInt32());
-					m.Result = (IntPtr)DoHitTest(screenPoint);
+				case WMMessageCodes.WM_NCHITTEST:
+					WM_NCHITTEST(ref m);
 					break;
-				case (int)WMMessageCodes.WM_NCPAINT:
-					BeginPaint(m.HWnd, out PAINTSTRUCT ncpaint);
-					using (Graphics graphics = Graphics.FromHdc(GetWindowDC(m.HWnd)))
-					{
-						graphics.ExcludeClip(new Rectangle(0, TitleBarHeight, Size.Width, Size.Height));
-						WM_NCPAINT(new PaintEventArgs(graphics, new Rectangle(0, 0, Size.Width, Size.Height)));
-					}
-					EndPaint(m.HWnd, ref ncpaint);
+				case WMMessageCodes.WM_NCPAINT:
+					WM_NCPAINT(ref m);
+					break;
+				case WMMessageCodes.WM_NCCALCSIZE:
+					WM_NCCALCSIZE(ref m);
 					m.Result = (IntPtr)0;
 					break;
-				case (int)WMMessageCodes.WM_PAINT:
+				/*case WMMessageCodes.WM_ERASEBKGND:
+					m.Result = (IntPtr)1;
+					break;*/
+				/*case WMMessageCodes.WM_PAINT:
 					BeginPaint(m.HWnd, out PAINTSTRUCT wmpaint);
 					using (Graphics g = Graphics.FromHwnd(m.HWnd))
 						WM_PAINT(g);
 					EndPaint(m.HWnd, ref wmpaint);
-					break;
-				case (int)WMMessageCodes.WM_NCCALCSIZE:
-					WM_NCCALCSIZE(ref m);
-					m.Result = (IntPtr)0;
-					break;
-				case (int)WMMessageCodes.WM_ERASEBKGND:
-					m.Result = (IntPtr)1;
-					break;
+					break;*/
 				default:
 					base.WndProc(ref m);
 					break;
