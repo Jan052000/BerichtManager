@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -6,10 +6,17 @@ using System.Windows.Forms;
 
 namespace BerichtManager.OwnControls
 {
+	//Useful:
 	//https://stackoverflow.com/questions/53000291/how-to-smooth-ugly-jitter-flicker-jumping-when-resizing-windows-especially-drag
 	public class BorderlessForm : Form
 	{
 		#region Designer and form variables
+
+		/// <summary>
+		/// Variable that tells wether or not the form is currently active
+		/// </summary>
+		private bool IsActive { get; set; } = false;
+
 		/// <summary>
 		/// Sets height of title bar
 		/// </summary>
@@ -33,14 +40,14 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
-		/// Color of title bar when window is focused
+		/// Color of title bar when window is active
 		/// </summary>
-		private Color titleBarColorActive { get; set; } = Color.Red;//SystemColors.ActiveBorder;
+		private Color titleBarColorActive { get; set; } = SystemColors.ActiveCaption;
 		/// <summary>
-		/// Color of title bar when window is focused
+		/// Color of title bar when window is active
 		/// </summary>
 		[Category("Style")]
-		[DefaultValue(typeof(Color), "ActiveBorder")]
+		[DefaultValue(typeof(Color), "ActiveCaption")]
 		public Color TitleBarColorActive
 		{
 			get => titleBarColorActive;
@@ -54,9 +61,15 @@ namespace BerichtManager.OwnControls
 			}
 		}
 
-		private Color titleBarColorInactive { get; set; } = Color.Blue;//SystemColors.InactiveBorder;
+		/// <summary>
+		/// Color of title bar when window is inactive
+		/// </summary>
+		private Color titleBarColorInactive { get; set; } = SystemColors.InactiveCaption;
+		/// <summary>
+		/// Color of title bar when window is inactive
+		/// </summary>
 		[Category("Style")]
-		[DefaultValue(typeof(Color), "InactiveBorder")]
+		[DefaultValue(typeof(Color), "InactiveCaption")]
 		public Color TitleBarColorInactive
 		{
 			get => titleBarColorInactive;
@@ -69,15 +82,6 @@ namespace BerichtManager.OwnControls
 				}
 			}
 		}
-
-		private bool IsActive { get; set; } = false;
-
-		/// <summary>
-		/// Indicates wether or not the close button in top right corner should be re when hovered
-		/// </summary>
-		[Category("Style")]
-		[DefaultValue(true)]
-		private bool RedCloseButtonHover { get; set; } = true;
 
 		/// <summary>
 		/// Sets region outside of form which is able to trigger resize
@@ -103,6 +107,7 @@ namespace BerichtManager.OwnControls
 		#endregion
 
 		#region Windows message constants
+
 		/// <summary>
 		/// Message codes for windows message
 		/// </summary>
@@ -117,19 +122,19 @@ namespace BerichtManager.OwnControls
 			/// </summary>
 			WM_PAINT = 0xF,
 			/// <summary>
-			/// Message for erasing content by drawing background
+			/// Message for erasing background
 			/// </summary>
 			WM_ERASEBKGND = 0x14,
 			/// <summary>
-			/// Message code for windows message WM_NCCALCSIZE
+			/// Message for calculating the new client size after resize
 			/// </summary>
 			WM_NCCALCSIZE = 0x83,
 			/// <summary>
-			/// Message code for windows message WM_NCHITTEST
+			/// Message for calculating if and what the cursor is interacting with
 			/// </summary>
 			WM_NCHITTEST = 0x84,
 			/// <summary>
-			/// Message code for windows message WM_NCPAINT
+			/// Message for painting the form border
 			/// </summary>
 			WM_NCPAINT = 0x85,
 			/// <summary>
@@ -137,6 +142,7 @@ namespace BerichtManager.OwnControls
 			/// </summary>
 			WM_NCACTIVATE = 0x86
 		}
+
 		/// <summary>
 		/// Return values for "WM_NCHITTEST" message
 		/// </summary>
@@ -239,8 +245,12 @@ namespace BerichtManager.OwnControls
 		[DllImport("user32.dll", ExactSpelling = true)]
 		public static extern IntPtr GetWindowDC(IntPtr hWnd);
 
-		[System.Runtime.InteropServices.DllImport("user32.dll", ExactSpelling = true)]
+		[DllImport("user32.dll", ExactSpelling = true)]
 		public static extern IntPtr GetDCEx(IntPtr hWnd, IntPtr hrgnClip, int flags);
+
+		[DllImport("user32.dll")]
+		static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDc);
+
 		#endregion
 
 		public BorderlessForm()
@@ -265,11 +275,14 @@ namespace BerichtManager.OwnControls
 		private void WM_NCPAINT(ref Message m)
 		{
 			BeginPaint(m.HWnd, out PAINTSTRUCT ncpaint);
-			using (Graphics graphics = Graphics.FromHdc(GetWindowDC(m.HWnd)))
+			IntPtr hdc = GetWindowDC(m.HWnd);
+			using (Graphics graphics = Graphics.FromHdc(hdc))
 			{
 				graphics.ExcludeClip(new Rectangle(0, TitleBarHeight, Size.Width, Size.Height));
 				graphics.Clear(IsActive ? TitleBarColorActive : TitleBarColorInactive);
 			}
+			//If dc is not released then title bar will not update color unless form was resized prior
+			ReleaseDC(m.HWnd, hdc);
 			EndPaint(m.HWnd, ref ncpaint);
 			m.Result = (IntPtr)0;
 		}
@@ -306,22 +319,6 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
-		/// Paints the client area
-		/// </summary>
-		/// <param name="g"><see cref="Graphics"/> object that represents the client area</param>
-		private void WM_PAINT(Graphics g)
-		{
-			using (Pen p = new Pen(Color.Green))
-				g.DrawLine(p, 1, 1, 1, Size.Height - TitleBarHeight - 2);
-			using (Pen p = new Pen(Color.Blue))
-				g.DrawLine(p, 1, 1, Size.Width - 1, 1);
-			using (Pen p = new Pen(Color.Red))
-				g.DrawLine(p, Size.Width - 2, 1, Size.Width - 2, Size.Height - 2 - TitleBarHeight);
-			using (Pen p = new Pen(Color.Yellow))
-				g.DrawLine(p, 1, Size.Height - 2 - TitleBarHeight, Size.Width - 2, Size.Height - 2 - TitleBarHeight);
-		}
-
-		/// <summary>
 		/// Calculates and sets the new client area
 		/// </summary>
 		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
@@ -340,6 +337,23 @@ namespace BerichtManager.OwnControls
 				RECT rect = (RECT)Marshal.PtrToStructure(m.LParam, typeof(RECT));
 				rect.top += TitleBarHeight;
 				Marshal.StructureToPtr(rect, m.LParam, true);
+			}
+			m.Result = (IntPtr)0;
+		}
+
+		/// <summary>
+		/// Handles the activation and deactivation of the window border
+		/// </summary>
+		/// <param name="m"></param>
+		private void WM_NCACTIVATE(ref Message m)
+		{
+			if (WindowState == FormWindowState.Minimized)
+				base.DefWndProc(ref m);
+			else
+			{
+				IsActive = m.WParam.ToInt32() == 1;
+				WM_NCPAINT(ref m);
+				m.Result = (IntPtr)1;
 			}
 		}
 
@@ -361,17 +375,10 @@ namespace BerichtManager.OwnControls
 					break;
 				case WMMessageCodes.WM_NCCALCSIZE:
 					WM_NCCALCSIZE(ref m);
-					m.Result = (IntPtr)0;
 					break;
-				/*case WMMessageCodes.WM_ERASEBKGND:
-					m.Result = (IntPtr)1;
-					break;*/
-				/*case WMMessageCodes.WM_PAINT:
-					BeginPaint(m.HWnd, out PAINTSTRUCT wmpaint);
-					using (Graphics g = Graphics.FromHwnd(m.HWnd))
-						WM_PAINT(g);
-					EndPaint(m.HWnd, ref wmpaint);
-					break;*/
+				case WMMessageCodes.WM_NCACTIVATE:
+					WM_NCACTIVATE(ref m);
+					break;
 				default:
 					base.WndProc(ref m);
 					break;
