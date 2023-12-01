@@ -293,7 +293,7 @@ namespace BerichtManager.OwnControls
 		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
 		private void WM_NCHITTEST(ref Message m)
 		{
-			Point screenPoint = new Point(m.LParam.ToInt32());
+			Point screenPoint = new Point(IntPtr.Size == 8 ? unchecked((int)m.LParam.ToInt64()) : m.LParam.ToInt32());
 			Point windowPoint = ToWindowCoordinates(screenPoint);
 			NCHitTestResult result = NCHitTestResult.HT_CLIENT;
 			Rectangle titleBar = new Rectangle(Location.X, Location.Y, Size.Width, TitleBarHeight);
