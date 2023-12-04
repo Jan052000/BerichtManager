@@ -240,6 +240,29 @@ namespace BerichtManager.OwnControls
 			}
 		}
 
+		/// <summary>
+		/// Bounds of the close button in title bar (right)
+		/// </summary>
+		private Rectangle CloseButtonBounds
+		{
+			get => new Rectangle(Width - TitleBarButtonWidth - ResizeHitbox, 2, TitleBarButtonWidth, TitleBarHeight - 1);
+		}
+
+		/// <summary>
+		/// Bounds of the zoom button in title bar (middle)
+		/// </summary>
+		private Rectangle ZoomButtonBounds
+		{
+			get => new Rectangle(CloseButtonBounds.X - TitleBarButtonWidth - 1, CloseButtonBounds.Y, CloseButtonBounds.Width, CloseButtonBounds.Height);
+		}
+
+		/// <summary>
+		/// Bounds of the reduce button in title bar (left)
+		/// </summary>
+		private Rectangle ReduceButtonBounds
+		{
+			get => new Rectangle(ZoomButtonBounds.X - TitleBarButtonWidth - 1, ZoomButtonBounds.Y, ZoomButtonBounds.Width, ZoomButtonBounds.Height);
+		}
 		#endregion
 
 		#region Windows message constants
@@ -452,18 +475,15 @@ namespace BerichtManager.OwnControls
 				using (SolidBrush b = new SolidBrush(TitleBarButtonHoverColor))
 				using (SolidBrush red = new SolidBrush(CloseButtonHoverColor))
 				{
-					Rectangle close = new Rectangle(Width - TitleBarButtonWidth - 2, 2, TitleBarButtonWidth, TitleBarHeight - 1);
-					Rectangle zoom = new Rectangle(close.X - TitleBarButtonWidth - 1, close.Y, close.Width, close.Height);
-					Rectangle reduce = new Rectangle(zoom.X - TitleBarButtonWidth - 1, zoom.Y, zoom.Width, zoom.Height);
 					if (HoveringButton == 0)
-						graphics.FillRectangle(red, close);
-					TextRenderer.DrawText(graphics, "r", new Font("webdings", TitleBarButtonFontSize), close, TitleBarButtonForeColor);
+						graphics.FillRectangle(red, CloseButtonBounds);
+					TextRenderer.DrawText(graphics, "r", new Font("webdings", TitleBarButtonFontSize), CloseButtonBounds, TitleBarButtonForeColor);
 					if (HoveringButton == 1)
-						graphics.FillRectangle(b, zoom);
-					TextRenderer.DrawText(graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), zoom, TitleBarButtonForeColor);
+						graphics.FillRectangle(b, ZoomButtonBounds);
+					TextRenderer.DrawText(graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), ZoomButtonBounds, TitleBarButtonForeColor);
 					if (HoveringButton == 2)
-						graphics.FillRectangle(b, reduce);
-					TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), reduce, TitleBarButtonForeColor);
+						graphics.FillRectangle(b, ReduceButtonBounds);
+					TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
 				}
 			}
 			//If dc is not released then title bar will not update color unless form was resized prior
@@ -484,14 +504,11 @@ namespace BerichtManager.OwnControls
 			Rectangle titleBar = new Rectangle(Location.X, Location.Y, Size.Width, TitleBarHeight);
 			if (titleBar.Contains(screenPoint))
 			{
-				Rectangle close = new Rectangle(Width - TitleBarButtonWidth - ResizeHitbox, 2, TitleBarButtonWidth, TitleBarHeight - 1);
-				Rectangle zoom = new Rectangle(close.X - TitleBarButtonWidth - 1, close.Y, close.Width, close.Height);
-				Rectangle reduce = new Rectangle(zoom.X - TitleBarButtonWidth - 1, zoom.Y, zoom.Width, zoom.Height);
-				if (close.Contains(windowPoint))
+				if (CloseButtonBounds.Contains(windowPoint))
 					HoveringButton = 0;
-				else if (zoom.Contains(windowPoint))
+				else if (ZoomButtonBounds.Contains(windowPoint))
 					HoveringButton = 1;
-				else if (reduce.Contains(windowPoint))
+				else if (ReduceButtonBounds.Contains(windowPoint))
 					HoveringButton = 2;
 				else
 					HoveringButton = -1;
