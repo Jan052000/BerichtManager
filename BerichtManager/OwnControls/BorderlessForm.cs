@@ -6,10 +6,14 @@ using System.Windows.Forms;
 
 namespace BerichtManager.OwnControls
 {
-	//Useful:
-	//https://stackoverflow.com/questions/53000291/how-to-smooth-ugly-jitter-flicker-jumping-when-resizing-windows-especially-drag
+	/// <summary>
+	/// Class which extends the functionalities of a standard winforms <see cref="Form"/> and contains a customizable title bar
+	/// </summary>
 	public class BorderlessForm : Form
 	{
+		//Useful:
+		//https://stackoverflow.com/questions/53000291/how-to-smooth-ugly-jitter-flicker-jumping-when-resizing-windows-especially-drag
+
 		#region Designer and form variables
 		/// <summary>
 		/// Graphics object to draw the title bar to memory between paints
@@ -430,7 +434,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Message codes for windows message
 		/// </summary>
-		private enum WMMessageCodes
+		public enum WMMessageCodes
 		{
 			/// <summary>
 			/// Message code for windows message WM_ACIVATE
@@ -473,7 +477,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Return values for "WM_NCHITTEST" message
 		/// </summary>
-		private enum NCHitTestResult
+		public enum NCHitTestResult
 		{
 			/// <summary>
 			/// Return value for mouse over client area with no aditional functions
@@ -512,11 +516,11 @@ namespace BerichtManager.OwnControls
 			/// </summary>
 			HT_TOP = 0xC,
 			/// <summary>
-			/// Return value for mouse over top left point
+			/// Return value for mouse over top left corner
 			/// </summary>
 			HT_TOPLEFT = 0xD,
 			/// <summary>
-			/// Return value for mouse over top right point
+			/// Return value for mouse over top right corner
 			/// </summary>
 			HT_TOPRIGHT = 0xE,
 			/// <summary>
@@ -524,11 +528,11 @@ namespace BerichtManager.OwnControls
 			/// </summary>
 			HT_BOTTOM = 0xF,
 			/// <summary>
-			/// Return value for mouse over bottom left point
+			/// Return value for mouse over bottom left corner
 			/// </summary>
 			HT_BOTTOMLEFT = 0x10,
 			/// <summary>
-			/// Return value for mouse over bottom right point
+			/// Return value for mouse over bottom right corner
 			/// </summary>
 			HT_BOTTOMRIGHT = 0x11,
 			/// <summary>
@@ -571,14 +575,28 @@ namespace BerichtManager.OwnControls
 		}
 		#endregion
 
-		#region External
-		//RECT Structure
+		#region Structs and dll imports for Win32 API
+		/// <summary>
+		/// Tells the window manager that painting has begun in a window (Needs to have <see cref="EndPaint(IntPtr, ref PAINTSTRUCT)"/> called after painting is completed)
+		/// </summary>
+		/// <param name="hwnd">A pointer to the hndle of the window you want to draw on</param>
+		/// <param name="lpPaint">A <see cref="PAINTSTRUCT"/> object</param>
+		/// <returns>A pointer to the handle of a device context of the window if successful or <see langword="null"/> if not</returns>
+		/// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint
 		[DllImport("user32.dll")]
 		private static extern IntPtr BeginPaint(IntPtr hwnd, out PAINTSTRUCT lpPaint);
 
+		/// <summary>
+		/// Tells the window manager that painting has been completed (Needs to be called after <see cref="BeginPaint(IntPtr, out PAINTSTRUCT)"/> when painting is completed)
+		/// </summary>
+		/// <param name="hWnd"></param>
+		/// <param name="lpPaint"></param>
+		/// <returns><see langword="true"/></returns>
+		/// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint
 		[DllImport("user32.dll")]
 		private static extern bool EndPaint(IntPtr hWnd, [In] ref PAINTSTRUCT lpPaint);
 
+		//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct
 		[StructLayout(LayoutKind.Sequential)]
 		public struct PAINTSTRUCT
 		{
@@ -591,12 +609,7 @@ namespace BerichtManager.OwnControls
 			public byte[] rgbReserved;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
-		public struct RECT
-		{
-			public int left, top, right, bottom;
-		}
-
+		//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowpos
 		[StructLayout(LayoutKind.Sequential)]
 		public struct WINDOWPOS
 		{
@@ -606,6 +619,14 @@ namespace BerichtManager.OwnControls
 			public int flags;
 		}
 
+		//https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect
+		[StructLayout(LayoutKind.Sequential)]
+		public struct RECT
+		{
+			public int left, top, right, bottom;
+		}
+
+		//https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nccalcsize_params
 		[StructLayout(LayoutKind.Sequential)]
 		public struct NCCALCSIZE_PARAMS
 		{
@@ -613,23 +634,30 @@ namespace BerichtManager.OwnControls
 			public WINDOWPOS lppos;
 		}
 
+		/// <summary>
+		/// Retrieves the device context for a window
+		/// </summary>
+		/// <param name="hWnd">A pointer to the window of which you want to get the device context</param>
+		/// <returns>A pointer to the device context if successful or <see langword="null"/> if not</returns>
+		/// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc
 		[DllImport("user32.dll", ExactSpelling = true)]
-		public static extern IntPtr GetWindowDC(IntPtr hWnd);
+		private static extern IntPtr GetWindowDC(IntPtr hWnd);
 
-		[DllImport("user32.dll", ExactSpelling = true)]
-		public static extern IntPtr GetDCEx(IntPtr hWnd, IntPtr hrgnClip, int flags);
-
+		/// <summary>
+		/// Releases the device context for a window (Needs to be called after <see cref="GetWindowDC(IntPtr)"/> and from the same thread)
+		/// </summary>
+		/// <param name="hWnd">A pointer to the window handle</param>
+		/// <param name="hDc">A pointer to the evice context that belongs to the window which is to be released</param>
+		/// <returns><see langword="true"/> if dc was released or <see langword="false"/> if not</returns>
+		/// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc
 		[DllImport("user32.dll")]
-		static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDc);
-
-		[DllImport("user32.DLL")]
-		private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
+		private static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDc);
 		#endregion
 
 		public BorderlessForm()
 		{
 			SetStyle(ControlStyles.ContainerControl | ControlStyles.CacheText | ControlStyles.OptimizedDoubleBuffer, true);
-			FormBorderStyle = FormBorderStyle.None;
+			base.FormBorderStyle = FormBorderStyle.None;
 			MinimumSize = new Size(3 * TitleBarButtonWidth + 3, TitleBarHeight);
 		}
 
@@ -906,7 +934,6 @@ namespace BerichtManager.OwnControls
 			get
 			{
 				CreateParams cp = base.CreateParams;
-				//cp.Style |= 0x20000; // <--- use 0x20000
 				cp.ExStyle |= 0x02000000;
 				return cp;
 			}
