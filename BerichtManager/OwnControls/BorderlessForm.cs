@@ -230,12 +230,7 @@ namespace BerichtManager.OwnControls
 				if (hoveringButton != value)
 				{
 					hoveringButton = value;
-					Message newMessage = new Message();
-					newMessage.HWnd = Handle;
-					newMessage.Msg = (int)WMMessageCodes.WM_NCPAINT;
-					newMessage.WParam = (IntPtr)0;
-					newMessage.LParam = (IntPtr)0;
-					WM_NCPAINT(ref newMessage);
+					ForceRedrawNCA();
 				}
 			}
 		}
@@ -542,7 +537,7 @@ namespace BerichtManager.OwnControls
 		}
 		#endregion
 
-		#region Overwrite variables for designer
+		#region Overwrite variables
 		/// <summary>
 		/// Overwrite and pass through for base.FormBorderStyle to change designer category
 		/// </summary>
@@ -563,13 +558,23 @@ namespace BerichtManager.OwnControls
 				if (Text != value)
 				{
 					base.Text = value;
-					Message newMessage = new Message();
-					newMessage.HWnd = Handle;
-					newMessage.Msg = (int)WMMessageCodes.WM_NCPAINT;
-					newMessage.WParam = (IntPtr)0;
-					newMessage.LParam = (IntPtr)0;
-					ForceNCRedraw = true;
-					WM_NCPAINT(ref newMessage);
+					ForceRedrawNCA();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Is overwritten to reset hovered title bar button as no nca update is done when switching window states
+		/// </summary>
+		private new FormWindowState WindowState
+		{
+			get => base.WindowState;
+			set
+			{
+				if (base.WindowState != value)
+				{
+					HoveringButton = -1;
+					base.WindowState = value;
 				}
 			}
 		}
@@ -669,6 +674,22 @@ namespace BerichtManager.OwnControls
 		private Point ToWindowCoordinates(Point p)
 		{
 			return new Point(p.X - Location.X, p.Y - Location.Y);
+		}
+
+		/// <summary>
+		/// Forces the non client areas to be redrawn and the buffered graphics to be discarded
+		/// </summary>
+		private void ForceRedrawNCA()
+		{
+			Message newMessage = new Message
+			{
+				HWnd = Handle,
+				Msg = (int)WMMessageCodes.WM_NCPAINT,
+				WParam = (IntPtr)0,
+				LParam = (IntPtr)0
+			};
+			ForceNCRedraw = true;
+			WM_NCPAINT(ref newMessage);
 		}
 
 		/// <summary>
@@ -813,14 +834,14 @@ namespace BerichtManager.OwnControls
 			ForceNCRedraw = true;
 			if (m.WParam != (IntPtr)0)
 			{
-				NCCALCSIZE_PARAMS nccp = (NCCALCSIZE_PARAMS)Marshal.PtrToStructure(m.LParam, typeof(NCCALCSIZE_PARAMS));
+				NCCALCSIZE_PARAMS nccp = (NCCALCSIZE_PARAMS)m.GetLParam(typeof(NCCALCSIZE_PARAMS));
 				nccp.rgrc0.top += TitleBarHeight;
 				Marshal.StructureToPtr(nccp, m.LParam, true);
 
 			}
 			else
 			{
-				RECT rect = (RECT)Marshal.PtrToStructure(m.LParam, typeof(RECT));
+				RECT rect = (RECT)m.GetLParam(typeof(RECT));
 				rect.top += TitleBarHeight;
 				Marshal.StructureToPtr(rect, m.LParam, true);
 			}
@@ -838,8 +859,7 @@ namespace BerichtManager.OwnControls
 			else
 			{
 				IsActive = m.WParam.ToInt32() == 1;
-				ForceNCRedraw = true;
-				WM_NCPAINT(ref m);
+				ForceRedrawNCA();
 				m.Result = (IntPtr)1;
 			}
 		}
