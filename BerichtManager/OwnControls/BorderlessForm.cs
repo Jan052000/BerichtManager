@@ -11,6 +11,14 @@ namespace BerichtManager.OwnControls
 	public class BorderlessForm : Form
 	{
 		#region Designer and form variables
+		/// <summary>
+		/// Graphics object to draw the title bar to memory between paints
+		/// </summary>
+		private BufferedGraphics BufferedGraphics { get; set; } = null;
+		/// <summary>
+		/// Management of memory allocation of <see cref="BufferedGraphics"/>
+		/// </summary>
+		private BufferedGraphicsContext BufferedGraphicsContext { get; set; } = new BufferedGraphicsContext();
 
 		/// <summary>
 		/// Variable that tells wether or not the form is currently active
@@ -21,6 +29,11 @@ namespace BerichtManager.OwnControls
 		/// Stores which button the left mouse button clicked on
 		/// </summary>
 		private int ClickedButton { get; set; } = -1;
+
+		/// <summary>
+		/// Tells the <see cref="WM_NCPAINT(ref Message)"/> function to clear the buffers and redraw the non client area
+		/// </summary>
+		private bool ForceNCRedraw { get; set; } = false;
 
 		/// <summary>
 		/// Sets height of title bar
@@ -213,7 +226,12 @@ namespace BerichtManager.OwnControls
 				if (hoveringButton != value)
 				{
 					hoveringButton = value;
-					SendMessage(Handle, (int)WMMessageCodes.WM_NCPAINT, 0, 0);
+					Message newMessage = new Message();
+					newMessage.HWnd = Handle;
+					newMessage.Msg = (int)WMMessageCodes.WM_NCPAINT;
+					newMessage.WParam = (IntPtr)0;
+					newMessage.LParam = (IntPtr)0;
+					WM_NCPAINT(ref newMessage);
 				}
 			}
 		}
@@ -262,6 +280,148 @@ namespace BerichtManager.OwnControls
 		private Rectangle ReduceButtonBounds
 		{
 			get => new Rectangle(ZoomButtonBounds.X - TitleBarButtonWidth - 1, ZoomButtonBounds.Y, ZoomButtonBounds.Width, ZoomButtonBounds.Height);
+		}
+
+		/// <summary>
+		/// Bounds of the icon
+		/// </summary>
+		private Rectangle IconBounds
+		{
+			get => new Rectangle(IconPadding, TitleBarHeight / 2 - IconSize.Height / 2, IconSize.Width, IconSize.Height);
+		}
+
+		/// <summary>
+		/// Padding the icon has to the left of the window
+		/// </summary>
+		private int iconPadding { get; set; } = 16;
+		/// <summary>
+		/// Padding the icon has to the left of the window
+		/// </summary>
+		[Category("Style")]
+		[DefaultValue(16)]
+		public int IconPadding
+		{
+			get => iconPadding;
+			set
+			{
+				if (iconPadding != value)
+				{
+					iconPadding = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Size of the icon
+		/// </summary>
+		private Size iconSize { get; set; } = new Size(16, 16);
+		/// <summary>
+		/// Size of the icon
+		/// </summary>
+		[Category("Style")]
+		[DefaultValue(typeof(Size), "16; 16")]
+		public Size IconSize
+		{
+			get => iconSize;
+			set
+			{
+				if (iconSize.Width != value.Width || iconSize.Height != value.Height)
+				{
+					iconSize = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Color if the title when window is active
+		/// </summary>
+		private Color activeTitleColor { get; set; } = SystemColors.ActiveCaptionText;
+		/// <summary>
+		/// Color if the title when window is active
+		/// </summary>
+		[Category("Style")]
+		[DefaultValue(typeof(Color), "ActiveCaptionText")]
+		public Color ActiveTitleColor
+		{
+			get => activeTitleColor;
+			set
+			{
+				if (activeTitleColor != value)
+				{
+					activeTitleColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Color if the title when window is inactive
+		/// </summary>
+		private Color inactiveTitleColor { get; set; } = SystemColors.InactiveCaptionText;
+		/// <summary>
+		/// Color if the title when window is inactive
+		/// </summary>
+		[Category("Style")]
+		[DefaultValue(typeof(Color), "InactiveCaptionText")]
+		public Color InactiveTitleColor
+		{
+			get => inactiveTitleColor;
+			set
+			{
+				if (inactiveTitleColor != value)
+				{
+					inactiveTitleColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Padding title has to the icon
+		/// </summary>
+		private int textToIconPadding { get; set; } = 8;
+		/// <summary>
+		/// Padding title has to the icon
+		/// </summary>
+		[Category("Style")]
+		[DefaultValue(8)]
+		public int TextToIconPadding
+		{
+			get => textToIconPadding;
+			set
+			{
+				if (textToIconPadding != value)
+				{
+					textToIconPadding = value;
+					Invalidate();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Title as it should be rendered (will shorten if title too long)
+		/// </summary>
+		private string RenderedText
+		{
+			get
+			{
+				int availableTextSpace = ReduceButtonBounds.X - (IconBounds.X + IconBounds.Width + TextToIconPadding);
+				if (availableTextSpace < TextRenderer.MeasureText(base.Text, Font).Width)
+				{
+					string newTitle = "";
+					for (int i = 0; i < base.Text.Length; i++)
+					{
+						if (availableTextSpace >= TextRenderer.MeasureText(newTitle + base.Text[i] + "...", Font).Width)
+							newTitle += base.Text[i];
+						else
+							return newTitle + "...";
+
+					}
+				}
+				return base.Text;
+			}
 		}
 		#endregion
 
@@ -385,15 +545,39 @@ namespace BerichtManager.OwnControls
 		[Category("Style")]
 		[DefaultValue(typeof(FormBorderStyle), "None")]
 		public new FormBorderStyle FormBorderStyle { get => base.FormBorderStyle; set => base.FormBorderStyle = value; }
+
+		/// <summary>
+		/// Overwrite and pass through to catch title changing and redrawing non client area
+		/// </summary>
+		[Category("Appearance")]
+		[DefaultValue("")]
+		public new string Text
+		{
+			get => base.Text;
+			set
+			{
+				if (Text != value)
+				{
+					base.Text = value;
+					Message newMessage = new Message();
+					newMessage.HWnd = Handle;
+					newMessage.Msg = (int)WMMessageCodes.WM_NCPAINT;
+					newMessage.WParam = (IntPtr)0;
+					newMessage.LParam = (IntPtr)0;
+					ForceNCRedraw = true;
+					WM_NCPAINT(ref newMessage);
+				}
+			}
+		}
 		#endregion
 
 		#region External
 		//RECT Structure
 		[DllImport("user32.dll")]
-		static extern IntPtr BeginPaint(IntPtr hwnd, out PAINTSTRUCT lpPaint);
+		private static extern IntPtr BeginPaint(IntPtr hwnd, out PAINTSTRUCT lpPaint);
 
 		[DllImport("user32.dll")]
-		static extern bool EndPaint(IntPtr hWnd, [In] ref PAINTSTRUCT lpPaint);
+		private static extern bool EndPaint(IntPtr hWnd, [In] ref PAINTSTRUCT lpPaint);
 
 		[StructLayout(LayoutKind.Sequential)]
 		public struct PAINTSTRUCT
@@ -444,6 +628,7 @@ namespace BerichtManager.OwnControls
 
 		public BorderlessForm()
 		{
+			SetStyle(ControlStyles.ContainerControl | ControlStyles.CacheText | ControlStyles.OptimizedDoubleBuffer, true);
 			FormBorderStyle = FormBorderStyle.None;
 			MinimumSize = new Size(3 * TitleBarButtonWidth + 3, TitleBarHeight);
 		}
@@ -459,6 +644,39 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
+		/// Draws the title bar, the title and the icon
+		/// </summary>
+		/// <param name="graphics">Graphics object to draw title bar on</param>
+		private void DrawTitleBar(Graphics graphics)
+		{
+			graphics.ExcludeClip(new Rectangle(0, TitleBarHeight, Size.Width, Size.Height));
+			graphics.Clear(IsActive ? TitleBarColorActive : TitleBarColorInactive);
+
+			//Draw Text
+			TextRenderer.DrawText(graphics, RenderedText, Font, new Point(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
+
+			//Draw buttons
+			using (SolidBrush b = new SolidBrush(TitleBarButtonHoverColor))
+			using (SolidBrush red = new SolidBrush(CloseButtonHoverColor))
+			{
+				if (HoveringButton == 0)
+					graphics.FillRectangle(red, CloseButtonBounds);
+				TextRenderer.DrawText(graphics, "r", new Font("webdings", TitleBarButtonFontSize), CloseButtonBounds, TitleBarButtonForeColor);
+				if (HoveringButton == 1)
+					graphics.FillRectangle(b, ZoomButtonBounds);
+				TextRenderer.DrawText(graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), ZoomButtonBounds, TitleBarButtonForeColor);
+				if (HoveringButton == 2)
+					graphics.FillRectangle(b, ReduceButtonBounds);
+				TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
+			}
+
+			//Draw Icon
+			graphics.DrawIcon(Icon, IconBounds);
+
+			graphics.Flush(System.Drawing.Drawing2D.FlushIntention.Sync);
+		}
+
+		/// <summary>
 		/// Paints the non client areas
 		/// </summary>
 		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
@@ -466,29 +684,36 @@ namespace BerichtManager.OwnControls
 		{
 			BeginPaint(m.HWnd, out PAINTSTRUCT ncpaint);
 			IntPtr hdc = GetWindowDC(m.HWnd);
-			using (Graphics graphics = Graphics.FromHdc(hdc))
+			if (ForceNCRedraw)
 			{
-				graphics.ExcludeClip(new Rectangle(0, TitleBarHeight, Size.Width, Size.Height));
-				graphics.Clear(IsActive ? TitleBarColorActive : TitleBarColorInactive);
-
-				//Draw buttons
-				using (SolidBrush b = new SolidBrush(TitleBarButtonHoverColor))
-				using (SolidBrush red = new SolidBrush(CloseButtonHoverColor))
-				{
-					if (HoveringButton == 0)
-						graphics.FillRectangle(red, CloseButtonBounds);
-					TextRenderer.DrawText(graphics, "r", new Font("webdings", TitleBarButtonFontSize), CloseButtonBounds, TitleBarButtonForeColor);
-					if (HoveringButton == 1)
-						graphics.FillRectangle(b, ZoomButtonBounds);
-					TextRenderer.DrawText(graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), ZoomButtonBounds, TitleBarButtonForeColor);
-					if (HoveringButton == 2)
-						graphics.FillRectangle(b, ReduceButtonBounds);
-					TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
-				}
+				ForceNCRedraw = false;
+				using (Graphics graphics = Graphics.FromHdc(hdc))
+					DrawTitleBar(graphics);
+				EndPaint(m.HWnd, ref ncpaint);
+				if (BufferedGraphics != null)
+					BufferedGraphics.Dispose();
+				BufferedGraphics = BufferedGraphicsContext.Allocate(hdc, new Rectangle(0, 0, Size.Width, TitleBarHeight));
+				DrawTitleBar(BufferedGraphics.Graphics);
+				ReleaseDC(m.HWnd, hdc);
 			}
-			//If dc is not released then title bar will not update color unless form was resized prior
-			ReleaseDC(m.HWnd, hdc);
-			EndPaint(m.HWnd, ref ncpaint);
+			else
+			{
+				if (BufferedGraphics == null)
+				{
+					BufferedGraphics = BufferedGraphicsContext.Allocate(hdc, new Rectangle(0, 0, Size.Width, TitleBarHeight));
+					DrawTitleBar(BufferedGraphics.Graphics);
+					BufferedGraphics.Render();
+				}
+				else
+					BufferedGraphics.Render();
+				EndPaint(m.HWnd, ref ncpaint);
+				BufferedGraphics.Dispose();
+				BufferedGraphics = BufferedGraphicsContext.Allocate(hdc, new Rectangle(0, 0, Size.Width, TitleBarHeight));
+				DrawTitleBar(BufferedGraphics.Graphics);
+				//If dc is not released then title bar will not update color unless form was resized prior
+				ReleaseDC(m.HWnd, hdc);
+
+			}
 			m.Result = (IntPtr)0;
 		}
 
@@ -557,6 +782,7 @@ namespace BerichtManager.OwnControls
 		/// https://stackoverflow.com/questions/28277039/how-to-set-the-client-area-clientrectangle-in-a-borderless-form
 		private void WM_NCCALCSIZE(ref Message m)
 		{
+			ForceNCRedraw = true;
 			if (m.WParam != (IntPtr)0)
 			{
 				NCCALCSIZE_PARAMS nccp = (NCCALCSIZE_PARAMS)Marshal.PtrToStructure(m.LParam, typeof(NCCALCSIZE_PARAMS));
@@ -584,6 +810,7 @@ namespace BerichtManager.OwnControls
 			else
 			{
 				IsActive = m.WParam.ToInt32() == 1;
+				ForceNCRedraw = true;
 				WM_NCPAINT(ref m);
 				m.Result = (IntPtr)1;
 			}
