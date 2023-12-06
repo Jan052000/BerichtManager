@@ -40,6 +40,21 @@ namespace BerichtManager.OwnControls
 		private bool ForceNCRedraw { get; set; } = false;
 
 		/// <summary>
+		/// Bounds of window before maximize, minimize or reduce
+		/// </summary>
+		private Rectangle OriginalBounds { get; set; }
+
+		/// <summary>
+		/// Tells the form wether or not to maximize when restoring position from minimized state
+		/// </summary>
+		private bool ShouldMaximizeOnRestore { get; set; } = false;
+
+		/// <summary>
+		/// Stores the screen this window was last on
+		/// </summary>
+		private Screen LastScreen { get; set; }
+
+		/// <summary>
 		/// Sets height of title bar
 		/// </summary>
 		private int titleBarHeight { get; set; } = 32;
@@ -564,17 +579,54 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
+		/// Holds the <see cref="FormWindowState"/> of the window
+		/// </summary>
+		private FormWindowState windowState = FormWindowState.Normal;
+		/// <summary>
 		/// Is overwritten to reset hovered title bar button as no nca update is done when switching window states
+		/// and to stop reduce from cutting off a <see cref="TitleBarHeight"/> sized rectangle from the bottom of the window
 		/// </summary>
 		private new FormWindowState WindowState
 		{
-			get => base.WindowState;
+			get => windowState;
 			set
 			{
-				if (base.WindowState != value)
+				if (windowState != value)
 				{
+					FormWindowState oldValue = windowState;
 					HoveringButton = -1;
-					base.WindowState = value;
+					windowState = value;
+					//Save the old bounds when switching from normal state 
+					if (oldValue == FormWindowState.Normal)
+						OriginalBounds = new Rectangle(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
+					switch (value)
+					{
+						case FormWindowState.Normal:
+							//Force clearing the buffers on next WM_NCPAINT
+							if (oldValue == FormWindowState.Minimized)
+								ForceNCRedraw = true;
+							//If last state before minimizing was Maximized then maximize window else restore bounds to original
+							if (ShouldMaximizeOnRestore)
+							{
+								Bounds = LastScreen.WorkingArea;
+								windowState = FormWindowState.Maximized;
+							}
+							else
+							{
+								Bounds = new Rectangle(OriginalBounds.X, OriginalBounds.Y, OriginalBounds.Width, OriginalBounds.Height);
+							}
+							break;
+						case FormWindowState.Minimized:
+							//Move window to the out of bounds area window moves its minimized windows to
+							Bounds = new Rectangle(-32000, -32000, OriginalBounds.Width, OriginalBounds.Height);
+							break;
+						case FormWindowState.Maximized:
+							//Save which screen the form was last on
+							LastScreen = Screen.FromControl(this);
+							//Set window to entire screen minus task bar
+							Bounds = LastScreen.WorkingArea;
+							break;
+					}
 				}
 			}
 		}
@@ -821,7 +873,29 @@ namespace BerichtManager.OwnControls
 				result = NCHitTestResult.HT_BOTTOMLEFT;
 			else if (windowPoint.X >= Size.Width - ResizeHitbox && windowPoint.Y >= Size.Height - ResizeHitbox)
 				result = NCHitTestResult.HT_BOTTOMRIGHT;
+			//Remove resize handles when window is maximized
+			if (CheckIfBorder(result) && WindowState == FormWindowState.Maximized)
+				result = NCHitTestResult.HT_CLIENT;
 			m.Result = (IntPtr)result;
+		}
+
+		/// <summary>
+		/// Checks if the result contans a value indicating a hit with the border
+		/// </summary>
+		/// <param name="result">Current result to check if it is a border hit</param>
+		/// <returns><see langword="true"/> if the hit was on the border and <see langword="false"/> otherwise</returns>
+		private bool CheckIfBorder(NCHitTestResult result)
+		{
+			bool newResult =
+			result == NCHitTestResult.HT_LEFT ||
+			result == NCHitTestResult.HT_RIGHT ||
+			result == NCHitTestResult.HT_TOP ||
+			result == NCHitTestResult.HT_TOPLEFT ||
+			result == NCHitTestResult.HT_TOPRIGHT ||
+			result == NCHitTestResult.HT_BOTTOM ||
+			result == NCHitTestResult.HT_BOTTOMLEFT ||
+			result == NCHitTestResult.HT_BOTTOMRIGHT;
+			return newResult;
 		}
 
 		/// <summary>
@@ -855,7 +929,8 @@ namespace BerichtManager.OwnControls
 		private void WM_NCACTIVATE(ref Message m)
 		{
 			if (WindowState == FormWindowState.Minimized)
-				base.DefWndProc(ref m);
+				WindowState = FormWindowState.Normal;
+			//base.DefWndProc(ref m);
 			else
 			{
 				IsActive = m.WParam.ToInt32() == 1;
@@ -902,7 +977,10 @@ namespace BerichtManager.OwnControls
 					break;
 				case NCHitTestResult.HT_ZOOM:
 					if (ClickedButton == 1)
+					{
+						ShouldMaximizeOnRestore = !ShouldMaximizeOnRestore;
 						WindowState = WindowState == FormWindowState.Maximized ? FormWindowState.Normal : FormWindowState.Maximized;
+					}
 					break;
 				case NCHitTestResult.HT_REDUCE:
 					if (ClickedButton == 2)
