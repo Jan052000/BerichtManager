@@ -430,7 +430,11 @@ namespace BerichtManager.OwnControls
 						if (availableTextSpace >= TextRenderer.MeasureText(newTitle + base.Text[i] + "...", Font).Width)
 							newTitle += base.Text[i];
 						else
+						{
+							if (base.Text == "")
+								return "";
 							return newTitle + "...";
+						}
 
 					}
 				}
@@ -813,7 +817,6 @@ namespace BerichtManager.OwnControls
 				DrawTitleBar(BufferedGraphics.Graphics);
 				//If dc is not released then title bar will not update color unless form was resized prior
 				ReleaseDC(m.HWnd, hdc);
-
 			}
 			m.Result = (IntPtr)0;
 		}
