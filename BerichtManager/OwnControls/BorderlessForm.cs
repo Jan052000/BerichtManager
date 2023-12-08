@@ -49,10 +49,24 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		private bool ShouldMaximizeOnRestore { get; set; } = false;
 
+		private Screen lastScreen { get; set; }
 		/// <summary>
 		/// Stores the screen this window was last on
 		/// </summary>
-		private Screen LastScreen { get; set; }
+		private Screen LastScreen
+		{
+			get
+			{
+				if (lastScreen == null)
+					lastScreen = Screen.FromControl(this);
+				return lastScreen;
+			}
+			set
+			{
+				if (lastScreen != value)
+					lastScreen = value;
+			}
+		}
 
 		/// <summary>
 		/// Sets height of title bar
