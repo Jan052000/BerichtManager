@@ -245,7 +245,7 @@ namespace BerichtManager.OwnControls
 				if (hoveringButton != value)
 				{
 					hoveringButton = value;
-					ForceRedrawNCA();
+					SendMessage(Handle, (int)WMMessageCodes.WM_USER_REDRAWBUTTONS, (IntPtr)0, (IntPtr)0);
 				}
 			}
 		}
@@ -485,7 +485,16 @@ namespace BerichtManager.OwnControls
 			/// <summary>
 			/// Sent if left button goes up over non client area
 			/// </summary>
-			WM_NCLBUTTONUP = 0xA2
+			WM_NCLBUTTONUP = 0xA2,
+			/// <summary>
+			/// Start of WM_USER message range for private messages in this control (0x0400 thorugh 0x7FFF)
+			/// </summary>
+			WM_USER = 0x0400,
+			/// <summary>
+			/// Message code for repainting the buttons of the title bar
+			/// HWND should be the windows handle, LParam and WParam are not used
+			/// </summary>
+			WM_USER_REDRAWBUTTONS = WM_USER + 0x02
 		}
 
 		/// <summary>
@@ -713,6 +722,17 @@ namespace BerichtManager.OwnControls
 		/// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc
 		[DllImport("user32.dll")]
 		private static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDc);
+
+		/// <summary>
+		/// Sends a message to the window
+		/// </summary>
+		/// <param name="hWnd">Handle to the window that will recieve the message</param>
+		/// <param name="wMsg">Message code of the message</param>
+		/// <param name="wParam">WParam of message</param>
+		/// <param name="lParam">LParam of message</param>
+		/// <returns></returns>
+		[DllImport("user32.dll")]
+		public static extern int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
 		#endregion
 
 		public BorderlessForm()
@@ -745,7 +765,59 @@ namespace BerichtManager.OwnControls
 				LParam = (IntPtr)0
 			};
 			ForceNCRedraw = true;
-			WM_NCPAINT(ref newMessage);
+			WndProc(ref newMessage);
+		}
+
+		/// <summary>
+		/// Redraw buttons on form and in graphics buffer
+		/// </summary>
+		/// <param name="m">Message passed from <see cref="WndProc(ref Message)"/></param>
+		private void RedrawButtons(ref Message m)
+		{
+			IntPtr hdc = GetWindowDC(m.HWnd);
+			BeginPaint(m.HWnd, out PAINTSTRUCT __);
+			using (SolidBrush b = new SolidBrush(TitleBarButtonHoverColor))
+			using (SolidBrush red = new SolidBrush(CloseButtonHoverColor))
+			using (SolidBrush backgrnd = new SolidBrush(IsActive ? TitleBarColorActive : TitleBarColorInactive))
+			{
+				using (Graphics graphics = Graphics.FromHdc(hdc))
+				{
+					{
+						if (HoveringButton == 0)
+							graphics.FillRectangle(red, CloseButtonBounds);
+						else
+							graphics.FillRectangle(backgrnd, CloseButtonBounds);
+						TextRenderer.DrawText(graphics, "r", new Font("webdings", TitleBarButtonFontSize), CloseButtonBounds, TitleBarButtonForeColor);
+						if (HoveringButton == 1)
+							graphics.FillRectangle(b, ZoomButtonBounds);
+						else
+							graphics.FillRectangle(backgrnd, ZoomButtonBounds);
+						TextRenderer.DrawText(graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), ZoomButtonBounds, TitleBarButtonForeColor);
+						if (HoveringButton == 2)
+							graphics.FillRectangle(b, ReduceButtonBounds);
+						else
+							graphics.FillRectangle(backgrnd, ReduceButtonBounds);
+						TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
+					}
+				}
+				if (HoveringButton == 0)
+					BufferedGraphics.Graphics.FillRectangle(red, CloseButtonBounds);
+				else
+					BufferedGraphics.Graphics.FillRectangle(backgrnd, CloseButtonBounds);
+				TextRenderer.DrawText(BufferedGraphics.Graphics, "r", new Font("webdings", TitleBarButtonFontSize), CloseButtonBounds, TitleBarButtonForeColor);
+				if (HoveringButton == 1)
+					BufferedGraphics.Graphics.FillRectangle(b, ZoomButtonBounds);
+				else
+					BufferedGraphics.Graphics.FillRectangle(backgrnd, ZoomButtonBounds);
+				TextRenderer.DrawText(BufferedGraphics.Graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), ZoomButtonBounds, TitleBarButtonForeColor);
+				if (HoveringButton == 2)
+					BufferedGraphics.Graphics.FillRectangle(b, ReduceButtonBounds);
+				else
+					BufferedGraphics.Graphics.FillRectangle(backgrnd, ReduceButtonBounds);
+				TextRenderer.DrawText(BufferedGraphics.Graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
+			}
+			EndPaint(m.HWnd, ref __);
+			ReleaseDC(Handle, hdc);
 		}
 
 		/// <summary>
@@ -1023,6 +1095,9 @@ namespace BerichtManager.OwnControls
 					break;
 				case WMMessageCodes.WM_NCLBUTTONUP:
 					WM_NCLBUTTONUP(ref m);
+					break;
+				case WMMessageCodes.WM_USER_REDRAWBUTTONS:
+					RedrawButtons(ref m);
 					break;
 				default:
 					base.WndProc(ref m);
