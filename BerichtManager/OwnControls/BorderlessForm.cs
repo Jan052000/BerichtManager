@@ -1145,6 +1145,7 @@ namespace BerichtManager.OwnControls
 		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
 		private void WM_MOVING(ref Message m)
 		{
+			int mouseOffsetY = 5;
 			if (WindowState == FormWindowState.Maximized)
 			{
 				ShouldMaximizeOnRestore = false;
@@ -1155,15 +1156,15 @@ namespace BerichtManager.OwnControls
 				{
 					currentWindow.left = MousePosition.X - newOriginalBounds.Width / 2;
 					currentWindow.right = MousePosition.X + newOriginalBounds.Width / 2;
-					currentWindow.top = MousePosition.Y;
-					currentWindow.bottom = MousePosition.Y + newOriginalBounds.Height;
+					currentWindow.top = MousePosition.Y - mouseOffsetY;
+					currentWindow.bottom = MousePosition.Y + newOriginalBounds.Height - mouseOffsetY;
 				}
 				else
 				{
 					currentWindow.left = (int)Math.Floor((double)MousePosition.X - newOriginalBounds.Width / 2);
 					currentWindow.right = (int)Math.Ceiling((double)MousePosition.X + newOriginalBounds.Width / 2);
-					currentWindow.top = MousePosition.Y;
-					currentWindow.bottom = MousePosition.Y + newOriginalBounds.Height;
+					currentWindow.top = MousePosition.Y - mouseOffsetY;
+					currentWindow.bottom = MousePosition.Y + newOriginalBounds.Height - mouseOffsetY;
 				}
 				Marshal.StructureToPtr(currentWindow, m.LParam, true);
 				WindowState = FormWindowState.Normal;
