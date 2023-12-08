@@ -487,6 +487,10 @@ namespace BerichtManager.OwnControls
 			/// </summary>
 			WM_NCLBUTTONUP = 0xA2,
 			/// <summary>
+			/// Sent if the nca is double clicked with left mouse button
+			/// </summary>
+			WM_NCLBUTTONDBLCLK = 0xA3,
+			/// <summary>
 			/// Start of WM_USER message range for private messages in this control (0x0400 thorugh 0x7FFF)
 			/// </summary>
 			WM_USER = 0x0400,
@@ -1043,7 +1047,7 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
-		/// Hanldes left button down in non client area
+		/// Handles left button down in non client area
 		/// </summary>
 		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
 		private void WM_NCLBUTTONDOWN(ref Message m)
@@ -1067,7 +1071,7 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
-		/// Hanldes left button up in non client area
+		/// Handles left button up in non client area
 		/// </summary>
 		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
 		private void WM_NCLBUTTONUP(ref Message m)
@@ -1094,6 +1098,27 @@ namespace BerichtManager.OwnControls
 					base.WndProc(ref m);
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Handles double click on nca
+		/// </summary>
+		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
+		private void WM_NCLBUTTONDBLCLK(ref Message m)
+		{
+			Point point = new Point(IntPtr.Size == 8 ? unchecked((int)m.LParam.ToInt64()) : m.LParam.ToInt32());
+			Rectangle titleBar = new Rectangle(0, 0, Width, TitleBarHeight);
+			if (!titleBar.Contains(ToWindowCoordinates(point)))
+			{
+				base.WndProc(ref m);
+				return;
+			}
+			ShouldMaximizeOnRestore = !ShouldMaximizeOnRestore;
+			if (WindowState == FormWindowState.Maximized)
+				WindowState = FormWindowState.Normal;
+			else
+				WindowState = FormWindowState.Maximized;
+			m.Result = (IntPtr)0;
 		}
 
 		protected override void WndProc(ref Message m)
@@ -1129,6 +1154,9 @@ namespace BerichtManager.OwnControls
 					break;
 				case WMMessageCodes.WM_USER_REDRAWTITLE:
 					RedrawTitle(ref m);
+					break;
+				case WMMessageCodes.WM_NCLBUTTONDBLCLK:
+					WM_NCLBUTTONDBLCLK(ref m);
 					break;
 				default:
 					base.WndProc(ref m);
