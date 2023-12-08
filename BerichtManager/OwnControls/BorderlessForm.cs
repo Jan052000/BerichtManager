@@ -494,7 +494,11 @@ namespace BerichtManager.OwnControls
 			/// Message code for repainting the buttons of the title bar
 			/// HWND should be the windows handle, LParam and WParam are not used
 			/// </summary>
-			WM_USER_REDRAWBUTTONS = WM_USER + 0x02
+			WM_USER_REDRAWBUTTONS = WM_USER + 0x02,
+			/// <summary>
+			/// Message code for repainting title
+			/// </summary>
+			WM_USER_REDRAWTITLE = WM_USER + 0x03
 		}
 
 		/// <summary>
@@ -586,7 +590,7 @@ namespace BerichtManager.OwnControls
 				if (Text != value)
 				{
 					base.Text = value;
-					ForceRedrawNCA();
+					SendMessage(Handle, (int)WMMessageCodes.WM_USER_REDRAWTITLE, (IntPtr)0, (IntPtr)0);
 				}
 			}
 		}
@@ -766,6 +770,30 @@ namespace BerichtManager.OwnControls
 			};
 			ForceNCRedraw = true;
 			WndProc(ref newMessage);
+		}
+
+		/// <summary>
+		/// Redraw title on form and in graphics buffer
+		/// </summary>
+		/// <param name="m">Message passed from <see cref="WndProc(ref Message)"/></param>
+		private void RedrawTitle(ref Message m)
+		{
+			IntPtr hdc = GetWindowDC(m.HWnd);
+			BeginPaint(m.HWnd, out PAINTSTRUCT __);
+			using (SolidBrush backgrnd = new SolidBrush(IsActive ? TitleBarColorActive : TitleBarColorInactive))
+			using (Pen p = new Pen(IsActive ? ActiveTitleColor : InactiveTitleColor))
+			{
+				Rectangle titleRect = new Rectangle(IconBounds.X + IconBounds.Width + TextToIconPadding, 0, ReduceButtonBounds.X - (IconBounds.X + IconBounds.Width + TextToIconPadding), TitleBarHeight);
+				using (Graphics graphics = Graphics.FromHdc(hdc))
+				{
+					graphics.FillRectangle(backgrnd, titleRect);
+					TextRenderer.DrawText(graphics, RenderedText, Font, new Point(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
+				}
+				BufferedGraphics.Graphics.FillRectangle(backgrnd, titleRect);
+				TextRenderer.DrawText(BufferedGraphics.Graphics, RenderedText, Font, new Point(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
+			}
+			EndPaint(m.HWnd, ref __);
+			ReleaseDC(m.HWnd, hdc);
 		}
 
 		/// <summary>
@@ -1098,6 +1126,9 @@ namespace BerichtManager.OwnControls
 					break;
 				case WMMessageCodes.WM_USER_REDRAWBUTTONS:
 					RedrawButtons(ref m);
+					break;
+				case WMMessageCodes.WM_USER_REDRAWTITLE:
+					RedrawTitle(ref m);
 					break;
 				default:
 					base.WndProc(ref m);
