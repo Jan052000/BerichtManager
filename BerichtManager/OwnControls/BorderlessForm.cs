@@ -491,6 +491,10 @@ namespace BerichtManager.OwnControls
 			/// </summary>
 			WM_NCLBUTTONDBLCLK = 0xA3,
 			/// <summary>
+			/// Sent to window that is moved by the user
+			/// </summary>
+			WM_MOVING = 0x0216,
+			/// <summary>
 			/// Start of WM_USER message range for private messages in this control (0x0400 thorugh 0x7FFF)
 			/// </summary>
 			WM_USER = 0x0400,
@@ -1121,6 +1125,38 @@ namespace BerichtManager.OwnControls
 			m.Result = (IntPtr)0;
 		}
 
+		/// <summary>
+		/// Handles window being moved by user
+		/// </summary>
+		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
+		private void WM_MOVING(ref Message m)
+		{
+			if (WindowState == FormWindowState.Maximized)
+			{
+				ShouldMaximizeOnRestore = false;
+				Rectangle newOriginalBounds = new Rectangle(OriginalBounds.X, OriginalBounds.Y, OriginalBounds.Width, OriginalBounds.Height);
+				RECT currentWindow = (RECT)m.GetLParam(typeof(RECT));
+				WindowState = FormWindowState.Normal;
+				if (Width % 2 == 0)
+				{
+					currentWindow.left = MousePosition.X - newOriginalBounds.Width / 2;
+					currentWindow.right = MousePosition.X + newOriginalBounds.Width / 2;
+					currentWindow.top = MousePosition.Y;
+					currentWindow.bottom = MousePosition.Y + newOriginalBounds.Height;
+				}
+				else
+				{
+					currentWindow.left = (int)Math.Floor((double)MousePosition.X - newOriginalBounds.Width / 2);
+					currentWindow.right = (int)Math.Ceiling((double)MousePosition.X + newOriginalBounds.Width / 2);
+					currentWindow.top = MousePosition.Y;
+					currentWindow.bottom = MousePosition.Y + newOriginalBounds.Height;
+				}
+				Marshal.StructureToPtr(currentWindow, m.LParam, true);
+				WindowState = FormWindowState.Normal;
+			}
+			m.Result = (IntPtr)1;
+		}
+
 		protected override void WndProc(ref Message m)
 		{
 			if (FormBorderStyle != FormBorderStyle.None)
@@ -1157,6 +1193,9 @@ namespace BerichtManager.OwnControls
 					break;
 				case WMMessageCodes.WM_NCLBUTTONDBLCLK:
 					WM_NCLBUTTONDBLCLK(ref m);
+					break;
+				case WMMessageCodes.WM_MOVING:
+					WM_MOVING(ref m);
 					break;
 				default:
 					base.WndProc(ref m);
