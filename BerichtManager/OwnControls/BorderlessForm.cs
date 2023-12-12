@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace BerichtManager.OwnControls
 {
@@ -48,6 +49,16 @@ namespace BerichtManager.OwnControls
 		/// Tells the form wether or not to maximize when restoring position from minimized state
 		/// </summary>
 		private bool ShouldMaximizeOnRestore { get; set; } = false;
+
+		/// <summary>
+		/// Indicates wether or not a windows key is down
+		/// </summary>
+		private bool IsWindowsKeyDown { get => Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin); }
+
+		/// <summary>
+		/// Stores the previous window state
+		/// </summary>
+		private FormWindowState PreviousState { get; set; }
 
 		private Screen lastScreen { get; set; }
 		/// <summary>
@@ -665,6 +676,7 @@ namespace BerichtManager.OwnControls
 				{
 					FormWindowState oldValue = windowState;
 					HoveringButton = -1;
+					PreviousState = windowState;
 					windowState = value;
 					//Save the old bounds when switching from normal state 
 					if (oldValue == FormWindowState.Normal)
@@ -805,6 +817,8 @@ namespace BerichtManager.OwnControls
 			SetStyle(ControlStyles.ContainerControl | ControlStyles.CacheText | ControlStyles.OptimizedDoubleBuffer, true);
 			base.FormBorderStyle = FormBorderStyle.None;
 			MinimumSize = new Size(3 * TitleBarButtonWidth + 3, TitleBarHeight);
+			//Enable key preview to let form intercept WIN + Arrow combos
+			KeyPreview = true;
 		}
 
 		/// <summary>
@@ -1278,12 +1292,43 @@ namespace BerichtManager.OwnControls
 			}
 		}
 
+		protected override bool ProcessKeyPreview(ref Message m)
+		{
+			//Process command for snapping window to edge of screen
+			if (IsWindowsKeyDown)
+			{
+				switch ((Keys)m.WParam)
+				{
+					case Keys.Up:
+						if (WindowState == FormWindowState.Minimized)
+							WindowState = PreviousState;
+						else
+							WindowState = FormWindowState.Maximized;
+						return true;
+					case Keys.Right:
+						WindowState = FormWindowState.Right;
+						return true;
+					case Keys.Down:
+						if (WindowState == FormWindowState.Maximized)
+							WindowState = FormWindowState.Normal;
+						else
+							WindowState = FormWindowState.Minimized;
+						return true;
+					case Keys.Left:
+						WindowState = FormWindowState.Left;
+						return true;
+				}
+			}
+			return base.ProcessKeyPreview(ref m);
+		}
+
 		protected override CreateParams CreateParams
 		{
 			get
 			{
 				CreateParams cp = base.CreateParams;
-				cp.ExStyle |= 0x02000000;
+				cp.Style &= ~0x00010000;    // => WS_MAXIMIZEBOX = false
+				cp.ExStyle |= 0x02000000;   // => WS_EX_COMPOSITED = true
 				return cp;
 			}
 		}
