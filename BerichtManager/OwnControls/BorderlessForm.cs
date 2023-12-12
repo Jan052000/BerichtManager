@@ -885,23 +885,23 @@ namespace BerichtManager.OwnControls
 			{
 				using (Graphics graphics = Graphics.FromHdc(hdc))
 				{
-					{
-						if (HoveringButton == 0)
-							graphics.FillRectangle(red, CloseButtonBounds);
-						else
-							graphics.FillRectangle(backgrnd, CloseButtonBounds);
-						TextRenderer.DrawText(graphics, "r", new Font("webdings", TitleBarButtonFontSize), CloseButtonBounds, TitleBarButtonForeColor);
-						if (HoveringButton == 1)
-							graphics.FillRectangle(b, ZoomButtonBounds);
-						else
-							graphics.FillRectangle(backgrnd, ZoomButtonBounds);
-						TextRenderer.DrawText(graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), ZoomButtonBounds, TitleBarButtonForeColor);
-						if (HoveringButton == 2)
-							graphics.FillRectangle(b, ReduceButtonBounds);
-						else
-							graphics.FillRectangle(backgrnd, ReduceButtonBounds);
-						TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
-					}
+					if (HoveringButton == 0)
+						graphics.FillRectangle(red, CloseButtonBounds);
+					else
+						graphics.FillRectangle(backgrnd, CloseButtonBounds);
+					TextRenderer.DrawText(graphics, "r", new Font("webdings", TitleBarButtonFontSize), CloseButtonBounds, TitleBarButtonForeColor);
+					if (HoveringButton == 1)
+						graphics.FillRectangle(b, ZoomButtonBounds);
+					else
+						graphics.FillRectangle(backgrnd, ZoomButtonBounds);
+					TextRenderer.DrawText(graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), ZoomButtonBounds, TitleBarButtonForeColor);
+					if (HoveringButton == 2)
+						graphics.FillRectangle(b, ReduceButtonBounds);
+					else
+						graphics.FillRectangle(backgrnd, ReduceButtonBounds);
+					TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
+					if (CloseButtonBounds.Contains(IconBounds) || ZoomButtonBounds.Contains(IconBounds) || ReduceButtonBounds.Contains(IconBounds))
+						graphics.DrawIcon(Icon, IconBounds);
 				}
 				if (HoveringButton == 0)
 					BufferedGraphics.Graphics.FillRectangle(red, CloseButtonBounds);
@@ -919,6 +919,8 @@ namespace BerichtManager.OwnControls
 					BufferedGraphics.Graphics.FillRectangle(backgrnd, ReduceButtonBounds);
 				TextRenderer.DrawText(BufferedGraphics.Graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
 			}
+			if (CloseButtonBounds.Contains(IconBounds) || ZoomButtonBounds.Contains(IconBounds) || ReduceButtonBounds.Contains(IconBounds))
+				BufferedGraphics.Graphics.DrawIcon(Icon, IconBounds);
 			EndPaint(m.HWnd, ref __);
 			ReleaseDC(Handle, hdc);
 		}
@@ -1108,7 +1110,6 @@ namespace BerichtManager.OwnControls
 		{
 			if (WindowState == FormWindowState.Minimized)
 				WindowState = FormWindowState.Normal;
-			//base.DefWndProc(ref m);
 			else
 			{
 				IsActive = m.WParam.ToInt32() == 1;
