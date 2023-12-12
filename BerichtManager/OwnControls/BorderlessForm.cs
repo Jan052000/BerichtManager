@@ -509,6 +509,10 @@ namespace BerichtManager.OwnControls
 			/// </summary>
 			WM_MOVING = 0x0216,
 			/// <summary>
+			/// Sent to window when it stopped moving or sizing
+			/// </summary>
+			WM_EXITSIZEMOVE = 0x0232,
+			/// <summary>
 			/// Start of WM_USER message range for private messages in this control (0x0400 thorugh 0x7FFF)
 			/// </summary>
 			WM_USER = 0x0400,
@@ -618,6 +622,33 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
+		/// Valid states for the window
+		/// </summary>
+		private enum FormWindowState
+		{
+			/// <summary>
+			/// Window is normal
+			/// </summary>
+			Normal,
+			/// <summary>
+			/// Window is minimized
+			/// </summary>
+			Minimized,
+			/// <summary>
+			/// Window is maximized
+			/// </summary>
+			Maximized,
+			/// <summary>
+			/// Window is docked to left of screen
+			/// </summary>
+			Left,
+			/// <summary>
+			/// Window is docked to right of screen
+			/// </summary>
+			Right
+		}
+
+		/// <summary>
 		/// Holds the <see cref="FormWindowState"/> of the window
 		/// </summary>
 		private FormWindowState windowState = FormWindowState.Normal;
@@ -664,6 +695,14 @@ namespace BerichtManager.OwnControls
 							LastScreen = Screen.FromControl(this);
 							//Set window to entire screen minus task bar
 							Bounds = LastScreen.WorkingArea;
+							break;
+						case FormWindowState.Left:
+							//LastScreen = Screen.FromControl(this);
+							Bounds = new Rectangle(LastScreen.WorkingArea.X, LastScreen.WorkingArea.Y, LastScreen.WorkingArea.Width / 2, LastScreen.WorkingArea.Height);
+							break;
+						case FormWindowState.Right:
+							//LastScreen = Screen.FromControl(this);
+							Bounds = new Rectangle(LastScreen.WorkingArea.X + LastScreen.WorkingArea.Width / 2 - 1, LastScreen.WorkingArea.Y, LastScreen.WorkingArea.Width / 2, LastScreen.WorkingArea.Height);
 							break;
 					}
 				}
@@ -1146,7 +1185,8 @@ namespace BerichtManager.OwnControls
 		private void WM_MOVING(ref Message m)
 		{
 			int mouseOffsetY = 5;
-			if (WindowState == FormWindowState.Maximized)
+			//Reset window to original size and snap it to mouse if window is docked on screen
+			if (WindowState == FormWindowState.Maximized || WindowState == FormWindowState.Left || WindowState == FormWindowState.Right)
 			{
 				ShouldMaximizeOnRestore = false;
 				Rectangle newOriginalBounds = new Rectangle(OriginalBounds.X, OriginalBounds.Y, OriginalBounds.Width, OriginalBounds.Height);
@@ -1170,6 +1210,23 @@ namespace BerichtManager.OwnControls
 				WindowState = FormWindowState.Normal;
 			}
 			m.Result = (IntPtr)1;
+		}
+
+		/// <summary>
+		/// Handles move or size ending
+		/// </summary>
+		/// <param name="m">Reference to the <see cref="Message"/> recieved from <see cref="WndProc(ref Message)"/></param>
+		private void WM_EXITSIZEMOVE(ref Message m)
+		{
+			LastScreen = Screen.FromPoint(MousePosition);
+			Point mousePos = MousePosition;
+			if (mousePos.X == LastScreen.WorkingArea.X)
+				WindowState = FormWindowState.Left;
+			else if (mousePos.X >= LastScreen.WorkingArea.X + LastScreen.WorkingArea.Width - 2)
+				WindowState = FormWindowState.Right;
+			else if (mousePos.Y <= LastScreen.WorkingArea.Y)
+				WindowState = FormWindowState.Maximized;
+			m.Result = (IntPtr)0;
 		}
 
 		protected override void WndProc(ref Message m)
@@ -1211,6 +1268,9 @@ namespace BerichtManager.OwnControls
 					break;
 				case WMMessageCodes.WM_MOVING:
 					WM_MOVING(ref m);
+					break;
+				case WMMessageCodes.WM_EXITSIZEMOVE:
+					WM_EXITSIZEMOVE(ref m);
 					break;
 				default:
 					base.WndProc(ref m);
