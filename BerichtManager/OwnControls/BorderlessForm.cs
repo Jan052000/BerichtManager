@@ -60,6 +60,9 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		private FormWindowState PreviousState { get; set; }
 
+		/// <summary>
+		/// Stores the screen this window was last on
+		/// </summary>
 		private Screen lastScreen { get; set; }
 		/// <summary>
 		/// Stores the screen this window was last on
