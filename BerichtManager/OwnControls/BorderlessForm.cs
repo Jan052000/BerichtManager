@@ -56,6 +56,11 @@ namespace BerichtManager.OwnControls
 		private bool IsWindowsKeyDown { get => Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin); }
 
 		/// <summary>
+		/// Indicates wether or not a shift key is down
+		/// </summary>
+		private bool IsShiftDown { get => Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift); }
+
+		/// <summary>
 		/// Stores the previous window state
 		/// </summary>
 		private FormWindowState PreviousState { get; set; }
@@ -1304,7 +1309,7 @@ namespace BerichtManager.OwnControls
 		protected override bool ProcessKeyPreview(ref Message m)
 		{
 			//Process command for snapping window to edge of screen
-			if (IsWindowsKeyDown)
+			if (IsWindowsKeyDown && !IsShiftDown)
 			{
 				switch ((Keys)m.WParam)
 				{
