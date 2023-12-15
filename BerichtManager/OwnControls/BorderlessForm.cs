@@ -680,51 +680,48 @@ namespace BerichtManager.OwnControls
 			get => windowState;
 			set
 			{
-				if (windowState != value)
+				FormWindowState oldValue = windowState;
+				HoveringButton = -1;
+				PreviousState = windowState;
+				windowState = value;
+				//Save the old bounds when switching from normal state 
+				if (oldValue == FormWindowState.Normal)
+					OriginalBounds = new Rectangle(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
+				switch (value)
 				{
-					FormWindowState oldValue = windowState;
-					HoveringButton = -1;
-					PreviousState = windowState;
-					windowState = value;
-					//Save the old bounds when switching from normal state 
-					if (oldValue == FormWindowState.Normal)
-						OriginalBounds = new Rectangle(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
-					switch (value)
-					{
-						case FormWindowState.Normal:
-							//Force clearing the buffers on next WM_NCPAINT
-							if (oldValue == FormWindowState.Minimized)
-								ForceNCRedraw = true;
-							//If last state before minimizing was Maximized then maximize window else restore bounds to original
-							if (ShouldMaximizeOnRestore)
-							{
-								Bounds = LastScreen.WorkingArea;
-								windowState = FormWindowState.Maximized;
-							}
-							else
-							{
-								Bounds = new Rectangle(OriginalBounds.X, OriginalBounds.Y, OriginalBounds.Width, OriginalBounds.Height);
-							}
-							break;
-						case FormWindowState.Minimized:
-							//Move window to the out of bounds area window moves its minimized windows to
-							Bounds = new Rectangle(-32000, -32000, OriginalBounds.Width, OriginalBounds.Height);
-							break;
-						case FormWindowState.Maximized:
-							//Save which screen the form was last on
-							LastScreen = Screen.FromControl(this);
-							//Set window to entire screen minus task bar
+					case FormWindowState.Normal:
+						//Force clearing the buffers on next WM_NCPAINT
+						if (oldValue == FormWindowState.Minimized)
+							ForceNCRedraw = true;
+						//If last state before minimizing was Maximized then maximize window else restore bounds to original
+						if (ShouldMaximizeOnRestore)
+						{
 							Bounds = LastScreen.WorkingArea;
-							break;
-						case FormWindowState.Left:
-							//LastScreen = Screen.FromControl(this);
-							Bounds = new Rectangle(LastScreen.WorkingArea.X, LastScreen.WorkingArea.Y, LastScreen.WorkingArea.Width / 2, LastScreen.WorkingArea.Height);
-							break;
-						case FormWindowState.Right:
-							//LastScreen = Screen.FromControl(this);
-							Bounds = new Rectangle(LastScreen.WorkingArea.X + LastScreen.WorkingArea.Width / 2 - 1, LastScreen.WorkingArea.Y, LastScreen.WorkingArea.Width / 2, LastScreen.WorkingArea.Height);
-							break;
-					}
+							windowState = FormWindowState.Maximized;
+						}
+						else
+						{
+							Bounds = new Rectangle(OriginalBounds.X, OriginalBounds.Y, OriginalBounds.Width, OriginalBounds.Height);
+						}
+						break;
+					case FormWindowState.Minimized:
+						//Move window to the out of bounds area window moves its minimized windows to
+						Bounds = new Rectangle(-32000, -32000, OriginalBounds.Width, OriginalBounds.Height);
+						break;
+					case FormWindowState.Maximized:
+						//Save which screen the form was last on
+						LastScreen = Screen.FromControl(this);
+						//Set window to entire screen minus task bar
+						Bounds = LastScreen.WorkingArea;
+						break;
+					case FormWindowState.Left:
+						//LastScreen = Screen.FromControl(this);
+						Bounds = new Rectangle(LastScreen.WorkingArea.X, LastScreen.WorkingArea.Y, LastScreen.WorkingArea.Width / 2, LastScreen.WorkingArea.Height);
+						break;
+					case FormWindowState.Right:
+						//LastScreen = Screen.FromControl(this);
+						Bounds = new Rectangle(LastScreen.WorkingArea.X + LastScreen.WorkingArea.Width / 2 - 1, LastScreen.WorkingArea.Y, LastScreen.WorkingArea.Width / 2, LastScreen.WorkingArea.Height);
+						break;
 				}
 			}
 		}
@@ -1309,8 +1306,28 @@ namespace BerichtManager.OwnControls
 		protected override bool ProcessKeyPreview(ref Message m)
 		{
 			//Process command for snapping window to edge of screen
-			if (IsWindowsKeyDown && !IsShiftDown)
+			if (IsWindowsKeyDown)
 			{
+				//If shift is down move window to another screen
+				if (IsShiftDown)
+				{
+					switch ((Keys)m.WParam)
+					{
+						case Keys.Left:
+						case Keys.Right:
+							//get offset from top left of current screen
+							int xOffset = OriginalBounds.X - LastScreen.WorkingArea.X;
+							int yOffset = OriginalBounds.Y - LastScreen.WorkingArea.Y;
+							//set new screen
+							LastScreen = Screen.FromControl(this);
+							//translate original bounds to new screen
+							OriginalBounds = new Rectangle(LastScreen.WorkingArea.X + xOffset, LastScreen.WorkingArea.Y + yOffset, OriginalBounds.Width, OriginalBounds.Height);
+							//update window state to fit window to screen
+							WindowState = WindowState;
+							return true;
+					}
+					return true;
+				}
 				switch ((Keys)m.WParam)
 				{
 					case Keys.Up:
