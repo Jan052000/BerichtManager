@@ -1088,7 +1088,6 @@ namespace BerichtManager.OwnControls
 		/// https://stackoverflow.com/questions/28277039/how-to-set-the-client-area-clientrectangle-in-a-borderless-form
 		private void WM_NCCALCSIZE(ref Message m)
 		{
-			ForceNCRedraw = true;
 			if (m.WParam != (IntPtr)0)
 			{
 				NCCALCSIZE_PARAMS nccp = (NCCALCSIZE_PARAMS)m.GetLParam(typeof(NCCALCSIZE_PARAMS));
@@ -1102,6 +1101,7 @@ namespace BerichtManager.OwnControls
 				rect.top += TitleBarHeight;
 				Marshal.StructureToPtr(rect, m.LParam, true);
 			}
+			ForceNCRedraw = true;
 			m.Result = (IntPtr)0;
 		}
 
