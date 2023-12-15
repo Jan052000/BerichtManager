@@ -1226,7 +1226,7 @@ namespace BerichtManager.OwnControls
 				}
 				else
 				{
-					currentWindow.left = (int)Math.Floor((double)MousePosition.X - newOriginalBounds.Width / 2);
+					currentWindow.left = (int)Math.Ceiling((double)MousePosition.X - newOriginalBounds.Width / 2) - 1;
 					currentWindow.right = (int)Math.Ceiling((double)MousePosition.X + newOriginalBounds.Width / 2);
 					currentWindow.top = MousePosition.Y - mouseOffsetY;
 					currentWindow.bottom = MousePosition.Y + newOriginalBounds.Height - mouseOffsetY;
