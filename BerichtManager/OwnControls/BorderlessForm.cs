@@ -1188,6 +1188,11 @@ namespace BerichtManager.OwnControls
 				base.WndProc(ref m);
 				return;
 			}
+			if (IconBounds.Contains(ToWindowCoordinates(point)))
+			{
+				Close();
+				return;
+			}
 			ShouldMaximizeOnRestore = !ShouldMaximizeOnRestore;
 			if (WindowState == FormWindowState.Maximized)
 				WindowState = FormWindowState.Normal;
