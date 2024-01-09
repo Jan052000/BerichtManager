@@ -273,7 +273,7 @@ namespace BerichtManager.WebUntisClient
 				if (int.TryParse(thisWeekStart.ToString("yyyyMMdd"), out int weekStart)) { }
 				if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
 
-				Holidays holidays = GetHolidays(user, client);
+				Holidays holidays = GetHolidays(client);
 				if (holidays.result == null)
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "An error has occurred on the web untis server", "Server did not respond");
@@ -304,10 +304,9 @@ namespace BerichtManager.WebUntisClient
 		/// Requests public holidays and vacations from WebUntis jsonrpc server
 		/// if no client is provided a new client will be created for the method call
 		/// </summary>
-		/// <param name="user"><see cref="User"/> object containing login information</param>
-		/// <param name="useClient"><see cref="HttpClient"/> to be used for requests</param>
+		/// <param name="useClient"><see cref="HttpClient"/> to be used for requests assumes client is logged in and has cookies and api key set</param>
 		/// <returns><see cref="Holidays"/> object if request was successful or null if not</returns>
-		private Holidays GetHolidays(Config.User user = null, HttpClient useClient = null)
+		private Holidays GetHolidays(HttpClient useClient = null)
 		{
 			UpdateConfigData();
 			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
@@ -316,43 +315,83 @@ namespace BerichtManager.WebUntisClient
 			if (useClient != null) client = useClient;
 			else
 			{
-				client = new HttpClient();
-
-				//Ensure complete headers
+				//Enable cookies to get JSESSION token from WebUntis server
+				HttpClientHandler httpClientHandler = new HttpClientHandler();
+				httpClientHandler.CookieContainer = new CookieContainer();
+				httpClientHandler.UseCookies = true;
+				client = new HttpClient(httpClientHandler);
 				HttpResponseMessage responseMessage;
+				string jSpringURL = "https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check";
+				Dictionary<string, string> loginContent;
+
+				//Generate Headers and Login
 				if (ConfigHandler.StayLoggedIn())
 				{
-					responseMessage = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + SchoolName + "&j_username=" + ConfigHandler.WebUntisUsername() + "&j_password=" + ConfigHandler.WebUntisPassword()).Result;
+					//Obtain JSessionId
+					loginContent = new Dictionary<string, string>()
+					{
+						{ "school", SchoolName },
+						{ "j_username", ConfigHandler.WebUntisUsername() },
+						{ "j_password", ConfigHandler.WebUntisPassword() },
+						{ "token", "" }
+					};
 				}
 				else
 				{
-					if (user == null)
-					{
-						user = ConfigHandler.DoLogin();
-					}
+					Config.User user = ConfigHandler.DoLogin();
 					if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 					{
 						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");
-						return new Holidays();
+						return null;
 					}
 					else
 					{
-						responseMessage = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check?school=" + SchoolName + "&j_username=" + user.Username + "&j_password=" + user.Password).Result;
+						loginContent = new Dictionary<string, string>()
+						{
+							{ "school", SchoolName },
+							{ "j_username", user.Username },
+							{ "j_password", user.Password },
+							{ "token", "" }
+						};
 					}
 				}
+				responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(loginContent)).Result;
+				//HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
+
+				//Set cookie data
+				string newCookie = "schoolname=\"_" + System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
+				if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
+				{
+					List<string> cookieHeaders = new List<string>();
+					IEnumerator<string> cookieEnumerator = setCookies.GetEnumerator();
+					while (cookieEnumerator.MoveNext())
+					{
+						if (cookieEnumerator.Current.Contains("traceId"))
+							cookieHeaders = cookieEnumerator.Current.Split(';').ToList<string>();
+					}
+					cookieHeaders.ForEach(header =>
+					{
+						if (header.Trim().Contains("traceId"))
+							newCookie += header + "; ";
+					});
+				}
+				foreach (Cookie cookie in httpClientHandler.CookieContainer.GetCookies(new Uri(jSpringURL)))
+				{
+					if (cookie.Name.Equals("JSESSIONID"))
+						newCookie += cookie.Name + "=" + cookie.Value;
+				}
+				client.DefaultRequestHeaders.Add("Cookie", newCookie);
 
 				//Obtain Api Key
-				if (client.DefaultRequestHeaders.Authorization == null)
+				string apiKey = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
+				if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
 				{
-					string apiKey = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
-					if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
-					{
-						client.DefaultRequestHeaders.Authorization = authorize;
-					}
-					else
-					{
-						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
-					}
+					client.DefaultRequestHeaders.Authorization = authorize;
+				}
+				else
+				{
+					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+					return null;
 				}
 			}
 
