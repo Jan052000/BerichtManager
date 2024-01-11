@@ -741,9 +741,9 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Tells the window manager that painting has been completed (Needs to be called after <see cref="BeginPaint(IntPtr, out PAINTSTRUCT)"/> when painting is completed)
 		/// </summary>
-		/// <param name="hWnd"></param>
-		/// <param name="lpPaint"></param>
-		/// <returns><see langword="true"/></returns>
+		/// <param name="hWnd">A pointer to the hndle of the window you want to draw on</param>
+		/// <param name="lpPaint">A <see cref="PAINTSTRUCT"/> object</param>
+		/// <returns>A value other than <see langword="null"/></returns>
 		/// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint
 		[DllImport("user32.dll")]
 		private static extern bool EndPaint(IntPtr hWnd, [In] ref PAINTSTRUCT lpPaint);
