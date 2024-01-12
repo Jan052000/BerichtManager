@@ -1303,7 +1303,8 @@ namespace BerichtManager
 		private void menuStrip1_Paint(object sender, PaintEventArgs e)
 		{
 			int versionNumberWidth = (int)e.Graphics.MeasureString(VersionNumber, menuStrip1.Font).Width / 2;
-			TextRenderer.DrawText(e.Graphics, VersionString, menuStrip1.Font, new Point(e.ClipRectangle.X + e.ClipRectangle.Width / 2 - versionNumberWidth, e.ClipRectangle.Y + menuStrip1.Padding.Top + 2), menuStrip1.ForeColor);
+			Control control = sender as Control;
+			TextRenderer.DrawText(e.Graphics, VersionString, menuStrip1.Font, new Point(control.Location.X + control.Width / 2 - versionNumberWidth, control.Location.Y + control.Padding.Top + 2), control.ForeColor);
 		}
 
 		private void tvReports_KeyUp(object sender, KeyEventArgs e)
