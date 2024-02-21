@@ -893,7 +893,7 @@ namespace BerichtManager.OwnControls
 		{
 			IntPtr hdc = GetWindowDC(m.HWnd);
 			BeginPaint(m.HWnd, out PAINTSTRUCT __);
-			using (SolidBrush b = new SolidBrush(TitleBarButtonHoverColor))
+			using (SolidBrush hover = new SolidBrush(TitleBarButtonHoverColor))
 			using (SolidBrush red = new SolidBrush(CloseButtonHoverColor))
 			using (SolidBrush backgrnd = new SolidBrush(IsActive ? TitleBarColorActive : TitleBarColorInactive))
 			{
@@ -905,12 +905,12 @@ namespace BerichtManager.OwnControls
 						graphics.FillRectangle(backgrnd, CloseButtonBounds);
 					TextRenderer.DrawText(graphics, "r", new Font("webdings", TitleBarButtonFontSize), CloseButtonBounds, TitleBarButtonForeColor);
 					if (HoveringButton == 1)
-						graphics.FillRectangle(b, ZoomButtonBounds);
+						graphics.FillRectangle(hover, ZoomButtonBounds);
 					else
 						graphics.FillRectangle(backgrnd, ZoomButtonBounds);
 					TextRenderer.DrawText(graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), ZoomButtonBounds, TitleBarButtonForeColor);
 					if (HoveringButton == 2)
-						graphics.FillRectangle(b, ReduceButtonBounds);
+						graphics.FillRectangle(hover, ReduceButtonBounds);
 					else
 						graphics.FillRectangle(backgrnd, ReduceButtonBounds);
 					TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
@@ -925,12 +925,12 @@ namespace BerichtManager.OwnControls
 					BufferedGraphics.Graphics.FillRectangle(backgrnd, CloseButtonBounds);
 				TextRenderer.DrawText(BufferedGraphics.Graphics, "r", new Font("webdings", TitleBarButtonFontSize), CloseButtonBounds, TitleBarButtonForeColor);
 				if (HoveringButton == 1)
-					BufferedGraphics.Graphics.FillRectangle(b, ZoomButtonBounds);
+					BufferedGraphics.Graphics.FillRectangle(hover, ZoomButtonBounds);
 				else
 					BufferedGraphics.Graphics.FillRectangle(backgrnd, ZoomButtonBounds);
 				TextRenderer.DrawText(BufferedGraphics.Graphics, WindowState == FormWindowState.Maximized ? "2" : "1", new Font("webdings", TitleBarButtonFontSize), ZoomButtonBounds, TitleBarButtonForeColor);
 				if (HoveringButton == 2)
-					BufferedGraphics.Graphics.FillRectangle(b, ReduceButtonBounds);
+					BufferedGraphics.Graphics.FillRectangle(hover, ReduceButtonBounds);
 				else
 					BufferedGraphics.Graphics.FillRectangle(backgrnd, ReduceButtonBounds);
 				TextRenderer.DrawText(BufferedGraphics.Graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
