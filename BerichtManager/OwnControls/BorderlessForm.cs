@@ -906,7 +906,7 @@ namespace BerichtManager.OwnControls
 					else
 						graphics.FillRectangle(backgrnd, ReduceButtonBounds);
 					TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
-					if (CloseButtonBounds.Contains(IconBounds) || ZoomButtonBounds.Contains(IconBounds) || ReduceButtonBounds.Contains(IconBounds))
+					if (CloseButtonBounds.IntersectsWith(IconBounds) || ZoomButtonBounds.IntersectsWith(IconBounds) || ReduceButtonBounds.IntersectsWith(IconBounds))
 						graphics.DrawIcon(Icon, IconBounds);
 				}
 				if (HoveringButton == 0)
@@ -925,7 +925,7 @@ namespace BerichtManager.OwnControls
 					BufferedGraphics.Graphics.FillRectangle(backgrnd, ReduceButtonBounds);
 				TextRenderer.DrawText(BufferedGraphics.Graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
 			}
-			if (CloseButtonBounds.Contains(IconBounds) || ZoomButtonBounds.Contains(IconBounds) || ReduceButtonBounds.Contains(IconBounds))
+			if (CloseButtonBounds.IntersectsWith(IconBounds) || ZoomButtonBounds.IntersectsWith(IconBounds) || ReduceButtonBounds.IntersectsWith(IconBounds))
 				BufferedGraphics.Graphics.DrawIcon(Icon, IconBounds);
 			EndPaint(m.HWnd, ref __);
 			ReleaseDC(Handle, hdc);
