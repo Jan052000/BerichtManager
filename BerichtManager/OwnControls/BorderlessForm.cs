@@ -635,7 +635,8 @@ namespace BerichtManager.OwnControls
 				if (Text != value)
 				{
 					base.Text = value;
-					SendMessage(Handle, (int)WMMessageCodes.WM_USER_REDRAWTITLE, (IntPtr)0, (IntPtr)0);
+					//SendMessage(Handle, (int)WMMessageCodes.WM_USER_REDRAWTITLE, (IntPtr)0, (IntPtr)0);
+					ForceRedrawNCA();
 				}
 			}
 		}
@@ -869,11 +870,11 @@ namespace BerichtManager.OwnControls
 					graphics.FillRectangle(backgrnd, titleRect);
 					TextRenderer.DrawText(graphics, RenderedText, Font, new Point(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
 				}
+				EndPaint(m.HWnd, ref __);
+				ReleaseDC(m.HWnd, hdc);
 				BufferedGraphics.Graphics.FillRectangle(backgrnd, titleRect);
 				TextRenderer.DrawText(BufferedGraphics.Graphics, RenderedText, Font, new Point(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
 			}
-			EndPaint(m.HWnd, ref __);
-			ReleaseDC(m.HWnd, hdc);
 		}
 
 		/// <summary>
