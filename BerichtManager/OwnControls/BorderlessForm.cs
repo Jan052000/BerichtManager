@@ -338,6 +338,14 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
+		/// Bounds of the title
+		/// </summary>
+		private Rectangle TitleBounds
+		{
+			get => new Rectangle(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y, TextRenderer.MeasureText(RenderedText, Font).Width, TitleBarHeight);
+		}
+
+		/// <summary>
 		/// Padding the icon has to the left of the window
 		/// </summary>
 		private int iconPadding { get; set; } = 16;
@@ -868,12 +876,12 @@ namespace BerichtManager.OwnControls
 				using (Graphics graphics = Graphics.FromHdc(hdc))
 				{
 					graphics.FillRectangle(backgrnd, titleRect);
-					TextRenderer.DrawText(graphics, RenderedText, Font, new Point(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
+					TextRenderer.DrawText(graphics, RenderedText, Font, new Point(TitleBounds.X, TitleBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
 				}
 				EndPaint(m.HWnd, ref __);
 				ReleaseDC(m.HWnd, hdc);
 				BufferedGraphics.Graphics.FillRectangle(backgrnd, titleRect);
-				TextRenderer.DrawText(BufferedGraphics.Graphics, RenderedText, Font, new Point(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
+				TextRenderer.DrawText(BufferedGraphics.Graphics, RenderedText, Font, new Point(TitleBounds.X, TitleBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
 			}
 		}
 
@@ -908,6 +916,8 @@ namespace BerichtManager.OwnControls
 					TextRenderer.DrawText(graphics, "0", new Font("webdings", TitleBarButtonFontSize), ReduceButtonBounds, TitleBarButtonForeColor);
 					if (CloseButtonBounds.IntersectsWith(IconBounds) || ZoomButtonBounds.IntersectsWith(IconBounds) || ReduceButtonBounds.IntersectsWith(IconBounds))
 						graphics.DrawIcon(Icon, IconBounds);
+					if (CloseButtonBounds.IntersectsWith(TitleBounds) || ZoomButtonBounds.IntersectsWith(TitleBounds) || ReduceButtonBounds.IntersectsWith(TitleBounds))
+						TextRenderer.DrawText(graphics, RenderedText, Font, new Point(TitleBounds.X, TitleBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
 				}
 				if (HoveringButton == 0)
 					BufferedGraphics.Graphics.FillRectangle(red, CloseButtonBounds);
@@ -927,6 +937,8 @@ namespace BerichtManager.OwnControls
 			}
 			if (CloseButtonBounds.IntersectsWith(IconBounds) || ZoomButtonBounds.IntersectsWith(IconBounds) || ReduceButtonBounds.IntersectsWith(IconBounds))
 				BufferedGraphics.Graphics.DrawIcon(Icon, IconBounds);
+			if (CloseButtonBounds.IntersectsWith(TitleBounds) || ZoomButtonBounds.IntersectsWith(TitleBounds) || ReduceButtonBounds.IntersectsWith(TitleBounds))
+				TextRenderer.DrawText(BufferedGraphics.Graphics, RenderedText, Font, new Point(TitleBounds.X, TitleBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
 			EndPaint(m.HWnd, ref __);
 			ReleaseDC(Handle, hdc);
 		}
