@@ -44,6 +44,37 @@ namespace BerichtManager.Config
 		}
 		#endregion
 
+		#region Properties
+		/// <summary>
+		/// Holds all values for config with the keys as key and the type and default value as values
+		/// </summary>
+		Dictionary<string, (Type Type, object DefaultValue)> Config { get; } = new Dictionary<string, (Type, object)>()
+		{
+			{"TemplatePath", (Type.GetType("System.String"), "")},
+			{"ReportNR", (Type.GetType("System.Int32"), 1)},
+			{"Active", (Type.GetType("System.String"), "")},
+			{"Username", (Type.GetType("System.String"), "")},
+			{"Password", (Type.GetType("System.String"), "")},
+			{"Name", (Type.GetType("System.String"), "")},
+			{"Font", (Type.GetType("System.String"), "Arial")},
+			{"EditorFontSize", (Type.GetType("System.Single"), 8.25f)},
+			{"LastReportWeekOfYear", (Type.GetType("System.Int32"), new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)},
+			{"StayLoggedIn", (Type.GetType("System.Boolean"), false)},
+			{"UseCustomPrefix", (Type.GetType("System.Boolean"), false)},
+			{"CustomPrefix", (Type.GetType("System.String"), "-")},
+			{"WebUntisServer", (Type.GetType("System.String"), "borys")},
+			{"SchoolName", (Type.GetType("System.String"), "pictorus-bk")},
+			{"UseWebUntis", (Type.GetType("System.Boolean"), true)},
+			{"EndWeekOnFriday", (Type.GetType("System.Boolean"), false)},
+			{"EnableLegacyEdit", (Type.GetType("System.Boolean"), false)},
+			{"ActiveTheme", (Type.GetType("System.String"), "Dark Mode")},
+			{"ReportPath", (Type.GetType("System.String"), Path.GetFullPath(".\\.."))},
+			{"PublishPath", (Type.GetType("System.String"), "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
+			{"TabStops", (Type.GetType("System.Int32"), 20)},
+			{"NamingPattern", (Type.GetType("System.String"), "WochenberichtKW~+CW+~")}
+		};
+		#endregion
+
 		private ConfigHandler()
 		{
 			bool isComplete = true;
@@ -51,13 +82,12 @@ namespace BerichtManager.Config
 			{
 				Directory.CreateDirectory(ConfigFolderPath);
 				File.Create(FullPath).Close();
-				ConfigObject = new JObject(new JProperty("TemplatePath", ""), new JProperty("ReportNR", 1), new JProperty("Active", ""), new JProperty("Username", ""), new JProperty("Password", ""),
-					new JProperty("Name", ""), new JProperty("Font", "Arial"), new JProperty("EditorFontSize", 8.25f), new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1),
-					new JProperty("StayLoggedIn", false), new JProperty("UseCustomPrefix", false), new JProperty("CustomPrefix", "-"), new JProperty("WebUntisServer", "borys"), new JProperty("SchoolName", "pictorus-bk"),
-					new JProperty("UseWebUntis", true), new JProperty("EndWeekOnFriday", false), new JProperty("EnableLegacyEdit", false), new JProperty("ActiveTheme", "Dark Mode"),
-					new JProperty("ReportPath", Path.GetFullPath(".\\..")), new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"),
-					new JProperty("TabStops", 20), new JProperty("NamingPattern", "WochenberichtKW~+CW+~"));
-				File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
+				ConfigObject = new JObject();
+				foreach (KeyValuePair<string, (Type Type, object DefaultValue)> kvp in Config)
+				{
+					ConfigObject.Add(new JProperty(kvp.Key, Convert.ChangeType(kvp.Value.DefaultValue, kvp.Value.Type)));
+				}
+				isComplete = false;
 			}
 			else
 			{
@@ -69,136 +99,48 @@ namespace BerichtManager.Config
 				{
 					ConfigObject = JObject.Parse(File.ReadAllText(FullPath));
 				}
-				if (!ConfigObject.ContainsKey("TemplatePath"))
+				foreach (KeyValuePair<string, (Type Type, object DefaultValue)> kvp in Config)
 				{
-					OpenFileDialog dialog = new OpenFileDialog();
-					dialog.Filter = "Word Templates (*.dotx)|*.dotx";
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Please select a word template to use", "Select a template");
-					if (dialog.ShowDialog() == DialogResult.OK)
-						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Template selected: " + dialog.FileName, "Info");
-					ConfigObject.Add("TemplatePath", dialog.FileName);
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("ActiveTheme"))
-				{
-					ConfigObject.Add(new JProperty("ActiveTheme", "Dark Mode"));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("ReportNR"))
-				{
-					EditForm form = new EditForm(title: "Edit Number of Report", text: "1", stopConfigCalls: true);
-					if (form.ShowDialog() == DialogResult.OK)
+					if (!ConfigObject.ContainsKey(kvp.Key))
 					{
-						if (int.TryParse(form.Result, out int value))
-							ConfigObject.Add(new JProperty("ReportNR", value));
-						else
+						isComplete = false;
+						switch (kvp.Key)
 						{
-							ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Invalid number, defaulting to 1! (This can be changed later in options menu)", "Invalid number!");
-							ConfigObject.Add(new JProperty("ReportNR", 1));
+							case "TemplatePath":
+								OpenFileDialog dialog = new OpenFileDialog();
+								dialog.Filter = "Word Templates (*.dotx)|*.dotx";
+								ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Please select a word template to use", "Select a template");
+								if (dialog.ShowDialog() == DialogResult.OK)
+									ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Template selected: " + dialog.FileName, "Info");
+								ConfigObject.Add("TemplatePath", dialog.FileName);
+								break;
+							case "ReportNR":
+								EditForm reportNumberForm = new EditForm(title: "Edit Number of Report", text: "1", stopConfigCalls: true);
+								if (reportNumberForm.ShowDialog() == DialogResult.OK)
+								{
+									if (int.TryParse(reportNumberForm.Result, out int value))
+										ConfigObject.Add(new JProperty("ReportNR", value));
+									else
+									{
+										ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Invalid number, defaulting to 1! (This can be changed later in options menu)", "Invalid number!");
+										ConfigObject.Add(new JProperty("ReportNR", 1));
+									}
+								}
+								else
+									ConfigObject.Add(new JProperty("ReportNR", 1));
+								break;
+							case "Name":
+								EditForm nameForm = new EditForm(title: "Enter your name", text: "Name Vorname", stopConfigCalls: true);
+								if (nameForm.ShowDialog() == DialogResult.OK)
+									ConfigObject.Add(new JProperty("Name", nameForm.Result));
+								else
+									ConfigObject.Add(new JProperty("Name", ""));
+								break;
+							default:
+								ConfigObject.Add(new JProperty(kvp.Key, Convert.ChangeType(kvp.Value.DefaultValue, kvp.Value.Type)));
+								break;
 						}
 					}
-					else
-						ConfigObject.Add(new JProperty("ReportNR", 1));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("Active"))
-				{
-					ConfigObject.Add(new JProperty("Active", ""));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("Username"))
-				{
-					ConfigObject.Add(new JProperty("Username", ""));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("Password"))
-				{
-					ConfigObject.Add(new JProperty("Password", ""));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("Name"))
-				{
-					EditForm form = new EditForm(title: "Enter your name", text: "Name Vorname", stopConfigCalls: true);
-					if (form.ShowDialog() == DialogResult.OK)
-						ConfigObject.Add(new JProperty("Name", form.Result));
-					else
-						ConfigObject.Add(new JProperty("Name", ""));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("Font"))
-				{
-					ConfigObject.Add(new JProperty("Font", "Arial"));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("EditorFontSize"))
-				{
-					ConfigObject.Add(new JProperty("EditorFontSize", 8.25f));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("LastReportWeekOfYear"))
-				{
-					ConfigObject.Add(new JProperty("LastReportWeekOfYear", new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("StayLoggedIn"))
-				{
-					ConfigObject.Add(new JProperty("StayLoggedIn", false));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("UseCustomPrefix"))
-				{
-					ConfigObject.Add(new JProperty("UseCustomPrefix", false));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("CustomPrefix"))
-				{
-					ConfigObject.Add(new JProperty("CustomPrefix", "-"));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("WebUntisServer"))
-				{
-					ConfigObject.Add(new JProperty("WebUntisServer", "borys"));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("SchoolName"))
-				{
-					ConfigObject.Add(new JProperty("SchoolName", "pictorus-bk"));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("UseWebUntis"))
-				{
-					ConfigObject.Add(new JProperty("UseWebUntis", true));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("EndWeekOnFriday"))
-				{
-					ConfigObject.Add(new JProperty("EndWeekOnFriday", false));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("EnableLegacyEdit"))
-				{
-					ConfigObject.Add(new JProperty("EnableLegacyEdit", false));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("ReportPath"))
-				{
-					ConfigObject.Add(new JProperty("ReportPath", Path.GetFullPath(".\\..")));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("PublishPath"))
-				{
-					ConfigObject.Add(new JProperty("PublishPath", "T:\\Azubis\\Berichtmanager\\BerichtManager.exe"));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("TabStops"))
-				{
-					ConfigObject.Add(new JProperty("TabStops", 20));
-					isComplete = false;
-				}
-				if (!ConfigObject.ContainsKey("NamingPattern"))
-				{
-					ConfigObject.Add(new JProperty("NamingPattern", "WochenberichtKW~+CW+~"));
-					isComplete = false;
 				}
 			}
 			if (!isComplete)
