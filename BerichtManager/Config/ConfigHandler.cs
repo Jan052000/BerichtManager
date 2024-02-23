@@ -636,11 +636,4 @@ namespace BerichtManager.Config
 			Password = password;
 		}
 	}
-
-	public class DataNotFoundException : Exception
-	{
-		public DataNotFoundException() : base("Key and / or Value not found")
-		{
-		}
-	}
 }
