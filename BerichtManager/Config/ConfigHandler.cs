@@ -219,7 +219,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		/// <typeparam name="T">Type of the value to get</typeparam>
 		/// <param name="key">Key of the value to get</param>
-		/// <returns></returns>
+		/// <returns>Value of <paramref name="key"/> converted to type <typeparamref name="T"/></returns>
 		private T GenericGet<T>(string key)
 		{
 			return ConfigObject.Value<T>(key);
