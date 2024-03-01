@@ -233,7 +233,7 @@ namespace BerichtManager.Forms
 
 		private void btLogin_Click(object sender, EventArgs e)
 		{
-			ConfigHandler.DoLogin();
+			ConfigHandler.DoWebUntisLogin();
 		}
 
 		private void tbTemplate_Click(object sender, EventArgs e)

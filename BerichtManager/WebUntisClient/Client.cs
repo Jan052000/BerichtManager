@@ -77,7 +77,7 @@ namespace BerichtManager.WebUntisClient
 			}
 			else
 			{
-				user = ConfigHandler.DoLogin();
+				user = ConfigHandler.DoWebUntisLogin();
 				if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");
@@ -338,7 +338,7 @@ namespace BerichtManager.WebUntisClient
 				}
 				else
 				{
-					Config.User user = ConfigHandler.DoLogin();
+					Config.User user = ConfigHandler.DoWebUntisLogin();
 					if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 					{
 						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");

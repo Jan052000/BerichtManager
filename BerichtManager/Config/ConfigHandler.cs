@@ -289,7 +289,7 @@ namespace BerichtManager.Config
 		/// Starts the login process for the user
 		/// </summary>
 		/// <returns><see cref="User"/> object containing username and password</returns>
-		public User DoLogin()
+		public User DoWebUntisLogin()
 		{
 			Login form = new Login("WebUntis");
 			form.ShowDialog();
