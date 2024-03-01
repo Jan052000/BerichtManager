@@ -35,6 +35,9 @@ namespace BerichtManager.ThemeManagement
 		/// Delegate for <see cref="UpdatedThemesList"/> event
 		/// </summary>
 		public delegate void UpdateThemesListDelegate();
+		/// <summary>
+		/// Active theme to use
+		/// </summary>
 		public ITheme ActiveTheme
 		{
 			get
@@ -47,6 +50,9 @@ namespace BerichtManager.ThemeManagement
 
 		#region Singleton
 		private static ThemeManager Singleton;
+		/// <summary>
+		/// Instance of <see cref="ThemeManager"/> object
+		/// </summary>
 		public static ThemeManager Instance
 		{
 			get
@@ -84,7 +90,7 @@ namespace BerichtManager.ThemeManagement
 				}
 				catch
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Unable to load " + file + "!", "Errow while loading theme");
+					ThemedMessageBox.Show(Instance.ActiveTheme, "Unable to load " + file + "!", "Errow while loading theme");
 				}
 			});
 			return themes;
@@ -121,7 +127,7 @@ namespace BerichtManager.ThemeManagement
 			SaveStatusCodes returnCode = SaveStatusCodes.Success;
 			if (File.Exists(themesFolderPath + theme.Name + ".bmtheme") || ThemeNames.Contains(theme.Name))
 			{
-				if (ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Overwrite existing file: " + themesFolderPath + theme.Name + ".bmtheme ?", "Overwrite file?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				if (ThemedMessageBox.Show(Instance.ActiveTheme, "Overwrite existing file: " + themesFolderPath + theme.Name + ".bmtheme ?", "Overwrite file?", MessageBoxButtons.YesNo) != DialogResult.Yes)
 					return SaveStatusCodes.OverwriteDeclined;
 			}
 			else returnCode = SaveStatusCodes.NewThemeCreated;
