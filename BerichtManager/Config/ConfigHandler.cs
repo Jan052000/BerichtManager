@@ -44,7 +44,7 @@ namespace BerichtManager.Config
 		}
 		#endregion
 
-		#region Properties
+		#region Default config properties
 		/// <summary>
 		/// Holds all values for config with the keys as key and the type and default value as values
 		/// </summary>
