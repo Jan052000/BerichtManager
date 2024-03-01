@@ -79,7 +79,7 @@
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(444, 190);
+			this.btClose.Location = new System.Drawing.Point(444, 116);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 4;
@@ -90,7 +90,7 @@
 			// btLogin
 			// 
 			this.btLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btLogin.Location = new System.Drawing.Point(363, 190);
+			this.btLogin.Location = new System.Drawing.Point(363, 116);
 			this.btLogin.Name = "btLogin";
 			this.btLogin.Size = new System.Drawing.Size(75, 23);
 			this.btLogin.TabIndex = 5;
@@ -103,11 +103,11 @@
 			this.laLogin.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.laLogin.AutoSize = true;
-			this.laLogin.Location = new System.Drawing.Point(220, 9);
+			this.laLogin.Location = new System.Drawing.Point(201, 9);
 			this.laLogin.Name = "laLogin";
-			this.laLogin.Size = new System.Drawing.Size(93, 13);
+			this.laLogin.Size = new System.Drawing.Size(112, 13);
 			this.laLogin.TabIndex = 6;
-			this.laLogin.Text = "Login to Webuntis";
+			this.laLogin.Text = "Login to {Placeholder}";
 			// 
 			// cbKeepLogin
 			// 
@@ -135,7 +135,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(531, 225);
+			this.ClientSize = new System.Drawing.Size(531, 151);
 			this.Controls.Add(this.cbShowPassword);
 			this.Controls.Add(this.cbKeepLogin);
 			this.Controls.Add(this.laLogin);
@@ -148,6 +148,7 @@
 			this.MinimumSize = new System.Drawing.Size(333, 186);
 			this.Name = "Login";
 			this.Text = "Login";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Login_FormClosing);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -159,10 +160,10 @@
 		private System.Windows.Forms.TextBox tbUsername;
 		private System.Windows.Forms.TextBox tbPassword;
 		private System.Windows.Forms.Label laPassword;
-		private System.Windows.Forms.Button btClose;
-		private System.Windows.Forms.Button btLogin;
 		private System.Windows.Forms.Label laLogin;
 		private System.Windows.Forms.CheckBox cbKeepLogin;
 		private System.Windows.Forms.CheckBox cbShowPassword;
+		private OwnControls.FocusColoredFlatButton btClose;
+		private OwnControls.FocusColoredFlatButton btLogin;
 	}
 }

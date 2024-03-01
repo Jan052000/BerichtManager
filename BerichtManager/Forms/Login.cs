@@ -6,16 +6,36 @@ using System.Windows.Forms;
 
 namespace BerichtManager.Forms
 {
+	/// <summary>
+	/// A simple login form
+	/// </summary>
 	public partial class Login : Form
 	{
-		public string Username;
-		public string Password;
-		public bool KeepLoggedIn;
-		public Login()
+		/// <summary>
+		/// Username entered by user
+		/// </summary>
+		public string Username { get; private set; }
+		/// <summary>
+		/// Password entered by user
+		/// </summary>
+		public string Password { get; private set; }
+		/// <summary>
+		/// Wether or not user wants to stay logged in
+		/// </summary>
+		public bool KeepLoggedIn { get; private set; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Login"/> <see cref="Form"/>
+		/// </summary>
+		/// <param name="logInTo">Name of site to log in to</param>
+		public Login(string logInTo)
 		{
 			InitializeComponent();
 			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
+			laLogin.Text = laLogin.Text.Replace("{Placeholder}", logInTo);
+			laLogin.Width = TextRenderer.MeasureText(laLogin.Text, laLogin.Font).Width;
+			laLogin.Location = new Point(Width / 2 - laLogin.Width / 2, laLogin.Location.Y);
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -35,14 +55,12 @@ namespace BerichtManager.Forms
 
 		private void cbShowPassword_CheckedChanged(object sender, EventArgs e)
 		{
-			if (cbShowPassword.Checked)
-			{
-				tbPassword.UseSystemPasswordChar = false;
-			}
-			else
-			{
-				tbPassword.UseSystemPasswordChar = true;
-			}
+			tbPassword.UseSystemPasswordChar = !cbShowPassword.Checked;
+		}
+
+		private void Login_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			DialogResult = DialogResult.Cancel;
 		}
 	}
 }
