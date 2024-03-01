@@ -262,7 +262,7 @@ namespace BerichtManager.Config
 		/// Sets the username for webuntis
 		/// </summary>
 		/// <param name="username">Username</param>
-		public void WebUntisUsername(string username)
+		private void WebUntisUsername(string username)
 		{
 			GenericSet("Username", username);
 		}
@@ -280,7 +280,7 @@ namespace BerichtManager.Config
 		/// Sets the password for Webuntis
 		/// </summary>
 		/// <param name="password">Password</param>
-		public void WebUntisPassword(string password)
+		private void WebUntisPassword(string password)
 		{
 			GenericSet("Password", UserHandler.EncodePassword(password));
 		}
