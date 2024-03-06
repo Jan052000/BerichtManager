@@ -50,6 +50,10 @@ namespace BerichtManager.Forms
 			this.tbServer = new System.Windows.Forms.TextBox();
 			this.cbUseCustomPrefix = new System.Windows.Forms.CheckBox();
 			this.tbCustomPrefix = new System.Windows.Forms.TextBox();
+			this.nudLastUploadedReportNumber = new System.Windows.Forms.NumericUpDown();
+			this.btIHKLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.tbJobField = new System.Windows.Forms.TextBox();
+			this.tbSupervisorMail = new System.Windows.Forms.TextBox();
 			this.gbManagerOptions = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.laFontSize = new System.Windows.Forms.Label();
 			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
@@ -66,19 +70,26 @@ namespace BerichtManager.Forms
 			this.laSchool = new System.Windows.Forms.Label();
 			this.laServer = new System.Windows.Forms.Label();
 			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.gbIHK = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.cbIHKAutoSync = new System.Windows.Forms.CheckBox();
+			this.laSupervisorMail = new System.Windows.Forms.Label();
+			this.laJobField = new System.Windows.Forms.Label();
+			this.laLastUploadedReportNumber = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudLastUploadedReportNumber)).BeginInit();
 			this.gbManagerOptions.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
 			this.gbConfig.SuspendLayout();
 			this.gbWebUntis.SuspendLayout();
 			this.gbPrefix.SuspendLayout();
+			this.gbIHK.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(713, 411);
+			this.btClose.Location = new System.Drawing.Point(713, 526);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 0;
@@ -89,7 +100,7 @@ namespace BerichtManager.Forms
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(632, 411);
+			this.btSave.Location = new System.Drawing.Point(632, 526);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
 			this.btSave.TabIndex = 1;
@@ -320,6 +331,43 @@ namespace BerichtManager.Forms
 			this.toolTip1.SetToolTip(this.tbCustomPrefix, "Prefix to be used in school field");
 			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
+			// nudLastUploadedReportNumber
+			// 
+			this.nudLastUploadedReportNumber.Location = new System.Drawing.Point(98, 14);
+			this.nudLastUploadedReportNumber.Name = "nudLastUploadedReportNumber";
+			this.nudLastUploadedReportNumber.Size = new System.Drawing.Size(120, 20);
+			this.nudLastUploadedReportNumber.TabIndex = 1;
+			this.toolTip1.SetToolTip(this.nudLastUploadedReportNumber, "Number of last uploaded reoprt");
+			// 
+			// btIHKLogin
+			// 
+			this.btIHKLogin.Location = new System.Drawing.Point(224, 14);
+			this.btIHKLogin.Name = "btIHKLogin";
+			this.btIHKLogin.Size = new System.Drawing.Size(75, 21);
+			this.btIHKLogin.TabIndex = 47;
+			this.btIHKLogin.Text = "Login";
+			this.toolTip1.SetToolTip(this.btIHKLogin, "Log in to IHK");
+			this.btIHKLogin.UseVisualStyleBackColor = true;
+			this.btIHKLogin.Click += new System.EventHandler(this.btIHKLogin_Click);
+			// 
+			// tbJobField
+			// 
+			this.tbJobField.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbJobField.Location = new System.Drawing.Point(98, 40);
+			this.tbJobField.Name = "tbJobField";
+			this.tbJobField.Size = new System.Drawing.Size(696, 20);
+			this.tbJobField.TabIndex = 48;
+			this.toolTip1.SetToolTip(this.tbJobField, "Name of job field");
+			// 
+			// tbSupervisorMail
+			// 
+			this.tbSupervisorMail.Location = new System.Drawing.Point(98, 66);
+			this.tbSupervisorMail.Name = "tbSupervisorMail";
+			this.tbSupervisorMail.Size = new System.Drawing.Size(696, 20);
+			this.tbSupervisorMail.TabIndex = 50;
+			this.toolTip1.SetToolTip(this.tbSupervisorMail, "E-mail of supervisor");
+			// 
 			// gbManagerOptions
 			// 
 			this.gbManagerOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -506,23 +554,81 @@ namespace BerichtManager.Forms
 			this.gbPrefix.TabStop = false;
 			this.gbPrefix.Text = "Prefix";
 			// 
+			// gbIHK
+			// 
+			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbIHK.Controls.Add(this.cbIHKAutoSync);
+			this.gbIHK.Controls.Add(this.laSupervisorMail);
+			this.gbIHK.Controls.Add(this.tbSupervisorMail);
+			this.gbIHK.Controls.Add(this.laJobField);
+			this.gbIHK.Controls.Add(this.tbJobField);
+			this.gbIHK.Controls.Add(this.btIHKLogin);
+			this.gbIHK.Controls.Add(this.nudLastUploadedReportNumber);
+			this.gbIHK.Controls.Add(this.laLastUploadedReportNumber);
+			this.gbIHK.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbIHK.Location = new System.Drawing.Point(0, 405);
+			this.gbIHK.Name = "gbIHK";
+			this.gbIHK.Size = new System.Drawing.Size(800, 115);
+			this.gbIHK.TabIndex = 46;
+			this.gbIHK.TabStop = false;
+			this.gbIHK.Text = "IHK";
+			// 
+			// cbIHKAutoSync
+			// 
+			this.cbIHKAutoSync.AutoSize = true;
+			this.cbIHKAutoSync.Location = new System.Drawing.Point(98, 92);
+			this.cbIHKAutoSync.Name = "cbIHKAutoSync";
+			this.cbIHKAutoSync.Size = new System.Drawing.Size(134, 17);
+			this.cbIHKAutoSync.TabIndex = 52;
+			this.cbIHKAutoSync.Text = "Sync with IHK on save";
+			this.cbIHKAutoSync.UseVisualStyleBackColor = true;
+			// 
+			// laSupervisorMail
+			// 
+			this.laSupervisorMail.AutoSize = true;
+			this.laSupervisorMail.Location = new System.Drawing.Point(5, 69);
+			this.laSupervisorMail.Name = "laSupervisorMail";
+			this.laSupervisorMail.Size = new System.Drawing.Size(87, 13);
+			this.laSupervisorMail.TabIndex = 51;
+			this.laSupervisorMail.Text = "Supervisor e-mail";
+			// 
+			// laJobField
+			// 
+			this.laJobField.AutoSize = true;
+			this.laJobField.Location = new System.Drawing.Point(46, 43);
+			this.laJobField.Name = "laJobField";
+			this.laJobField.Size = new System.Drawing.Size(46, 13);
+			this.laJobField.TabIndex = 49;
+			this.laJobField.Text = "Job field";
+			// 
+			// laLastUploadedReportNumber
+			// 
+			this.laLastUploadedReportNumber.AutoSize = true;
+			this.laLastUploadedReportNumber.Location = new System.Drawing.Point(14, 16);
+			this.laLastUploadedReportNumber.Name = "laLastUploadedReportNumber";
+			this.laLastUploadedReportNumber.Size = new System.Drawing.Size(78, 13);
+			this.laLastUploadedReportNumber.TabIndex = 0;
+			this.laLastUploadedReportNumber.Text = "Last IHK report";
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 446);
+			this.ClientSize = new System.Drawing.Size(800, 561);
+			this.Controls.Add(this.gbIHK);
 			this.Controls.Add(this.gbManagerOptions);
 			this.Controls.Add(this.gbConfig);
 			this.Controls.Add(this.gbWebUntis);
 			this.Controls.Add(this.gbPrefix);
 			this.Controls.Add(this.btSave);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(586, 485);
+			this.MinimumSize = new System.Drawing.Size(816, 577);
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionMenu_FormClosing);
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudLastUploadedReportNumber)).EndInit();
 			this.gbManagerOptions.ResumeLayout(false);
 			this.gbManagerOptions.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).EndInit();
@@ -532,14 +638,13 @@ namespace BerichtManager.Forms
 			this.gbWebUntis.PerformLayout();
 			this.gbPrefix.ResumeLayout(false);
 			this.gbPrefix.PerformLayout();
+			this.gbIHK.ResumeLayout(false);
+			this.gbIHK.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Button btClose;
-		private System.Windows.Forms.Button btSave;
 		private System.Windows.Forms.ToolTip toolTip1;
 		private OwnControls.ColoredGroupBox gbPrefix;
 		private System.Windows.Forms.CheckBox cbUseCustomPrefix;
@@ -547,7 +652,6 @@ namespace BerichtManager.Forms
 		private OwnControls.ColoredGroupBox gbWebUntis;
 		private System.Windows.Forms.CheckBox cbShouldUseUntis;
 		private System.Windows.Forms.TextBox tbSchool;
-		private System.Windows.Forms.Button btLogin;
 		private System.Windows.Forms.Label laSchool;
 		private System.Windows.Forms.TextBox tbServer;
 		private System.Windows.Forms.Label laServer;
@@ -559,9 +663,7 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.Label laName;
 		private System.Windows.Forms.NumericUpDown nudNumber;
 		private System.Windows.Forms.Label laNamingPattern;
-		private System.Windows.Forms.Button btCreateTheme;
 		private System.Windows.Forms.TextBox tbTemplate;
-		private System.Windows.Forms.Button btEditTheme;
 		private System.Windows.Forms.Label laTheme;
 		private System.Windows.Forms.Label laTemplate;
 		private OwnControls.ColoredComboBox coTheme;
@@ -575,5 +677,19 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.Label laUpdate;
 		private System.Windows.Forms.Label laFontSize;
 		private System.Windows.Forms.NumericUpDown nudFontSize;
+		private OwnControls.ColoredGroupBox gbIHK;
+		private OwnControls.FocusColoredFlatButton btClose;
+		private OwnControls.FocusColoredFlatButton btSave;
+		private OwnControls.FocusColoredFlatButton btLogin;
+		private OwnControls.FocusColoredFlatButton btCreateTheme;
+		private OwnControls.FocusColoredFlatButton btEditTheme;
+		private System.Windows.Forms.Label laLastUploadedReportNumber;
+		private System.Windows.Forms.NumericUpDown nudLastUploadedReportNumber;
+		private System.Windows.Forms.TextBox tbJobField;
+		private OwnControls.FocusColoredFlatButton btIHKLogin;
+		private System.Windows.Forms.Label laJobField;
+		private System.Windows.Forms.Label laSupervisorMail;
+		private System.Windows.Forms.TextBox tbSupervisorMail;
+		private System.Windows.Forms.CheckBox cbIHKAutoSync;
 	}
 }

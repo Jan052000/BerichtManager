@@ -74,6 +74,12 @@ namespace BerichtManager.Forms
 			tbUpdate.Text = ConfigHandler.PublishPath();
 			tbNamingPattern.Text = ConfigHandler.NamingPattern();
 
+			//IHK
+			nudLastUploadedReportNumber.Value = ConfigHandler.LastIHKReportNr();
+			tbJobField.Text = ConfigHandler.IHKJobField();
+			tbSupervisorMail.Text = ConfigHandler.IHKSupervisorEMail();
+			cbIHKAutoSync.Checked = ConfigHandler.AutoSyncWithIHK();
+
 			IsDirty = false;
 			btSave.Enabled = false;
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
@@ -205,6 +211,11 @@ namespace BerichtManager.Forms
 			if (ConfigHandler.PublishPath() != tbUpdate.Text)
 				ConfigHandler.PublishPath(tbUpdate.Text);
 			ConfigHandler.SaveConfig();
+			//IHK
+			ConfigHandler.LastIHKReportNr((int)nudLastUploadedReportNumber.Value);
+			ConfigHandler.IHKJobField(tbJobField.Text);
+			ConfigHandler.IHKSupervisorEMail(tbSupervisorMail.Text);
+			ConfigHandler.AutoSyncWithIHK(cbIHKAutoSync.Checked);
 		}
 
 		/// <summary>
@@ -309,6 +320,11 @@ namespace BerichtManager.Forms
 		private void OptionMenu_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			ThemeManager.Instance.UpdatedThemesList -= UpdateThemesList;
+		}
+
+		private void btIHKLogin_Click(object sender, EventArgs e)
+		{
+			ConfigHandler.DoIHKLogin();
 		}
 	}
 }
