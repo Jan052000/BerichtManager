@@ -255,7 +255,7 @@ namespace BerichtManager
 		/// <param name="app">The Wordapp containing the document</param>
 		private void SetFontInDoc(Word.Document doc, Word.Application app)
 		{
-			doc.Content.Select();
+			doc.Select();
 			if (app.Selection.Font.Name != ConfigHandler.EditorFont())
 			{
 				app.Selection.Font.Name = ConfigHandler.EditorFont();
@@ -283,6 +283,7 @@ namespace BerichtManager
 		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application app, bool vacation = false, int reportDifference = 0, bool isSingle = false)
 		{
 			Word.Document ldoc = null;
+			bool ldocWasSaved = false;
 			if (!File.Exists(templatePath))
 			{
 				ThemedMessageBox.Show(ActiveTheme, ConfigHandler.TemplatePath() + " was not found was it moved or deleted?", "Template not found");
@@ -474,6 +475,7 @@ namespace BerichtManager
 				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
 				SetFontInDoc(ldoc, app);
 				ldoc.SaveAs2(FileName: path);
+				UpdateTree();
 
 				ConfigHandler.ReportNumber(ConfigHandler.ReportNumber() + 1);
 				ConfigHandler.LastReportKW(Culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
@@ -481,10 +483,9 @@ namespace BerichtManager
 				ConfigHandler.SaveConfig();
 				miEditLatest.Enabled = true;
 				ThemedMessageBox.Show(ActiveTheme, "Created Document at: " + path);
+				ldocWasSaved = true;
 
 				ldoc.Close();
-				UpdateTree();
-
 				SaveOrExit();
 				Doc = WordApp.Documents.Open(path);
 				rtbWork.Text = Doc.FormFields[6].Result;
@@ -497,12 +498,19 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						ThemedMessageBox.Show(ActiveTheme, "an unexpected problem occured this progam will now close!");
-						break;
 					case -2147467262:
 					case -2146823679:
-						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please try again shortly");
+					case -2147023179:
+					//{"Der Remoteprozeduraufruf ist fehlgeschlagen. (Ausnahme von HRESULT: 0x800706BE)"}
+					case -2147023170:
+						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please wait while it restarts");
 						RestartWord();
+						if (ldocWasSaved)
+						{
+							ThemedMessageBox.Show(ActiveTheme, text: "Unable to automatically open report, Word was closed unexpectedly", "Loading was cancelled because word closed");
+							return;
+						}
+						CreateDocument(templatePath, baseDate, WordApp, vacation: vacation, reportDifference: reportDifference, isSingle: isSingle);
 						break;
 					case -2146822750:
 						//Document already fit on page
@@ -1380,6 +1388,15 @@ namespace BerichtManager
 		}
 
 		/// <summary>
+		/// Checks wether or not the word app is still open by comparing types of open and closed word app
+		/// </summary>
+		/// <returns><see langword="true"/> if word is open and <see langword="false"/> otherwise</returns>
+		private bool CheckIfWordOpen()
+		{
+			return !typeof(Word.Application).IsAssignableFrom(WordApp.GetType());
+		}
+
+		/// <summary>
 		/// Restarts word if it has been closed
 		/// </summary>
 		private void RestartWord()
@@ -1392,17 +1409,9 @@ namespace BerichtManager
 			}
 
 			//Check if word is still open
-			if (!typeof(Word.Application).IsAssignableFrom(WordApp.GetType()))
+			if (CheckIfWordOpen())
 				return;
 			WordInitialized = false;
-			//try
-			//{
-			//	wordApp.Quit(SaveChanges: false);
-			//}
-			//catch
-			//{
-
-			//}
 			WordApp = new Word.Application();
 			WordInitialized = true;
 		}
