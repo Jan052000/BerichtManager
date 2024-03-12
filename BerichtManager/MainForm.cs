@@ -255,12 +255,30 @@ namespace BerichtManager
 		/// <param name="app">The Wordapp containing the document</param>
 		private void SetFontInDoc(Word.Document doc, Word.Application app)
 		{
-			doc.Select();
+			doc.Content.Select();
 			if (app.Selection.Font.Name != ConfigHandler.EditorFont())
 			{
 				app.Selection.Font.Name = ConfigHandler.EditorFont();
 				ThemedMessageBox.Show(ActiveTheme, "Changed report Font to: " + ConfigHandler.EditorFont(), "Font changed!");
 			}
+			try
+			{
+				doc.FitToPages();
+			}
+			catch
+			{
+
+			}
+		}
+
+		/// <summary>
+		/// Fits <paramref name="doc"/> to pages
+		/// </summary>
+		/// <param name="doc"></param>
+		private void FitToPage(Word.Document doc = null)
+		{
+			if (doc == null)
+				doc = Doc;
 			try
 			{
 				doc.FitToPages();
@@ -473,7 +491,7 @@ namespace BerichtManager
 				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
 				string name = ConfigHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, ConfigHandler.ReportNumber().ToString());
 				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
-				SetFontInDoc(ldoc, app);
+				FitToPage(ldoc);
 				ldoc.SaveAs2(FileName: path);
 				UpdateTree();
 
@@ -832,7 +850,7 @@ namespace BerichtManager
 							}
 						}
 					}
-					SetFontInDoc(Doc, WordApp);
+					FitToPage(Doc);
 					Doc.Save();
 					rtbWork.Text = Doc.FormFields[6].Result;
 					rtbSchool.Text = Doc.FormFields[8].Result;
@@ -950,7 +968,7 @@ namespace BerichtManager
 					return;
 				FillText(WordApp, Doc.FormFields[6], rtbWork.Text);
 				FillText(WordApp, Doc.FormFields[8], rtbSchool.Text);
-				SetFontInDoc(Doc, WordApp);
+				FitToPage(Doc);
 				Doc.Save();
 				ThemedMessageBox.Show(ActiveTheme, "Saved changes", "Saved");
 				WasEdited = false;
