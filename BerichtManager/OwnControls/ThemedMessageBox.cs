@@ -14,10 +14,6 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		private string Message { get; set; }
 		/// <summary>
-		/// Title in title bar
-		/// </summary>
-		private string Title { get; set; }
-		/// <summary>
 		/// Configuration of buttons
 		/// </summary>
 		private MessageBoxButtons Buttons { get; set; }
@@ -26,18 +22,15 @@ namespace BerichtManager.OwnControls
 		{
 			InitializeComponent();
 			InitializeButtons(buttons);
+			SizeToButtons();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			if (theme == null) theme = new DarkMode();
 			ThemeSetter.SetThemes(this, theme);
 			this.Text = title;
 			rtbText.Text = text;
 			Message = text;
-			Title = title;
 			Buttons = buttons;
-			AutoSizeBox();
-			rtbText.SelectAll();
-			rtbText.SelectionAlignment = HorizontalAlignment.Center;
-			rtbText.DeselectAll();
+			rtbText.Size = TextRenderer.MeasureText(Message, rtbText.Font);
 			rtbText.Enter += UnfocusOnEnter;
 		}
 
@@ -65,22 +58,22 @@ namespace BerichtManager.OwnControls
 		}
 
 		/// <summary>
-		/// Calculates and sets the width and height of the message box
+		/// Sets minimum size to match width of all enabled buttons
 		/// </summary>
-		private void AutoSizeBox()
+		private void SizeToButtons()
 		{
-			using (Graphics g = rtbText.CreateGraphics())
+			Size newSize = new Size(115, 25 + btCopyToClipboard.Height + btCopyToClipboard.Margin.Top + btCopyToClipboard.Margin.Bottom + 32);
+			foreach (Control control in Controls)
 			{
-				SizeF size = g.MeasureString(Message, rtbText.Font);
-				int titleBarHeight = 32;
-				int titleBarWidth = 8;
-				int paddingBottom = 20;
-				int paddingTop = 10;
-				int messageBoxWidth = titleBarWidth * 2 + (int)size.Width + Padding.Left + Padding.Right + rtbText.Margin.Left + rtbText.Margin.Right;
-				int messageBoxHeight = titleBarHeight + (int)size.Height + Padding.Top + Padding.Bottom + rtbText.Margin.Top + rtbText.Margin.Bottom + btYes.Padding.Top + btYes.Padding.Bottom + btYes.Height + paddingBottom + paddingTop;
-				if (Width < messageBoxWidth) Width = messageBoxWidth;
-				if (Height < messageBoxHeight) Height = messageBoxHeight;
+				switch (control)
+				{
+					case Button button:
+						if (button.Enabled && button != btCopyToClipboard)
+							newSize.Width += button.Width + button.Margin.Left + button.Margin.Right;
+						break;
+				}
 			}
+			MinimumSize = newSize;
 		}
 
 		/// <summary>
@@ -223,6 +216,16 @@ namespace BerichtManager.OwnControls
 		{
 			DialogResult = DialogResult.No;
 			Close();
+		}
+
+		/// <summary>
+		/// Copies the content of <see cref="Message"/> to the clipboard
+		/// </summary>
+		private void CopyToClipboard(object sender, EventArgs e)
+		{
+			Clipboard.SetText(Message);
+			ToolTip tt = new ToolTip();
+			tt.Show("Conent copied to clipboard", this, btCopyToClipboard.Location, 1500);
 		}
 	}
 }
