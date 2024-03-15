@@ -62,7 +62,6 @@ namespace BerichtManager.WebUntisClient
 			string jSpringURL = "https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check";
 
 			//Generate Headers and Login
-			Config.User user = null;
 			if (ConfigHandler.StayLoggedIn())
 			{
 				//Obtain JSessionId
@@ -77,7 +76,7 @@ namespace BerichtManager.WebUntisClient
 			}
 			else
 			{
-				user = ConfigHandler.DoWebUntisLogin();
+				Config.User user = ConfigHandler.DoWebUntisLogin();
 				if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");
