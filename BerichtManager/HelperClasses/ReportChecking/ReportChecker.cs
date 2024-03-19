@@ -67,10 +67,28 @@ namespace BerichtManager.HelperClasses.ReportChecking
 			for (int i = 0; i < nodes.Count - 1; i++)
 			{
 				if (reportNumbers[nodes[i + 1]] - reportNumbers[nodes[i]] > 1)
-					reportDiscrepancies.Add(new ReportDiscrepancy(nodes[i].FullPath, nodes[i + 1].FullPath, ReportDiscrepancy.DiscrepancyKind.Number));
+					reportDiscrepancies.Add(new ReportDiscrepancy(GenerateTreePath(nodes[i]), GenerateTreePath(nodes[i + 1]), ReportDiscrepancy.DiscrepancyKind.Number));
 			}
 
 			return reportDiscrepancies;
+		}
+
+		/// <summary>
+		/// Generates a file path relative to but excluding root
+		/// </summary>
+		/// <param name="node"><see cref="TreeNode"/> to generate path for</param>
+		/// <returns>Path relative to root</returns>
+		private static string GenerateTreePath(TreeNode node)
+		{
+			string path = node.Text;
+			TreeNode currentNode = node;
+			while (currentNode.Parent != null)
+			{
+				if (currentNode.Parent != node)
+					path = Path.Combine(currentNode.Parent.Text, path);
+				currentNode = currentNode.Parent;
+			}
+			return path;
 		}
 
 		/// <summary>
