@@ -1275,7 +1275,6 @@ namespace BerichtManager
 		private void ActiveThemeChanged(object sender, ITheme theme)
 		{
 			ThemeSetter.SetThemes(this, theme);
-			NodeDrawer.SetTheme(ActiveTheme);
 			tvReports.Refresh();
 		}
 
@@ -1321,8 +1320,6 @@ namespace BerichtManager
 
 		private void tvReports_DrawNode(object sender, DrawTreeNodeEventArgs e)
 		{
-			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
-				return;
 			NodeDrawer.DrawNode(e);
 		}
 
