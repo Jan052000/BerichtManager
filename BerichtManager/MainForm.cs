@@ -814,6 +814,11 @@ namespace BerichtManager
 						SelectEditFrom selectEdit = new SelectEditFrom();
 						if (selectEdit.ShowDialog() == DialogResult.OK)
 						{
+							if (selectEdit.SelectedItems.Count == 0)
+							{
+								SaveOrExit();
+								return;
+							}
 							IEnumerator enumerator = Doc.FormFields.GetEnumerator();
 							EditForm edit;
 							foreach (EditState si in selectEdit.SelectedItems)
