@@ -36,6 +36,10 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// <see cref="Word.Application"/> to open reports with
 		/// </summary>
 		private Word.Application WordApp { get; set; }
+		/// <summary>
+		/// Cache for report numbers and start dates
+		/// </summary>
+		private Dictionary<TreeNode, (int ReportNumber, DateTime StartDate)> ReportsCache { get; } = new Dictionary<TreeNode, (int ReportNumber, DateTime StartDate)>();
 
 		internal ReportChecker(Word.Application wordApp)
 		{
@@ -102,6 +106,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 					doc.Close(SaveChanges: false);
 					return new List<ReportDiscrepancy>();
 				}
+				ReportsCache.Add(report, (reportNumber, startDate));
 				doc.Close(SaveChanges: false);
 			}
 
