@@ -39,7 +39,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// <summary>
 		/// Cache for report numbers and start dates
 		/// </summary>
-		private Dictionary<TreeNode, (int ReportNumber, DateTime StartDate)> ReportsCache { get; } = new Dictionary<TreeNode, (int ReportNumber, DateTime StartDate)>();
+		public Dictionary<TreeNode, (int ReportNumber, DateTime StartDate)> ReportsCache { get; } = new Dictionary<TreeNode, (int ReportNumber, DateTime StartDate)>();
 
 		internal ReportChecker(Word.Application wordApp)
 		{
@@ -54,6 +54,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// <returns><see cref="List{T}"/> of <see cref="ReportDiscrepancy"/> or <see langword="null"/> if an error was encountered</returns>
 		internal List<ReportDiscrepancy> SearchNumbers(TreeNode root)
 		{
+			ReportsCache.Clear();
 			Dictionary<TreeNode, int> reportNumbers = new Dictionary<TreeNode, int>();
 			Dictionary<TreeNode, DateTime> startDates = new Dictionary<TreeNode, DateTime>();
 			List<ReportDiscrepancy> reportDiscrepancies = new List<ReportDiscrepancy>();
@@ -150,7 +151,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// </summary>
 		/// <param name="node"><see cref="TreeNode"/> to generate path for</param>
 		/// <returns>Path relative to root</returns>
-		private string GenerateTreePath(TreeNode node)
+		public string GenerateTreePath(TreeNode node)
 		{
 			string path = node.Text;
 			TreeNode currentNode = node;
@@ -179,7 +180,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// <param name="node">Directory to search</param>
 		/// <param name="reports"><see cref="List{T}"/> of found reports to fill</param>
 		/// <returns><see cref="List{T}"/> of <see cref="TreeNode"/>s that represent all valid reports</returns>
-		private List<TreeNode> FindReports(TreeNode node, List<TreeNode> reports = null)
+		public List<TreeNode> FindReports(TreeNode node, List<TreeNode> reports = null)
 		{
 			if (reports == null)
 				reports = new List<TreeNode>();

@@ -14,6 +14,9 @@ using BerichtManager.HelperClasses;
 using BerichtManager.WebUntisClient;
 using System.Threading.Tasks;
 using BerichtManager.OwnControls;
+using BerichtManager.HelperClasses.ReportChecking;
+using System.Text;
+using System.Linq;
 
 namespace BerichtManager
 {
@@ -1465,6 +1468,33 @@ namespace BerichtManager
 			rtbWork.Text = "";
 			WasEdited = false;
 			EditMode = false;
+		}
+
+		private void miNumbers_Click(object sender, EventArgs e)
+		{
+			if (!HasWordStarted())
+				return;
+			FolderSelect select = new FolderSelect(tvReports.Nodes[0]);
+			if (select.ShowDialog() != DialogResult.OK)
+				return;
+			if (select.FilteredNode == null)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: "No file or folder was selected, check was canceled", title: "No selection was made");
+				return;
+			}
+			ReportChecker checker = new ReportChecker(WordApp);
+			List<ReportDiscrepancy> discrepancies = checker.SearchNumbers(select.FilteredNode);
+			if (discrepancies == null)
+				return;
+			if (discrepancies.Count == 0)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: "No discrepancies found", "Check done");
+				return;
+			}
+			StringBuilder message = new StringBuilder();
+			message.AppendLine("At least one number discrepancy was found");
+			discrepancies.ForEach(d => message.AppendLine($"{d.StartAt} => {d.Next},"));
+			ThemedMessageBox.Show(ActiveTheme, text: message.ToString(), title: "Discrepancy found");
 		}
 	}
 }

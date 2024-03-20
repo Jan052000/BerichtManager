@@ -64,11 +64,13 @@ namespace BerichtManager
 			this.miEditLatest = new System.Windows.Forms.ToolStripMenuItem();
 			this.miPrintAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRevealInExplorer = new System.Windows.Forms.ToolStripMenuItem();
+			this.miCloseReport = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.miCloseReport = new System.Windows.Forms.ToolStripMenuItem();
+			this.miCheckDiscrepancy = new System.Windows.Forms.ToolStripMenuItem();
+			this.miNumbers = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -281,7 +283,8 @@ namespace BerichtManager
             this.miEditLatest,
             this.miPrintAll,
             this.miRevealInExplorer,
-            this.miCloseReport});
+            this.miCloseReport,
+            this.miCheckDiscrepancy});
 			this.miFile.Name = "miFile";
 			this.miFile.Size = new System.Drawing.Size(37, 20);
 			this.miFile.Text = "File";
@@ -289,30 +292,37 @@ namespace BerichtManager
 			// miCreate
 			// 
 			this.miCreate.Name = "miCreate";
-			this.miCreate.Size = new System.Drawing.Size(180, 22);
+			this.miCreate.Size = new System.Drawing.Size(191, 22);
 			this.miCreate.Text = "Create";
 			this.miCreate.Click += new System.EventHandler(this.btCreate_Click);
 			// 
 			// miEditLatest
 			// 
 			this.miEditLatest.Name = "miEditLatest";
-			this.miEditLatest.Size = new System.Drawing.Size(180, 22);
+			this.miEditLatest.Size = new System.Drawing.Size(191, 22);
 			this.miEditLatest.Text = "Edit latest";
 			this.miEditLatest.Click += new System.EventHandler(this.btEdit_Click);
 			// 
 			// miPrintAll
 			// 
 			this.miPrintAll.Name = "miPrintAll";
-			this.miPrintAll.Size = new System.Drawing.Size(180, 22);
+			this.miPrintAll.Size = new System.Drawing.Size(191, 22);
 			this.miPrintAll.Text = "Print all";
 			this.miPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
 			// 
 			// miRevealInExplorer
 			// 
 			this.miRevealInExplorer.Name = "miRevealInExplorer";
-			this.miRevealInExplorer.Size = new System.Drawing.Size(180, 22);
+			this.miRevealInExplorer.Size = new System.Drawing.Size(191, 22);
 			this.miRevealInExplorer.Text = "Reveal in explorer";
 			this.miRevealInExplorer.Click += new System.EventHandler(this.miRevealInExplorer_Click);
+			// 
+			// miCloseReport
+			// 
+			this.miCloseReport.Name = "miCloseReport";
+			this.miCloseReport.Size = new System.Drawing.Size(191, 22);
+			this.miCloseReport.Text = "Close Report";
+			this.miCloseReport.Click += new System.EventHandler(this.miCloseReport_Click);
 			// 
 			// miOptions
 			// 
@@ -348,12 +358,21 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// miCloseReport
+			// miCheckDiscrepancy
 			// 
-			this.miCloseReport.Name = "miCloseReport";
-			this.miCloseReport.Size = new System.Drawing.Size(180, 22);
-			this.miCloseReport.Text = "Close Report";
-			this.miCloseReport.Click += new System.EventHandler(this.miCloseReport_Click);
+			this.miCheckDiscrepancy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miNumbers});
+			this.miCheckDiscrepancy.Name = "miCheckDiscrepancy";
+			this.miCheckDiscrepancy.Size = new System.Drawing.Size(191, 22);
+			this.miCheckDiscrepancy.Text = "Check for discrepancy";
+			// 
+			// miNumbers
+			// 
+			this.miNumbers.Name = "miNumbers";
+			this.miNumbers.Size = new System.Drawing.Size(180, 22);
+			this.miNumbers.Text = "Check numbers";
+			this.miNumbers.ToolTipText = "Check if report numbers are continuous";
+			this.miNumbers.Click += new System.EventHandler(this.miNumbers_Click);
 			// 
 			// MainForm
 			// 
@@ -415,6 +434,8 @@ namespace BerichtManager
 		private System.Windows.Forms.Panel paPadding2;
 		private System.Windows.Forms.ToolStripMenuItem miRevealInExplorer;
 		private System.Windows.Forms.ToolStripMenuItem miCloseReport;
+		private System.Windows.Forms.ToolStripMenuItem miCheckDiscrepancy;
+		private System.Windows.Forms.ToolStripMenuItem miNumbers;
 	}
 }
 
