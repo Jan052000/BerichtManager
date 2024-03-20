@@ -296,7 +296,7 @@ namespace BerichtManager
 		/// <param name="baseDate">The date of the report to be created</param>
 		/// <param name="app">The Wordapp that is used to create the document</param>
 		/// <param name="vacation">If you missed reports due to vacation</param>
-		/// <param name="reportDifference">The reportnumber difference between the report to create and the would be current report number</param>
+		/// <param name="reportDifference">The difference between the next report number and the one for the created report</param>
 		/// <param name="isSingle">Used to tell the method that this is a regular create job</param>
 		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application app, bool vacation = false, int reportDifference = 0, bool isSingle = false)
 		{
@@ -348,7 +348,7 @@ namespace BerichtManager
 				enumerator.MoveNext();
 
 				//Enter report nr.
-				FillText(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber() + reportDifference).ToString());
+				FillText(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber() - reportDifference).ToString());
 
 				//Enter week start and end
 				DateTime today = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day);
