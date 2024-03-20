@@ -57,10 +57,5 @@ namespace BerichtManager.Forms
 		{
 			tbPassword.UseSystemPasswordChar = !cbShowPassword.Checked;
 		}
-
-		private void Login_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			DialogResult = DialogResult.Cancel;
-		}
 	}
 }
