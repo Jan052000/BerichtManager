@@ -1,4 +1,4 @@
-﻿using BerichtManager.Config;
+using BerichtManager.Config;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
 using System;
@@ -20,7 +20,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// </summary>
 		internal enum ReportFields
 		{
-			Name,
+			Name = 1,
 			ReportNumber,
 			StartDate,
 			EndDate,
