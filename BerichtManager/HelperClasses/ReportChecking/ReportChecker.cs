@@ -51,7 +51,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// </summary>
 		/// <param name="root">Root <see cref="TreeNode"/> of folder to check</param>
 		/// <param name="wordApp"><see cref="Word.Application"/> to open documents in</param>
-		/// <returns><see cref="List{T}"/> of <see cref="ReportDiscrepancy"/></returns>
+		/// <returns><see cref="List{T}"/> of <see cref="ReportDiscrepancy"/> or <see langword="null"/> if an error was encountered</returns>
 		internal List<ReportDiscrepancy> SearchNumbers(TreeNode root)
 		{
 			Dictionary<TreeNode, int> reportNumbers = new Dictionary<TreeNode, int>();
@@ -78,7 +78,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"The report {path} does not contain the necessary form fields, checking was canceled", title: "Invalid report");
 					doc.Close(SaveChanges: false);
-					return new List<ReportDiscrepancy>();
+					return null;
 				}
 				if (GetReportNumber(doc, out int reportNumber))
 				{
@@ -91,7 +91,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read report number from {path}, checking was canceled", title: "Unable to read report number");
 					doc.Close(SaveChanges: false);
-					return new List<ReportDiscrepancy>();
+					return null;
 				}
 				if (GetStartDate(doc, out DateTime startDate))
 				{
@@ -104,7 +104,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read start date from {path}, checking was canceled", title: "Unable to read start date");
 					doc.Close(SaveChanges: false);
-					return new List<ReportDiscrepancy>();
+					return null;
 				}
 				ReportsCache.Add(report, (reportNumber, startDate));
 				doc.Close(SaveChanges: false);
@@ -123,7 +123,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 					message.AppendLine($"Start date: {GenerateTreePath(node)} = {GenerateTreePath(startDates.First(kvp => kvp.Value == duplicateStartDates[node]).Key)}");
 				});
 				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: message.ToString(), title: "Duplicates found");
-				return new List<ReportDiscrepancy>();
+				return null;
 			}
 
 			reportNumbers = reportNumbers.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
