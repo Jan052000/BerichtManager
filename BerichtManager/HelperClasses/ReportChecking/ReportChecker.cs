@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 
@@ -31,6 +32,15 @@ namespace BerichtManager.HelperClasses.ReportChecking
 			SignDateY,
 			SignDateS
 		}
+		/// <summary>
+		/// <see cref="Word.Application"/> to open reports with
+		/// </summary>
+		private Word.Application WordApp { get; set; }
+
+		internal ReportChecker(Word.Application wordApp)
+		{
+			WordApp = wordApp;
+		}
 
 		/// <summary>
 		/// Searches report numberf for discrepancies
@@ -38,15 +48,15 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// <param name="root">Root <see cref="TreeNode"/> of folder to check</param>
 		/// <param name="wordApp"><see cref="Word.Application"/> to open documents in</param>
 		/// <returns><see cref="List{T}"/> of <see cref="ReportDiscrepancy"/></returns>
-		internal static List<ReportDiscrepancy> SearchNumbers(TreeNode root, Word.Application wordApp)
+		internal List<ReportDiscrepancy> SearchNumbers(TreeNode root)
 		{
 			Dictionary<TreeNode, int> reportNumbers = new Dictionary<TreeNode, int>();
 			Dictionary<TreeNode, DateTime> startDates = new Dictionary<TreeNode, DateTime>();
 			List<ReportDiscrepancy> reportDiscrepancies = new List<ReportDiscrepancy>();
 			//List for duplicate report numbers
-			List<TreeNode> duplicateNumbers = new List<TreeNode>();
+			Dictionary<TreeNode, int> duplicateNumbers = new Dictionary<TreeNode, int>();
 			//List for duplicate start dates
-			List<TreeNode> duplicateStartDates = new List<TreeNode>();
+			Dictionary<TreeNode, DateTime> duplicateStartDates = new Dictionary<TreeNode, DateTime>();
 
 			List<TreeNode> reportNodes = FindReports(root);
 			foreach (TreeNode report in reportNodes)
@@ -59,7 +69,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 						path = Path.Combine(currentNode.Parent.Text, path);
 					currentNode = currentNode.Parent;
 				}
-				Word.Document doc = wordApp.Documents.Open(FileName: Path.Combine(ConfigHandler.Instance.ReportPath(), path), ReadOnly: true);
+				Word.Document doc = WordApp.Documents.Open(FileName: Path.Combine(ConfigHandler.Instance.ReportPath(), path), ReadOnly: true);
 				if (doc.FormFields.Count < 10)
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"The report {path} does not contain the necessary form fields, checking was canceled", title: "Invalid report");
@@ -67,7 +77,12 @@ namespace BerichtManager.HelperClasses.ReportChecking
 					return new List<ReportDiscrepancy>();
 				}
 				if (GetReportNumber(doc, out int reportNumber))
-					reportNumbers.Add(report, reportNumber);
+				{
+					if (!reportNumbers.ContainsValue(reportNumber))
+						reportNumbers.Add(report, reportNumber);
+					else
+						duplicateNumbers.Add(report, reportNumber);
+				}
 				else
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read report number from {path}, checking was canceled", title: "Unable to read report number");
@@ -75,7 +90,12 @@ namespace BerichtManager.HelperClasses.ReportChecking
 					return new List<ReportDiscrepancy>();
 				}
 				if (GetStartDate(doc, out DateTime startDate))
-					startDates.Add(report, startDate);
+				{
+					if (!startDates.ContainsValue(startDate))
+						startDates.Add(report, startDate);
+					else
+						duplicateStartDates.Add(report, startDate);
+				}
 				else
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read start date from {path}, checking was canceled", title: "Unable to read start date");
@@ -85,9 +105,20 @@ namespace BerichtManager.HelperClasses.ReportChecking
 				doc.Close(SaveChanges: false);
 			}
 
-			if (duplicateNumbers.Count > 0)
+			if (duplicateNumbers.Count > 0 || duplicateStartDates.Count > 0)
 			{
-
+				StringBuilder message = new StringBuilder();
+				message.AppendLine("At least one duplicate start date or report number was found, checking was canceled: ");
+				duplicateNumbers.Keys.ToList().ForEach(node =>
+				{
+					message.AppendLine($"Number: {GenerateTreePath(node)} = {GenerateTreePath(reportNumbers.First(kvp => kvp.Value == duplicateNumbers[node]).Key)}");
+				});
+				duplicateStartDates.Keys.ToList().ForEach(node =>
+				{
+					message.AppendLine($"Start date: {GenerateTreePath(node)} = {GenerateTreePath(startDates.First(kvp => kvp.Value == duplicateStartDates[node]).Key)}");
+				});
+				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: message.ToString(), title: "Duplicates found");
+				return new List<ReportDiscrepancy>();
 			}
 
 			reportNumbers = reportNumbers.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
@@ -114,7 +145,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// </summary>
 		/// <param name="node"><see cref="TreeNode"/> to generate path for</param>
 		/// <returns>Path relative to root</returns>
-		private static string GenerateTreePath(TreeNode node)
+		private string GenerateTreePath(TreeNode node)
 		{
 			string path = node.Text;
 			TreeNode currentNode = node;
@@ -132,7 +163,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// </summary>
 		/// <param name="name">Name of report to check</param>
 		/// <returns><see langword="true"/> if report is valid and <see langword="false"/> otherise</returns>
-		private static bool IsReportValid(string name)
+		private bool IsReportValid(string name)
 		{
 			return name.EndsWith(".docx") && !name.StartsWith("~$");
 		}
@@ -143,7 +174,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// <param name="node">Directory to search</param>
 		/// <param name="reports"><see cref="List{T}"/> of found reports to fill</param>
 		/// <returns><see cref="List{T}"/> of <see cref="TreeNode"/>s that represent all valid reports</returns>
-		private static List<TreeNode> FindReports(TreeNode node, List<TreeNode> reports = null)
+		private List<TreeNode> FindReports(TreeNode node, List<TreeNode> reports = null)
 		{
 			if (reports == null)
 				reports = new List<TreeNode>();
@@ -163,7 +194,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// <param name="document"><see cref="Word.Document"/> to get number from</param>
 		/// <param name="number">Number of report</param>
 		/// <returns><see langword="true"/> if number was found and <see langword="false"/> otherwise</returns>
-		private static bool GetReportNumber(Word.Document document, out int number)
+		private bool GetReportNumber(Word.Document document, out int number)
 		{
 			if (!int.TryParse(document.FormFields[ReportFields.ReportNumber].Result, out int reportNumber))
 			{
@@ -179,7 +210,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// </summary>
 		/// <param name="document"><see cref="Word.Document"/> to get start date from</param>
 		/// <returns>Start date of report</returns>
-		private static bool GetStartDate(Word.Document document, out DateTime startDate)
+		private bool GetStartDate(Word.Document document, out DateTime startDate)
 		{
 			if (!DateTime.TryParse(document.FormFields[ReportFields.StartDate].Result, out DateTime rstartDate))
 			{
@@ -195,7 +226,7 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// </summary>
 		/// <param name="document"><see cref="Word.Document"/> to get end date from</param>
 		/// <returns>End date of report</returns>
-		private static DateTime GerEndDate(Word.Document document)
+		private DateTime GerEndDate(Word.Document document)
 		{
 			if (!DateTime.TryParse(document.FormFields[ReportFields.StartDate].Result, out DateTime endDate))
 			{
