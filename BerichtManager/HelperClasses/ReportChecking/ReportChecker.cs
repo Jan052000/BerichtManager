@@ -41,7 +41,12 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		internal static List<ReportDiscrepancy> SearchNumbers(TreeNode root, Word.Application wordApp)
 		{
 			Dictionary<TreeNode, int> reportNumbers = new Dictionary<TreeNode, int>();
+			Dictionary<TreeNode, DateTime> startDates = new Dictionary<TreeNode, DateTime>();
 			List<ReportDiscrepancy> reportDiscrepancies = new List<ReportDiscrepancy>();
+			//List for duplicate report numbers
+			List<TreeNode> duplicateNumbers = new List<TreeNode>();
+			//List for duplicate start dates
+			List<TreeNode> duplicateStartDates = new List<TreeNode>();
 
 			List<TreeNode> reportNodes = FindReports(root);
 			foreach (TreeNode report in reportNodes)
@@ -55,11 +60,34 @@ namespace BerichtManager.HelperClasses.ReportChecking
 					currentNode = currentNode.Parent;
 				}
 				Word.Document doc = wordApp.Documents.Open(FileName: Path.Combine(ConfigHandler.Instance.ReportPath(), path), ReadOnly: true);
-				if (doc.FormFields.Count >= 10 && GetReportNumber(doc, out int reportNumber))
+				if (doc.FormFields.Count < 10)
+				{
+					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"The report {path} does not contain the necessary form fields, checking was canceled", title: "Invalid report");
+					doc.Close(SaveChanges: false);
+					return new List<ReportDiscrepancy>();
+				}
+				if (GetReportNumber(doc, out int reportNumber))
 					reportNumbers.Add(report, reportNumber);
 				else
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read report number from {path}", title: "Unable to read report number");
-				doc.Close();
+				{
+					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read report number from {path}, checking was canceled", title: "Unable to read report number");
+					doc.Close(SaveChanges: false);
+					return new List<ReportDiscrepancy>();
+				}
+				if (GetStartDate(doc, out DateTime startDate))
+					startDates.Add(report, startDate);
+				else
+				{
+					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read start date from {path}, checking was canceled", title: "Unable to read start date");
+					doc.Close(SaveChanges: false);
+					return new List<ReportDiscrepancy>();
+				}
+				doc.Close(SaveChanges: false);
+			}
+
+			if (duplicateNumbers.Count > 0)
+			{
+
 			}
 
 			reportNumbers = reportNumbers.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
@@ -67,7 +95,15 @@ namespace BerichtManager.HelperClasses.ReportChecking
 			for (int i = 0; i < nodes.Count - 1; i++)
 			{
 				if (reportNumbers[nodes[i + 1]] - reportNumbers[nodes[i]] > 1)
-					reportDiscrepancies.Add(new ReportDiscrepancy(GenerateTreePath(nodes[i]), GenerateTreePath(nodes[i + 1]), ReportDiscrepancy.DiscrepancyKind.Number));
+					reportDiscrepancies.Add(
+						new ReportDiscrepancy(GenerateTreePath(nodes[i]),
+						GenerateTreePath(nodes[i + 1]),
+						ReportDiscrepancy.DiscrepancyKind.Number,
+						reportNumbers[nodes[i]],
+						startDates[nodes[i]],
+						reportNumbers[nodes[i + 1]],
+						startDates[nodes[i + 1]])
+					);
 			}
 
 			return reportDiscrepancies;
@@ -129,9 +165,8 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// <returns><see langword="true"/> if number was found and <see langword="false"/> otherwise</returns>
 		private static bool GetReportNumber(Word.Document document, out int number)
 		{
-			if (!int.TryParse(document.FormFields[ReportFields.ReportNumber + 1].Result, out int reportNumber))
+			if (!int.TryParse(document.FormFields[ReportFields.ReportNumber].Result, out int reportNumber))
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read report number of {Path.Combine(document.Path, document.Name)}", title: "Unable to read number");
 				number = -1;
 				return false;
 			}
@@ -144,14 +179,15 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		/// </summary>
 		/// <param name="document"><see cref="Word.Document"/> to get start date from</param>
 		/// <returns>Start date of report</returns>
-		private static DateTime GetStartDate(Word.Document document)
+		private static bool GetStartDate(Word.Document document, out DateTime startDate)
 		{
-			if (!DateTime.TryParse(document.FormFields[ReportFields.StartDate].Result, out DateTime startDate))
+			if (!DateTime.TryParse(document.FormFields[ReportFields.StartDate].Result, out DateTime rstartDate))
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read start date of {Path.Combine(document.Path, document.Name)}", title: "Unable to read date");
-				return new DateTime();
+				startDate = new DateTime();
+				return false;
 			}
-			return startDate;
+			startDate = rstartDate;
+			return true;
 		}
 
 		/// <summary>
@@ -163,7 +199,6 @@ namespace BerichtManager.HelperClasses.ReportChecking
 		{
 			if (!DateTime.TryParse(document.FormFields[ReportFields.StartDate].Result, out DateTime endDate))
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read end date of {Path.Combine(document.Path, document.Name)}", title: "Unable to read date");
 				return new DateTime();
 			}
 			return endDate;
