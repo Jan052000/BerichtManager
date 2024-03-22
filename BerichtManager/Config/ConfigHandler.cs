@@ -75,7 +75,7 @@ namespace BerichtManager.Config
 			{"TabStops", (Type.GetType("System.Int32"), 20)},
 			{"NamingPattern", (Type.GetType("System.String"), "WochenberichtKW~+CW+~")},
 			{"AutoSyncWithIHK", (Type.GetType("System.Boolean"), false)},
-			{"LastIHKReportNr", (Type.GetType("System.Int32"), -1)},
+			{"LastIHKReportNr", (Type.GetType("System.Int32"), 0)},
 			{"IHKUserName", (Type.GetType("System.String"), "")},
 			{"IHKPassword", (Type.GetType("System.String"), "")},
 			{"IHKStayLoggedIn", (Type.GetType("System.Boolean"), false)},
