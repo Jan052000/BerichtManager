@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 
 namespace BerichtManager.IHKClient
@@ -19,10 +19,10 @@ namespace BerichtManager.IHKClient
 		public string LfdNR { get; set; }
 		[JsonProperty("edtvon")]
 		[IHKFormDataName("edtvon")]
-		public DateTime StartDate { get; set; }
+		public string StartDate { get; set; }
 		[JsonProperty("edtbis")]
 		[IHKFormDataName("edtbis")]
-		public DateTime EndDate { get; set; }
+		public string EndDate { get; set; }
 		[JsonProperty("ausbabschnitt")]
 		[IHKFormDataName("ausbabschnitt")]
 		public string JobField { get; set; }
