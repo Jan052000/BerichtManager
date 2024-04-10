@@ -91,6 +91,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HelperClasses\FolderSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HelperClasses\FolderSelect.Designer.cs">
+      <DependentUpon>FolderSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="OwnControls\FocusColoredFlatButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -166,6 +172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectEditFrom.resx">
       <DependentUpon>SelectEditFrom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HelperClasses\FolderSelect.resx">
+      <DependentUpon>FolderSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
