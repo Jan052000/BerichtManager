@@ -80,7 +80,8 @@ namespace BerichtManager.Config
 			{"IHKPassword", (Type.GetType("System.String"), "")},
 			{"IHKStayLoggedIn", (Type.GetType("System.Boolean"), false)},
 			{"IHKJobField", (Type.GetType("System.String"), "")},
-			{"IHKSupervisorEMail", (Type.GetType("System.String"), "")}
+			{"IHKSupervisorEMail", (Type.GetType("System.String"), "")},
+			{"IHKBaseUrl", (Type.GetType("System.String"), "https://www.bildung-ihk-nordwestfalen.de/")}
 		};
 		#endregion
 
@@ -792,6 +793,24 @@ namespace BerichtManager.Config
 		public void AutoSyncWithIHK(bool autoSync)
 		{
 			GenericSet("AutoSyncWithIHK", autoSync);
+		}
+
+		/// <summary>
+		/// Gets base url for <see cref="IHKClient.IHKClient"/>
+		/// </summary>
+		/// <returns>Base url of IHK portal</returns>
+		public string IHKBaseUrl()
+		{
+			return GenericGet<string>("IHKBaseUrl");
+		}
+
+		/// <summary>
+		/// Sets base url for <see cref="IHKClient.IHKClient"/>
+		/// </summary>
+		/// <param name="url">Base url of IHK portal</param>
+		public void IHKBaseUrl(string url)
+		{
+			GenericSet("IHKBaseUrl", url);
 		}
 
 		private void SortConfig()

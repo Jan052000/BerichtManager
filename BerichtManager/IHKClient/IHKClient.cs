@@ -33,7 +33,7 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// Base url for IHK endpoint
 		/// </summary>
-		private string BASEURL { get => "https://www.bildung-ihk-nordwestfalen.de/"; }
+		private string BASEURL { get => Config.ConfigHandler.Instance.IHKBaseUrl(); }
 		/// <summary>
 		/// Wether or not the client is logged in
 		/// </summary>
