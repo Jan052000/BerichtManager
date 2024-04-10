@@ -75,6 +75,8 @@ namespace BerichtManager.Forms
 			this.laSupervisorMail = new System.Windows.Forms.Label();
 			this.laJobField = new System.Windows.Forms.Label();
 			this.laLastUploadedReportNumber = new System.Windows.Forms.Label();
+			this.tbIHKBaseUrl = new System.Windows.Forms.TextBox();
+			this.laIHKBaseUrl = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudLastUploadedReportNumber)).BeginInit();
@@ -89,7 +91,7 @@ namespace BerichtManager.Forms
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(713, 526);
+			this.btClose.Location = new System.Drawing.Point(713, 552);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 0;
@@ -100,7 +102,7 @@ namespace BerichtManager.Forms
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(632, 526);
+			this.btSave.Location = new System.Drawing.Point(633, 552);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
 			this.btSave.TabIndex = 1;
@@ -557,6 +559,8 @@ namespace BerichtManager.Forms
 			// gbIHK
 			// 
 			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbIHK.Controls.Add(this.laIHKBaseUrl);
+			this.gbIHK.Controls.Add(this.tbIHKBaseUrl);
 			this.gbIHK.Controls.Add(this.cbIHKAutoSync);
 			this.gbIHK.Controls.Add(this.laSupervisorMail);
 			this.gbIHK.Controls.Add(this.tbSupervisorMail);
@@ -568,7 +572,7 @@ namespace BerichtManager.Forms
 			this.gbIHK.Dock = System.Windows.Forms.DockStyle.Top;
 			this.gbIHK.Location = new System.Drawing.Point(0, 405);
 			this.gbIHK.Name = "gbIHK";
-			this.gbIHK.Size = new System.Drawing.Size(800, 115);
+			this.gbIHK.Size = new System.Drawing.Size(800, 141);
 			this.gbIHK.TabIndex = 46;
 			this.gbIHK.TabStop = false;
 			this.gbIHK.Text = "IHK";
@@ -576,7 +580,7 @@ namespace BerichtManager.Forms
 			// cbIHKAutoSync
 			// 
 			this.cbIHKAutoSync.AutoSize = true;
-			this.cbIHKAutoSync.Location = new System.Drawing.Point(98, 92);
+			this.cbIHKAutoSync.Location = new System.Drawing.Point(98, 118);
 			this.cbIHKAutoSync.Name = "cbIHKAutoSync";
 			this.cbIHKAutoSync.Size = new System.Drawing.Size(134, 17);
 			this.cbIHKAutoSync.TabIndex = 52;
@@ -610,11 +614,27 @@ namespace BerichtManager.Forms
 			this.laLastUploadedReportNumber.TabIndex = 0;
 			this.laLastUploadedReportNumber.Text = "Last IHK report";
 			// 
+			// tbIHKBaseUrl
+			// 
+			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
+			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
+			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
+			this.tbIHKBaseUrl.TabIndex = 53;
+			// 
+			// laIHKBaseUrl
+			// 
+			this.laIHKBaseUrl.AutoSize = true;
+			this.laIHKBaseUrl.Location = new System.Drawing.Point(51, 95);
+			this.laIHKBaseUrl.Name = "laIHKBaseUrl";
+			this.laIHKBaseUrl.Size = new System.Drawing.Size(41, 13);
+			this.laIHKBaseUrl.TabIndex = 54;
+			this.laIHKBaseUrl.Text = "IHK Url";
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 561);
+			this.ClientSize = new System.Drawing.Size(800, 587);
 			this.Controls.Add(this.gbIHK);
 			this.Controls.Add(this.gbManagerOptions);
 			this.Controls.Add(this.gbConfig);
@@ -691,5 +711,7 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.Label laSupervisorMail;
 		private System.Windows.Forms.TextBox tbSupervisorMail;
 		private System.Windows.Forms.CheckBox cbIHKAutoSync;
+		private System.Windows.Forms.Label laIHKBaseUrl;
+		private System.Windows.Forms.TextBox tbIHKBaseUrl;
 	}
 }

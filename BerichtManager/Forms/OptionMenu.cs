@@ -79,6 +79,7 @@ namespace BerichtManager.Forms
 			tbJobField.Text = ConfigHandler.IHKJobField();
 			tbSupervisorMail.Text = ConfigHandler.IHKSupervisorEMail();
 			cbIHKAutoSync.Checked = ConfigHandler.AutoSyncWithIHK();
+			tbIHKBaseUrl.Text = ConfigHandler.IHKBaseUrl();
 
 			IsDirty = false;
 			btSave.Enabled = false;
@@ -216,6 +217,7 @@ namespace BerichtManager.Forms
 			ConfigHandler.IHKJobField(tbJobField.Text);
 			ConfigHandler.IHKSupervisorEMail(tbSupervisorMail.Text);
 			ConfigHandler.AutoSyncWithIHK(cbIHKAutoSync.Checked);
+			ConfigHandler.IHKBaseUrl(tbIHKBaseUrl.Text);
 		}
 
 		/// <summary>
