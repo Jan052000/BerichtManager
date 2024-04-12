@@ -272,17 +272,36 @@ namespace BerichtManager
 		}
 
 		/// <summary>
+		/// Fits <paramref name="doc"/> to pages
+		/// </summary>
+		/// <param name="doc"></param>
+		private void FitToPage(Word.Document doc = null)
+		{
+			if (doc == null)
+				doc = Doc;
+			try
+			{
+				doc.FitToPages();
+			}
+			catch
+			{
+
+			}
+		}
+
+		/// <summary>
 		/// Creates a new Word document from a given template for a given time.
 		/// </summary>
 		/// <param name="templatePath">The full path of the template to be used</param>
 		/// <param name="baseDate">The date of the report to be created</param>
 		/// <param name="app">The Wordapp that is used to create the document</param>
 		/// <param name="vacation">If you missed reports due to vacation</param>
-		/// <param name="reportDifference">The reportnumber difference between the report to create and the would be current report number</param>
+		/// <param name="reportDifference">The difference between the next report number and the one for the created report</param>
 		/// <param name="isSingle">Used to tell the method that this is a regular create job</param>
 		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application app, bool vacation = false, int reportDifference = 0, bool isSingle = false)
 		{
 			Word.Document ldoc = null;
+			bool ldocWasSaved = false;
 			if (!File.Exists(templatePath))
 			{
 				ThemedMessageBox.Show(ActiveTheme, ConfigHandler.TemplatePath() + " was not found was it moved or deleted?", "Template not found");
@@ -329,7 +348,7 @@ namespace BerichtManager
 				enumerator.MoveNext();
 
 				//Enter report nr.
-				FillText(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber() + reportDifference).ToString());
+				FillText(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber() - reportDifference).ToString());
 
 				//Enter week start and end
 				DateTime today = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day);
@@ -472,8 +491,9 @@ namespace BerichtManager
 				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
 				string name = ConfigHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, ConfigHandler.ReportNumber().ToString());
 				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
-				SetFontInDoc(ldoc, app);
+				FitToPage(ldoc);
 				ldoc.SaveAs2(FileName: path);
+				UpdateTree();
 
 				ConfigHandler.ReportNumber(ConfigHandler.ReportNumber() + 1);
 				ConfigHandler.LastReportKW(Culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
@@ -481,10 +501,9 @@ namespace BerichtManager
 				ConfigHandler.SaveConfig();
 				miEditLatest.Enabled = true;
 				ThemedMessageBox.Show(ActiveTheme, "Created Document at: " + path);
+				ldocWasSaved = true;
 
 				ldoc.Close();
-				UpdateTree();
-
 				SaveOrExit();
 				Doc = WordApp.Documents.Open(path);
 				rtbWork.Text = Doc.FormFields[6].Result;
@@ -497,12 +516,19 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						ThemedMessageBox.Show(ActiveTheme, "an unexpected problem occured this progam will now close!");
-						break;
 					case -2147467262:
 					case -2146823679:
-						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please try again shortly");
+					case -2147023179:
+					//{"Der Remoteprozeduraufruf ist fehlgeschlagen. (Ausnahme von HRESULT: 0x800706BE)"}
+					case -2147023170:
+						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please wait while it restarts");
 						RestartWord();
+						if (ldocWasSaved)
+						{
+							ThemedMessageBox.Show(ActiveTheme, text: "Unable to automatically open report, Word was closed unexpectedly", "Loading was cancelled because word closed");
+							return;
+						}
+						CreateDocument(templatePath, baseDate, WordApp, vacation: vacation, reportDifference: reportDifference, isSingle: isSingle);
 						break;
 					case -2146822750:
 						//Document already fit on page
@@ -788,6 +814,11 @@ namespace BerichtManager
 						SelectEditFrom selectEdit = new SelectEditFrom();
 						if (selectEdit.ShowDialog() == DialogResult.OK)
 						{
+							if (selectEdit.SelectedItems.Count == 0)
+							{
+								SaveOrExit();
+								return;
+							}
 							IEnumerator enumerator = Doc.FormFields.GetEnumerator();
 							EditForm edit;
 							foreach (EditState si in selectEdit.SelectedItems)
@@ -824,7 +855,7 @@ namespace BerichtManager
 							}
 						}
 					}
-					SetFontInDoc(Doc, WordApp);
+					FitToPage(Doc);
 					Doc.Save();
 					rtbWork.Text = Doc.FormFields[6].Result;
 					rtbSchool.Text = Doc.FormFields[8].Result;
@@ -942,7 +973,7 @@ namespace BerichtManager
 					return;
 				FillText(WordApp, Doc.FormFields[6], rtbWork.Text);
 				FillText(WordApp, Doc.FormFields[8], rtbSchool.Text);
-				SetFontInDoc(Doc, WordApp);
+				FitToPage(Doc);
 				Doc.Save();
 				ThemedMessageBox.Show(ActiveTheme, "Saved changes", "Saved");
 				WasEdited = false;
@@ -1249,7 +1280,6 @@ namespace BerichtManager
 		private void ActiveThemeChanged(object sender, ITheme theme)
 		{
 			ThemeSetter.SetThemes(this, theme);
-			NodeDrawer.SetTheme(ActiveTheme);
 			tvReports.Refresh();
 		}
 
@@ -1295,8 +1325,6 @@ namespace BerichtManager
 
 		private void tvReports_DrawNode(object sender, DrawTreeNodeEventArgs e)
 		{
-			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
-				return;
 			NodeDrawer.DrawNode(e);
 		}
 
@@ -1380,6 +1408,15 @@ namespace BerichtManager
 		}
 
 		/// <summary>
+		/// Checks wether or not the word app is still open by comparing types of open and closed word app
+		/// </summary>
+		/// <returns><see langword="true"/> if word is open and <see langword="false"/> otherwise</returns>
+		private bool CheckIfWordOpen()
+		{
+			return !typeof(Word.Application).IsAssignableFrom(WordApp.GetType());
+		}
+
+		/// <summary>
 		/// Restarts word if it has been closed
 		/// </summary>
 		private void RestartWord()
@@ -1392,17 +1429,9 @@ namespace BerichtManager
 			}
 
 			//Check if word is still open
-			if (!typeof(Word.Application).IsAssignableFrom(WordApp.GetType()))
+			if (CheckIfWordOpen())
 				return;
 			WordInitialized = false;
-			//try
-			//{
-			//	wordApp.Quit(SaveChanges: false);
-			//}
-			//catch
-			//{
-
-			//}
 			WordApp = new Word.Application();
 			WordInitialized = true;
 		}

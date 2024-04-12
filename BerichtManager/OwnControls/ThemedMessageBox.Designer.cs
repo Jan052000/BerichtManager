@@ -33,6 +33,7 @@
 			this.btYes = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btNo = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btCancel = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btCopyToClipboard = new System.Windows.Forms.Button();
 			this.paText.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -41,10 +42,11 @@
 			this.paText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.paText.AutoScroll = true;
 			this.paText.Controls.Add(this.rtbText);
 			this.paText.Location = new System.Drawing.Point(12, 12);
 			this.paText.Name = "paText";
-			this.paText.Size = new System.Drawing.Size(344, 141);
+			this.paText.Size = new System.Drawing.Size(410, 173);
 			this.paText.TabIndex = 2;
 			// 
 			// rtbText
@@ -55,14 +57,14 @@
 			this.rtbText.Location = new System.Drawing.Point(0, 0);
 			this.rtbText.Name = "rtbText";
 			this.rtbText.ReadOnly = true;
-			this.rtbText.Size = new System.Drawing.Size(344, 141);
+			this.rtbText.Size = new System.Drawing.Size(410, 173);
 			this.rtbText.TabIndex = 2;
 			this.rtbText.Text = "";
 			// 
 			// btYes
 			// 
 			this.btYes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btYes.Location = new System.Drawing.Point(119, 159);
+			this.btYes.Location = new System.Drawing.Point(185, 191);
 			this.btYes.Name = "btYes";
 			this.btYes.Size = new System.Drawing.Size(75, 23);
 			this.btYes.TabIndex = 3;
@@ -72,7 +74,7 @@
 			// btNo
 			// 
 			this.btNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btNo.Location = new System.Drawing.Point(200, 159);
+			this.btNo.Location = new System.Drawing.Point(266, 191);
 			this.btNo.Name = "btNo";
 			this.btNo.Size = new System.Drawing.Size(75, 23);
 			this.btNo.TabIndex = 1;
@@ -82,23 +84,35 @@
 			// btCancel
 			// 
 			this.btCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btCancel.Location = new System.Drawing.Point(281, 159);
+			this.btCancel.Location = new System.Drawing.Point(347, 191);
 			this.btCancel.Name = "btCancel";
 			this.btCancel.Size = new System.Drawing.Size(75, 23);
 			this.btCancel.TabIndex = 0;
 			this.btCancel.Text = "Cancel";
 			this.btCancel.UseVisualStyleBackColor = true;
 			// 
+			// btCopyToClipboard
+			// 
+			this.btCopyToClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btCopyToClipboard.Location = new System.Drawing.Point(12, 191);
+			this.btCopyToClipboard.Name = "btCopyToClipboard";
+			this.btCopyToClipboard.Size = new System.Drawing.Size(75, 23);
+			this.btCopyToClipboard.TabIndex = 4;
+			this.btCopyToClipboard.Text = "Copy";
+			this.btCopyToClipboard.UseVisualStyleBackColor = true;
+			this.btCopyToClipboard.Click += new System.EventHandler(this.CopyToClipboard);
+			// 
 			// ThemedMessageBox
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(368, 194);
+			this.ClientSize = new System.Drawing.Size(434, 226);
+			this.Controls.Add(this.btCopyToClipboard);
 			this.Controls.Add(this.btYes);
 			this.Controls.Add(this.paText);
 			this.Controls.Add(this.btNo);
 			this.Controls.Add(this.btCancel);
-			this.MaximumSize = new System.Drawing.Size(600, 500);
+			this.MinimumSize = new System.Drawing.Size(99, 0);
 			this.Name = "ThemedMessageBox";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "ColoredMessageBox";
@@ -114,5 +128,6 @@
 		private FocusColoredFlatButton btCancel;
 		private FocusColoredFlatButton btNo;
 		private FocusColoredFlatButton btYes;
+		private System.Windows.Forms.Button btCopyToClipboard;
 	}
 }

@@ -111,12 +111,9 @@ namespace BerichtManager.Forms
 				return;
 			if (rtInput.Font.FontFamily.Name != ConfigHandler.EditorFont())
 			{
-				if (ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Do you want to change the font of following reports to " + cbFontFamily.Text + "?\n(Standard: \"Arial\")", "Change Font?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-				{
-					ConfigHandler.EditorFont(rtInput.Font.FontFamily.Name);
-					ConfigHandler.SaveConfig();
-					RefreshConfigs();
-				}
+				ConfigHandler.EditorFont(rtInput.Font.FontFamily.Name);
+				ConfigHandler.SaveConfig();
+				RefreshConfigs();
 			}
 			SaveSize();
 		}
@@ -124,8 +121,6 @@ namespace BerichtManager.Forms
 		private void btClose_Click(object sender, EventArgs e)
 		{
 			Result = rtInput.Text;
-
-			ChangeFont();
 			DialogResult = DialogResult.Cancel;
 			Close();
 		}
@@ -140,7 +135,6 @@ namespace BerichtManager.Forms
 			{
 				Result = rtInput.Text;
 			}
-			ChangeFont();
 			DialogResult = DialogResult.OK;
 			Close();
 		}
@@ -161,6 +155,7 @@ namespace BerichtManager.Forms
 		private void cbFontFamily_SelectedValueChanged(object sender, EventArgs e)
 		{
 			rtInput.Font = new Font(cbFontFamily.Text, rtInput.Font.Size);
+			ChangeFont();
 		}
 
 		private void cbEditorFont_CheckedChanged(object sender, EventArgs e)
@@ -193,7 +188,6 @@ namespace BerichtManager.Forms
 			{
 				Result = rtInput.Text;
 			}
-			ChangeFont();
 			DialogResult = DialogResult.Ignore;
 			Close();
 		}
