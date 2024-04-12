@@ -29,6 +29,10 @@ namespace BerichtManager
 		private Word.Application WordApp { get; set; }
 		private ConfigHandler ConfigHandler { get; } = ConfigHandler.Instance;
 		private Client Client { get; } = new Client();
+		/// <summary>
+		/// Client which is used to interact with IHK services
+		/// </summary>
+		private IHKClient.IHKClient IHKClient { get; } = new IHKClient.IHKClient();
 
 		/// <summary>
 		/// Directory containing all reports
@@ -76,7 +80,7 @@ namespace BerichtManager
 		/// <summary>
 		/// Factory for creating tasks that start word
 		/// </summary>
-		private readonly TaskFactory WordTaskFactory = Task.Factory;
+		private TaskFactory WordTaskFactory { get; } = Task.Factory;
 
 		/// <summary>
 		/// Generates path to file from selected node
@@ -1236,6 +1240,7 @@ namespace BerichtManager
 			//miDelete.Visible = isInLogs || tvReports.SelectedNode.Text.EndsWith(".docx") || tvReports.SelectedNode.Text.StartsWith("~$");
 			miQuickEditOptions.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
+			miUploadAsNext.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			return;
 		}
 
@@ -1470,6 +1475,52 @@ namespace BerichtManager
 			rtbWork.Text = "";
 			WasEdited = false;
 			EditMode = false;
+		}
+
+		/// <summary>
+		/// Uploads a single report to IHK and handles the output from <see cref="IHKClient"/>
+		/// </summary>
+		/// <param name="doc">Report to upload</param>
+		/// <returns><see langword="true"/> if upload was successful and <see langword="false"/> otherwise</returns>
+		private async Task<bool> UploadReportToIHK(Word.Document doc)
+		{
+			try
+			{
+				switch (await IHKClient.CreateReport(doc))
+				{
+					case BerichtManager.IHKClient.IHKClient.CreateResults.Success:
+						ThemedMessageBox.Show(ActiveTheme, text: "Report uploaded successfully", title: "Upload successful");
+						break;
+					case BerichtManager.IHKClient.IHKClient.CreateResults.CreationFailed:
+					case BerichtManager.IHKClient.IHKClient.CreateResults.UploadFailed:
+						ThemedMessageBox.Show(ActiveTheme, text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
+						return false;
+					case BerichtManager.IHKClient.IHKClient.CreateResults.Unauthorized:
+						ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
+						return false;
+				}
+			}
+			catch (Exception ex)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}", title: ex.GetType().Name);
+				return false;
+			}
+			return true;
+		}
+
+		private async void miUploadAsNext_Click(object sender, EventArgs e)
+		{
+			if (!HasWordStarted())
+				return;
+			Word.Document doc = WordApp.Documents.Add(FullSelectedPath);
+			if (doc.FormFields.Count < 10)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please upload manually", title: "Invalid document");
+				return;
+			}
+			//Implement upload flagging
+			await UploadReportToIHK(doc);
+			doc.Close(SaveChanges: false);
 		}
 	}
 }
