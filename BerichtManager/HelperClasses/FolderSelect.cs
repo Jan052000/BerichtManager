@@ -19,25 +19,73 @@ namespace BerichtManager.HelperClasses
 		/// Flag to stop <see cref="CheckChildNodes(TreeNode)"/> from cascading endlessly
 		/// </summary>
 		private bool UpdatingChecks { get; set; } = false;
+		/// <summary>
+		/// Delegate for a node filter
+		/// </summary>
+		/// <param name="node"><see cref="TreeNode"/> node to filter</param>
+		/// <returns><see langword="true"/> if node should be filtered and <see langword="false"/> if not</returns>
+		public delegate bool NodeFilter(TreeNode node);
 
 		/// <summary>
-		/// Creates a new form of <see cref="FolderSelect"/>
+		/// Creates a new <see cref="Form"/> of <see cref="FolderSelect"/>
 		/// </summary>
 		/// <param name="node">Initial <see cref="TreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
 		public FolderSelect(TreeNode node)
 		{
 			InitializeComponent();
 			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			AddNode(node);
+		}
+
+		/// <summary>
+		/// Creates a new <see cref="Form"/> of <see cref="FolderSelect"/>
+		/// </summary>
+		/// <param name="node">Initial <see cref="TreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
+		/// <param name="filter"><see cref="NodeFilter"/> used to filter <paramref name="node"/></param>
+		public FolderSelect(TreeNode node, NodeFilter filter)
+		{
+			InitializeComponent();
+			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			FilterNode(AddNode(node), filter);
+		}
+
+		/// <summary>
+		/// Adds <paramref name="node"/> to <see cref="tvFolders"/>
+		/// </summary>
+		/// <param name="node">Root <see cref="TreeNode"/> to add</param>
+		private TreeNode AddNode(TreeNode node)
+		{
+			int index;
 			tvFolders.Nodes.Clear();
-			try
+			if (node.TreeView == null)
+				index = tvFolders.Nodes.Add(node);
+			else
+				index = tvFolders.Nodes.Add((TreeNode)node?.Clone());
+			return tvFolders.Nodes[index];
+		}
+
+		/// <summary>
+		/// Mutates and filters <paramref name="node"/> and its children
+		/// </summary>
+		/// <param name="node"><see cref="TreeNode"/> to check</param>
+		/// <param name="filter">Filter function</param>
+		/// <returns>Filtered <see cref="TreeNode"/> or <see langword="null"/> if <paramref name="node"/> was filtered</returns>
+		private TreeNode FilterNode(TreeNode node, NodeFilter filter)
+		{
+			if (filter(node))
+				return null;
+
+			List<TreeNode> children = new List<TreeNode>();
+			foreach (TreeNode child in node.Nodes)
 			{
-				tvFolders.Nodes.Add(node);
+				if (!filter(child) && FilterNode(child, filter) != null)
+					children.Add(child);
 			}
-			catch (ArgumentException)
-			{
-				//HResult -2147024809 means that the node is already in use in a control so a clone is added to tvFolders
-				tvFolders.Nodes.Add((TreeNode)node.Clone());
-			}
+
+			node.Nodes.Clear();
+			children.ForEach(child => node.Nodes.Add(child));
+
+			return node;
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
