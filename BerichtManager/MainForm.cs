@@ -1559,7 +1559,7 @@ namespace BerichtManager
 			});
 			if (fs.ShowDialog() != DialogResult.OK)
 				return;
-			new ReportFinder().FindReports(fs.FilteredNode, out List<TreeNode> reports);
+			ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
 			foreach (TreeNode report in reports)
 			{
 				string path = Path.GetFullPath($"{ConfigHandler.ReportPath()}\\..\\{GetFullNodePath(report)}");
