@@ -1512,14 +1512,22 @@ namespace BerichtManager
 		{
 			if (!HasWordStarted())
 				return;
-			Word.Document doc = WordApp.Documents.Add(FullSelectedPath);
+			if (UploadedReports.Instance.TryGetValue(ActivePath, out List<string> uploaded) && uploaded.Contains(tvReports.SelectedNode.FullPath))
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: "Report was already uploaded", title: "Report already uploaded");
+				return;
+			}
+			Word.Document doc = WordApp.Documents.Open(FullSelectedPath);
 			if (doc.FormFields.Count < 10)
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please upload manually", title: "Invalid document");
 				return;
 			}
-			//Implement upload flagging
-			await UploadReportToIHK(doc);
+
+			if (await UploadReportToIHK(doc))
+			{
+				UploadedReports.Instance.Add(ActivePath, tvReports.SelectedNode.FullPath);
+			}
 			doc.Close(SaveChanges: false);
 		}
 	}
