@@ -71,6 +71,7 @@ namespace BerichtManager
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
 			this.miIHKOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.miUploadAsNext = new System.Windows.Forms.ToolStripMenuItem();
+			this.miUploadAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -361,7 +362,8 @@ namespace BerichtManager
 			// miIHKOptions
 			// 
 			this.miIHKOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miUploadAsNext});
+            this.miUploadAsNext,
+            this.miUploadAll});
 			this.miIHKOptions.Name = "miIHKOptions";
 			this.miIHKOptions.Size = new System.Drawing.Size(180, 22);
 			this.miIHKOptions.Text = "IHK";
@@ -372,6 +374,13 @@ namespace BerichtManager
 			this.miUploadAsNext.Size = new System.Drawing.Size(180, 22);
 			this.miUploadAsNext.Text = "Upload selected";
 			this.miUploadAsNext.Click += new System.EventHandler(this.miUploadAsNext_Click);
+			// 
+			// miUploadAll
+			// 
+			this.miUploadAll.Name = "miUploadAll";
+			this.miUploadAll.Size = new System.Drawing.Size(180, 22);
+			this.miUploadAll.Text = "Upload all missing";
+			this.miUploadAll.Click += new System.EventHandler(this.miUploadAll_Click);
 			// 
 			// MainForm
 			// 
@@ -435,6 +444,7 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miCloseReport;
 		private System.Windows.Forms.ToolStripMenuItem miIHKOptions;
 		private System.Windows.Forms.ToolStripMenuItem miUploadAsNext;
+		private System.Windows.Forms.ToolStripMenuItem miUploadAll;
 	}
 }
 

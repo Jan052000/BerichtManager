@@ -1478,25 +1478,29 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Uploads a single report to IHK and handles the output from <see cref="IHKClient"/>
+		/// Uploads a single report to IHK and handles the output from <see cref="IHKClient"/> if <paramref name="shouldWarn"/> is <see langword="true"/>
 		/// </summary>
 		/// <param name="doc">Report to upload</param>
+		/// <param name="shouldWarn">If <see langword="true"/> message boxes will be shown explaining what went wrong</param>
 		/// <returns><see langword="true"/> if upload was successful and <see langword="false"/> otherwise</returns>
-		private async Task<bool> UploadReportToIHK(Word.Document doc)
+		private async Task<bool> UploadReportToIHK(Word.Document doc, bool shouldWarn = true)
 		{
 			try
 			{
 				switch (await IHKClient.CreateReport(doc))
 				{
 					case BerichtManager.IHKClient.IHKClient.CreateResults.Success:
-						ThemedMessageBox.Show(ActiveTheme, text: "Report uploaded successfully", title: "Upload successful");
+						if (shouldWarn)
+							ThemedMessageBox.Show(ActiveTheme, text: "Report uploaded successfully", title: "Upload successful");
 						break;
 					case BerichtManager.IHKClient.IHKClient.CreateResults.CreationFailed:
 					case BerichtManager.IHKClient.IHKClient.CreateResults.UploadFailed:
-						ThemedMessageBox.Show(ActiveTheme, text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
+						if (shouldWarn)
+							ThemedMessageBox.Show(ActiveTheme, text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
 						return false;
 					case BerichtManager.IHKClient.IHKClient.CreateResults.Unauthorized:
-						ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
+						if (shouldWarn)
+							ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
 						return false;
 				}
 			}
@@ -1529,6 +1533,76 @@ namespace BerichtManager
 				UploadedReports.Instance.Add(ActivePath, tvReports.SelectedNode.FullPath);
 			}
 			doc.Close(SaveChanges: false);
+		}
+
+		private async void miUploadAll_Click(object sender, EventArgs e)
+		{
+			if (!HasWordStarted())
+				return;
+			if (ThemedMessageBox.Show(ActiveTheme, text: "Warning, this will upload all reports selected in the next window in the order they appear!\nDo you want to proceed?", title: "Caution", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+				return;
+
+			List<string> files = new List<string>();
+			if (!UploadedReports.Instance.TryGetValue(ActivePath, out List<string> uploadedPaths))
+				UploadedReports.Instance.Add(ActivePath, files);
+			else
+				files = uploadedPaths;
+
+			FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
+			{
+				foreach (string path in files)
+				{
+					if (path == GetFullNodePath(node))
+						return true;
+				}
+				return false;
+			});
+			if (fs.ShowDialog() != DialogResult.OK)
+				return;
+			new ReportFinder().FindReports(fs.FilteredNode, out List<TreeNode> reports);
+			foreach (TreeNode report in reports)
+			{
+				string path = Path.GetFullPath($"{ConfigHandler.ReportPath()}\\..\\{GetFullNodePath(report)}");
+				Word.Document doc = WordApp.Documents.Open(Path.GetFullPath(path));
+				if (doc.FormFields.Count < 10)
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please add missing form fields.\nUploading is stopped", title: "Invalid document");
+					return;
+				}
+				if (!await UploadReportToIHK(doc, shouldWarn: false))
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled", title: "Upload failed");
+					doc.Close(SaveChanges: false);
+					return;
+				}
+				UploadedReports.Instance.Add(ActivePath, GetFullNodePath(report));
+				doc.Close(SaveChanges: false);
+			}
+			string text = "";
+			if (reports.Count == 1)
+				text = "Upload of report was succesful";
+			else
+				text = $"Upload of all {reports.Count} reports was successful";
+			ThemedMessageBox.Show(ActiveTheme, text: text, title: "Upload finished");
+		}
+
+		/// <summary>
+		/// Generates the full path of the <paramref name="node"/>
+		/// </summary>
+		/// <param name="node"><see cref="TreeNode"/> to get path for</param>
+		/// <param name="separator">String to separate path elements with</param>
+		/// <returns>Full path separated by <paramref name="separator"/></returns>
+		private string GetFullNodePath(TreeNode node, string separator = "\\")
+		{
+			TreeNode current = node;
+
+			string path = node.Text;
+			while (current.Parent != null)
+			{
+				current = current.Parent;
+				path = current.Text + separator + path;
+			}
+			return path;
 		}
 	}
 }
