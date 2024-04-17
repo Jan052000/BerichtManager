@@ -13,7 +13,7 @@ namespace BerichtManager.HelperClasses
 		/// </summary>
 		/// <param name="name">Name of report to check</param>
 		/// <returns><see langword="true"/> if report is valid and <see langword="false"/> otherise</returns>
-		private static bool IsReportValid(string name)
+		public static bool IsReportNameValid(string name)
 		{
 			return name.EndsWith(".docx") && !name.StartsWith("~$");
 		}
@@ -27,9 +27,11 @@ namespace BerichtManager.HelperClasses
 		public static void FindReports(TreeNode node, out List<TreeNode> reports)
 		{
 			reports = new List<TreeNode>();
+			if (node == null)
+				return;
 			foreach (TreeNode child in node.Nodes)
 			{
-				if (IsReportValid(child.Text))
+				if (IsReportNameValid(child.Text))
 					reports.Add(child);
 				else
 				{
