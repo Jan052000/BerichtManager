@@ -98,8 +98,9 @@
       <DependentUpon>FolderSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="HelperClasses\ReportFinder.cs" />
+    <Compile Include="UploadChecking\ReportNode.cs" />
     <Compile Include="HelperClasses\ReportTransformer.cs" />
-    <Compile Include="HelperClasses\UploadedReports.cs" />
+    <Compile Include="UploadChecking\UploadedReports.cs" />
     <Compile Include="IHKClient\Exceptions\InputFieldsMismatchException.cs" />
     <Compile Include="IHKClient\Exceptions\NoFormFoundException.cs" />
     <Compile Include="IHKClient\Exceptions\NoInputsFoundException.cs" />

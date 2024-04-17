@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace BerichtManager.HelperClasses
+namespace BerichtManager.UploadChecking
 {
-	internal class UploadedReports : Dictionary<string, List<string>>
+	internal class UploadedReports : Dictionary<string, Dictionary<string, ReportNode.UploadStatuses>>
 	{
 		/// <summary>
 		/// Path to directory containing config file
@@ -46,11 +46,15 @@ namespace BerichtManager.HelperClasses
 		/// </summary>
 		/// <param name="key">Key of the list to add <paramref name="value"/> to</param>
 		/// <param name="value">Value to add to <see cref="List{T}"/> at <paramref name="key"/></param>
-		public void Add(string key, string value)
+		public void AddReport(string key, string value, ReportNode.UploadStatuses status)
 		{
-			if (!TryGetValue(key, out List<string> paths))
-				Add(key, new List<string> { value });
-			paths.Add(value);
+			var s = this.Keys;
+			if (!TryGetValue(key, out Dictionary<string, ReportNode.UploadStatuses> paths))
+			{
+				paths = new Dictionary<string, ReportNode.UploadStatuses>();
+				Add(key, paths);
+			}
+			paths.Add(value, status);
 			Save();
 		}
 
@@ -61,8 +65,8 @@ namespace BerichtManager.HelperClasses
 		{
 			if (!File.Exists(FullPath))
 				return;
-			Dictionary<string, List<string>> reports = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(File.ReadAllText(FullPath));
-			foreach (KeyValuePair<string, List<string>> kvp in reports)
+			Dictionary<string, Dictionary<string, ReportNode.UploadStatuses>> reports = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, ReportNode.UploadStatuses>>>(File.ReadAllText(FullPath));
+			foreach (KeyValuePair<string, Dictionary<string, ReportNode.UploadStatuses>> kvp in reports)
 			{
 				Add(kvp.Key, kvp.Value);
 			}

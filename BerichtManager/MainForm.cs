@@ -14,6 +14,8 @@ using BerichtManager.HelperClasses;
 using BerichtManager.WebUntisClient;
 using System.Threading.Tasks;
 using BerichtManager.OwnControls;
+using BerichtManager.UploadChecking;
+using System.Linq;
 
 namespace BerichtManager
 {
@@ -1512,11 +1514,27 @@ namespace BerichtManager
 			return true;
 		}
 
+		/// <summary>
+		/// Checks if a report has already been uploaded
+		/// </summary>
+		/// <param name="reportKey">Path of report to add</param>
+		/// <returns><see langword="true"/> if report is marked as uploaded and <see langword="false"/> if not</returns>
+		private bool ReportIsAlreadyUploaded(string reportKey)
+		{
+			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, ReportNode.UploadStatuses> reports))
+				return false;
+			if (!reports.ContainsKey(reportKey))
+				return false;
+			if (!reports.TryGetValue(reportKey, out ReportNode.UploadStatuses status))
+				return false;
+			return status == ReportNode.UploadStatuses.Uploaded || status == ReportNode.UploadStatuses.HandedIn;
+		}
+
 		private async void miUploadAsNext_Click(object sender, EventArgs e)
 		{
 			if (!HasWordStarted())
 				return;
-			if (UploadedReports.Instance.TryGetValue(ActivePath, out List<string> uploaded) && uploaded.Contains(tvReports.SelectedNode.FullPath))
+			if (ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath))
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: "Report was already uploaded", title: "Report already uploaded");
 				return;
@@ -1530,7 +1548,7 @@ namespace BerichtManager
 
 			if (await UploadReportToIHK(doc))
 			{
-				UploadedReports.Instance.Add(ActivePath, tvReports.SelectedNode.FullPath);
+				UploadedReports.Instance.AddReport(ActivePath, tvReports.SelectedNode.FullPath, ReportNode.UploadStatuses.Uploaded);
 			}
 			doc.Close(SaveChanges: false);
 		}
@@ -1543,16 +1561,14 @@ namespace BerichtManager
 				return;
 
 			List<string> files = new List<string>();
-			if (!UploadedReports.Instance.TryGetValue(ActivePath, out List<string> uploadedPaths))
-				UploadedReports.Instance.Add(ActivePath, files);
-			else
-				files = uploadedPaths;
+			if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, ReportNode.UploadStatuses> uploadedPaths))
+				files = uploadedPaths.Keys.ToList();
 
 			FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 			{
 				foreach (string path in files)
 				{
-					if (path == GetFullNodePath(node))
+					if (ReportIsAlreadyUploaded(GetFullNodePath(node)))
 						return true;
 				}
 				return false;
@@ -1575,7 +1591,7 @@ namespace BerichtManager
 					doc.Close(SaveChanges: false);
 					return;
 				}
-				UploadedReports.Instance.Add(ActivePath, GetFullNodePath(report));
+				UploadedReports.Instance.AddReport(ActivePath, GetFullNodePath(report), ReportNode.UploadStatuses.Uploaded);
 				doc.Close(SaveChanges: false);
 			}
 			string text = "";
