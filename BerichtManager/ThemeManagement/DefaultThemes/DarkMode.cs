@@ -28,5 +28,7 @@ namespace BerichtManager.ThemeManagement.DefaultThemes
 		public Color SplitterColor => Color.DimGray;
 		public Color TreeViewDottedLineColor => Color.White;
 		public Color TreeViewHighlightedNodeColor => Color.FromArgb(90, 90, 90);
+		public Color ReportUploadedColor => Color.DodgerBlue;
+		public Color ReportHandedInColor => Color.LimeGreen;
 	}
 }

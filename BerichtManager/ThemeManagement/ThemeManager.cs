@@ -201,5 +201,9 @@ namespace BerichtManager.ThemeManagement
 		public Color TreeViewDottedLineColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color TreeViewHighlightedNodeColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
+		public Color ReportUploadedColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
+		public Color ReportHandedInColor { get; set; }
 	}
 }

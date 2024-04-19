@@ -121,9 +121,9 @@ namespace BerichtManager.ThemeManagement
 			{
 				//Offset of node left + right
 				int nodeOffset = 6;
-				using (Pen outline = new Pen(report.UploadStatus == ReportNode.UploadStatuses.Uploaded ? Color.DodgerBlue : Color.Green))
+				using (Pen outline = new Pen(report.UploadStatus == ReportNode.UploadStatuses.Uploaded ? Theme.ReportUploadedColor : Theme.ReportHandedInColor))
 					e.Graphics.DrawEllipse(outline, e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
-				using (SolidBrush upload = new SolidBrush(report.UploadStatus == ReportNode.UploadStatuses.Uploaded ? Color.DodgerBlue : Color.Green))
+				using (SolidBrush upload = new SolidBrush(report.UploadStatus == ReportNode.UploadStatuses.Uploaded ? Theme.ReportUploadedColor : Theme.ReportHandedInColor))
 					e.Graphics.FillEllipse(upload, e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
 			}
 		}

@@ -76,6 +76,10 @@
 			this.laDisabledButtonTextColor = new System.Windows.Forms.Label();
 			this.tbBtHoverColor = new System.Windows.Forms.TextBox();
 			this.laBtHoverColor = new System.Windows.Forms.Label();
+			this.tbUploadedColor = new System.Windows.Forms.TextBox();
+			this.tbReportHandedIn = new System.Windows.Forms.TextBox();
+			this.laUploadedColor = new System.Windows.Forms.Label();
+			this.laReportHandedIn = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.nudButtonFocusBorderWidth)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -235,7 +239,7 @@
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(294, 581);
+			this.btClose.Location = new System.Drawing.Point(294, 633);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 34;
@@ -246,7 +250,7 @@
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(294, 551);
+			this.btSave.Location = new System.Drawing.Point(294, 603);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
 			this.btSave.TabIndex = 35;
@@ -604,11 +608,55 @@
 			this.laBtHoverColor.TabIndex = 66;
 			this.laBtHoverColor.Text = "Button hover color";
 			// 
+			// tbUploadedColor
+			// 
+			this.tbUploadedColor.Location = new System.Drawing.Point(188, 610);
+			this.tbUploadedColor.Name = "tbUploadedColor";
+			this.tbUploadedColor.ReadOnly = true;
+			this.tbUploadedColor.Size = new System.Drawing.Size(100, 20);
+			this.tbUploadedColor.TabIndex = 67;
+			this.tbUploadedColor.Text = "-1";
+			this.tbUploadedColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+			this.tbUploadedColor.Enter += new System.EventHandler(this.TextBox_Entered);
+			// 
+			// tbReportHandedIn
+			// 
+			this.tbReportHandedIn.Location = new System.Drawing.Point(188, 636);
+			this.tbReportHandedIn.Name = "tbReportHandedIn";
+			this.tbReportHandedIn.ReadOnly = true;
+			this.tbReportHandedIn.Size = new System.Drawing.Size(100, 20);
+			this.tbReportHandedIn.TabIndex = 68;
+			this.tbReportHandedIn.Text = "-1";
+			this.tbReportHandedIn.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+			this.tbReportHandedIn.Enter += new System.EventHandler(this.TextBox_Entered);
+			// 
+			// laUploadedColor
+			// 
+			this.laUploadedColor.AutoSize = true;
+			this.laUploadedColor.Location = new System.Drawing.Point(12, 613);
+			this.laUploadedColor.Name = "laUploadedColor";
+			this.laUploadedColor.Size = new System.Drawing.Size(86, 13);
+			this.laUploadedColor.TabIndex = 69;
+			this.laUploadedColor.Text = "Report uploaded";
+			// 
+			// laReportHandedIn
+			// 
+			this.laReportHandedIn.AutoSize = true;
+			this.laReportHandedIn.Location = new System.Drawing.Point(12, 639);
+			this.laReportHandedIn.Name = "laReportHandedIn";
+			this.laReportHandedIn.Size = new System.Drawing.Size(89, 13);
+			this.laReportHandedIn.TabIndex = 70;
+			this.laReportHandedIn.Text = "Report handed in";
+			// 
 			// CreateTheme
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(381, 616);
+			this.ClientSize = new System.Drawing.Size(381, 668);
+			this.Controls.Add(this.laReportHandedIn);
+			this.Controls.Add(this.laUploadedColor);
+			this.Controls.Add(this.tbReportHandedIn);
+			this.Controls.Add(this.tbUploadedColor);
 			this.Controls.Add(this.laBtHoverColor);
 			this.Controls.Add(this.tbBtHoverColor);
 			this.Controls.Add(this.laDisabledButtonTextColor);
@@ -716,5 +764,9 @@
 		private System.Windows.Forms.Label laDisabledButtonTextColor;
 		private System.Windows.Forms.TextBox tbBtHoverColor;
 		private System.Windows.Forms.Label laBtHoverColor;
+		private System.Windows.Forms.TextBox tbUploadedColor;
+		private System.Windows.Forms.TextBox tbReportHandedIn;
+		private System.Windows.Forms.Label laUploadedColor;
+		private System.Windows.Forms.Label laReportHandedIn;
 	}
 }

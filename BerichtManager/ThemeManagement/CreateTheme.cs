@@ -94,7 +94,9 @@ namespace BerichtManager.ThemeManagement
 				TextBoxBorderColor = (Color)colorConverter.ConvertFromString(tbTBBorderColor.Text),
 				TextBoxDisabledBackColor = (Color)colorConverter.ConvertFromString(tbTBDisabledBackColor.Text),
 				TreeViewDottedLineColor = (Color)colorConverter.ConvertFromString(tbTVDottedLine.Text),
-				TreeViewHighlightedNodeColor = (Color)colorConverter.ConvertFromString(tbHighlight.Text)
+				TreeViewHighlightedNodeColor = (Color)colorConverter.ConvertFromString(tbHighlight.Text),
+				ReportUploadedColor = (Color)colorConverter.ConvertFromString(tbUploadedColor.Text),
+				ReportHandedInColor = (Color)colorConverter.ConvertFromString(tbReportHandedIn.Text)
 			});
 			if (code == SaveStatusCodes.OverwriteDeclined)
 			{
@@ -137,6 +139,8 @@ namespace BerichtManager.ThemeManagement
 			tbTBBorderColor.Text = ColorTranslator.ToHtml(theme.TextBoxBorderColor);
 			tbTBDisabledBackColor.Text = ColorTranslator.ToHtml(theme.TextBoxDisabledBackColor);
 			tbTVDottedLine.Text = ColorTranslator.ToHtml(theme.TreeViewDottedLineColor);
+			tbUploadedColor.Text = ColorTranslator.ToHtml(theme.ReportUploadedColor);
+			tbReportHandedIn.Text = ColorTranslator.ToHtml(theme.ReportHandedInColor);
 		}
 	}
 }
