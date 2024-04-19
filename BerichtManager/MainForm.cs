@@ -200,7 +200,9 @@ namespace BerichtManager
 		private void UpdateTree()
 		{
 			tvReports.Nodes.Clear();
-			tvReports.Nodes.Add(CreateDirectoryNode(Info));
+			TreeNode root = CreateDirectoryNode(Info);
+			tvReports.Nodes.Add(root);
+			FillStatuses(root);
 			tvReports.Sort();
 		}
 
@@ -216,8 +218,28 @@ namespace BerichtManager
 			foreach (var directory in directoryInfo.GetDirectories())
 				directoryNode.Nodes.Add(CreateDirectoryNode(directory));
 			foreach (var file in directoryInfo.GetFiles())
-				directoryNode.Nodes.Add(new TreeNode(file.Name));
+				if (ReportFinder.IsReportNameValid(file.Name))
+					directoryNode.Nodes.Add(new ReportNode(file.Name));
+				else
+					directoryNode.Nodes.Add(new TreeNode(file.Name));
 			return directoryNode;
+		}
+
+		/// <summary>
+		/// Fills the <see cref="ReportNode"/>s in <paramref name="root"/> with their <see cref="ReportNode.UploadStatuses"/>
+		/// </summary>
+		/// <param name="root">Root <see cref="TreeNode"/></param>
+		private void FillStatuses(TreeNode root)
+		{
+			if (root is ReportNode report)
+			{
+				if (ReportIsAlreadyUploaded(GetFullNodePath(root), out ReportNode.UploadStatuses status))
+					report.UploadStatus = status;
+			}
+			foreach (TreeNode node in root.Nodes)
+			{
+				FillStatuses(node);
+			}
 		}
 
 		/// <summary>
@@ -1518,23 +1540,26 @@ namespace BerichtManager
 		/// Checks if a report has already been uploaded
 		/// </summary>
 		/// <param name="reportKey">Path of report to add</param>
+		/// <param name="updatedStatus"><see cref="ReportNode.UploadStatuses"/> of report</param>
 		/// <returns><see langword="true"/> if report is marked as uploaded and <see langword="false"/> if not</returns>
-		private bool ReportIsAlreadyUploaded(string reportKey)
+		private bool ReportIsAlreadyUploaded(string reportKey, out ReportNode.UploadStatuses updatedStatus)
 		{
+			updatedStatus = ReportNode.UploadStatuses.None;
 			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, ReportNode.UploadStatuses> reports))
 				return false;
 			if (!reports.ContainsKey(reportKey))
 				return false;
-			if (!reports.TryGetValue(reportKey, out ReportNode.UploadStatuses status))
+			if (!reports.TryGetValue(reportKey, out ReportNode.UploadStatuses ustatus))
 				return false;
-			return status == ReportNode.UploadStatuses.Uploaded || status == ReportNode.UploadStatuses.HandedIn;
+			updatedStatus = ustatus;
+			return ustatus == ReportNode.UploadStatuses.Uploaded || ustatus == ReportNode.UploadStatuses.HandedIn;
 		}
 
 		private async void miUploadAsNext_Click(object sender, EventArgs e)
 		{
 			if (!HasWordStarted())
 				return;
-			if (ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath))
+			if (ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _))
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: "Report was already uploaded", title: "Report already uploaded");
 				return;
@@ -1568,7 +1593,7 @@ namespace BerichtManager
 			{
 				foreach (string path in files)
 				{
-					if (ReportIsAlreadyUploaded(GetFullNodePath(node)))
+					if (ReportIsAlreadyUploaded(GetFullNodePath(node), out _))
 						return true;
 				}
 				return false;

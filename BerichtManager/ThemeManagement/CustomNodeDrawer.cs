@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using BerichtManager.UploadChecking;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
@@ -65,7 +66,7 @@ namespace BerichtManager.ThemeManagement
 		/// Draws nodes to treeview
 		/// </summary>
 		/// <param name="e">Event that is passed down when drawing nodes</param>
-		public void DrawNode(DrawTreeNodeEventArgs e)
+		public void DrawNode(DrawTreeNodeEventArgs e, bool drawUploadStatus = true)
 		{
 			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
 				return;
@@ -114,6 +115,16 @@ namespace BerichtManager.ThemeManagement
 					else
 						e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
 				}
+			}
+
+			if (drawUploadStatus && e.Node is ReportNode report && report.UploadStatus != ReportNode.UploadStatuses.None)
+			{
+				//Offset of node left + right
+				int nodeOffset = 6;
+				using (Pen outline = new Pen(report.UploadStatus == ReportNode.UploadStatuses.Uploaded ? Color.DodgerBlue : Color.Green))
+					e.Graphics.DrawEllipse(outline, e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
+				using (SolidBrush upload = new SolidBrush(report.UploadStatus == ReportNode.UploadStatuses.Uploaded ? Color.DodgerBlue : Color.Green))
+					e.Graphics.FillEllipse(upload, e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
 			}
 		}
 
