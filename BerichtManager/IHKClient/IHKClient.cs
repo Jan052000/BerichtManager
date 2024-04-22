@@ -158,14 +158,14 @@ namespace BerichtManager.IHKClient
 		/// Creates and saves the report on IHK online campus
 		/// </summary>
 		/// <param name="document"><see cref="Word.Document"/> to upload</param>
-		/// <returns><see langword="true"/> if creation was successful and <see langword="false"/> if not</returns>
+		/// <returns><see cref="UploadResult"/> object containing status and start date of report</returns>
 		/// <inheritdoc cref="FillReportContent(Report, HtmlDocument)" path="/exception"/>
 		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document)" path="/exception"/>
-		public async Task<CreateResults> CreateReport(Word.Document document)
+		public async Task<UploadResult> CreateReport(Word.Document document)
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
-					return CreateResults.Unauthorized;
+					return new UploadResult(CreateResults.Unauthorized);
 
 			//Load list of reports and check session
 			HttpResponseMessage response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
@@ -173,12 +173,12 @@ namespace BerichtManager.IHKClient
 			{
 				LoggedIn = false;
 				//LoggedIn = await DoLogin();
-				return CreateResults.Unauthorized;
+				return new UploadResult(CreateResults.Unauthorized);
 			}
 			//Get new form from IHK
 			response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
 			if (!response.IsSuccessStatusCode)
-				return CreateResults.CreationFailed;
+				return new UploadResult(CreateResults.CreationFailed);
 			//Fill report with contents from new IHK report
 			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
 			Report report = new Report();
@@ -193,12 +193,12 @@ namespace BerichtManager.IHKClient
 			//Post content to create report
 			response = await PostAndRefer("tibrosBB/azubiHeftAdd.jsp", content);
 			if (response.StatusCode != HttpStatusCode.Found && !response.IsSuccessStatusCode)
-				return CreateResults.UploadFailed;
+				return new UploadResult(CreateResults.UploadFailed);
 			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
 				await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
 				await GetAndRefer(response.Headers.Location);
-			return CreateResults.Success;
+			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate));
 		}
 
 		/// <summary>

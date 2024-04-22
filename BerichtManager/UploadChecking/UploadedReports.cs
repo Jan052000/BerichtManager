@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using BerichtManager.Config;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace BerichtManager.UploadChecking
 {
-	internal class UploadedReports : Dictionary<string, Dictionary<string, ReportNode.UploadStatuses>>
+	internal class UploadedReports : Dictionary<string, Dictionary<string, UploadedReport>>
 	{
 		/// <summary>
 		/// Path to directory containing config file
@@ -44,17 +45,17 @@ namespace BerichtManager.UploadChecking
 		/// <summary>
 		/// Adds <paramref name="value"/> to the <see cref="List{T}"/> at <paramref name="key"/>
 		/// </summary>
-		/// <param name="key">Key of the list to add <paramref name="value"/> to</param>
-		/// <param name="value">Value to add to <see cref="List{T}"/> at <paramref name="key"/></param>
-		public void AddReport(string key, string value, ReportNode.UploadStatuses status)
+		/// <param name="path">Path of report</param>
+		/// <param name="report">Report object to save</param>
+		/// <inheritdoc cref="Dictionary{TKey, TValue}.Add(TKey, TValue)" path="/exception"/>
+		public void AddReport(string path, UploadedReport report)
 		{
-			var s = this.Keys;
-			if (!TryGetValue(key, out Dictionary<string, ReportNode.UploadStatuses> paths))
+			if (!TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
 			{
-				paths = new Dictionary<string, ReportNode.UploadStatuses>();
-				Add(key, paths);
+				paths = new Dictionary<string, UploadedReport>();
+				Add(ConfigHandler.Instance.ReportPath(), paths);
 			}
-			paths.Add(value, status);
+			paths.Add(path, report);
 			Save();
 		}
 
@@ -65,8 +66,8 @@ namespace BerichtManager.UploadChecking
 		{
 			if (!File.Exists(FullPath))
 				return;
-			Dictionary<string, Dictionary<string, ReportNode.UploadStatuses>> reports = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, ReportNode.UploadStatuses>>>(File.ReadAllText(FullPath));
-			foreach (KeyValuePair<string, Dictionary<string, ReportNode.UploadStatuses>> kvp in reports)
+			Dictionary<string, Dictionary<string, UploadedReport>> reports = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, UploadedReport>>>(File.ReadAllText(FullPath));
+			foreach (KeyValuePair<string, Dictionary<string, UploadedReport>> kvp in reports)
 			{
 				Add(kvp.Key, kvp.Value);
 			}

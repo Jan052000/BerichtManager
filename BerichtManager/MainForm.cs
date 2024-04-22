@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using BerichtManager.OwnControls;
 using BerichtManager.UploadChecking;
 using System.Linq;
+using BerichtManager.IHKClient;
 
 namespace BerichtManager
 {
@@ -1502,21 +1503,25 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Uploads a single report to IHK and handles the output from <see cref="IHKClient"/> if <paramref name="shouldWarn"/> is <see langword="true"/>
+		/// Uploads a single report to IHK, handles the output from <see cref="IHKClient"/> if <paramref name="shouldWarn"/> is <see langword="true"/>
+		/// and marks it as uploaded if upload successful
 		/// </summary>
 		/// <param name="doc">Report to upload</param>
+		/// <param name="nodePath">Path of node in tree</param>
 		/// <param name="shouldWarn">If <see langword="true"/> message boxes will be shown explaining what went wrong</param>
 		/// <returns><see langword="true"/> if upload was successful and <see langword="false"/> otherwise</returns>
-		private async Task<bool> UploadReportToIHK(Word.Document doc, bool shouldWarn = true)
+		private async Task<bool> UploadReportToIHK(Word.Document doc, string nodePath, bool shouldWarn = true)
 		{
 			try
 			{
-				switch (await IHKClient.CreateReport(doc))
+				UploadResult result = await IHKClient.CreateReport(doc);
+				switch (result.Result)
 				{
 					case BerichtManager.IHKClient.IHKClient.CreateResults.Success:
 						if (shouldWarn)
 							ThemedMessageBox.Show(ActiveTheme, text: "Report uploaded successfully", title: "Upload successful");
-						break;
+						UploadedReports.Instance.AddReport(nodePath, new UploadedReport(result.StartDate));
+						return true;
 					case BerichtManager.IHKClient.IHKClient.CreateResults.CreationFailed:
 					case BerichtManager.IHKClient.IHKClient.CreateResults.UploadFailed:
 						if (shouldWarn)
@@ -1526,6 +1531,9 @@ namespace BerichtManager
 						if (shouldWarn)
 							ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
 						return false;
+					default:
+						ThemedMessageBox.Show(ActiveTheme, text: "Unknown upload response", title: "Unknown response");
+						return false;
 				}
 			}
 			catch (Exception ex)
@@ -1533,7 +1541,6 @@ namespace BerichtManager
 				ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}", title: ex.GetType().Name);
 				return false;
 			}
-			return true;
 		}
 
 		/// <summary>
@@ -1545,14 +1552,14 @@ namespace BerichtManager
 		private bool ReportIsAlreadyUploaded(string reportKey, out ReportNode.UploadStatuses updatedStatus)
 		{
 			updatedStatus = ReportNode.UploadStatuses.None;
-			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, ReportNode.UploadStatuses> reports))
+			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> reports))
 				return false;
 			if (!reports.ContainsKey(reportKey))
 				return false;
-			if (!reports.TryGetValue(reportKey, out ReportNode.UploadStatuses ustatus))
+			if (!reports.TryGetValue(reportKey, out UploadedReport ustatus))
 				return false;
-			updatedStatus = ustatus;
-			return ustatus == ReportNode.UploadStatuses.Uploaded || ustatus == ReportNode.UploadStatuses.HandedIn;
+			updatedStatus = ustatus.Status;
+			return updatedStatus == ReportNode.UploadStatuses.Uploaded || updatedStatus == ReportNode.UploadStatuses.HandedIn;
 		}
 
 		private async void miUploadAsNext_Click(object sender, EventArgs e)
@@ -1571,10 +1578,7 @@ namespace BerichtManager
 				return;
 			}
 
-			if (await UploadReportToIHK(doc))
-			{
-				UploadedReports.Instance.AddReport(ActivePath, tvReports.SelectedNode.FullPath, ReportNode.UploadStatuses.Uploaded);
-			}
+			await UploadReportToIHK(doc, tvReports.SelectedNode.FullPath);
 			doc.Close(SaveChanges: false);
 			UpdateTree();
 		}
@@ -1587,7 +1591,7 @@ namespace BerichtManager
 				return;
 
 			List<string> files = new List<string>();
-			if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, ReportNode.UploadStatuses> uploadedPaths))
+			if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
 				files = uploadedPaths.Keys.ToList();
 
 			FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
@@ -1611,13 +1615,12 @@ namespace BerichtManager
 					ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please add missing form fields.\nUploading is stopped", title: "Invalid document");
 					return;
 				}
-				if (!await UploadReportToIHK(doc, shouldWarn: false))
+				if (!await UploadReportToIHK(doc, GetFullNodePath(report), shouldWarn: false))
 				{
 					ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled", title: "Upload failed");
 					doc.Close(SaveChanges: false);
 					return;
 				}
-				UploadedReports.Instance.AddReport(ActivePath, GetFullNodePath(report), ReportNode.UploadStatuses.Uploaded);
 				doc.Close(SaveChanges: false);
 			}
 			string text = "";
