@@ -1613,7 +1613,7 @@ namespace BerichtManager
 				Word.Document doc = WordApp.Documents.Open(Path.GetFullPath(path));
 				if (doc.FormFields.Count < 10)
 				{
-					ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please add missing form fields.\nUploading is stopped", title: "Invalid document");
+					ThemedMessageBox.Show(ActiveTheme, text: $"Invalid document, please add missing form fields to {path}.\nUploading is stopped", title: "Invalid document");
 					doc.Close(SaveChanges: false);
 					return;
 				}
