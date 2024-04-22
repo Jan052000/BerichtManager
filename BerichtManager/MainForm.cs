@@ -1503,43 +1503,20 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Uploads a single report to IHK, handles the output from <see cref="IHKClient"/> if <paramref name="shouldWarn"/> is <see langword="true"/>
-		/// and marks it as uploaded if upload successful
+		/// Uploads a single report to IHK, handles exceptions
 		/// </summary>
 		/// <param name="doc">Report to upload</param>
-		/// <param name="nodePath">Path of node in tree</param>
-		/// <param name="shouldWarn">If <see langword="true"/> message boxes will be shown explaining what went wrong</param>
-		/// <returns><see langword="true"/> if upload was successful and <see langword="false"/> otherwise</returns>
-		private async Task<bool> UploadReportToIHK(Word.Document doc, string nodePath, bool shouldWarn = true)
+		/// <returns><see cref="UploadResult"/> of creation or <see langword="null"/> if an error occurred</returns>
+		private async Task<UploadResult> TryUploadReportToIHK(Word.Document doc)
 		{
 			try
 			{
-				UploadResult result = await IHKClient.CreateReport(doc);
-				switch (result.Result)
-				{
-					case BerichtManager.IHKClient.IHKClient.CreateResults.Success:
-						if (shouldWarn)
-							ThemedMessageBox.Show(ActiveTheme, text: "Report uploaded successfully", title: "Upload successful");
-						UploadedReports.Instance.AddReport(nodePath, new UploadedReport(result.StartDate));
-						return true;
-					case BerichtManager.IHKClient.IHKClient.CreateResults.CreationFailed:
-					case BerichtManager.IHKClient.IHKClient.CreateResults.UploadFailed:
-						if (shouldWarn)
-							ThemedMessageBox.Show(ActiveTheme, text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
-						return false;
-					case BerichtManager.IHKClient.IHKClient.CreateResults.Unauthorized:
-						if (shouldWarn)
-							ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
-						return false;
-					default:
-						ThemedMessageBox.Show(ActiveTheme, text: "Unknown upload response", title: "Unknown response");
-						return false;
-				}
+				return await IHKClient.CreateReport(doc);
 			}
 			catch (Exception ex)
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}", title: ex.GetType().Name);
-				return false;
+				return null;
 			}
 		}
 
@@ -1578,8 +1555,23 @@ namespace BerichtManager
 				doc.Close(SaveChanges: false);
 				return;
 			}
-
-			await UploadReportToIHK(doc, tvReports.SelectedNode.FullPath);
+			UploadResult result = await TryUploadReportToIHK(doc);
+			if (result == null)
+				return;
+			switch (result.Result)
+			{
+				case BerichtManager.IHKClient.IHKClient.CreateResults.Success:
+					ThemedMessageBox.Show(ActiveTheme, text: "Report uploaded successfully", title: "Upload successful");
+					UploadedReports.Instance.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate));
+					break;
+				case BerichtManager.IHKClient.IHKClient.CreateResults.Unauthorized:
+					ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
+					break;
+				default:
+					ThemedMessageBox.Show(ActiveTheme, text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
+					break;
+			}
+			//await UploadReportToIHK(doc, tvReports.SelectedNode.FullPath);
 			doc.Close(SaveChanges: false);
 			UpdateTree();
 		}
@@ -1617,11 +1609,22 @@ namespace BerichtManager
 					doc.Close(SaveChanges: false);
 					return;
 				}
-				if (!await UploadReportToIHK(doc, GetFullNodePath(report), shouldWarn: false))
-				{
-					ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled", title: "Upload failed");
-					doc.Close(SaveChanges: false);
+				UploadResult result = await TryUploadReportToIHK(doc);
+				if (result == null)
 					return;
+				switch (result.Result)
+				{
+					case BerichtManager.IHKClient.IHKClient.CreateResults.Success:
+						UploadedReports.Instance.AddReport(GetFullNodePath(report), new UploadedReport(result.StartDate));
+						break;
+					case BerichtManager.IHKClient.IHKClient.CreateResults.Unauthorized:
+						ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
+						doc.Close(SaveChanges: false);
+						return;
+					default:
+						ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
+						doc.Close(SaveChanges: false);
+						return;
 				}
 				doc.Close(SaveChanges: false);
 			}
