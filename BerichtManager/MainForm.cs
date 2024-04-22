@@ -1576,6 +1576,7 @@ namespace BerichtManager
 				UploadedReports.Instance.AddReport(ActivePath, tvReports.SelectedNode.FullPath, ReportNode.UploadStatuses.Uploaded);
 			}
 			doc.Close(SaveChanges: false);
+			UpdateTree();
 		}
 
 		private async void miUploadAll_Click(object sender, EventArgs e)
@@ -1625,6 +1626,7 @@ namespace BerichtManager
 			else
 				text = $"Upload of all {reports.Count} reports was successful";
 			ThemedMessageBox.Show(ActiveTheme, text: text, title: "Upload finished");
+			UpdateTree();
 		}
 
 		/// <summary>
