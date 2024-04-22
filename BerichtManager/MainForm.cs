@@ -1576,7 +1576,7 @@ namespace BerichtManager
 			UpdateTree();
 		}
 
-		private async void miUploadAll_Click(object sender, EventArgs e)
+		private async void miUploadAllSelected_Click(object sender, EventArgs e)
 		{
 			if (!HasWordStarted())
 				return;
