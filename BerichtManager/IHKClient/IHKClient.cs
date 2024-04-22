@@ -33,7 +33,7 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// Base url for IHK endpoint
 		/// </summary>
-		private string BASEURL { get => Config.ConfigHandler.Instance.IHKBaseUrl(); }
+		private string BASEURL { get => ConfigHandler.Instance.IHKBaseUrl(); }
 		/// <summary>
 		/// Wether or not the client is logged in
 		/// </summary>
@@ -172,9 +172,10 @@ namespace BerichtManager.IHKClient
 			if (response.StatusCode == HttpStatusCode.Unauthorized)
 			{
 				LoggedIn = false;
-				//LoggedIn = await DoLogin();
 				return new UploadResult(CreateResults.Unauthorized);
 			}
+			if (!response.IsSuccessStatusCode)
+				return new UploadResult(CreateResults.CreationFailed);
 			//Get new form from IHK
 			response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
 			if (!response.IsSuccessStatusCode)
