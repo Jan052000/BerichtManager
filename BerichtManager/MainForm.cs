@@ -1265,7 +1265,7 @@ namespace BerichtManager
 			//miDelete.Visible = isInLogs || tvReports.SelectedNode.Text.EndsWith(".docx") || tvReports.SelectedNode.Text.StartsWith("~$");
 			miQuickEditOptions.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
-			miUploadAsNext.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
+			miUploadAsNext.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$") && !ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _);
 			return;
 		}
 
@@ -1546,17 +1546,17 @@ namespace BerichtManager
 		/// <summary>
 		/// Checks if a report has already been uploaded
 		/// </summary>
-		/// <param name="reportKey">Path of report to add</param>
+		/// <param name="reportNodePath">Path of report to add</param>
 		/// <param name="updatedStatus"><see cref="ReportNode.UploadStatuses"/> of report</param>
 		/// <returns><see langword="true"/> if report is marked as uploaded and <see langword="false"/> if not</returns>
-		private bool ReportIsAlreadyUploaded(string reportKey, out ReportNode.UploadStatuses updatedStatus)
+		private bool ReportIsAlreadyUploaded(string reportNodePath, out ReportNode.UploadStatuses updatedStatus)
 		{
 			updatedStatus = ReportNode.UploadStatuses.None;
 			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> reports))
 				return false;
-			if (!reports.ContainsKey(reportKey))
+			if (!reports.ContainsKey(reportNodePath))
 				return false;
-			if (!reports.TryGetValue(reportKey, out UploadedReport ustatus))
+			if (!reports.TryGetValue(reportNodePath, out UploadedReport ustatus))
 				return false;
 			updatedStatus = ustatus.Status;
 			return updatedStatus == ReportNode.UploadStatuses.Uploaded || updatedStatus == ReportNode.UploadStatuses.HandedIn;
