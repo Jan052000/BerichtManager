@@ -1531,12 +1531,10 @@ namespace BerichtManager
 			updatedStatus = ReportNode.UploadStatuses.None;
 			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> reports))
 				return false;
-			if (!reports.ContainsKey(reportNodePath))
-				return false;
 			if (!reports.TryGetValue(reportNodePath, out UploadedReport ustatus))
 				return false;
 			updatedStatus = ustatus.Status;
-			return updatedStatus == ReportNode.UploadStatuses.Uploaded || updatedStatus == ReportNode.UploadStatuses.HandedIn;
+			return updatedStatus != ReportNode.UploadStatuses.None;
 		}
 
 		private async void miUploadAsNext_Click(object sender, EventArgs e)
@@ -1587,15 +1585,7 @@ namespace BerichtManager
 			if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
 				files = uploadedPaths.Keys.ToList();
 
-			FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
-			{
-				foreach (string path in files)
-				{
-					if (ReportIsAlreadyUploaded(GetFullNodePath(node), out _))
-						return true;
-				}
-				return false;
-			});
+			FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node => files.Contains(GetFullNodePath(node)));
 			if (fs.ShowDialog() != DialogResult.OK)
 				return;
 			ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
