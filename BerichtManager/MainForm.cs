@@ -1575,6 +1575,7 @@ namespace BerichtManager
 			if (doc.FormFields.Count < 10)
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please upload manually", title: "Invalid document");
+				doc.Close(SaveChanges: false);
 				return;
 			}
 
@@ -1613,6 +1614,7 @@ namespace BerichtManager
 				if (doc.FormFields.Count < 10)
 				{
 					ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please add missing form fields.\nUploading is stopped", title: "Invalid document");
+					doc.Close(SaveChanges: false);
 					return;
 				}
 				if (!await UploadReportToIHK(doc, GetFullNodePath(report), shouldWarn: false))
