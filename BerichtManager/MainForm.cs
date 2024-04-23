@@ -1558,11 +1558,11 @@ namespace BerichtManager
 				return;
 			switch (result.Result)
 			{
-				case BerichtManager.IHKClient.IHKClient.CreateResults.Success:
+				case CreateResults.Success:
 					ThemedMessageBox.Show(ActiveTheme, text: "Report uploaded successfully", title: "Upload successful");
 					UploadedReports.Instance.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate));
 					break;
-				case BerichtManager.IHKClient.IHKClient.CreateResults.Unauthorized:
+				case CreateResults.Unauthorized:
 					ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
 					break;
 				default:
@@ -1604,10 +1604,10 @@ namespace BerichtManager
 					return;
 				switch (result.Result)
 				{
-					case BerichtManager.IHKClient.IHKClient.CreateResults.Success:
+					case CreateResults.Success:
 						UploadedReports.Instance.AddReport(GetFullNodePath(report), new UploadedReport(result.StartDate));
 						break;
-					case BerichtManager.IHKClient.IHKClient.CreateResults.Unauthorized:
+					case CreateResults.Unauthorized:
 						ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
 						doc.Close(SaveChanges: false);
 						return;

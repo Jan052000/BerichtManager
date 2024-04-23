@@ -7,7 +7,7 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// <see cref="IHKClient.CreateResults"/> of report
 		/// </summary>
-		public IHKClient.CreateResults Result { get; set; }
+		public CreateResults Result { get; set; }
 		/// <summary>
 		/// Start date as set on ihk servers
 		/// </summary>
@@ -18,7 +18,7 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <param name="result">Result of upload process</param>
 		/// <param name="startDate">Start date as set on ihk servers</param>
-		public UploadResult(IHKClient.CreateResults result, DateTime startDate)
+		public UploadResult(CreateResults result, DateTime startDate)
 		{
 			Result = result;
 			StartDate = startDate;
@@ -28,7 +28,7 @@ namespace BerichtManager.IHKClient
 		/// Creates a new <see cref="UploadResult"/> object
 		/// </summary>
 		/// <param name="result">Result of upload process</param>
-		public UploadResult(IHKClient.CreateResults result)
+		public UploadResult(CreateResults result)
 		{
 			Result = result;
 			StartDate = new DateTime();
