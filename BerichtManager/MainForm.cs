@@ -492,7 +492,7 @@ namespace BerichtManager
 
 
 				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
-				string name = ConfigHandler.NamingPattern().Replace(NamingPatternResolver.CalendarWeek, weekOfYear.ToString()).Replace(NamingPatternResolver.ReportNumber, ConfigHandler.ReportNumber().ToString());
+				string name = NamingPatternResolver.ResolveName(weekOfYear.ToString(), ConfigHandler.ReportNumber().ToString());
 				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
 				FitToPage(ldoc);
 				ldoc.SaveAs2(FileName: path);
