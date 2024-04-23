@@ -72,6 +72,7 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
+			this.miUploadSelection = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -307,8 +308,9 @@ namespace BerichtManager
             this.miCreate,
             this.miEditLatest,
             this.miPrintAll,
-            this.miRevealInExplorer,
-            this.miCloseReport});
+            this.miUploadSelection,
+            this.miCloseReport,
+            this.miRevealInExplorer});
 			this.miFile.Name = "miFile";
 			this.miFile.Size = new System.Drawing.Size(37, 20);
 			this.miFile.Text = "File";
@@ -316,35 +318,35 @@ namespace BerichtManager
 			// miCreate
 			// 
 			this.miCreate.Name = "miCreate";
-			this.miCreate.Size = new System.Drawing.Size(167, 22);
+			this.miCreate.Size = new System.Drawing.Size(180, 22);
 			this.miCreate.Text = "Create";
 			this.miCreate.Click += new System.EventHandler(this.btCreate_Click);
 			// 
 			// miEditLatest
 			// 
 			this.miEditLatest.Name = "miEditLatest";
-			this.miEditLatest.Size = new System.Drawing.Size(167, 22);
+			this.miEditLatest.Size = new System.Drawing.Size(180, 22);
 			this.miEditLatest.Text = "Edit latest";
 			this.miEditLatest.Click += new System.EventHandler(this.btEdit_Click);
 			// 
 			// miPrintAll
 			// 
 			this.miPrintAll.Name = "miPrintAll";
-			this.miPrintAll.Size = new System.Drawing.Size(167, 22);
+			this.miPrintAll.Size = new System.Drawing.Size(180, 22);
 			this.miPrintAll.Text = "Print all";
 			this.miPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
 			// 
 			// miRevealInExplorer
 			// 
 			this.miRevealInExplorer.Name = "miRevealInExplorer";
-			this.miRevealInExplorer.Size = new System.Drawing.Size(167, 22);
+			this.miRevealInExplorer.Size = new System.Drawing.Size(180, 22);
 			this.miRevealInExplorer.Text = "Reveal in explorer";
 			this.miRevealInExplorer.Click += new System.EventHandler(this.miRevealInExplorer_Click);
 			// 
 			// miCloseReport
 			// 
 			this.miCloseReport.Name = "miCloseReport";
-			this.miCloseReport.Size = new System.Drawing.Size(167, 22);
+			this.miCloseReport.Size = new System.Drawing.Size(180, 22);
 			this.miCloseReport.Text = "Close Report";
 			this.miCloseReport.Click += new System.EventHandler(this.miCloseReport_Click);
 			// 
@@ -381,6 +383,13 @@ namespace BerichtManager
 			this.miClose.Text = "Close";
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
+			// 
+			// miUploadSelection
+			// 
+			this.miUploadSelection.Name = "miUploadSelection";
+			this.miUploadSelection.Size = new System.Drawing.Size(180, 22);
+			this.miUploadSelection.Text = "Upload selection";
+			this.miUploadSelection.Click += new System.EventHandler(this.miUploadAllSelected_Click);
 			// 
 			// MainForm
 			// 
@@ -445,6 +454,7 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miIHKOptions;
 		private System.Windows.Forms.ToolStripMenuItem miUploadAsNext;
 		private System.Windows.Forms.ToolStripMenuItem miUploadAllSelected;
+		private System.Windows.Forms.ToolStripMenuItem miUploadSelection;
 	}
 }
 
