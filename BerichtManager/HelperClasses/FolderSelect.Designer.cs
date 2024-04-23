@@ -1,4 +1,4 @@
-﻿namespace BerichtManager.HelperClasses.ReportChecking
+﻿namespace BerichtManager.HelperClasses
 {
 	partial class FolderSelect
 	{
