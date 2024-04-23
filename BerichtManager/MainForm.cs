@@ -59,7 +59,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.15.2";
+		public const string VersionNumber = "1.16";
 
 		/// <summary>
 		/// String to be printed
@@ -79,7 +79,7 @@ namespace BerichtManager
 		/// <summary>
 		/// Factory for creating tasks that start word
 		/// </summary>
-		private readonly TaskFactory WordTaskFactory = Task.Factory;
+		private TaskFactory WordTaskFactory { get; } = Task.Factory;
 
 		/// <summary>
 		/// Generates path to file from selected node
