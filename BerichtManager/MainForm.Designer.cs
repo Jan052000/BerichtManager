@@ -68,11 +68,11 @@ namespace BerichtManager
 			this.miCheckDiscrepancy = new System.Windows.Forms.ToolStripMenuItem();
 			this.miNumbers = new System.Windows.Forms.ToolStripMenuItem();
 			this.miDates = new System.Windows.Forms.ToolStripMenuItem();
+			this.miFullCheck = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.miFullCheck = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -284,9 +284,9 @@ namespace BerichtManager
             this.miCreate,
             this.miEditLatest,
             this.miPrintAll,
-            this.miRevealInExplorer,
+            this.miCheckDiscrepancy,
             this.miCloseReport,
-            this.miCheckDiscrepancy});
+            this.miRevealInExplorer});
 			this.miFile.Name = "miFile";
 			this.miFile.Size = new System.Drawing.Size(37, 20);
 			this.miFile.Text = "File";
@@ -339,7 +339,7 @@ namespace BerichtManager
 			// miNumbers
 			// 
 			this.miNumbers.Name = "miNumbers";
-			this.miNumbers.Size = new System.Drawing.Size(180, 22);
+			this.miNumbers.Size = new System.Drawing.Size(157, 22);
 			this.miNumbers.Text = "Check numbers";
 			this.miNumbers.ToolTipText = "Check if report numbers are continuous";
 			this.miNumbers.Click += new System.EventHandler(this.CheckNumbers_Click);
@@ -347,9 +347,16 @@ namespace BerichtManager
 			// miDates
 			// 
 			this.miDates.Name = "miDates";
-			this.miDates.Size = new System.Drawing.Size(180, 22);
+			this.miDates.Size = new System.Drawing.Size(157, 22);
 			this.miDates.Text = "Check dates";
 			this.miDates.Click += new System.EventHandler(this.CheckDates_Click);
+			// 
+			// miFullCheck
+			// 
+			this.miFullCheck.Name = "miFullCheck";
+			this.miFullCheck.Size = new System.Drawing.Size(157, 22);
+			this.miFullCheck.Text = "Full check";
+			this.miFullCheck.Click += new System.EventHandler(this.FullCheck_Click);
 			// 
 			// miOptions
 			// 
@@ -384,13 +391,6 @@ namespace BerichtManager
 			this.miClose.Text = "Close";
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
-			// 
-			// miFullCheck
-			// 
-			this.miFullCheck.Name = "miFullCheck";
-			this.miFullCheck.Size = new System.Drawing.Size(180, 22);
-			this.miFullCheck.Text = "Full check";
-			this.miFullCheck.Click += new System.EventHandler(this.FullCheck_Click);
 			// 
 			// MainForm
 			// 
