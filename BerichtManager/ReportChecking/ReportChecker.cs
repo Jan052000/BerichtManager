@@ -1,11 +1,12 @@
 using BerichtManager.Config;
 using BerichtManager.OwnControls;
+using BerichtManager.ReportChecking.Discrepancies;
 using BerichtManager.ThemeManagement;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 
@@ -36,11 +37,11 @@ namespace BerichtManager.ReportChecking
 		/// <see cref="Word.Application"/> to open reports with
 		/// </summary>
 		private Word.Application WordApp { get; set; }
-		/// <summary>
-		/// Cache for report numbers and start dates
-		/// </summary>
-		public Dictionary<TreeNode, (int ReportNumber, DateTime StartDate)> ReportsCache { get; } = new Dictionary<TreeNode, (int ReportNumber, DateTime StartDate)>();
 
+		/// <summary>
+		/// Creates a new <see cref="ReportChecker"/> instance
+		/// </summary>
+		/// <param name="wordApp"><see cref="Word.Application"/> to open reports with</param>
 		internal ReportChecker(Word.Application wordApp)
 		{
 			WordApp = wordApp;
@@ -50,100 +51,119 @@ namespace BerichtManager.ReportChecking
 		/// Searches report numberf for discrepancies
 		/// </summary>
 		/// <param name="root">Root <see cref="TreeNode"/> of folder to check</param>
-		/// <param name="wordApp"><see cref="Word.Application"/> to open documents in</param>
-		/// <returns><see cref="List{T}"/> of <see cref="ReportDiscrepancy"/> or <see langword="null"/> if an error was encountered</returns>
-		internal List<ReportDiscrepancy> SearchNumbers(TreeNode root)
+		/// <param name="reportDiscrepancies">List of found discrepancies</param>
+		/// <returns><see langword="true"/> if checking was complete and <see langword="false"/> if an error was encountered and a warning was displayed</returns>
+		internal bool Check(TreeNode root, out List<IReportDiscrepancy> reportDiscrepancies, CheckKinds check = CheckKinds.All)
 		{
-			ReportsCache.Clear();
+			reportDiscrepancies = new List<IReportDiscrepancy>();
 			Dictionary<TreeNode, int> reportNumbers = new Dictionary<TreeNode, int>();
 			Dictionary<TreeNode, DateTime> startDates = new Dictionary<TreeNode, DateTime>();
-			List<ReportDiscrepancy> reportDiscrepancies = new List<ReportDiscrepancy>();
-			//List for duplicate report numbers
-			Dictionary<TreeNode, int> duplicateNumbers = new Dictionary<TreeNode, int>();
-			//List for duplicate start dates
-			Dictionary<TreeNode, DateTime> duplicateStartDates = new Dictionary<TreeNode, DateTime>();
 
 			List<TreeNode> reportNodes = FindReports(root);
 			foreach (TreeNode report in reportNodes)
 			{
-				string path = report.Text;
-				TreeNode currentNode = report;
-				while (currentNode.Parent != null)
-				{
-					if (currentNode.Parent != root)
-						path = Path.Combine(currentNode.Parent.Text, path);
-					currentNode = currentNode.Parent;
-				}
+				string path = GenerateTreePath(report);
 				Word.Document doc = WordApp.Documents.Open(FileName: Path.Combine(ConfigHandler.Instance.ReportPath(), path), ReadOnly: true);
 				if (doc.FormFields.Count < 10)
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"The report {path} does not contain the necessary form fields, checking was canceled", title: "Invalid report");
 					doc.Close(SaveChanges: false);
-					return null;
+					return false;
 				}
 				if (GetReportNumber(doc, out int reportNumber))
 				{
-					if (!reportNumbers.ContainsValue(reportNumber))
+					if (!reportNumbers.ContainsKey(report))
 						reportNumbers.Add(report, reportNumber);
-					else
-						duplicateNumbers.Add(report, reportNumber);
 				}
 				else
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read report number from {path}, checking was canceled", title: "Unable to read report number");
 					doc.Close(SaveChanges: false);
-					return null;
+					return false;
 				}
 				if (GetStartDate(doc, out DateTime startDate))
 				{
-					if (!startDates.ContainsValue(startDate))
+					if (!startDates.ContainsKey(report))
 						startDates.Add(report, startDate);
-					else
-						duplicateStartDates.Add(report, startDate);
 				}
 				else
 				{
 					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read start date from {path}, checking was canceled", title: "Unable to read start date");
 					doc.Close(SaveChanges: false);
-					return null;
+					return false;
 				}
-				ReportsCache.Add(report, (reportNumber, startDate));
 				doc.Close(SaveChanges: false);
 			}
 
-			if (duplicateNumbers.Count > 0 || duplicateStartDates.Count > 0)
+			if (check.HasFlag(CheckKinds.Numbers))
 			{
-				StringBuilder message = new StringBuilder();
-				message.AppendLine("At least one duplicate start date or report number was found, checking was canceled: ");
-				duplicateNumbers.Keys.ToList().ForEach(node =>
+				//Add duplicate numbers
+				var numberDuplicates = reportNumbers.GroupBy(kvp => kvp.Value).Where(group => group.Count() > 1).ToList();
+				foreach (var dupe in numberDuplicates)
 				{
-					message.AppendLine($"Number: {GenerateTreePath(node)} = {GenerateTreePath(reportNumbers.First(kvp => kvp.Value == duplicateNumbers[node]).Key)}");
-				});
-				duplicateStartDates.Keys.ToList().ForEach(node =>
+					List<string> duplicates = new List<string>();
+					foreach (KeyValuePair<TreeNode, int> kvp in dupe)
+					{
+						duplicates.Add(GenerateTreePath(kvp.Key));
+					}
+					reportDiscrepancies.Add(new DuplicateNumbersDiscrepancy(duplicates, dupe.Key));
+				}
+				//Add skipped numbers
+				Dictionary<TreeNode, int> sortedNumbers = reportNumbers.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+				List<TreeNode> nodes = sortedNumbers.Keys.ToList().OrderBy(x => sortedNumbers[x]).ToList();
+				for (int i = 0; i < nodes.Count - 1; i++)
 				{
-					message.AppendLine($"Start date: {GenerateTreePath(node)} = {GenerateTreePath(startDates.First(kvp => kvp.Value == duplicateStartDates[node]).Key)}");
-				});
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: message.ToString(), title: "Duplicates found");
-				return null;
+					if (sortedNumbers[nodes[i + 1]] - sortedNumbers[nodes[i]] > 1)
+						reportDiscrepancies.Add(
+							new NumberDiscrepancy(GenerateTreePath(nodes[i]), GenerateTreePath(nodes[i + 1]), reportNumbers[nodes[i]], reportNumbers[nodes[i + 1]])
+							);
+				}
 			}
-
-			reportNumbers = reportNumbers.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-			List<TreeNode> nodes = reportNumbers.Keys.ToList().OrderBy(x => reportNumbers[x]).ToList();
-			for (int i = 0; i < nodes.Count - 1; i++)
+			if (check.HasFlag(CheckKinds.Dates))
 			{
-				if (reportNumbers[nodes[i + 1]] - reportNumbers[nodes[i]] > 1)
-					reportDiscrepancies.Add(
-						new ReportDiscrepancy(GenerateTreePath(nodes[i]),
-						GenerateTreePath(nodes[i + 1]),
-						ReportDiscrepancy.DiscrepancyKind.Number,
-						reportNumbers[nodes[i]],
-						startDates[nodes[i]],
-						reportNumbers[nodes[i + 1]],
-						startDates[nodes[i + 1]])
-					);
+				//Add duplicate dates
+				var dateDuplicates = startDates.GroupBy(kvp => kvp.Value).Where(group => group.Count() > 1).ToList();
+				foreach (var dupe in dateDuplicates)
+				{
+					List<string> duplicates = new List<string>();
+					foreach (KeyValuePair<TreeNode, DateTime> kvp in dupe)
+					{
+						duplicates.Add(GenerateTreePath(kvp.Key));
+					}
+					reportDiscrepancies.Add(new DuplicateStartDatesDiscrepancy(duplicates, dupe.Key));
+				}
+				//Add skipped dates
+				var sortedDates = startDates.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+				List<TreeNode> datesList = sortedDates.Keys.ToList().OrderBy(x => sortedDates[x]).ToList();
+				for (int i = 0; i < datesList.Count - 1; i++)
+				{
+					if ((sortedDates[datesList[i + 1]] - sortedDates[datesList[i]]).Days > 7)
+						reportDiscrepancies.Add(
+							new DateDiscrepancy(GenerateTreePath(datesList[i]), GenerateTreePath(datesList[i + 1]), startDates[datesList[i]], startDates[datesList[i + 1]])
+							);
+				}
 			}
+			return true;
+		}
 
-			return reportDiscrepancies;
+		/// <summary>
+		/// Enum for checking options
+		/// </summary>
+		[Flags]
+		public enum CheckKinds
+		{
+			/// <summary>
+			/// Only report numbers will be ckecked
+			/// </summary>
+			Numbers = 1,
+			/// <summary>
+			/// Only report start dates will be checked
+			/// </summary>
+			Dates,
+			/// <summary>
+			/// Report numbers and start dates will be checked
+			/// </summary>
+			All
 		}
 
 		/// <summary>
@@ -155,11 +175,10 @@ namespace BerichtManager.ReportChecking
 		{
 			string path = node.Text;
 			TreeNode currentNode = node;
-			while (currentNode.Parent != null)
+			while (currentNode.Parent.Parent != null)
 			{
-				if (currentNode.Parent != node)
-					path = Path.Combine(currentNode.Parent.Text, path);
 				currentNode = currentNode.Parent;
+				path = Path.Combine(currentNode.Text, path);
 			}
 			return path;
 		}
@@ -218,27 +237,13 @@ namespace BerichtManager.ReportChecking
 		/// <returns>Start date of report</returns>
 		private bool GetStartDate(Word.Document document, out DateTime startDate)
 		{
-			if (!DateTime.TryParse(document.FormFields[ReportFields.StartDate].Result, out DateTime rstartDate))
+			if (!DateTime.TryParseExact(document.FormFields[ReportFields.StartDate].Result, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime rstartDate))
 			{
 				startDate = new DateTime();
 				return false;
 			}
 			startDate = rstartDate;
 			return true;
-		}
-
-		/// <summary>
-		/// Gets end date of report
-		/// </summary>
-		/// <param name="document"><see cref="Word.Document"/> to get end date from</param>
-		/// <returns>End date of report</returns>
-		private DateTime GerEndDate(Word.Document document)
-		{
-			if (!DateTime.TryParse(document.FormFields[ReportFields.StartDate].Result, out DateTime endDate))
-			{
-				return new DateTime();
-			}
-			return endDate;
 		}
 	}
 }

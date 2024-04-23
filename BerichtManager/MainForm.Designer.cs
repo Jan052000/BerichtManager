@@ -65,12 +65,14 @@ namespace BerichtManager
 			this.miPrintAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRevealInExplorer = new System.Windows.Forms.ToolStripMenuItem();
 			this.miCloseReport = new System.Windows.Forms.ToolStripMenuItem();
+			this.miCheckDiscrepancy = new System.Windows.Forms.ToolStripMenuItem();
+			this.miNumbers = new System.Windows.Forms.ToolStripMenuItem();
+			this.miDates = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.miCheckDiscrepancy = new System.Windows.Forms.ToolStripMenuItem();
-			this.miNumbers = new System.Windows.Forms.ToolStripMenuItem();
+			this.miFullCheck = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -324,6 +326,31 @@ namespace BerichtManager
 			this.miCloseReport.Text = "Close Report";
 			this.miCloseReport.Click += new System.EventHandler(this.miCloseReport_Click);
 			// 
+			// miCheckDiscrepancy
+			// 
+			this.miCheckDiscrepancy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miNumbers,
+            this.miDates,
+            this.miFullCheck});
+			this.miCheckDiscrepancy.Name = "miCheckDiscrepancy";
+			this.miCheckDiscrepancy.Size = new System.Drawing.Size(191, 22);
+			this.miCheckDiscrepancy.Text = "Check for discrepancy";
+			// 
+			// miNumbers
+			// 
+			this.miNumbers.Name = "miNumbers";
+			this.miNumbers.Size = new System.Drawing.Size(180, 22);
+			this.miNumbers.Text = "Check numbers";
+			this.miNumbers.ToolTipText = "Check if report numbers are continuous";
+			this.miNumbers.Click += new System.EventHandler(this.CheckNumbers_Click);
+			// 
+			// miDates
+			// 
+			this.miDates.Name = "miDates";
+			this.miDates.Size = new System.Drawing.Size(180, 22);
+			this.miDates.Text = "Check dates";
+			this.miDates.Click += new System.EventHandler(this.CheckDates_Click);
+			// 
 			// miOptions
 			// 
 			this.miOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -358,21 +385,12 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// miCheckDiscrepancy
+			// miFullCheck
 			// 
-			this.miCheckDiscrepancy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miNumbers});
-			this.miCheckDiscrepancy.Name = "miCheckDiscrepancy";
-			this.miCheckDiscrepancy.Size = new System.Drawing.Size(191, 22);
-			this.miCheckDiscrepancy.Text = "Check for discrepancy";
-			// 
-			// miNumbers
-			// 
-			this.miNumbers.Name = "miNumbers";
-			this.miNumbers.Size = new System.Drawing.Size(180, 22);
-			this.miNumbers.Text = "Check numbers";
-			this.miNumbers.ToolTipText = "Check if report numbers are continuous";
-			this.miNumbers.Click += new System.EventHandler(this.miNumbers_Click);
+			this.miFullCheck.Name = "miFullCheck";
+			this.miFullCheck.Size = new System.Drawing.Size(180, 22);
+			this.miFullCheck.Text = "Full check";
+			this.miFullCheck.Click += new System.EventHandler(this.FullCheck_Click);
 			// 
 			// MainForm
 			// 
@@ -436,6 +454,8 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miCloseReport;
 		private System.Windows.Forms.ToolStripMenuItem miCheckDiscrepancy;
 		private System.Windows.Forms.ToolStripMenuItem miNumbers;
+		private System.Windows.Forms.ToolStripMenuItem miDates;
+		private System.Windows.Forms.ToolStripMenuItem miFullCheck;
 	}
 }
 

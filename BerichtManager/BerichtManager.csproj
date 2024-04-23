@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -97,8 +97,14 @@
     <Compile Include="HelperClasses\FolderSelect.Designer.cs">
       <DependentUpon>FolderSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReportChecking\Discrepancies\DateDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DuplicateDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DuplicateNumbersDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DuplicateStartDatesDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\IReportDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\NumberDiscrepancy.cs" />
     <Compile Include="ReportChecking\ReportChecker.cs" />
-    <Compile Include="ReportChecking\ReportDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\SingleDiscrepancy.cs" />
     <Compile Include="OwnControls\FocusColoredFlatButton.cs">
       <SubType>Component</SubType>
     </Compile>

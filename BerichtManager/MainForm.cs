@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using BerichtManager.OwnControls;
 using BerichtManager.ReportChecking;
 using System.Text;
+using BerichtManager.ReportChecking.Discrepancies;
 
 namespace BerichtManager
 {
@@ -1474,7 +1475,11 @@ namespace BerichtManager
 			EditMode = false;
 		}
 
-		private void miNumbers_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Checks all selected reports for discrepancies and handles output
+		/// </summary>
+		/// <param name="check">Kind of check to execute</param>
+		private void CheckDiscrepancies(ReportChecker.CheckKinds check)
 		{
 			if (!HasWordStarted())
 				return;
@@ -1487,7 +1492,8 @@ namespace BerichtManager
 				return;
 			}
 			ReportChecker checker = new ReportChecker(WordApp);
-			List<ReportDiscrepancy> discrepancies = checker.SearchNumbers(select.FilteredNode);
+			if (!checker.Check(select.FilteredNode, out List<IReportDiscrepancy> discrepancies, check: check))
+				return;
 			if (discrepancies == null)
 				return;
 			if (discrepancies.Count == 0)
@@ -1496,9 +1502,24 @@ namespace BerichtManager
 				return;
 			}
 			StringBuilder message = new StringBuilder();
-			message.AppendLine("At least one number discrepancy was found");
-			discrepancies.ForEach(d => message.AppendLine($"{d.StartAt} => {d.Next},"));
+			message.AppendLine("At least one discrepancy was found:");
+			discrepancies.ForEach(d => message.AppendLine(d.ToString()));
 			ThemedMessageBox.Show(ActiveTheme, text: message.ToString(), title: "Discrepancy found");
+		}
+
+		private void CheckNumbers_Click(object sender, EventArgs e)
+		{
+			CheckDiscrepancies(ReportChecker.CheckKinds.Numbers);
+		}
+
+		private void CheckDates_Click(object sender, EventArgs e)
+		{
+			CheckDiscrepancies(ReportChecker.CheckKinds.Dates);
+		}
+
+		private void FullCheck_Click(object sender, EventArgs e)
+		{
+			CheckDiscrepancies(ReportChecker.CheckKinds.All);
 		}
 	}
 }
