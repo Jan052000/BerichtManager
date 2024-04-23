@@ -404,7 +404,7 @@ namespace BerichtManager
 			this.MinimumSize = new System.Drawing.Size(545, 289);
 			this.Name = "MainForm";
 			this.Text = "Bericht Manager";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormManager_FormClosing);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
 			this.toRightClickMenu.ResumeLayout(false);
 			this.paMainView.ResumeLayout(false);

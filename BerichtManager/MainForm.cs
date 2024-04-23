@@ -72,9 +72,9 @@ namespace BerichtManager
 		private string ActivePath { get; set; } = Path.GetFullPath(".\\..");
 
 		/// <summary>
-		/// Status if the word app has finished loading
+		/// Status if the word app is running
 		/// </summary>
-		private bool WordInitialized { get; set; } = false;
+		private bool WordIsOpen { get; set; } = false;
 
 		/// <summary>
 		/// Factory for creating tasks that start word
@@ -1301,12 +1301,12 @@ namespace BerichtManager
 
 		private void miWordVisible_Click(object sender, EventArgs e)
 		{
-			if (WordInitialized)
+			if (WordIsOpen)
 				WordApp.Visible = miWordVisible.Checked;
 			WordVisible = miWordVisible.Checked;
 		}
 
-		private void FormManager_FormClosing(object sender, FormClosingEventArgs e)
+		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			try
 			{
@@ -1319,6 +1319,8 @@ namespace BerichtManager
 					Doc.Close(SaveChanges: false);
 					Doc = null;
 				}
+				if (CheckIfWordRunning())
+					WordApp.Quit();
 			}
 			catch (Exception ex)
 			{
@@ -1387,11 +1389,12 @@ namespace BerichtManager
 		/// <returns>Has Word finished starting</returns>
 		private bool HasWordStarted()
 		{
-			if (!WordInitialized)
+			if (!CheckIfWordRunning())
 			{
 				ThemedMessageBox.Show(ActiveTheme, "Word is still starting, please try again", "Please try again");
+				return false;
 			}
-			return WordInitialized;
+			return true;
 		}
 
 		private void miRevealInExplorer_Click(object sender, EventArgs e)
@@ -1411,12 +1414,30 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Checks wether or not the word app is still open by comparing types of open and closed word app
+		/// Delegate to execute when word closes
 		/// </summary>
-		/// <returns><see langword="true"/> if word is open and <see langword="false"/> otherwise</returns>
-		private bool CheckIfWordOpen()
+		private void OnWordClose()
 		{
-			return !typeof(Word.Application).IsAssignableFrom(WordApp.GetType());
+			WordIsOpen = false;
+		}
+
+		/// <summary>
+		/// Checks if word should be running by catching an exception if it is not
+		/// </summary>
+		/// <returns><see langword="true"/> if word is still running and <see langword="false"/> if not</returns>
+		private bool CheckIfWordRunning()
+		{
+			if (WordApp == null || !WordIsOpen)
+				return false;
+			try
+			{
+				var dummy = WordApp.Version;
+			}
+			catch
+			{
+				return false;
+			}
+			return true;
 		}
 
 		/// <summary>
@@ -1424,19 +1445,11 @@ namespace BerichtManager
 		/// </summary>
 		private void RestartWord()
 		{
-			if (WordApp == null)
-			{
-				WordApp = new Word.Application();
-				WordInitialized = true;
+			if (CheckIfWordRunning())
 				return;
-			}
-
-			//Check if word is still open
-			if (CheckIfWordOpen())
-				return;
-			WordInitialized = false;
 			WordApp = new Word.Application();
-			WordInitialized = true;
+			((Word.ApplicationEvents4_Event)WordApp).Quit += () => { OnWordClose(); };
+			WordIsOpen = true;
 		}
 
 		/// <summary>
