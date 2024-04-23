@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BerichtManager.HelperClasses.ReportChecking
+namespace BerichtManager.ReportChecking
 {
 	/// <summary>
 	/// Class that hold data for discrepancies

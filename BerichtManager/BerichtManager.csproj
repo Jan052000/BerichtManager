@@ -97,8 +97,8 @@
     <Compile Include="HelperClasses\FolderSelect.Designer.cs">
       <DependentUpon>FolderSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="HelperClasses\ReportChecking\ReportChecker.cs" />
-    <Compile Include="HelperClasses\ReportChecking\ReportDiscrepancy.cs" />
+    <Compile Include="ReportChecking\ReportChecker.cs" />
+    <Compile Include="ReportChecking\ReportDiscrepancy.cs" />
     <Compile Include="OwnControls\FocusColoredFlatButton.cs">
       <SubType>Component</SubType>
     </Compile>

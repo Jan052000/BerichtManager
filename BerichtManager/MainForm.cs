@@ -14,7 +14,7 @@ using BerichtManager.HelperClasses;
 using BerichtManager.WebUntisClient;
 using System.Threading.Tasks;
 using BerichtManager.OwnControls;
-using BerichtManager.HelperClasses.ReportChecking;
+using BerichtManager.ReportChecking;
 using System.Text;
 
 namespace BerichtManager

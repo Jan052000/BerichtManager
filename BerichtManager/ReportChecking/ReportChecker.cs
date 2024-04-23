@@ -9,7 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 
-namespace BerichtManager.HelperClasses.ReportChecking
+namespace BerichtManager.ReportChecking
 {
 	/// <summary>
 	/// Class containing methods for checking reports for discrepancies
