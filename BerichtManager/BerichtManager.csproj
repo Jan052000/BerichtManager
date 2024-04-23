@@ -97,6 +97,14 @@
     <Compile Include="HelperClasses\FolderSelect.Designer.cs">
       <DependentUpon>FolderSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReportChecking\Discrepancies\DateDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DuplicateDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DuplicateNumbersDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DuplicateStartDatesDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\IReportDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\NumberDiscrepancy.cs" />
+    <Compile Include="ReportChecking\ReportChecker.cs" />
+    <Compile Include="ReportChecking\Discrepancies\SingleDiscrepancy.cs" />
     <Compile Include="OwnControls\FocusColoredFlatButton.cs">
       <SubType>Component</SubType>
     </Compile>
