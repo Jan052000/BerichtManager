@@ -169,6 +169,8 @@ namespace BerichtManager.IHKClient
 				if (!await DoLogin())
 					return false;
 			HttpResponseMessage response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
+			if (!response.IsSuccessStatusCode)
+				return false;
 			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
 			List<HtmlElement> reportElements = CSSSelect(doc.Body, "div.reihe");
 			PutReportstatus(reportElements);
