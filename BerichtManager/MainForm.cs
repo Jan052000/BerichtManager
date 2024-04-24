@@ -1651,5 +1651,24 @@ namespace BerichtManager
 			}
 			return path;
 		}
+
+		private async void miUpdateStatuses_Click(object sender, EventArgs e)
+		{
+			if (await IHKClient.UpdateReportStatuses())
+				ThemedMessageBox.Show(ActiveTheme, text: "Update complete.", title: "Update complete");
+			else
+				ThemedMessageBox.Show(ActiveTheme, text: "Already up to date", title: "Update complete");
+			UpdateTree();
+		}
+
+#pragma warning disable CS1998 // Bei der asynchronen Methode fehlen "await"-Operatoren. Die Methode wird synchron ausgeführt.
+		private async void MainForm_Load(object sender, EventArgs e)
+#pragma warning restore CS1998 // Bei der asynchronen Methode fehlen "await"-Operatoren. Die Methode wird synchron ausgeführt.
+		{
+#if !DEBUG
+			await IHKClient.UpdateReportStatuses();
+			UpdateTree();
+#endif
+		}
 	}
 }
