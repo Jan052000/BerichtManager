@@ -25,7 +25,15 @@ namespace BerichtManager.UploadChecking
 			/// <summary>
 			/// Report was uploaded and handed in
 			/// </summary>
-			HandedIn
+			HandedIn,
+			/// <summary>
+			/// Report was handed in and accepted
+			/// </summary>
+			Accepted,
+			/// <summary>
+			/// Report was handed in and rejected
+			/// </summary>
+			Rejected
 		}
 
 		public ReportNode() : base() { }
