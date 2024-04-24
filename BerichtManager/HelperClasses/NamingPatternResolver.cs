@@ -17,7 +17,10 @@ namespace BerichtManager.HelperClasses
 		/// </summary>
 		public const string ReportNumber = "~+RN+~";
 
-		public static CultureInfo Culture = new CultureInfo("de-DE");
+		/// <summary>
+		/// <see cref="CultureInfo"/> to use for calendar
+		/// </summary>
+		public static CultureInfo Culture { get; } = CultureInfo.CurrentCulture;
 
 		/// <summary>
 		/// Resolves report number and caledar week into the desired name
@@ -64,6 +67,11 @@ namespace BerichtManager.HelperClasses
 			}
 
 			return new ResolvedValues(reportNumber, calendarWeek);
+		}
+
+		public static bool PatternContainsValues(string pattern)
+		{
+			return pattern.IndexOf(CalendarWeek) > 0 || pattern.IndexOf(ReportNumber) > 0;
 		}
 	}
 

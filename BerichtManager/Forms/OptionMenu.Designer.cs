@@ -217,7 +217,7 @@ namespace BerichtManager.Forms
 			this.tbNamingPattern.Size = new System.Drawing.Size(696, 20);
 			this.tbNamingPattern.TabIndex = 32;
 			this.toolTip1.SetToolTip(this.tbNamingPattern, "~+CW+~ = Calendar week\r\n~+RN+~ = Report number");
-			this.tbNamingPattern.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			this.tbNamingPattern.TextChanged += new System.EventHandler(this.NamingPatternChanged);
 			// 
 			// tbName
 			// 
@@ -537,9 +537,6 @@ namespace BerichtManager.Forms
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Button btClose;
-		private System.Windows.Forms.Button btSave;
 		private System.Windows.Forms.ToolTip toolTip1;
 		private OwnControls.ColoredGroupBox gbPrefix;
 		private System.Windows.Forms.CheckBox cbUseCustomPrefix;
@@ -547,7 +544,6 @@ namespace BerichtManager.Forms
 		private OwnControls.ColoredGroupBox gbWebUntis;
 		private System.Windows.Forms.CheckBox cbShouldUseUntis;
 		private System.Windows.Forms.TextBox tbSchool;
-		private System.Windows.Forms.Button btLogin;
 		private System.Windows.Forms.Label laSchool;
 		private System.Windows.Forms.TextBox tbServer;
 		private System.Windows.Forms.Label laServer;
@@ -559,9 +555,7 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.Label laName;
 		private System.Windows.Forms.NumericUpDown nudNumber;
 		private System.Windows.Forms.Label laNamingPattern;
-		private System.Windows.Forms.Button btCreateTheme;
 		private System.Windows.Forms.TextBox tbTemplate;
-		private System.Windows.Forms.Button btEditTheme;
 		private System.Windows.Forms.Label laTheme;
 		private System.Windows.Forms.Label laTemplate;
 		private OwnControls.ColoredComboBox coTheme;
@@ -575,5 +569,10 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.Label laUpdate;
 		private System.Windows.Forms.Label laFontSize;
 		private System.Windows.Forms.NumericUpDown nudFontSize;
+		private OwnControls.FocusColoredFlatButton btClose;
+		private OwnControls.FocusColoredFlatButton btSave;
+		private OwnControls.FocusColoredFlatButton btLogin;
+		private OwnControls.FocusColoredFlatButton btCreateTheme;
+		private OwnControls.FocusColoredFlatButton btEditTheme;
 	}
 }

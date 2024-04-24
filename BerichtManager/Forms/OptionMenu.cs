@@ -1,4 +1,5 @@
 ﻿using BerichtManager.Config;
+using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
 using System;
@@ -216,6 +217,18 @@ namespace BerichtManager.Forms
 		{
 			IsDirty = true;
 			btSave.Enabled = true;
+		}
+
+		/// <summary>
+		/// Handles a value change for <see cref="tbNamingPattern"/>
+		/// </summary>
+		/// <param name="sender"><see cref="tbNamingPattern"/> object</param>
+		/// <param name="e">Event args</param>
+		private void NamingPatternChanged(object sender, EventArgs e)
+		{
+			MarkAsDirty(sender, e);
+			if (!NamingPatternResolver.PatternContainsValues(tbNamingPattern.Text))
+				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: "Caution: pattern does not contain any identifying values, new reports would overwrite each other!", title: "Warning!");
 		}
 
 		private void cbShouldUseUntis_CheckedChanged(object sender, EventArgs e)
