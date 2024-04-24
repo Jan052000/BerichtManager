@@ -173,8 +173,7 @@ namespace BerichtManager.IHKClient
 				return false;
 			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
 			List<HtmlElement> reportElements = CSSSelect(doc.Body, "div.reihe");
-			PutReportstatus(reportElements);
-			return true;
+			return PutReportstatus(reportElements);
 		}
 
 		/// <summary>
