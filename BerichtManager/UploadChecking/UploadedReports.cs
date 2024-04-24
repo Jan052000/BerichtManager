@@ -1,8 +1,9 @@
-using BerichtManager.Config;
+﻿using BerichtManager.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace BerichtManager.UploadChecking
 {
@@ -60,6 +61,26 @@ namespace BerichtManager.UploadChecking
 			else
 				paths.Add(path, report);
 			Save();
+		}
+
+		/// <summary>
+		/// Updates the upload status of the rpeort starting on <paramref name="startDate"/>
+		/// </summary>
+		/// <param name="startDate"><see cref="DateTime"/> of rpeort start date</param>
+		/// <param name="status"><see cref="ReportNode.UploadStatuses"/> to update to</param>
+		public static void UpdateReportStatus(DateTime startDate, ReportNode.UploadStatuses status)
+		{
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
+				return;
+			List<UploadedReport> uploadedReports = paths.Where(kvp => kvp.Value.StartDate == startDate).ToList().Select(x => x.Value).ToList();
+			bool save = false;
+			uploadedReports.ForEach(report =>
+			{
+				save = report.Status != status;
+				report.Status = status;
+			});
+			if (save)
+				Instance.Save();
 		}
 
 		/// <summary>
