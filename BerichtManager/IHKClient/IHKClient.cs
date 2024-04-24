@@ -109,7 +109,7 @@ namespace BerichtManager.IHKClient
 		private async Task<bool> SetFirstCookie()
 		{
 			string path = "tibrosBB/BB_auszubildende.jsp";
-			HttpResponseMessage response = await HttpClient.GetAsync(path);
+			HttpResponseMessage response = await GetAndRefer(path);
 			if (!response.IsSuccessStatusCode)
 				return false;
 			if (response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
@@ -131,6 +131,8 @@ namespace BerichtManager.IHKClient
 		/// <returns><see langword="true"/> if login was successful or client was already logged in and <see langword="false"/> otherwise</returns>
 		private async Task<bool> DoLogin()
 		{
+			if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+				return false;
 			if (LoggedIn)
 				return true;
 			if (!await SetFirstCookie())
@@ -145,7 +147,7 @@ namespace BerichtManager.IHKClient
 				{ "pass", password },
 				{ "anmelden", null }
 			};
-			HttpResponseMessage response = await HttpClient.PostAsync(uri, new FormUrlEncodedContent(content));
+			HttpResponseMessage response = await PostAndRefer(uri, new FormUrlEncodedContent(content));
 			if (response.StatusCode != HttpStatusCode.Found && !response.IsSuccessStatusCode)
 				return false;
 			//Get second cookie if recieved
@@ -178,6 +180,7 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <param name="reportElements">List of report <see cref="HtmlElement"/>s from IHK page</param>
 		/// <returns><see langword="true"/> if a rport was updated and <see langword="false"/> otherwise</returns>
+		/// <exception cref="HttpRequestException"></exception>
 		private bool PutReportstatus(List<HtmlElement> reportElements)
 		{
 			bool updated = false;
@@ -271,6 +274,7 @@ namespace BerichtManager.IHKClient
 		/// <returns><see cref="UploadResult"/> object containing status and start date of report</returns>
 		/// <inheritdoc cref="FillReportContent(Report, HtmlDocument)" path="/exception"/>
 		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document)" path="/exception"/>
+		/// <exception cref="HttpRequestException"></exception>
 		public async Task<UploadResult> CreateReport(Word.Document document)
 		{
 			if (!LoggedIn)
