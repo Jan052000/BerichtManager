@@ -1117,12 +1117,12 @@ namespace BerichtManager
 		{
 			if (!File.Exists(path))
 			{
+				if (File.GetAttributes(path) == FileAttributes.Directory)
+				{
+					ThemedMessageBox.Show(ActiveTheme, "You may not delete folders using the manager");
+					return;
+				}
 				ThemedMessageBox.Show(ActiveTheme, path + " not Found (was it moved or deleted?)");
-				return;
-			}
-			if (File.GetAttributes(path) == FileAttributes.Directory)
-			{
-				ThemedMessageBox.Show(ActiveTheme, "You may not delete folders using the manager");
 				return;
 			}
 			if (Path.GetExtension(path) != ".docx" && !path.Contains("\\Logs") && !Path.GetFileName(path).StartsWith("~$"))
