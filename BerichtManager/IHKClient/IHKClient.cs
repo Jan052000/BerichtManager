@@ -192,7 +192,7 @@ namespace BerichtManager.IHKClient
 				Regex datesRegex = new Regex("(\\d+?\\.\\d+?\\.\\d+)");
 				if (!DateTime.TryParseExact(datesRegex.Match(rows[(int)ReportElementFields.TimeSpan].InnerText).Value, "dd.MM.yyyy", null, DateTimeStyles.None, out DateTime startDate))
 					return;
-				if (new ReportStatuses().TryGetValue(rows[(int)ReportElementFields.Status].InnerText, out ReportNode.UploadStatuses status))
+				if (new ReportStatuses().TryGetValue(rows[(int)ReportElementFields.Status].InnerText.Trim(), out ReportNode.UploadStatuses status))
 					updated |= UploadedReports.UpdateReportStatus(startDate, status);
 			});
 			return updated;
