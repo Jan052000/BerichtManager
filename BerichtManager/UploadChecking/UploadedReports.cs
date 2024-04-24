@@ -1,4 +1,4 @@
-﻿using BerichtManager.Config;
+using BerichtManager.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -55,7 +55,10 @@ namespace BerichtManager.UploadChecking
 				paths = new Dictionary<string, UploadedReport>();
 				Add(ConfigHandler.Instance.ReportPath(), paths);
 			}
-			paths.Add(path, report);
+			if (paths.ContainsKey(path))
+				paths[path] = report;
+			else
+				paths.Add(path, report);
 			Save();
 		}
 
