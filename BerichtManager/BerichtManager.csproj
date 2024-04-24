@@ -102,6 +102,7 @@
     <Compile Include="IHKClient\UploadResult.cs" />
     <Compile Include="UploadChecking\ReportNode.cs" />
     <Compile Include="HelperClasses\ReportTransformer.cs" />
+    <Compile Include="UploadChecking\ReportStatuses.cs" />
     <Compile Include="UploadChecking\UploadedReport.cs" />
     <Compile Include="UploadChecking\UploadedReports.cs" />
     <Compile Include="IHKClient\Exceptions\InputFieldsMismatchException.cs" />
