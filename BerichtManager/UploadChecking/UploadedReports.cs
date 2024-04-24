@@ -68,12 +68,13 @@ namespace BerichtManager.UploadChecking
 		/// </summary>
 		/// <param name="startDate"><see cref="DateTime"/> of rpeort start date</param>
 		/// <param name="status"><see cref="ReportNode.UploadStatuses"/> to update to</param>
-		public static void UpdateReportStatus(DateTime startDate, ReportNode.UploadStatuses status)
+		/// <returns><see langword="true"/> if a rport was updated and <see langword="false"/> otherwise</returns>
+		public static bool UpdateReportStatus(DateTime startDate, ReportNode.UploadStatuses status)
 		{
-			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
-				return;
-			List<UploadedReport> uploadedReports = paths.Where(kvp => kvp.Value.StartDate == startDate).ToList().Select(x => x.Value).ToList();
 			bool save = false;
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
+				return save;
+			List<UploadedReport> uploadedReports = paths.Where(kvp => kvp.Value.StartDate == startDate).ToList().Select(x => x.Value).ToList();
 			uploadedReports.ForEach(report =>
 			{
 				save = report.Status != status;
@@ -81,6 +82,7 @@ namespace BerichtManager.UploadChecking
 			});
 			if (save)
 				Instance.Save();
+			return save;
 		}
 
 		/// <summary>

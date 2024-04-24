@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="HelperClasses\ReportFinder.cs" />
     <Compile Include="IHKClient\CreateResults.cs" />
+    <Compile Include="IHKClient\CssSelector.cs" />
     <Compile Include="IHKClient\UploadResult.cs" />
     <Compile Include="UploadChecking\ReportNode.cs" />
     <Compile Include="HelperClasses\ReportTransformer.cs" />

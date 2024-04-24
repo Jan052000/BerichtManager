@@ -10,6 +10,9 @@ using System.Reflection;
 using BerichtManager.IHKClient.Exceptions;
 using Word = Microsoft.Office.Interop.Word;
 using BerichtManager.HelperClasses;
+using System.Text.RegularExpressions;
+using BerichtManager.UploadChecking;
+using System.Globalization;
 
 namespace BerichtManager.IHKClient
 {
@@ -152,6 +155,113 @@ namespace BerichtManager.IHKClient
 
 			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(uri);
 			return true;
+		}
+
+		/// <summary>
+		/// Updates report upload statuses in <see cref="UploadedReports"/>
+		/// </summary>
+		/// <returns><see langword="true"/> if a rport was updated and <see langword="false"/> otherwise</returns>
+		public async Task<bool> UpdateReportStatuses()
+		{
+			if (!LoggedIn)
+				if (!await DoLogin())
+					return false;
+			HttpResponseMessage response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
+			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
+			List<HtmlElement> reportElements = CSSSelect(doc.Body, "div.reihe");
+			PutReportstatus(reportElements);
+			return true;
+		}
+
+		/// <summary>
+		/// Updates report upload status in <see cref="UploadedReports"/> with values from <paramref name="reportElements"/>
+		/// </summary>
+		/// <param name="reportElements">List of report <see cref="HtmlElement"/>s from IHK page</param>
+		/// <returns><see langword="true"/> if a rport was updated and <see langword="false"/> otherwise</returns>
+		private bool PutReportstatus(List<HtmlElement> reportElements)
+		{
+			bool updated = false;
+			reportElements.ForEach(reportElement =>
+			{
+				List<HtmlElement> rows = CSSSelect(reportElement, "div.col-md-8");
+				Regex datesRegex = new Regex("(\\d+?\\.\\d+?\\.\\d+)");
+				if (!DateTime.TryParseExact(datesRegex.Match(rows[(int)ReportElementFields.TimeSpan].InnerText).Value, "dd.MM.yyyy", null, DateTimeStyles.None, out DateTime startDate))
+					return;
+				if (new ReportStatuses().TryGetValue(rows[(int)ReportElementFields.Status].InnerText, out ReportNode.UploadStatuses status))
+					updated |= UploadedReports.UpdateReportStatus(startDate, status);
+			});
+			return updated;
+		}
+
+		/// <summary>
+		/// Position of report values in <see cref="HtmlElement"/> form IHK
+		/// </summary>
+		private enum ReportElementFields
+		{
+			/// <summary>
+			/// <see cref="TimeSpan"/> of report
+			/// </summary>
+			TimeSpan,
+			/// <summary>
+			/// Job field
+			/// </summary>
+			JobField,
+			/// <summary>
+			/// Supervisor e-mail
+			/// </summary>
+			Supervisor,
+			/// <summary>
+			/// Upload status
+			/// </summary>
+			Status,
+			/// <summary>
+			/// Button actions
+			/// </summary>
+			ButtonAction
+		}
+
+		/// <summary>
+		/// Searches <paramref name="root"/> for all <see cref="HtmlElement"/>s that fit <paramref name="cssSelector"/>
+		/// </summary>
+		/// <param name="root">Root <see cref="HtmlElement"/> to search</param>
+		/// <param name="cssSelector">Selector to use</param>
+		/// <returns><see cref="List{T}"/> of matching <see cref="HtmlElement"/>s</returns>
+		private List<HtmlElement> CSSSelect(HtmlElement root, string cssSelector)
+		{
+			List<HtmlElement> selected = new List<HtmlElement>();
+			if (cssSelector.Contains(' '))
+				cssSelector = cssSelector.Replace(" ", "");
+			List<Selector> selectors = new List<Selector>();
+
+			Regex select = new Regex("((?<Tag>.+?(?=\\.|>|\\ |$))(?<Classes>\\..+?)*?)(( *> *)|\\ |$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+			foreach (Match match in select.Matches(cssSelector))
+			{
+				List<string> classes = new List<string>();
+				for (int i = 0; i < match.Groups["Classes"].Captures.Count; i++)
+				{
+					classes.Add(match.Groups["Classes"].Captures[i].Value.Substring(1));
+				}
+				selectors.Add(new Selector(match.Groups["Tag"].Value, classes));
+			}
+
+			selectors.ForEach(selector =>
+			{
+				foreach (HtmlElement element in root.GetElementsByTagName("div"))
+				{
+					bool hasAllClasses = true;
+					List<string> classes = element.GetAttribute("className").Trim().Split(' ').ToList();
+					hasAllClasses &= classes.Count == selector.Classes.Count;
+					if (hasAllClasses)
+						classes.ForEach(cssClass =>
+						{
+							hasAllClasses &= selector.Classes.Contains(cssClass);
+						});
+					if (hasAllClasses)
+						selected.Add(element);
+				}
+			});
+
+			return selected;
 		}
 
 		/// <summary>
