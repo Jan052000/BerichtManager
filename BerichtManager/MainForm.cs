@@ -17,6 +17,7 @@ using BerichtManager.OwnControls;
 using BerichtManager.UploadChecking;
 using System.Linq;
 using BerichtManager.IHKClient;
+using System.Net.Http;
 
 namespace BerichtManager
 {
@@ -1513,9 +1514,14 @@ namespace BerichtManager
 			{
 				return await IHKClient.CreateReport(doc);
 			}
+			catch (HttpRequestException)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+				return null;
+			}
 			catch (Exception ex)
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}", title: ex.GetType().Name);
+				ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
 				return null;
 			}
 		}
