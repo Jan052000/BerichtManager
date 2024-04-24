@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BerichtManager.IHKClient
+﻿namespace BerichtManager.IHKClient
 {
 	/// <summary>
 	/// Results of the report creation process

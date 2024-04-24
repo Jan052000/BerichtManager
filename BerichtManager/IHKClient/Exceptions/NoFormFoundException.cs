@@ -1,5 +1,4 @@
-﻿using BerichtManager.HelperClasses;
-using System;
+﻿using System;
 
 namespace BerichtManager.IHKClient.Exceptions
 {
