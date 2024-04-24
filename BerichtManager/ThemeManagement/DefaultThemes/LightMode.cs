@@ -30,5 +30,7 @@ namespace BerichtManager.ThemeManagement.DefaultThemes
 		public Color TreeViewHighlightedNodeColor => Color.FromArgb(0, 120, 215);
 		public Color ReportUploadedColor => Color.Blue;
 		public Color ReportHandedInColor => Color.FromArgb(242, 222, 0);
+		public Color ReportAcceptedColor => Color.LimeGreen;
+		public Color ReportRejectedColor => Color.Red;
 	}
 }

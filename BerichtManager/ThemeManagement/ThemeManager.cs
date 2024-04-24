@@ -205,5 +205,9 @@ namespace BerichtManager.ThemeManagement
 		public Color ReportUploadedColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color ReportHandedInColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
+		public Color ReportAcceptedColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
+		public Color ReportRejectedColor { get; set; }
 	}
 }

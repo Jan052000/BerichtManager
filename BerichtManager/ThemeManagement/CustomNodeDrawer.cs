@@ -121,9 +121,26 @@ namespace BerichtManager.ThemeManagement
 			{
 				//Offset of node left + right
 				int nodeOffset = 6;
-				using (Pen outline = new Pen(report.UploadStatus == ReportNode.UploadStatuses.Uploaded ? Theme.ReportUploadedColor : Theme.ReportHandedInColor))
+				//Default color is invisible white
+				Color? statusColor = Color.FromArgb(0, Color.White);
+				switch (report.UploadStatus)
+				{
+					case ReportNode.UploadStatuses.Uploaded:
+						statusColor = Theme.ReportUploadedColor;
+						break;
+					case ReportNode.UploadStatuses.HandedIn:
+						statusColor = Theme.ReportHandedInColor;
+						break;
+					case ReportNode.UploadStatuses.Accepted:
+						statusColor = Theme.ReportAcceptedColor;
+						break;
+					case ReportNode.UploadStatuses.Rejected:
+						statusColor = Theme.ReportRejectedColor;
+						break;
+				}
+				using (Pen outline = new Pen((Color)statusColor))
 					e.Graphics.DrawEllipse(outline, e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
-				using (SolidBrush upload = new SolidBrush(report.UploadStatus == ReportNode.UploadStatuses.Uploaded ? Theme.ReportUploadedColor : Theme.ReportHandedInColor))
+				using (SolidBrush upload = new SolidBrush((Color)statusColor))
 					e.Graphics.FillEllipse(upload, e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
 			}
 		}

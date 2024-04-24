@@ -76,10 +76,14 @@
 			this.laDisabledButtonTextColor = new System.Windows.Forms.Label();
 			this.tbBtHoverColor = new System.Windows.Forms.TextBox();
 			this.laBtHoverColor = new System.Windows.Forms.Label();
-			this.tbUploadedColor = new System.Windows.Forms.TextBox();
+			this.tbReportUploaded = new System.Windows.Forms.TextBox();
 			this.tbReportHandedIn = new System.Windows.Forms.TextBox();
-			this.laUploadedColor = new System.Windows.Forms.Label();
+			this.laReportUploaded = new System.Windows.Forms.Label();
 			this.laReportHandedIn = new System.Windows.Forms.Label();
+			this.tbReportAccepted = new System.Windows.Forms.TextBox();
+			this.tbReportRejected = new System.Windows.Forms.TextBox();
+			this.laReportAccepted = new System.Windows.Forms.Label();
+			this.laReportRejected = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.nudButtonFocusBorderWidth)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -239,7 +243,7 @@
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(294, 633);
+			this.btClose.Location = new System.Drawing.Point(294, 685);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 34;
@@ -250,7 +254,7 @@
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(294, 603);
+			this.btSave.Location = new System.Drawing.Point(294, 655);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
 			this.btSave.TabIndex = 35;
@@ -608,16 +612,16 @@
 			this.laBtHoverColor.TabIndex = 66;
 			this.laBtHoverColor.Text = "Button hover color";
 			// 
-			// tbUploadedColor
+			// tbReportUploaded
 			// 
-			this.tbUploadedColor.Location = new System.Drawing.Point(188, 610);
-			this.tbUploadedColor.Name = "tbUploadedColor";
-			this.tbUploadedColor.ReadOnly = true;
-			this.tbUploadedColor.Size = new System.Drawing.Size(100, 20);
-			this.tbUploadedColor.TabIndex = 67;
-			this.tbUploadedColor.Text = "-1";
-			this.tbUploadedColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
-			this.tbUploadedColor.Enter += new System.EventHandler(this.TextBox_Entered);
+			this.tbReportUploaded.Location = new System.Drawing.Point(188, 610);
+			this.tbReportUploaded.Name = "tbReportUploaded";
+			this.tbReportUploaded.ReadOnly = true;
+			this.tbReportUploaded.Size = new System.Drawing.Size(100, 20);
+			this.tbReportUploaded.TabIndex = 67;
+			this.tbReportUploaded.Text = "-1";
+			this.tbReportUploaded.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+			this.tbReportUploaded.Enter += new System.EventHandler(this.TextBox_Entered);
 			// 
 			// tbReportHandedIn
 			// 
@@ -630,14 +634,14 @@
 			this.tbReportHandedIn.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbReportHandedIn.Enter += new System.EventHandler(this.TextBox_Entered);
 			// 
-			// laUploadedColor
+			// laReportUploaded
 			// 
-			this.laUploadedColor.AutoSize = true;
-			this.laUploadedColor.Location = new System.Drawing.Point(12, 613);
-			this.laUploadedColor.Name = "laUploadedColor";
-			this.laUploadedColor.Size = new System.Drawing.Size(86, 13);
-			this.laUploadedColor.TabIndex = 69;
-			this.laUploadedColor.Text = "Report uploaded";
+			this.laReportUploaded.AutoSize = true;
+			this.laReportUploaded.Location = new System.Drawing.Point(12, 613);
+			this.laReportUploaded.Name = "laReportUploaded";
+			this.laReportUploaded.Size = new System.Drawing.Size(86, 13);
+			this.laReportUploaded.TabIndex = 69;
+			this.laReportUploaded.Text = "Report uploaded";
 			// 
 			// laReportHandedIn
 			// 
@@ -648,15 +652,59 @@
 			this.laReportHandedIn.TabIndex = 70;
 			this.laReportHandedIn.Text = "Report handed in";
 			// 
+			// tbReportAccepted
+			// 
+			this.tbReportAccepted.Location = new System.Drawing.Point(188, 662);
+			this.tbReportAccepted.Name = "tbReportAccepted";
+			this.tbReportAccepted.ReadOnly = true;
+			this.tbReportAccepted.Size = new System.Drawing.Size(100, 20);
+			this.tbReportAccepted.TabIndex = 71;
+			this.tbReportAccepted.Text = "-1";
+			this.tbReportAccepted.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+			this.tbReportAccepted.Enter += new System.EventHandler(this.TextBox_Entered);
+			// 
+			// tbReportRejected
+			// 
+			this.tbReportRejected.Location = new System.Drawing.Point(188, 688);
+			this.tbReportRejected.Name = "tbReportRejected";
+			this.tbReportRejected.ReadOnly = true;
+			this.tbReportRejected.Size = new System.Drawing.Size(100, 20);
+			this.tbReportRejected.TabIndex = 72;
+			this.tbReportRejected.Text = "-1";
+			this.tbReportRejected.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+			this.tbReportRejected.Enter += new System.EventHandler(this.TextBox_Entered);
+			// 
+			// laReportAccepted
+			// 
+			this.laReportAccepted.AutoSize = true;
+			this.laReportAccepted.Location = new System.Drawing.Point(12, 665);
+			this.laReportAccepted.Name = "laReportAccepted";
+			this.laReportAccepted.Size = new System.Drawing.Size(87, 13);
+			this.laReportAccepted.TabIndex = 73;
+			this.laReportAccepted.Text = "Report accepted";
+			// 
+			// laReportRejected
+			// 
+			this.laReportRejected.AutoSize = true;
+			this.laReportRejected.Location = new System.Drawing.Point(12, 691);
+			this.laReportRejected.Name = "laReportRejected";
+			this.laReportRejected.Size = new System.Drawing.Size(80, 13);
+			this.laReportRejected.TabIndex = 74;
+			this.laReportRejected.Text = "Report rejected";
+			// 
 			// CreateTheme
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(381, 668);
+			this.ClientSize = new System.Drawing.Size(381, 720);
+			this.Controls.Add(this.laReportRejected);
+			this.Controls.Add(this.laReportAccepted);
+			this.Controls.Add(this.tbReportRejected);
+			this.Controls.Add(this.tbReportAccepted);
 			this.Controls.Add(this.laReportHandedIn);
-			this.Controls.Add(this.laUploadedColor);
+			this.Controls.Add(this.laReportUploaded);
 			this.Controls.Add(this.tbReportHandedIn);
-			this.Controls.Add(this.tbUploadedColor);
+			this.Controls.Add(this.tbReportUploaded);
 			this.Controls.Add(this.laBtHoverColor);
 			this.Controls.Add(this.tbBtHoverColor);
 			this.Controls.Add(this.laDisabledButtonTextColor);
@@ -764,9 +812,13 @@
 		private System.Windows.Forms.Label laDisabledButtonTextColor;
 		private System.Windows.Forms.TextBox tbBtHoverColor;
 		private System.Windows.Forms.Label laBtHoverColor;
-		private System.Windows.Forms.TextBox tbUploadedColor;
+		private System.Windows.Forms.TextBox tbReportUploaded;
 		private System.Windows.Forms.TextBox tbReportHandedIn;
-		private System.Windows.Forms.Label laUploadedColor;
+		private System.Windows.Forms.Label laReportUploaded;
 		private System.Windows.Forms.Label laReportHandedIn;
+		private System.Windows.Forms.TextBox tbReportAccepted;
+		private System.Windows.Forms.TextBox tbReportRejected;
+		private System.Windows.Forms.Label laReportAccepted;
+		private System.Windows.Forms.Label laReportRejected;
 	}
 }

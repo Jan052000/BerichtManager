@@ -30,5 +30,7 @@ namespace BerichtManager.ThemeManagement
 		Color TreeViewHighlightedNodeColor { get; }
 		Color ReportUploadedColor { get; }
 		Color ReportHandedInColor { get; }
+		Color ReportAcceptedColor { get; }
+		Color ReportRejectedColor { get; }
 	}
 }
