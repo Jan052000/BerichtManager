@@ -1499,11 +1499,14 @@ namespace BerichtManager
 			catch { }
 			List<string> openReports = CloseAllReports();
 			ReportChecker checker = new ReportChecker(WordApp);
+			Cursor = Cursors.WaitCursor;
 			if (!checker.Check(select.FilteredNode, out List<IReportDiscrepancy> discrepancies, check: check))
 			{
+				Cursor = Cursors.Default;
 				OpenAllDocuments(openReports, activePath);
 				return;
 			}
+			Cursor = Cursors.Default;
 			OpenAllDocuments(openReports, activePath);
 			if (discrepancies == null)
 				return;
