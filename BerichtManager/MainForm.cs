@@ -1553,7 +1553,15 @@ namespace BerichtManager
 				ThemedMessageBox.Show(ActiveTheme, text: "Report was already uploaded", title: "Report already uploaded");
 				return;
 			}
-			Word.Document doc = WordApp.Documents.Open(FullSelectedPath);
+			Word.Document doc;
+			bool close = true;
+			if (DocIsSamePathAsSelected())
+			{
+				close = false;
+				doc = Doc;
+			}
+			else
+				doc = WordApp.Documents.Open(FullSelectedPath);
 			if (doc.FormFields.Count < 10)
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please upload manually", title: "Invalid document");
@@ -1576,7 +1584,8 @@ namespace BerichtManager
 					ThemedMessageBox.Show(ActiveTheme, text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
 					break;
 			}
-			doc.Close(SaveChanges: false);
+			if (close)
+				doc.Close(SaveChanges: false);
 			UpdateTree();
 		}
 
@@ -1595,6 +1604,15 @@ namespace BerichtManager
 			if (fs.ShowDialog() != DialogResult.OK)
 				return;
 			ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
+
+			string activePath = "";
+			try
+			{
+				activePath = Doc?.Path;
+			}
+			catch { }
+			List<string> openReports = CloseAllReports();
+
 			foreach (TreeNode report in reports)
 			{
 				string path = Path.GetFullPath($"{ConfigHandler.ReportPath()}\\..\\{GetFullNodePath(report)}");
@@ -1624,6 +1642,9 @@ namespace BerichtManager
 				}
 				doc.Close(SaveChanges: false);
 			}
+
+			OpenAllDocuments(openReports, activePath);
+
 			string text = "";
 			if (reports.Count == 1)
 				text = "Upload of report was succesful";
@@ -1631,6 +1652,40 @@ namespace BerichtManager
 				text = $"Upload of all {reports.Count} reports was successful";
 			ThemedMessageBox.Show(ActiveTheme, text: text, title: "Upload finished");
 			UpdateTree();
+		}
+
+		/// <summary>
+		/// Opens a list of <see cref="Word.Document"/>s from <paramref name="paths"/> and opens <paramref name="activePath"/> in text boxes
+		/// </summary>
+		/// <param name="paths">Paths of previously opened reports</param>
+		/// <param name="activePath">Path to open in text box edit</param>
+		private void OpenAllDocuments(List<string> paths, string activePath)
+		{
+			paths.ForEach(path =>
+			{
+				if (path == activePath)
+					EditInTb(path);
+				else
+					WordApp.Documents.Open(FileName: path);
+			});
+		}
+
+		/// <summary>
+		/// Closes all open reports
+		/// </summary>
+		/// <returns><see cref="List{T}"/> of paths from previously opened reports</returns>
+		private List<string> CloseAllReports()
+		{
+			List<string> result = new List<string>();
+			foreach (Word.Document doc in WordApp.Documents)
+			{
+				result.Add(doc.Path);
+				if (doc == Doc)
+					SaveOrExit();
+				else
+					doc.Close();
+			}
+			return result;
 		}
 
 		/// <summary>
