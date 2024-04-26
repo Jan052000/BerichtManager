@@ -1665,10 +1665,10 @@ namespace BerichtManager
 		/// <returns><see langword="true"/> if any statuses have been updated and <see langword="false"/> otherwise</returns>
 		private async Task<bool> UpdateStatuses()
 		{
+			bool result = false;
 			try
 			{
 				List<UploadedReport> reportList = await IHKClient.GetReportStatuses();
-				bool result = false;
 				reportList.ForEach(report => result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status));
 				if (result)
 				{
@@ -1677,14 +1677,13 @@ namespace BerichtManager
 				}
 				else
 					ThemedMessageBox.Show(ActiveTheme, text: "Already up to date", title: "Update complete");
-				return result;
 			}
 			catch (HttpRequestException ex)
 			{
 				Logger.LogError(ex);
 				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
 			}
-			return false;
+			return result;
 		}
 
 		private async void MainForm_Load(object sender, EventArgs e)
