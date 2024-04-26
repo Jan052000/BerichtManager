@@ -1655,24 +1655,36 @@ namespace BerichtManager
 
 		private async void miUpdateStatuses_Click(object sender, EventArgs e)
 		{
+			if (await UpdateStatuses())
+				UpdateTree();
+		}
+
+		/// <summary>
+		/// Fetches and updates <see cref="UploadedReport"/>s in <see cref="UploadedReports"/>
+		/// </summary>
+		/// <returns><see langword="true"/> if any statuses have been updated and <see langword="false"/> otherwise</returns>
+		private async Task<bool> UpdateStatuses()
+		{
 			try
 			{
 				List<UploadedReport> reportList = await IHKClient.GetReportStatuses();
-				bool updateTree = false;
-				reportList.ForEach(report => updateTree |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status));
-				if (updateTree)
+				bool result = false;
+				reportList.ForEach(report => result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status));
+				if (result)
 				{
 					UpdateTree();
 					ThemedMessageBox.Show(ActiveTheme, text: "Update complete.", title: "Update complete");
 				}
 				else
 					ThemedMessageBox.Show(ActiveTheme, text: "Already up to date", title: "Update complete");
+				return result;
 			}
 			catch (HttpRequestException ex)
 			{
 				Logger.LogError(ex);
 				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
 			}
+			return false;
 		}
 
 #pragma warning disable CS1998 // Bei der asynchronen Methode fehlen "await"-Operatoren. Die Methode wird synchron ausgeführt.
