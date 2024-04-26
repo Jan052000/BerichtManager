@@ -71,12 +71,12 @@ namespace BerichtManager.Forms
 			this.laServer = new System.Windows.Forms.Label();
 			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.gbIHK = new BerichtManager.OwnControls.ColoredGroupBox();
-			this.cbIHKAutoSync = new System.Windows.Forms.CheckBox();
+			this.laIHKBaseUrl = new System.Windows.Forms.Label();
+			this.tbIHKBaseUrl = new System.Windows.Forms.TextBox();
+			this.cbAutoSyncStatusesWithIHK = new System.Windows.Forms.CheckBox();
 			this.laSupervisorMail = new System.Windows.Forms.Label();
 			this.laJobField = new System.Windows.Forms.Label();
 			this.laLastUploadedReportNumber = new System.Windows.Forms.Label();
-			this.tbIHKBaseUrl = new System.Windows.Forms.TextBox();
-			this.laIHKBaseUrl = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudLastUploadedReportNumber)).BeginInit();
@@ -561,7 +561,7 @@ namespace BerichtManager.Forms
 			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
 			this.gbIHK.Controls.Add(this.laIHKBaseUrl);
 			this.gbIHK.Controls.Add(this.tbIHKBaseUrl);
-			this.gbIHK.Controls.Add(this.cbIHKAutoSync);
+			this.gbIHK.Controls.Add(this.cbAutoSyncStatusesWithIHK);
 			this.gbIHK.Controls.Add(this.laSupervisorMail);
 			this.gbIHK.Controls.Add(this.tbSupervisorMail);
 			this.gbIHK.Controls.Add(this.laJobField);
@@ -577,15 +577,31 @@ namespace BerichtManager.Forms
 			this.gbIHK.TabStop = false;
 			this.gbIHK.Text = "IHK";
 			// 
-			// cbIHKAutoSync
+			// laIHKBaseUrl
 			// 
-			this.cbIHKAutoSync.AutoSize = true;
-			this.cbIHKAutoSync.Location = new System.Drawing.Point(98, 118);
-			this.cbIHKAutoSync.Name = "cbIHKAutoSync";
-			this.cbIHKAutoSync.Size = new System.Drawing.Size(134, 17);
-			this.cbIHKAutoSync.TabIndex = 52;
-			this.cbIHKAutoSync.Text = "Sync with IHK on save";
-			this.cbIHKAutoSync.UseVisualStyleBackColor = true;
+			this.laIHKBaseUrl.AutoSize = true;
+			this.laIHKBaseUrl.Location = new System.Drawing.Point(51, 95);
+			this.laIHKBaseUrl.Name = "laIHKBaseUrl";
+			this.laIHKBaseUrl.Size = new System.Drawing.Size(41, 13);
+			this.laIHKBaseUrl.TabIndex = 54;
+			this.laIHKBaseUrl.Text = "IHK Url";
+			// 
+			// tbIHKBaseUrl
+			// 
+			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
+			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
+			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
+			this.tbIHKBaseUrl.TabIndex = 53;
+			// 
+			// cbAutoSyncStatusesWithIHK
+			// 
+			this.cbAutoSyncStatusesWithIHK.AutoSize = true;
+			this.cbAutoSyncStatusesWithIHK.Location = new System.Drawing.Point(98, 118);
+			this.cbAutoSyncStatusesWithIHK.Name = "cbAutoSyncStatusesWithIHK";
+			this.cbAutoSyncStatusesWithIHK.Size = new System.Drawing.Size(172, 17);
+			this.cbAutoSyncStatusesWithIHK.TabIndex = 52;
+			this.cbAutoSyncStatusesWithIHK.Text = "Sync report statuses on startup";
+			this.cbAutoSyncStatusesWithIHK.UseVisualStyleBackColor = true;
 			// 
 			// laSupervisorMail
 			// 
@@ -613,22 +629,6 @@ namespace BerichtManager.Forms
 			this.laLastUploadedReportNumber.Size = new System.Drawing.Size(78, 13);
 			this.laLastUploadedReportNumber.TabIndex = 0;
 			this.laLastUploadedReportNumber.Text = "Last IHK report";
-			// 
-			// tbIHKBaseUrl
-			// 
-			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
-			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
-			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
-			this.tbIHKBaseUrl.TabIndex = 53;
-			// 
-			// laIHKBaseUrl
-			// 
-			this.laIHKBaseUrl.AutoSize = true;
-			this.laIHKBaseUrl.Location = new System.Drawing.Point(51, 95);
-			this.laIHKBaseUrl.Name = "laIHKBaseUrl";
-			this.laIHKBaseUrl.Size = new System.Drawing.Size(41, 13);
-			this.laIHKBaseUrl.TabIndex = 54;
-			this.laIHKBaseUrl.Text = "IHK Url";
 			// 
 			// OptionMenu
 			// 
@@ -710,7 +710,7 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.Label laJobField;
 		private System.Windows.Forms.Label laSupervisorMail;
 		private System.Windows.Forms.TextBox tbSupervisorMail;
-		private System.Windows.Forms.CheckBox cbIHKAutoSync;
+		private System.Windows.Forms.CheckBox cbAutoSyncStatusesWithIHK;
 		private System.Windows.Forms.Label laIHKBaseUrl;
 		private System.Windows.Forms.TextBox tbIHKBaseUrl;
 	}

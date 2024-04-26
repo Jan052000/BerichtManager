@@ -78,7 +78,7 @@ namespace BerichtManager.Forms
 			nudLastUploadedReportNumber.Value = ConfigHandler.LastIHKReportNr();
 			tbJobField.Text = ConfigHandler.IHKJobField();
 			tbSupervisorMail.Text = ConfigHandler.IHKSupervisorEMail();
-			cbIHKAutoSync.Checked = ConfigHandler.AutoSyncWithIHK();
+			cbAutoSyncStatusesWithIHK.Checked = ConfigHandler.AutoSyncStatusesWithIHK();
 			tbIHKBaseUrl.Text = ConfigHandler.IHKBaseUrl();
 
 			IsDirty = false;
@@ -216,7 +216,7 @@ namespace BerichtManager.Forms
 			ConfigHandler.LastIHKReportNr((int)nudLastUploadedReportNumber.Value);
 			ConfigHandler.IHKJobField(tbJobField.Text);
 			ConfigHandler.IHKSupervisorEMail(tbSupervisorMail.Text);
-			ConfigHandler.AutoSyncWithIHK(cbIHKAutoSync.Checked);
+			ConfigHandler.AutoSyncStatusesWithIHK(cbAutoSyncStatusesWithIHK.Checked);
 			ConfigHandler.IHKBaseUrl(tbIHKBaseUrl.Text);
 		}
 

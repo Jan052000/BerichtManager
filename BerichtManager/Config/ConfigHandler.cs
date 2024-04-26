@@ -74,7 +74,7 @@ namespace BerichtManager.Config
 			{"PublishPath", (Type.GetType("System.String"), "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
 			{"TabStops", (Type.GetType("System.Int32"), 20)},
 			{"NamingPattern", (Type.GetType("System.String"), "WochenberichtKW~+CW+~")},
-			{"AutoSyncWithIHK", (Type.GetType("System.Boolean"), false)},
+			{"AutoSyncStatusesWithIHK", (Type.GetType("System.Boolean"), false)},
 			{"LastIHKReportNr", (Type.GetType("System.Int32"), 0)},
 			{"IHKUserName", (Type.GetType("System.String"), "")},
 			{"IHKPassword", (Type.GetType("System.String"), "")},
@@ -778,21 +778,21 @@ namespace BerichtManager.Config
 		}
 
 		/// <summary>
-		/// Gets wether or not reports should be automatically synchronized with IHK on create and close
+		/// Gets wether or not report statuses should be fetched on startup
 		/// </summary>
 		/// <returns>if reports should be automatically synchronized with IHK on create and close</returns>
-		public bool AutoSyncWithIHK()
+		public bool AutoSyncStatusesWithIHK()
 		{
-			return GenericGet<bool>("AutoSyncWithIHK");
+			return GenericGet<bool>("AutoSyncStatusesWithIHK");
 		}
 
 		/// <summary>
-		/// Sets wether or not reports should be automatically synchronized with IHK on create and close
+		/// Sets wether or not report statuses should be fetched on startup
 		/// </summary>
 		/// <param name="autoSync">if reports should be automatically synchronized with IHK on create and close</param>
-		public void AutoSyncWithIHK(bool autoSync)
+		public void AutoSyncStatusesWithIHK(bool autoSync)
 		{
-			GenericSet("AutoSyncWithIHK", autoSync);
+			GenericSet("AutoSyncStatusesWithIHK", autoSync);
 		}
 
 		/// <summary>
