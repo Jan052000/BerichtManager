@@ -194,10 +194,34 @@ namespace BerichtManager.IHKClient
 				Regex datesRegex = new Regex("(\\d+?\\.\\d+?\\.\\d+)");
 				if (!DateTime.TryParseExact(datesRegex.Match(rows[(int)ReportElementFields.TimeSpan].InnerText).Value, "dd.MM.yyyy", null, DateTimeStyles.None, out DateTime startDate))
 					return;
-				if (new ReportStatuses().TryGetValue(rows[(int)ReportElementFields.Status].InnerText.Trim(), out ReportNode.UploadStatuses status))
-					uploadedReports.Add(new UploadedReport(startDate, status: status));
+				if (!new ReportStatuses().TryGetValue(rows[(int)ReportElementFields.Status].InnerText.Trim(), out ReportNode.UploadStatuses status))
+					return;
+				if (ExtractLfdNr(rows[(int)ReportElementFields.ButtonAction].InnerHtml.Trim(), out int? lfdnr))
+					uploadedReports.Add(new UploadedReport(startDate, status: status, lfdNr: lfdnr));
 			});
 			return uploadedReports;
+		}
+
+		/// <summary>
+		/// Searches <paramref name="hRefLink"/> for lfdnr s
+		/// </summary>
+		/// <param name="hRefLink">Text to search</param>
+		/// <param name="lfdnr">Parsed lfdnr if possible and <see langword="null"/> otherwise</param>
+		/// <returns><see langword="true"/> if lfdnr was found and parsed or <see langword="false"/> otherwise</returns>
+		private bool ExtractLfdNr(string hRefLink, out int? lfdnr)
+		{
+			lfdnr = null;
+			Regex regex = new Regex(@"(lfdnr=(?<lfdnr>\d+))", RegexOptions.Singleline | RegexOptions.ExplicitCapture);
+			Match match = regex.Match(hRefLink);
+			if (match.Success)
+			{
+				if (int.TryParse(match.Groups["lfdnr"].Value, out int result))
+				{
+					lfdnr = result;
+					return true;
+				}
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -314,10 +338,15 @@ namespace BerichtManager.IHKClient
 			if (response.StatusCode != HttpStatusCode.Found && !response.IsSuccessStatusCode)
 				return new UploadResult(CreateResults.UploadFailed);
 			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
-				await GetAndRefer("tibrosBB/azubiHeft.jsp");
+				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
-				await GetAndRefer(response.Headers.Location);
-			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate));
+				response = await GetAndRefer(response.Headers.Location);
+			doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
+			int? lfdNR = null;
+			List<UploadedReport> uploadedReports = TransformHtmlToReports(CSSSelect(doc.Body, "div.col-md-8"));
+			if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
+				lfdNR = currentReport.LfdNR;
+			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate), lfdnr: lfdNR);
 		}
 
 		/// <summary>

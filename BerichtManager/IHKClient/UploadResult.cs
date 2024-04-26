@@ -9,19 +9,24 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		public CreateResults Result { get; set; }
 		/// <summary>
-		/// Start date as set on ihk servers
+		/// Start date as set on IHK servers
 		/// </summary>
 		public DateTime StartDate { get; set; }
+		/// <summary>
+		/// lfdnr of report on IHK servers
+		/// </summary>
+		public int? LfdNR { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="UploadResult"/> object
 		/// </summary>
 		/// <param name="result">Result of upload process</param>
-		/// <param name="startDate">Start date as set on ihk servers</param>
-		public UploadResult(CreateResults result, DateTime startDate)
+		/// <param name="startDate">Start date as set on IHK servers</param>
+		public UploadResult(CreateResults result, DateTime startDate, int? lfdnr = null)
 		{
 			Result = result;
 			StartDate = startDate;
+			LfdNR = lfdnr;
 		}
 
 		/// <summary>

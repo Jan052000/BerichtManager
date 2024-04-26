@@ -68,17 +68,23 @@ namespace BerichtManager.UploadChecking
 		/// </summary>
 		/// <param name="startDate"><see cref="DateTime"/> of rpeort start date</param>
 		/// <param name="status"><see cref="ReportNode.UploadStatuses"/> to update to</param>
+		/// <param name="lfdnr">Identification number of report on IHK servers</param>
 		/// <returns><see langword="true"/> if a rport was updated and <see langword="false"/> otherwise</returns>
-		public static bool UpdateReportStatus(DateTime startDate, ReportNode.UploadStatuses status)
+		public static bool UpdateReportStatus(DateTime startDate, ReportNode.UploadStatuses status, int? lfdnr)
 		{
 			bool save = false;
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
 				return save;
-			List<UploadedReport> uploadedReports = paths.Where(kvp => kvp.Value.StartDate == startDate).ToList().Select(x => x.Value).ToList();
+			List<UploadedReport> uploadedReports = paths.Where(kvp => kvp.Value.StartDate == startDate && kvp.Value.LfdNR == lfdnr).ToList().Select(x => x.Value).ToList();
 			uploadedReports.ForEach(report =>
 			{
-				save = report.Status != status;
+				save |= report.Status != status;
 				report.Status = status;
+				if (!report.LfdNR.HasValue && lfdnr.HasValue)
+				{
+					report.LfdNR = lfdnr;
+					save = true;
+				}
 			});
 			if (save)
 				Instance.Save();

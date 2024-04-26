@@ -1567,7 +1567,7 @@ namespace BerichtManager
 			{
 				case CreateResults.Success:
 					ThemedMessageBox.Show(ActiveTheme, text: "Report uploaded successfully", title: "Upload successful");
-					UploadedReports.Instance.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate));
+					UploadedReports.Instance.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 					break;
 				case CreateResults.Unauthorized:
 					ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
@@ -1576,7 +1576,6 @@ namespace BerichtManager
 					ThemedMessageBox.Show(ActiveTheme, text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
 					break;
 			}
-			//await UploadReportToIHK(doc, tvReports.SelectedNode.FullPath);
 			doc.Close(SaveChanges: false);
 			UpdateTree();
 		}
@@ -1612,7 +1611,7 @@ namespace BerichtManager
 				switch (result.Result)
 				{
 					case CreateResults.Success:
-						UploadedReports.Instance.AddReport(GetFullNodePath(report), new UploadedReport(result.StartDate));
+						UploadedReports.Instance.AddReport(GetFullNodePath(report), new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 						break;
 					case CreateResults.Unauthorized:
 						ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
@@ -1669,7 +1668,7 @@ namespace BerichtManager
 			try
 			{
 				List<UploadedReport> reportList = await IHKClient.GetReportStatuses();
-				reportList.ForEach(report => result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status));
+				reportList.ForEach(report => result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status, lfdnr: report.LfdNR));
 				if (result)
 				{
 					UpdateTree();
