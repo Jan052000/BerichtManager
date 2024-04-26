@@ -1491,9 +1491,20 @@ namespace BerichtManager
 				ThemedMessageBox.Show(ActiveTheme, text: "No file or folder was selected, check was canceled", title: "No selection was made");
 				return;
 			}
+			string activePath = "";
+			try
+			{
+				activePath = Doc?.Path;
+			}
+			catch { }
+			List<string> openReports = CloseAllReports();
 			ReportChecker checker = new ReportChecker(WordApp);
 			if (!checker.Check(select.FilteredNode, out List<IReportDiscrepancy> discrepancies, check: check))
+			{
+				OpenAllDocuments(openReports, activePath);
 				return;
+			}
+			OpenAllDocuments(openReports, activePath);
 			if (discrepancies == null)
 				return;
 			if (discrepancies.Count == 0)
@@ -1505,6 +1516,40 @@ namespace BerichtManager
 			message.AppendLine("At least one discrepancy was found:");
 			discrepancies.ForEach(d => message.AppendLine(d.ToString()));
 			ThemedMessageBox.Show(ActiveTheme, text: message.ToString(), title: "Discrepancy found");
+		}
+
+		/// <summary>
+		/// Opens a list of <see cref="Word.Document"/>s from <paramref name="paths"/> and opens <paramref name="activePath"/> in text boxes
+		/// </summary>
+		/// <param name="paths">Paths of previously opened reports</param>
+		/// <param name="activePath">Path to open in text box edit</param>
+		private void OpenAllDocuments(List<string> paths, string activePath)
+		{
+			paths.ForEach(path =>
+			{
+				if (path == activePath)
+					EditInTb(path);
+				else
+					WordApp.Documents.Open(FileName: path);
+			});
+		}
+
+		/// <summary>
+		/// Closes all open reports
+		/// </summary>
+		/// <returns><see cref="List{T}"/> of paths from previously opened reports</returns>
+		private List<string> CloseAllReports()
+		{
+			List<string> result = new List<string>();
+			foreach (Word.Document doc in WordApp.Documents)
+			{
+				result.Add(doc.Path);
+				if (doc == Doc)
+					SaveOrExit();
+				else
+					doc.Close();
+			}
+			return result;
 		}
 
 		private void CheckNumbers_Click(object sender, EventArgs e)
