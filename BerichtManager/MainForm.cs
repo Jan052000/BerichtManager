@@ -1709,8 +1709,16 @@ namespace BerichtManager
 
 		private async void miUpdateStatuses_Click(object sender, EventArgs e)
 		{
-			if (await UpdateStatuses())
-				UpdateTree();
+			try
+			{
+				if (await UpdateStatuses())
+					UpdateTree();
+			}
+			catch (HttpRequestException ex)
+			{
+				Logger.LogError(ex);
+				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+			}
 		}
 
 		/// <summary>
