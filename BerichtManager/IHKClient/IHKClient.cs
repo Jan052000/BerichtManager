@@ -141,6 +141,8 @@ namespace BerichtManager.IHKClient
 			string uri = "tibrosBB/azubiHome.jsp";
 			string username = ConfigHandler.Instance.IHKUserName();
 			string password = ConfigHandler.Instance.IHKPassword();
+			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+				return false;
 			Dictionary<string, string> content = new Dictionary<string, string>()
 			{
 				{ "login", username },
@@ -193,10 +195,7 @@ namespace BerichtManager.IHKClient
 				if (!DateTime.TryParseExact(datesRegex.Match(rows[(int)ReportElementFields.TimeSpan].InnerText).Value, "dd.MM.yyyy", null, DateTimeStyles.None, out DateTime startDate))
 					return;
 				if (new ReportStatuses().TryGetValue(rows[(int)ReportElementFields.Status].InnerText.Trim(), out ReportNode.UploadStatuses status))
-				{
-					//updated |= UploadedReports.UpdateReportStatus(startDate, status);
 					uploadedReports.Add(new UploadedReport(startDate, status: status));
-				}
 			});
 			return uploadedReports;
 		}
