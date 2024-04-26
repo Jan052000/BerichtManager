@@ -277,7 +277,7 @@ namespace BerichtManager.IHKClient
 
 			selectors.ForEach(selector =>
 			{
-				foreach (HtmlElement element in root.GetElementsByTagName("div"))
+				foreach (HtmlElement element in root.GetElementsByTagName(selector.TagName))
 				{
 					bool hasAllClasses = true;
 					List<string> classes = element.GetAttribute("className").Trim().Split(' ').ToList();
