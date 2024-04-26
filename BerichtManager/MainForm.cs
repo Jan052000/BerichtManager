@@ -1514,8 +1514,9 @@ namespace BerichtManager
 			{
 				return await IHKClient.CreateReport(doc);
 			}
-			catch (HttpRequestException)
+			catch (HttpRequestException ex)
 			{
+				Logger.LogError(ex);
 				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
 				return null;
 			}
@@ -1654,11 +1655,24 @@ namespace BerichtManager
 
 		private async void miUpdateStatuses_Click(object sender, EventArgs e)
 		{
-			if (await IHKClient.UpdateReportStatuses())
-				ThemedMessageBox.Show(ActiveTheme, text: "Update complete.", title: "Update complete");
-			else
-				ThemedMessageBox.Show(ActiveTheme, text: "Already up to date", title: "Update complete");
-			UpdateTree();
+			try
+			{
+				List<UploadedReport> reportList = await IHKClient.GetReportStatuses();
+				bool updateTree = false;
+				reportList.ForEach(report => updateTree |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status));
+				if (updateTree)
+				{
+					UpdateTree();
+					ThemedMessageBox.Show(ActiveTheme, text: "Update complete.", title: "Update complete");
+				}
+				else
+					ThemedMessageBox.Show(ActiveTheme, text: "Already up to date", title: "Update complete");
+			}
+			catch (HttpRequestException ex)
+			{
+				Logger.LogError(ex);
+				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+			}
 		}
 
 #pragma warning disable CS1998 // Bei der asynchronen Methode fehlen "await"-Operatoren. Die Methode wird synchron ausgeführt.

@@ -160,31 +160,32 @@ namespace BerichtManager.IHKClient
 		}
 
 		/// <summary>
-		/// Updates report upload statuses in <see cref="UploadedReports"/>
+		/// Fetches a <see cref="List{T}"/> of <see cref="UploadedReport"/>s from IHK site
 		/// </summary>
-		/// <returns><see langword="true"/> if a rport was updated and <see langword="false"/> otherwise</returns>
-		public async Task<bool> UpdateReportStatuses()
+		/// <returns><see cref="List{T}"/> with found <see cref="UploadedReport"/>s</returns>
+		/// <exception cref="HttpRequestException"></exception>
+		public async Task<List<UploadedReport>> GetReportStatuses()
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
-					return false;
+					return new List<UploadedReport>();
 			HttpResponseMessage response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			if (!response.IsSuccessStatusCode)
-				return false;
+				return new List<UploadedReport>();
 			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
 			List<HtmlElement> reportElements = CSSSelect(doc.Body, "div.reihe");
-			return PutReportstatus(reportElements);
+			return TransformHtmlToReports(reportElements);
 		}
 
 		/// <summary>
-		/// Updates report upload status in <see cref="UploadedReports"/> with values from <paramref name="reportElements"/>
+		/// Transform <see cref="HtmlElement"/>s to <see cref="UploadedReport"/>s
 		/// </summary>
 		/// <param name="reportElements">List of report <see cref="HtmlElement"/>s from IHK page</param>
-		/// <returns><see langword="true"/> if a rport was updated and <see langword="false"/> otherwise</returns>
+		/// <returns><see cref="List{T}"/> with transformed <see cref="UploadedReport"/>s</returns>
 		/// <exception cref="HttpRequestException"></exception>
-		private bool PutReportstatus(List<HtmlElement> reportElements)
+		private List<UploadedReport> TransformHtmlToReports(List<HtmlElement> reportElements)
 		{
-			bool updated = false;
+			List<UploadedReport> uploadedReports = new List<UploadedReport>();
 			reportElements.ForEach(reportElement =>
 			{
 				List<HtmlElement> rows = CSSSelect(reportElement, "div.col-md-8");
@@ -192,9 +193,12 @@ namespace BerichtManager.IHKClient
 				if (!DateTime.TryParseExact(datesRegex.Match(rows[(int)ReportElementFields.TimeSpan].InnerText).Value, "dd.MM.yyyy", null, DateTimeStyles.None, out DateTime startDate))
 					return;
 				if (new ReportStatuses().TryGetValue(rows[(int)ReportElementFields.Status].InnerText.Trim(), out ReportNode.UploadStatuses status))
-					updated |= UploadedReports.UpdateReportStatus(startDate, status);
+				{
+					//updated |= UploadedReports.UpdateReportStatus(startDate, status);
+					uploadedReports.Add(new UploadedReport(startDate, status: status));
+				}
 			});
-			return updated;
+			return uploadedReports;
 		}
 
 		/// <summary>
