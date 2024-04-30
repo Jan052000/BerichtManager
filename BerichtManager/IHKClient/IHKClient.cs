@@ -144,6 +144,7 @@ namespace BerichtManager.IHKClient
 		/// <returns><see langword="true"/> if cookies were recieved and set, <see langword="false"/> otherwise</returns>
 		private async Task<bool> SetFirstCookie()
 		{
+			HttpClient.DefaultRequestHeaders.Remove("Cookie");
 			string path = "tibrosBB/BB_auszubildende.jsp";
 			HttpResponseMessage response = await GetAndRefer(path);
 			if (!response.IsSuccessStatusCode)
