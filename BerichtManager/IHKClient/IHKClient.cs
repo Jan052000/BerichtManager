@@ -349,17 +349,10 @@ namespace BerichtManager.IHKClient
 				if (!await DoLogin())
 					return new UploadResult(CreateResults.Unauthorized);
 
-			//Load list of reports and check session
-			HttpResponseMessage response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
-			if (response.StatusCode == HttpStatusCode.Unauthorized)
-			{
-				LoggedIn = false;
+			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
 				return new UploadResult(CreateResults.Unauthorized);
-			}
-			if (!response.IsSuccessStatusCode)
-				return new UploadResult(CreateResults.CreationFailed);
 			//Get new form from IHK
-			response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
+			HttpResponseMessage response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
 			if (!response.IsSuccessStatusCode)
 				return new UploadResult(CreateResults.CreationFailed);
 			//Fill report with contents from new IHK report
