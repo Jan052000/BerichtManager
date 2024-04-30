@@ -1,4 +1,4 @@
-﻿using BerichtManager.Config;
+using BerichtManager.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -69,7 +69,7 @@ namespace BerichtManager.UploadChecking
 		/// <param name="startDate"><see cref="DateTime"/> of rpeort start date</param>
 		/// <param name="status"><see cref="ReportNode.UploadStatuses"/> to update to</param>
 		/// <param name="lfdnr">Identification number of report on IHK servers</param>
-		/// <returns><see langword="true"/> if a rport was updated and <see langword="false"/> otherwise</returns>
+		/// <returns><see langword="true"/> if a report was updated and <see langword="false"/> otherwise</returns>
 		public static bool UpdateReportStatus(DateTime startDate, ReportNode.UploadStatuses status, int? lfdnr)
 		{
 			bool save = false;
