@@ -44,16 +44,15 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// <see cref="System.Timers.Timer"/> with an interval of 10m to end login session
 		/// </summary>
-		private System.Timers.Timer LoginSessionTimeout { get; }
+		private System.Timers.Timer LoginSessionTimeout { get; } = new System.Timers.Timer
+		{
+			Interval = 600000,
+			Enabled = false,
+			AutoReset = false
+		};
 
 		public IHKClient()
 		{
-			LoginSessionTimeout = new System.Timers.Timer
-			{
-				Interval = 600000,
-				Enabled = false,
-				AutoReset = false
-			};
 			LoginSessionTimeout.Elapsed += LoginSessionTimeout_Elapsed;
 			HttpClient = new HttpClient(HttpClientHandler);
 			HttpClientHandler.CookieContainer = CookieContainer;
