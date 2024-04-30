@@ -1621,11 +1621,17 @@ namespace BerichtManager
 				{
 					ThemedMessageBox.Show(ActiveTheme, text: $"Invalid document, please add missing form fields to {path}.\nUploading is stopped", title: "Invalid document");
 					doc.Close(SaveChanges: false);
+					OpenAllDocuments(openReports, activePath);
 					return;
 				}
 				UploadResult result = await TryUploadReportToIHK(doc);
 				if (result == null)
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
+					doc.Close(SaveChanges: false);
+					OpenAllDocuments(openReports, activePath);
 					return;
+				}
 				switch (result.Result)
 				{
 					case CreateResults.Success:
@@ -1634,10 +1640,12 @@ namespace BerichtManager
 					case CreateResults.Unauthorized:
 						ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
 						doc.Close(SaveChanges: false);
+						OpenAllDocuments(openReports, activePath);
 						return;
 					default:
 						ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
 						doc.Close(SaveChanges: false);
+						OpenAllDocuments(openReports, activePath);
 						return;
 				}
 				doc.Close(SaveChanges: false);
