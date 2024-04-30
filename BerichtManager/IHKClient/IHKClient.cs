@@ -192,6 +192,8 @@ namespace BerichtManager.IHKClient
 			//Get second cookie if recieved
 			HttpClient.DefaultRequestHeaders.Remove("Cookie");
 			List<Cookie> cookies = CookieContainer.GetCookies(FromRelativeUri(uri)).Cast<Cookie>().ToList();
+			if (cookies.Count == 0)
+				return false;
 			cookies.ForEach(cookie => HttpClient.DefaultRequestHeaders.Add("Cookie", cookie.ToString()));
 
 			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(uri);
