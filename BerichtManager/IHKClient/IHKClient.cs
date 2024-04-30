@@ -555,16 +555,17 @@ namespace BerichtManager.IHKClient
 		/// <param name="path">Relative path</param>
 		private async Task<bool> EnsureReferrer(string path)
 		{
-			if (HttpClient.DefaultRequestHeaders.Referrer != new Uri(HttpClient.BaseAddress, path))
-				try
-				{
-					await GetAndRefer(path);
-				}
-				catch (HttpRequestException)
-				{
-					return false;
-				}
-			return true;
+			if (HttpClient.DefaultRequestHeaders.Referrer == new Uri(HttpClient.BaseAddress, path))
+				return true;
+			try
+			{
+				await GetAndRefer(path);
+				return true;
+			}
+			catch (HttpRequestException)
+			{
+				return false;
+			}
 		}
 
 		/// <summary>
