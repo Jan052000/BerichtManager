@@ -42,11 +42,11 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		private bool LoggedIn { get; set; } = false;
 		/// <summary>
-		/// <see cref="System.Timers.Timer"/> with an interval of 10m to end login session
+		/// <see cref="System.Timers.Timer"/> with an interval of 15m to end login session
 		/// </summary>
 		private System.Timers.Timer LoginSessionTimeout { get; } = new System.Timers.Timer
 		{
-			Interval = 600000,
+			Interval = 900000,
 			Enabled = false,
 			AutoReset = false
 		};
