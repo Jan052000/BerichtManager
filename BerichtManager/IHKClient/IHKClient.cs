@@ -41,14 +41,43 @@ namespace BerichtManager.IHKClient
 		/// Wether or not the client is logged in
 		/// </summary>
 		private bool LoggedIn { get; set; } = false;
+		/// <summary>
+		/// <see cref="System.Timers.Timer"/> with an interval of 10m to end login session
+		/// </summary>
+		private System.Timers.Timer LoginSessionTimeout { get; }
 
 		public IHKClient()
 		{
+			LoginSessionTimeout = new System.Timers.Timer
+			{
+				Interval = 600000,
+				Enabled = false,
+				AutoReset = false
+			};
+			LoginSessionTimeout.Elapsed += LoginSessionTimeout_Elapsed;
 			HttpClient = new HttpClient(HttpClientHandler);
 			HttpClientHandler.CookieContainer = CookieContainer;
 			HttpClientHandler.UseCookies = true;
 			HttpClient.BaseAddress = new Uri(BASEURL);
 			HttpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0");
+		}
+
+		/// <summary>
+		/// Handler for <see cref="LoginSessionTimeout"/> elapsed event
+		/// </summary>
+		private void LoginSessionTimeout_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			LoggedIn = false;
+			HttpClient.DefaultRequestHeaders.Remove("Cookie");
+		}
+
+		/// <summary>
+		/// Resets <see cref="LoginSessionTimeout"/>
+		/// </summary>
+		private void ResetTimer()
+		{
+			LoginSessionTimeout.Stop();
+			LoginSessionTimeout.Start();
 		}
 
 		/// <summary>
@@ -158,7 +187,8 @@ namespace BerichtManager.IHKClient
 			cookies.ForEach(cookie => HttpClient.DefaultRequestHeaders.Add("Cookie", cookie.ToString()));
 
 			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(uri);
-			//LoggedIn = true;
+			LoggedIn = true;
+			ResetTimer();
 			return true;
 		}
 
@@ -177,6 +207,7 @@ namespace BerichtManager.IHKClient
 				return new List<UploadedReport>();
 			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
 			List<HtmlElement> reportElements = CSSSelect(doc.Body, "div.reihe");
+			ResetTimer();
 			return TransformHtmlToReports(reportElements);
 		}
 
@@ -347,6 +378,7 @@ namespace BerichtManager.IHKClient
 			List<UploadedReport> uploadedReports = TransformHtmlToReports(CSSSelect(doc.Body, "div.col-md-8"));
 			if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
 				lfdNR = currentReport.LfdNR;
+			ResetTimer();
 			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate), lfdnr: lfdNR);
 		}
 
@@ -512,6 +544,7 @@ namespace BerichtManager.IHKClient
 			else
 				response = await GetAndRefer(response.Headers.Location);
 
+			ResetTimer();
 			return true;
 		}
 
