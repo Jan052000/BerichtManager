@@ -1,4 +1,4 @@
-using BerichtManager.Config;
+﻿using BerichtManager.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ namespace BerichtManager.UploadChecking
 			bool save = false;
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
 				return save;
-			List<UploadedReport> uploadedReports = paths.Where(kvp => kvp.Value.StartDate == startDate && kvp.Value.LfdNR == lfdnr).ToList().Select(x => x.Value).ToList();
+			List<UploadedReport> uploadedReports = paths.Where(kvp => kvp.Value.StartDate == startDate && (!kvp.Value.LfdNR.HasValue || kvp.Value.LfdNR == lfdnr)).ToList().Select(x => x.Value).ToList();
 			uploadedReports.ForEach(report =>
 			{
 				save |= report.Status != status;
