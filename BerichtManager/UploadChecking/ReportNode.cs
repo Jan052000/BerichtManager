@@ -8,11 +8,15 @@ namespace BerichtManager.UploadChecking
 		/// Status of report on IHK servers
 		/// </summary>
 		public UploadStatuses UploadStatus { get; set; } = UploadStatuses.None;
-
 		/// <summary>
-		/// Statuses of report on IHK servers
+		/// lfdnr of report on IHK servers
 		/// </summary>
-		public enum UploadStatuses
+		public int LfdNr { get; set; }
+
+        /// <summary>
+        /// Statuses of report on IHK servers
+        /// </summary>
+        public enum UploadStatuses
 		{
 			/// <summary>
 			/// Report is not uploaded

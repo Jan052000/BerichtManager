@@ -1267,6 +1267,7 @@ namespace BerichtManager
 			miQuickEditOptions.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miUploadAsNext.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$") && !ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _);
+			miHandInSingle.Enabled = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text) && ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status) && (status == ReportNode.UploadStatuses.Uploaded);
 			return;
 		}
 
@@ -1760,6 +1761,123 @@ namespace BerichtManager
 		{
 			if (ConfigHandler.AutoSyncStatusesWithIHK() && await UpdateStatuses())
 				UpdateTree();
+		}
+
+		private async Task<bool> TryHandIn(int lfdnr)
+		{
+			try
+			{
+				return await IHKClient.HandInReport(lfdnr);
+			}
+			catch (HttpRequestException ex)
+			{
+				Logger.LogError(ex);
+				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+			}
+			return false;
+		}
+
+		private async void miHandInSingle_Click(object sender, EventArgs e)
+		{
+			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> reports))
+			{
+				//Should never happen as menu item should be diabled
+				ThemedMessageBox.Show(ActiveTheme, text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
+				return;
+			}
+			if (!reports.TryGetValue(tvReports.SelectedNode.FullPath, out UploadedReport report))
+			{
+				//Should never happen as menu item should be diabled
+				ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} was not uploaded yet", title: "Hand in failed");
+				return;
+			}
+			if (!(report.LfdNR is int lfdnr))
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {FullSelectedPath} could not be read", title: "Hand in failed");
+				return;
+			}
+
+			if (!await TryHandIn(lfdnr))
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} could not be handed in", title: "Hand in failed");
+				return;
+			}
+
+			UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.HandedIn, lfdnr);
+			UpdateTree();
+			ThemedMessageBox.Show(ActiveTheme, text: "Hand in successful", title: "Report handed in");
+		}
+
+		private async void HandInSelection(object sender, EventArgs e)
+		{
+			if (ThemedMessageBox.Show(ActiveTheme, text: "Warning, this will hand in all reports selected in the next window in the order they appear!\nDo you want to proceed?", title: "Caution", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+				return;
+
+			List<string> files = new List<string>();
+			if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
+				files = uploadedPaths.Keys.ToList();
+
+			FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
+			{
+				return (node is ReportNode reportNode) && (!files.Contains(GetFullNodePath(node)) || (uploadedPaths.TryGetValue(GetFullNodePath(node), out UploadedReport report) && report.Status != ReportNode.UploadStatuses.Uploaded));
+			});
+			if (fs.ShowDialog() != DialogResult.OK)
+				return;
+			ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
+
+			string activePath = "";
+			try
+			{
+				activePath = Doc?.Path;
+			}
+			catch { }
+			List<string> openReports = CloseAllReports();
+
+			bool needsUpdate = false;
+			int handedIn = 0;
+			foreach (TreeNode reportNode in reports)
+			{
+				string nodePath = GetFullNodePath(reportNode);
+				string fullPath = Path.GetFullPath(Path.Combine(ActivePath, "..", nodePath));
+				//Final fail save
+				if (!uploadedPaths.TryGetValue(nodePath, out UploadedReport report))
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: $"Report {fullPath} was not uploaded and could not be handed in as a result", title: "Hand in failed");
+					continue;
+				}
+				if (report.Status != ReportNode.UploadStatuses.Uploaded)
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: $"Report {fullPath} could not be handed in due to its upload status", title: "Hand in failed");
+					continue;
+				}
+				if (!(report.LfdNR is int lfdnr))
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {fullPath} could not be read and report could not be handed in as a result", title: "Hand in failed");
+					continue;
+				}
+				if (!await TryHandIn(lfdnr))
+				{
+					if (ThemedMessageBox.Show(ActiveTheme, text: $"Hand in of report {fullPath} failed, do you want to continue handing in reports?", title: "Hand in failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+						break;
+					else
+						continue;
+				}
+				needsUpdate = true;
+				handedIn++;
+				UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.HandedIn, report.LfdNR);
+			}
+
+			OpenAllDocuments(openReports, activePath);
+			if (!needsUpdate)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: "All reports were already handed in", title: "Hand in complete");
+				return;
+			}
+			UpdateTree();
+			string text = $"{handedIn} reports were successfully handed in";
+			if (handedIn == reports.Count)
+				text = "All " + text;
+			ThemedMessageBox.Show(ActiveTheme, text: text, title: "Hand in complete");
 		}
 	}
 }

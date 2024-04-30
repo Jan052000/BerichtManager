@@ -158,6 +158,7 @@ namespace BerichtManager.IHKClient
 			cookies.ForEach(cookie => HttpClient.DefaultRequestHeaders.Add("Cookie", cookie.ToString()));
 
 			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(uri);
+			//LoggedIn = true;
 			return true;
 		}
 
@@ -476,6 +477,60 @@ namespace BerichtManager.IHKClient
 				}
 			});
 			return mPFDC;
+		}
+
+		/// <summary>
+		/// Hands in a report
+		/// </summary>
+		/// <param name="lfdnr">lfdnr of report to hand in</param>
+		/// <returns><see langword="true"/> if report was handed in or <see langword="false"/> otherwise</returns>
+		/// <exception cref="HttpRequestException">Thrown if an exception in connection occurs</exception>
+		public async Task<bool> HandInReport(int lfdnr)
+		{
+			if (!LoggedIn && !await DoLogin())
+				return false;
+			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
+				return false;
+			//Opens first form
+			HttpResponseMessage response = await GetAndRefer($"tibrosBB/azubiHeftEintragDetails.jsp?lfdnr={lfdnr}");
+			if (!response.IsSuccessStatusCode)
+				return false;
+			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
+			if (doc.Forms.Count == 0)
+				throw new NoFormFoundException();
+			if (!FindAllInputInElement(doc.Forms[0], out List<HtmlElement> inputs))
+				throw new NoInputsFoundException();
+			if (!(inputs.Find(element => element.Name == "token") is HtmlElement tokenElement))
+				throw new InputFieldsMismatchException();
+
+			response = await PostAndRefer("tibrosBB/azubiHeftEintragSenden.jsp", new FormUrlEncodedContent(new Dictionary<string, string> { { "token", tokenElement.GetAttribute("value") }, { "senden", "" } }));
+			if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.Found)
+				return false;
+
+			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
+				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
+			else
+				response = await GetAndRefer(response.Headers.Location);
+
+			return true;
+		}
+
+		/// <summary>
+		/// Makes sure the referer is set to <paramref name="path"/>
+		/// </summary>
+		/// <param name="path">Relative path</param>
+		private async Task<bool> EnsureReferrer(string path)
+		{
+			if (HttpClient.DefaultRequestHeaders.Referrer != new Uri(HttpClient.BaseAddress, path))
+				try
+				{
+					await GetAndRefer(path);
+				}
+				catch (HttpRequestException)
+				{
+					return false;
+				}
+			return true;
 		}
 
 		/// <summary>
