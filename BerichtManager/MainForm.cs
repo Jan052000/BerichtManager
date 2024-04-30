@@ -1279,11 +1279,18 @@ namespace BerichtManager
 			optionMenu.ReportFolderChanged += ReportFolderChanged;
 			optionMenu.TabStopsChanged += UpdateTabStops;
 			optionMenu.FontSizeChanged += ChangeFontSize;
+			optionMenu.IHKBaseAddressChanged += IHKBaseAddressChanged;
 			optionMenu.ShowDialog();
 			optionMenu.ActiveThemeChanged -= ActiveThemeChanged;
 			optionMenu.ReportFolderChanged -= ReportFolderChanged;
 			optionMenu.TabStopsChanged -= UpdateTabStops;
 			optionMenu.FontSizeChanged -= ChangeFontSize;
+			optionMenu.IHKBaseAddressChanged -= IHKBaseAddressChanged;
+		}
+
+		private void IHKBaseAddressChanged()
+		{
+			IHKClient.UpdateBaseURL();
 		}
 
 		private void ReportFolderChanged(object sender, string folderPath)

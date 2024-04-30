@@ -44,6 +44,11 @@ namespace BerichtManager.Forms
 		/// </summary>
 		public event fontSizeChanged FontSizeChanged;
 
+		/// <summary>
+		/// Emits when ihk base address has been changed
+		/// </summary>
+		public event IHKBaseAddressChangedDelegate IHKBaseAddressChanged;
+
 		public OptionMenu()
 		{
 			InitializeComponent();
@@ -114,6 +119,11 @@ namespace BerichtManager.Forms
 		/// </summary>
 		/// <param name="fontSize">Size to change font to</param>
 		public delegate void fontSizeChanged(float fontSize);
+
+		/// <summary>
+		/// Delegate for the <see cref="IHKBaseAddressChanged"/> event
+		/// </summary>
+		public delegate void IHKBaseAddressChangedDelegate();
 
 		private void btClose_Click(object sender, EventArgs e)
 		{
@@ -217,6 +227,8 @@ namespace BerichtManager.Forms
 			ConfigHandler.IHKJobField(tbJobField.Text);
 			ConfigHandler.IHKSupervisorEMail(tbSupervisorMail.Text);
 			ConfigHandler.AutoSyncStatusesWithIHK(cbAutoSyncStatusesWithIHK.Checked);
+			if (ConfigHandler.IHKBaseUrl() != tbIHKBaseUrl.Text)
+				IHKBaseAddressChanged();
 			ConfigHandler.IHKBaseUrl(tbIHKBaseUrl.Text);
 		}
 

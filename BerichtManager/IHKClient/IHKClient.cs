@@ -63,6 +63,14 @@ namespace BerichtManager.IHKClient
 		}
 
 		/// <summary>
+		/// Changes the <see cref="HttpClient"/> base address to address in <see cref="ConfigHandler"/>
+		/// </summary>
+		public void UpdateBaseURL()
+		{
+			HttpClient.BaseAddress = new Uri(BASEURL);
+		}
+
+		/// <summary>
 		/// Handler for <see cref="LoginSessionTimeout"/> elapsed event
 		/// </summary>
 		private void LoginSessionTimeout_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
