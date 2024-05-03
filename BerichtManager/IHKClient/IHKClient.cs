@@ -552,6 +552,50 @@ namespace BerichtManager.IHKClient
 		}
 
 		/// <summary>
+		/// Edits a report with number <paramref name="lfdnr"/> to fit contents of <paramref name="document"/>
+		/// </summary>
+		/// <param name="document"><see cref="Word.Document"/> Content of report</param>
+		/// <param name="lfdnr">Lfdnr on IHK servers if edit</param>
+		/// <returns><see cref="UploadResult"/> result of creation process</returns>
+		/// <inheritdoc cref="CreateOrEditReport(Word.Document, int)" path="/exception"/>
+		public async Task<UploadResult> EditReport(Word.Document document, int lfdnr)
+		{
+			//HttpResponseMessage response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdnr}");
+			if (!LoggedIn)
+				if (!await DoLogin())
+					return new UploadResult(CreateResults.Unauthorized);
+
+			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
+				return new UploadResult(CreateResults.Unauthorized);
+			//Get new form from IHK
+			HttpResponseMessage response;
+			response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdnr}");
+			if (!response.IsSuccessStatusCode)
+				return new UploadResult(CreateResults.CreationFailed);
+			//Fill report with contents from new IHK report
+			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
+			Report report = new Report();
+			FillReportContent(report, doc);
+			//Overwrite contents from IHK
+			ReportTransformer.WordToIHK(document, report);
+			MultipartFormDataContent content = GetMultipartFormDataContent(report.ReportContent);
+			//Add necessary save parameter IHK needs to save reports
+			StringContent save = new StringContent("");
+			save.Headers.Remove("Content-Type");
+			content.Add(save, "\"save\"");
+			//Post content to create report
+			response = await PostAndRefer("tibrosBB/azubiHeftAdd.jsp", content);
+			if (response.StatusCode != HttpStatusCode.Found && !response.IsSuccessStatusCode)
+				return new UploadResult(CreateResults.UploadFailed);
+			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
+				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
+			else
+				response = await GetAndRefer(response.Headers.Location);
+			ResetTimer();
+			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate), lfdnr: lfdnr);
+		}
+
+		/// <summary>
 		/// Makes sure the referer is set to <paramref name="path"/>
 		/// </summary>
 		/// <param name="path">Relative path</param>
