@@ -342,47 +342,10 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <param name="document"><see cref="Word.Document"/> to upload</param>
 		/// <returns><see cref="UploadResult"/> object containing status and start date of report</returns>
-		/// <inheritdoc cref="FillReportContent(Report, HtmlDocument)" path="/exception"/>
-		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document)" path="/exception"/>
-		/// <exception cref="HttpRequestException"></exception>
+		/// <inheritdoc cref="CreateOrEditReport(Word.Document, int)" path="/exception"/>
 		public async Task<UploadResult> CreateReport(Word.Document document)
 		{
-			if (!LoggedIn)
-				if (!await DoLogin())
-					return new UploadResult(CreateResults.Unauthorized);
-
-			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
-				return new UploadResult(CreateResults.Unauthorized);
-			//Get new form from IHK
-			HttpResponseMessage response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
-			if (!response.IsSuccessStatusCode)
-				return new UploadResult(CreateResults.CreationFailed);
-			//Fill report with contents from new IHK report
-			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-			Report report = new Report();
-			FillReportContent(report, doc);
-			//Overwrite contents from IHK
-			ReportTransformer.WordToIHK(document, report);
-			MultipartFormDataContent content = GetMultipartFormDataContent(report.ReportContent);
-			//Add necessary save parameter IHK needs to save reports
-			StringContent save = new StringContent("");
-			save.Headers.Remove("Content-Type");
-			content.Add(save, "\"save\"");
-			//Post content to create report
-			response = await PostAndRefer("tibrosBB/azubiHeftAdd.jsp", content);
-			if (response.StatusCode != HttpStatusCode.Found && !response.IsSuccessStatusCode)
-				return new UploadResult(CreateResults.UploadFailed);
-			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
-				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
-			else
-				response = await GetAndRefer(response.Headers.Location);
-			doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-			int? lfdNR = null;
-			List<UploadedReport> uploadedReports = TransformHtmlToReports(CSSSelect(doc.Body, "div.reihe"));
-			if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
-				lfdNR = currentReport.LfdNR;
-			ResetTimer();
-			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate), lfdnr: lfdNR);
+			return await CreateOrEditReport(document);
 		}
 
 		/// <summary>
@@ -560,16 +523,31 @@ namespace BerichtManager.IHKClient
 		/// <inheritdoc cref="CreateOrEditReport(Word.Document, int)" path="/exception"/>
 		public async Task<UploadResult> EditReport(Word.Document document, int lfdnr)
 		{
-			//HttpResponseMessage response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdnr}");
+			return await CreateOrEditReport(document, lfdnr);
+		}
+
+		/// <summary>
+		/// Creates or edits reports based on <paramref name="lfdnr"/>
+		/// </summary>
+		/// <param name="document"><see cref="Word.Document"/> to use for content</param>
+		/// <param name="lfdnr">Number of report on IHK servers if it should be edited</param>
+		/// <returns><see cref="UploadResult"/></returns>
+		/// <inheritdoc cref="FillReportContent(Report, HtmlDocument)" path="/exception"/>
+		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document)" path="/exception"/>
+		/// <exception cref="HttpRequestException"></exception>
+		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int lfdnr = -1)
+		{
 			if (!LoggedIn)
 				if (!await DoLogin())
 					return new UploadResult(CreateResults.Unauthorized);
 
 			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
 				return new UploadResult(CreateResults.Unauthorized);
-			//Get new form from IHK
 			HttpResponseMessage response;
-			response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdnr}");
+			if (lfdnr >= 0)
+				response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdnr}");
+			else
+				response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
 			if (!response.IsSuccessStatusCode)
 				return new UploadResult(CreateResults.CreationFailed);
 			//Fill report with contents from new IHK report
@@ -591,6 +569,15 @@ namespace BerichtManager.IHKClient
 				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
 				response = await GetAndRefer(response.Headers.Location);
+			int? lfdNR = lfdnr;
+			//Get lfdnr from last report in list as shown in html on IHK site
+			if (lfdnr < 0)
+			{
+				doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
+				List<UploadedReport> uploadedReports = TransformHtmlToReports(CSSSelect(doc.Body, "div.reihe"));
+				if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
+					lfdNR = currentReport.LfdNR;
+			}
 			ResetTimer();
 			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate), lfdnr: lfdnr);
 		}
