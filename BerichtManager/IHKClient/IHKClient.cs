@@ -378,7 +378,7 @@ namespace BerichtManager.IHKClient
 				response = await GetAndRefer(response.Headers.Location);
 			doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
 			int? lfdNR = null;
-			List<UploadedReport> uploadedReports = TransformHtmlToReports(CSSSelect(doc.Body, "div.col-md-8"));
+			List<UploadedReport> uploadedReports = TransformHtmlToReports(CSSSelect(doc.Body, "div.reihe"));
 			if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
 				lfdNR = currentReport.LfdNR;
 			ResetTimer();
