@@ -92,6 +92,41 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Searches for a report with path <paramref name="path"/> under active path in <see cref="ConfigHandler"/>
+		/// </summary>
+		/// <param name="path">Path of report</param>
+		/// <param name="report">Found <see cref="UploadedReport"/> or <see langword="null"/> if it was not found</param>
+		/// <returns><see langword="true"/> if a report was found and <see langword="false"/> otherwise</returns>
+		public static bool GetUploadedReport(string path, out UploadedReport report)
+		{
+			report = null;
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
+				return false;
+			if (!paths.TryGetValue(path, out UploadedReport result))
+				return false;
+			report = result;
+			return true;
+		}
+
+		/// <summary>
+		/// Searches for a report with a start date of <paramref name="startDate"/> under active path in <see cref="ConfigHandler"/>
+		/// </summary>
+		/// <param name="startDate">Start date of report, only <see cref="DateTime.Date"/> components are compared</param>
+		/// <param name="report">Found <see cref="UploadedReport"/> or <see langword="null"/> if it was not found</param>
+		/// <returns><see langword="true"/> if a report was found and <see langword="false"/> otherwise</returns>
+		public static bool GetUploadedReport(DateTime startDate, out UploadedReport report)
+		{
+			report = null;
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
+				return false;
+			UploadedReport foundReport = paths.Values.ToList().Find(x => x.StartDate.Date == startDate.Date);
+			if (!(foundReport is UploadedReport result))
+				return false;
+			report = result;
+			return true;
+		}
+
+		/// <summary>
 		/// Loads the uploaded repor dictionary from file
 		/// </summary>
 		private void Load()
