@@ -410,7 +410,7 @@ namespace BerichtManager.IHKClient
 						IHKFormDataNameAttribute attr = prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() as IHKFormDataNameAttribute;
 						if (attr == null)
 							return false;
-						return attr.Name == htmlElement.Name;
+						return attr.Name == htmlElement.Name || prop.Name == htmlElement.Name;
 					}) == null)
 						throw new UnknownFieldException(htmlElement.Name);
 				}
@@ -432,7 +432,7 @@ namespace BerichtManager.IHKClient
 						return false;
 					}
 
-					return attr.Name == input.Name;
+					return attr.Name == input.Name || prop.Name == input.Name;
 				});
 				//If no matches found the field is unknown and new to the form
 				if (matchingProps.Count == 0)
