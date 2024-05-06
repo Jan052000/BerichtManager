@@ -340,6 +340,7 @@ namespace BerichtManager.Forms
 			this.nudLastUploadedReportNumber.Size = new System.Drawing.Size(120, 20);
 			this.nudLastUploadedReportNumber.TabIndex = 1;
 			this.toolTip1.SetToolTip(this.nudLastUploadedReportNumber, "Number of last uploaded reoprt");
+			this.nudLastUploadedReportNumber.ValueChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// btIHKLogin
 			// 
@@ -361,6 +362,7 @@ namespace BerichtManager.Forms
 			this.tbJobField.Size = new System.Drawing.Size(696, 20);
 			this.tbJobField.TabIndex = 48;
 			this.toolTip1.SetToolTip(this.tbJobField, "Name of job field");
+			this.tbJobField.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// tbSupervisorMail
 			// 
@@ -369,6 +371,7 @@ namespace BerichtManager.Forms
 			this.tbSupervisorMail.Size = new System.Drawing.Size(696, 20);
 			this.tbSupervisorMail.TabIndex = 50;
 			this.toolTip1.SetToolTip(this.tbSupervisorMail, "E-mail of supervisor");
+			this.tbSupervisorMail.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// gbManagerOptions
 			// 
@@ -592,6 +595,7 @@ namespace BerichtManager.Forms
 			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
 			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
 			this.tbIHKBaseUrl.TabIndex = 53;
+			this.tbIHKBaseUrl.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// cbAutoSyncStatusesWithIHK
 			// 
@@ -602,6 +606,7 @@ namespace BerichtManager.Forms
 			this.cbAutoSyncStatusesWithIHK.TabIndex = 52;
 			this.cbAutoSyncStatusesWithIHK.Text = "Sync report statuses on startup";
 			this.cbAutoSyncStatusesWithIHK.UseVisualStyleBackColor = true;
+			this.cbAutoSyncStatusesWithIHK.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// laSupervisorMail
 			// 
