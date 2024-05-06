@@ -777,6 +777,9 @@ namespace BerichtManager
 						document.PrintOut(Background: false);
 						document.Close();
 						File.Move(filePath, key + "\\Gedruckt\\" + Path.GetFileName(filePath));
+						string oldRelPath = filePath.Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First();
+						string newRelPath = (key + "\\Gedruckt\\" + Path.GetFileName(filePath)).Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First();
+						UploadedReports.MoveReport(oldRelPath, newRelPath);
 					}
 					catch (Exception ex)
 					{
@@ -1125,6 +1128,9 @@ namespace BerichtManager
 				{
 					File.Move(path,
 					path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path));
+					string oldRelPath = path.Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First();
+					string newRelPath = path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path).Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First();
+					UploadedReports.MoveReport(oldRelPath, newRelPath);
 					UpdateTree();
 				}
 			}
