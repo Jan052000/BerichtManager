@@ -1,4 +1,4 @@
-﻿using BerichtManager.UploadChecking;
+using BerichtManager.UploadChecking;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -138,10 +138,11 @@ namespace BerichtManager.ThemeManagement
 						statusColor = Theme.ReportRejectedColor;
 						break;
 				}
+				Rectangle ellipseRect = new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - nodeOffset - 1, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);//new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y - e.Node.Bounds.Height - 2 + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
 				using (Pen outline = new Pen((Color)statusColor))
-					e.Graphics.DrawEllipse(outline, e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
+					e.Graphics.DrawEllipse(outline, ellipseRect);
 				using (SolidBrush upload = new SolidBrush((Color)statusColor))
-					e.Graphics.FillEllipse(upload, e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
+					e.Graphics.FillEllipse(upload, ellipseRect);
 			}
 		}
 
