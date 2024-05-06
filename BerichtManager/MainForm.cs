@@ -1827,12 +1827,17 @@ namespace BerichtManager
 				ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} was not uploaded yet", title: "Hand in failed");
 				return;
 			}
+			//Prevent unsaved changes from being left locally
+			if (report.WasEditedLocally)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"Please save report {FullSelectedPath} to IHK before handing it in", "Can not hand in unsaved report");
+				return;
+			}
 			if (!(report.LfdNR is int lfdnr))
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {FullSelectedPath} could not be read", title: "Hand in failed");
 				return;
 			}
-
 			if (!await TryHandIn(lfdnr))
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} could not be handed in", title: "Hand in failed");
@@ -1861,14 +1866,6 @@ namespace BerichtManager
 				return;
 			ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
 
-			string activePath = "";
-			try
-			{
-				activePath = Doc?.Path;
-			}
-			catch { }
-			List<string> openReports = CloseAllReports();
-
 			bool needsUpdate = false;
 			int handedIn = 0;
 			foreach (TreeNode reportNode in reports)
@@ -1885,6 +1882,12 @@ namespace BerichtManager
 				{
 					ThemedMessageBox.Show(ActiveTheme, text: $"Report {fullPath} could not be handed in due to its upload status", title: "Hand in failed");
 					continue;
+				}
+				//Prevent unsaved changes from being left locally
+				if (report.WasEditedLocally)
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: $"Please save report {FullSelectedPath} to IHK before handing it in", "Can not hand in unsaved report");
+					return;
 				}
 				if (!(report.LfdNR is int lfdnr))
 				{
@@ -1903,7 +1906,6 @@ namespace BerichtManager
 				UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.HandedIn, report.LfdNR);
 			}
 
-			OpenAllDocuments(openReports, activePath);
 			if (!needsUpdate)
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: "All reports were already handed in", title: "Hand in complete");
