@@ -1790,6 +1790,11 @@ namespace BerichtManager
 				UpdateTree();
 		}
 
+		/// <summary>
+		/// Tries to hand in a report for <paramref name="lfdnr"/> and handles exceptions
+		/// </summary>
+		/// <param name="lfdnr">Number of report on IHK servers</param>
+		/// <returns><see langword="true"/> if hand in was successful and <see langword="false"/> otherwise</returns>
 		private async Task<bool> TryHandIn(int lfdnr)
 		{
 			try
@@ -1800,6 +1805,10 @@ namespace BerichtManager
 			{
 				Logger.LogError(ex);
 				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+			}
+			catch (Exception ex)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
 			}
 			return false;
 		}
