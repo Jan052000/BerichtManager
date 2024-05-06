@@ -1268,6 +1268,7 @@ namespace BerichtManager
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miUploadAsNext.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$") && !ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _);
 			miHandInSingle.Enabled = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text) && ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status) && (status == ReportNode.UploadStatuses.Uploaded);
+			miUpdateReport.Enabled = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text) && ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _);
 			return;
 		}
 
@@ -1885,6 +1886,92 @@ namespace BerichtManager
 			if (handedIn == reports.Count)
 				text = "All " + text;
 			ThemedMessageBox.Show(ActiveTheme, text: text, title: "Hand in complete");
+		}
+
+		/// <summary>
+		/// Tries to edit the report with <paramref name="lfdnr"/> to have the contents of <paramref name="doc"/>, handles all exceptions
+		/// </summary>
+		/// <param name="doc"><see cref="Word.Document"/> to update report with</param>
+		/// <param name="lfdnr">Lfdnr of report on IHK servers</param>
+		/// <returns><see cref="UploadResult"/> of edit process or <see langword="null"/> if an error occurred</returns>
+		private async Task<UploadResult> TryUpdateReport(Word.Document doc, int lfdnr)
+		{
+			try
+			{
+				return await IHKClient.EditReport(doc, lfdnr);
+			}
+			catch (Exception ex)
+			{
+				switch (ex)
+				{
+					case InvalidDocumentException _:
+						ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please upload manually", title: "Invalid document");
+						return null;
+					case HttpRequestException _:
+						Logger.LogError(ex);
+						ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+						return null;
+					default:
+						ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
+						return null;
+				}
+			}
+		}
+
+		private async void SendReportToIHK(object sender, EventArgs e)
+		{
+			if (!HasWordStarted())
+				return;
+			if (!CheckNetwork())
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: "No network connection", title: "No connection");
+				return;
+			}
+			if (!UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report))
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"Could not find report {FullSelectedPath} in uploaded list, please add {tvReports.SelectedNode.FullPath} if it is uploaded", title: "Report not found");
+				return;
+			}
+			Word.Document doc;
+			//Prevent word app from showing when opening an already open document
+			bool close = true;
+			if (DocIsSamePathAsSelected())
+			{
+				close = false;
+				doc = Doc;
+			}
+			else
+				doc = WordApp.Documents.Open(FullSelectedPath);
+			if (doc.FormFields.Count < 10)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please upload manually", title: "Invalid document");
+				doc.Close(SaveChanges: false);
+				return;
+			}
+			if (!(report.LfdNR is int lfdnr))
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"Unable to load lfdnr from {FullSelectedPath}, verify that it is correct", title: "Unable to edit");
+				return;
+			}
+
+			UploadResult result = await TryUpdateReport(doc, lfdnr);
+			if (result == null)
+				return;
+			if (close)
+				doc.Close();
+
+			UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.Uploaded, report.LfdNR);
+			UpdateTree();
+			ThemedMessageBox.Show(ActiveTheme, text: "Report was successfully updated", title: "Update complete");
+		}
+
+		/// <summary>
+		/// Checks
+		/// </summary>
+		/// <returns></returns>
+		private bool CheckNetwork()
+		{
+			return System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
 		}
 	}
 }

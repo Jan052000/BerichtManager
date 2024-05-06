@@ -53,6 +53,7 @@ namespace BerichtManager
 			this.miUploadAsNext = new System.Windows.Forms.ToolStripMenuItem();
 			this.miUploadAllSelected = new System.Windows.Forms.ToolStripMenuItem();
 			this.miHandInSingle = new System.Windows.Forms.ToolStripMenuItem();
+			this.miRcHandInSelection = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRefresh = new System.Windows.Forms.ToolStripMenuItem();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
 			this.rtbWork = new System.Windows.Forms.RichTextBox();
@@ -78,7 +79,7 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRcHandInSelection = new System.Windows.Forms.ToolStripMenuItem();
+			this.miUpdateReport = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -172,7 +173,8 @@ namespace BerichtManager
             this.miUploadAsNext,
             this.miUploadAllSelected,
             this.miHandInSingle,
-            this.miRcHandInSelection});
+            this.miRcHandInSelection,
+            this.miUpdateReport});
 			this.miIHKOptions.Name = "miIHKOptions";
 			this.miIHKOptions.Size = new System.Drawing.Size(180, 22);
 			this.miIHKOptions.Text = "IHK";
@@ -204,6 +206,13 @@ namespace BerichtManager
 			this.miHandInSingle.Size = new System.Drawing.Size(180, 22);
 			this.miHandInSingle.Text = "Hand in";
 			this.miHandInSingle.Click += new System.EventHandler(this.miHandInSingle_Click);
+			// 
+			// miRcHandInSelection
+			// 
+			this.miRcHandInSelection.Name = "miRcHandInSelection";
+			this.miRcHandInSelection.Size = new System.Drawing.Size(180, 22);
+			this.miRcHandInSelection.Text = "Hand in selection";
+			this.miRcHandInSelection.Click += new System.EventHandler(this.HandInSelection);
 			// 
 			// miRefresh
 			// 
@@ -372,21 +381,21 @@ namespace BerichtManager
 			// miUpdateStatuses
 			// 
 			this.miUpdateStatuses.Name = "miUpdateStatuses";
-			this.miUpdateStatuses.Size = new System.Drawing.Size(180, 22);
+			this.miUpdateStatuses.Size = new System.Drawing.Size(166, 22);
 			this.miUpdateStatuses.Text = "Update statuses";
 			this.miUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
 			// 
 			// miUploadSelection
 			// 
 			this.miUploadSelection.Name = "miUploadSelection";
-			this.miUploadSelection.Size = new System.Drawing.Size(180, 22);
+			this.miUploadSelection.Size = new System.Drawing.Size(166, 22);
 			this.miUploadSelection.Text = "Upload selection";
 			this.miUploadSelection.Click += new System.EventHandler(this.miUploadAllSelected_Click);
 			// 
 			// miHandInSelection
 			// 
 			this.miHandInSelection.Name = "miHandInSelection";
-			this.miHandInSelection.Size = new System.Drawing.Size(180, 22);
+			this.miHandInSelection.Size = new System.Drawing.Size(166, 22);
 			this.miHandInSelection.Text = "Hand in selection";
 			this.miHandInSelection.Click += new System.EventHandler(this.HandInSelection);
 			// 
@@ -438,12 +447,12 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// miRcHandInSelection
+			// miUpdateReport
 			// 
-			this.miRcHandInSelection.Name = "miRcHandInSelection";
-			this.miRcHandInSelection.Size = new System.Drawing.Size(180, 22);
-			this.miRcHandInSelection.Text = "Hand in selection";
-			this.miRcHandInSelection.Click += new System.EventHandler(this.HandInSelection);
+			this.miUpdateReport.Name = "miUpdateReport";
+			this.miUpdateReport.Size = new System.Drawing.Size(180, 22);
+			this.miUpdateReport.Text = "Update report";
+			this.miUpdateReport.Click += new System.EventHandler(this.SendReportToIHK);
 			// 
 			// MainForm
 			// 
@@ -516,6 +525,7 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miHandInSingle;
 		private System.Windows.Forms.ToolStripMenuItem miHandInSelection;
 		private System.Windows.Forms.ToolStripMenuItem miRcHandInSelection;
+		private System.Windows.Forms.ToolStripMenuItem miUpdateReport;
 	}
 }
 
