@@ -127,6 +127,22 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Moves a report from <paramref name="oldPath"/> to <paramref name="newPath"/>
+		/// </summary>
+		/// <param name="oldPath">Old path relative to <see cref="ConfigHandler.Instance"/>s report path</param>
+		/// <param name="newPath">New path relative to <see cref="ConfigHandler.Instance"/>s report path</param>
+		public static void MoveReport(string oldPath, string newPath)
+		{
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> reports))
+				return;
+			if (!reports.TryGetValue(oldPath, out UploadedReport toMove))
+				return;
+			reports.Remove(oldPath);
+			reports.Add(newPath, toMove);
+			Instance.Save();
+		}
+
+		/// <summary>
 		/// Loads the uploaded repor dictionary from file
 		/// </summary>
 		private void Load()
