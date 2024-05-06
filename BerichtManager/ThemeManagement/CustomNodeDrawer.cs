@@ -1,4 +1,4 @@
-using BerichtManager.UploadChecking;
+﻿using BerichtManager.UploadChecking;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -143,6 +143,15 @@ namespace BerichtManager.ThemeManagement
 					e.Graphics.DrawEllipse(outline, ellipseRect);
 				using (SolidBrush upload = new SolidBrush((Color)statusColor))
 					e.Graphics.FillEllipse(upload, ellipseRect);
+				if (report.WasEditedLocally)
+				{
+					int editedCircleOffset = 1;
+					Rectangle r = new Rectangle(ellipseRect.X + editedCircleOffset, ellipseRect.Y + editedCircleOffset, ellipseRect.Width - editedCircleOffset * 2, ellipseRect.Height - editedCircleOffset * 2);
+					using (SolidBrush editBrush = new SolidBrush(Color.Black))
+						e.Graphics.FillEllipse(editBrush, r);
+					using (Pen smoothe = new Pen((Color)statusColor))
+						e.Graphics.DrawEllipse(smoothe, r);
+				}
 			}
 		}
 

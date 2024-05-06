@@ -12,11 +12,15 @@ namespace BerichtManager.UploadChecking
 		/// lfdnr of report on IHK servers
 		/// </summary>
 		public int LfdNr { get; set; }
+		/// <summary>
+		/// Marks report as edited only locally
+		/// </summary>
+		public bool WasEditedLocally { get; set; } = false;
 
-        /// <summary>
-        /// Statuses of report on IHK servers
-        /// </summary>
-        public enum UploadStatuses
+		/// <summary>
+		/// Statuses of report on IHK servers
+		/// </summary>
+		public enum UploadStatuses
 		{
 			/// <summary>
 			/// Report is not uploaded

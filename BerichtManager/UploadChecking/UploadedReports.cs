@@ -143,6 +143,21 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Sets synchronization status of local report with IHK
+		/// </summary>
+		/// <param name="path">Path relative to <see cref="ConfigHandler.ReportPath()"/></param>
+		/// <param name="wasEdited">Status of synchronization with IHK</param>
+		public static void SetEdited(string path, bool wasEdited)
+		{
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> reports))
+				return;
+			if (!reports.TryGetValue(path, out UploadedReport toMark))
+				return;
+			toMark.WasEditedLocally = wasEdited;
+			Instance.Save();
+		}
+
+		/// <summary>
 		/// Loads the uploaded repor dictionary from file
 		/// </summary>
 		private void Load()
@@ -161,7 +176,7 @@ namespace BerichtManager.UploadChecking
 		/// </summary>
 		private void Save()
 		{
-			File.WriteAllText(FullPath, JsonConvert.SerializeObject(this, Formatting.Indented));
+			File.WriteAllText(FullPath, JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate}));
 		}
 	}
 }

@@ -205,6 +205,7 @@ namespace BerichtManager
 			TreeNode root = CreateDirectoryNode(Info);
 			tvReports.Nodes.Add(root);
 			FillStatuses(root);
+			MarkEdited(root);
 			tvReports.Sort();
 		}
 
@@ -241,6 +242,20 @@ namespace BerichtManager
 			foreach (TreeNode node in root.Nodes)
 			{
 				FillStatuses(node);
+			}
+		}
+
+		/// <summary>
+		/// Sets edit statuses of <see cref="ReportNode"/>s in <paramref name="root"/>
+		/// </summary>
+		/// <param name="root"></param>
+		private void MarkEdited(TreeNode root)
+		{
+			if (root is ReportNode reportNode && UploadedReports.GetUploadedReport(reportNode.FullPath, out UploadedReport report))
+				reportNode.WasEditedLocally = report.WasEditedLocally;
+			foreach (TreeNode node in root.Nodes)
+			{
+				MarkEdited(node);
 			}
 		}
 
@@ -817,6 +832,7 @@ namespace BerichtManager
 						return;
 					}
 
+					bool markAsEdited = false;
 					if (quickEditFieldNr > -1)
 					{
 						IEnumerator enumerator = Doc.FormFields.GetEnumerator();
@@ -829,16 +845,15 @@ namespace BerichtManager
 						}
 						EditForm edit = new EditForm(title: quickEditTitle, text: ((Word.FormField)enumerator.Current).Result);
 						edit.RefreshConfigs += RefreshConfig;
-						if (edit.ShowDialog() == DialogResult.OK)
+						switch (edit.DialogResult)
 						{
-							FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
-						}
-						else
-						{
-							if (edit.DialogResult == DialogResult.Ignore)
-							{
+							case DialogResult.OK:
+							case DialogResult.Ignore:
+								markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
 								FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
-							}
+								break;
+							default:
+								break;
 						}
 						edit.RefreshConfigs -= RefreshConfig;
 					}
@@ -856,33 +871,21 @@ namespace BerichtManager
 							EditForm edit;
 							foreach (EditState si in selectEdit.SelectedItems)
 							{
-								if (enumerator.MoveNext())
+								if (enumerator.MoveNext() && si.ShouldEdit)
 								{
-									if (si.ShouldEdit)
+									edit = new EditForm(title: si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
+									edit.RefreshConfigs += RefreshConfig;
+									edit.ShowDialog();
+									edit.RefreshConfigs -= RefreshConfig;
+									switch (edit.DialogResult)
 									{
-										edit = new EditForm(title: si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
-										edit.RefreshConfigs += RefreshConfig;
-										edit.ShowDialog();
-										edit.RefreshConfigs -= RefreshConfig;
-										if (edit.DialogResult == DialogResult.OK)
-										{
+										case DialogResult.OK:
+										case DialogResult.Ignore:
+											markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
 											FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
-										}
-										else
-										{
-											if (edit.DialogResult == DialogResult.Abort)
-											{
-												break;
-											}
-											else
-											{
-												if (edit.DialogResult == DialogResult.Ignore)
-												{
-													FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
-													break;
-												}
-											}
-										}
+											break;
+										default:
+											break;
 									}
 								}
 							}
@@ -890,6 +893,11 @@ namespace BerichtManager
 					}
 					FitToPage(Doc);
 					Doc.Save();
+					if (markAsEdited)
+					{
+						UploadedReports.SetEdited(path.Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First(), true);
+						UpdateTree();
+					}
 					rtbWork.Text = Doc.FormFields[6].Result;
 					rtbSchool.Text = Doc.FormFields[8].Result;
 					EditMode = true;
@@ -1008,6 +1016,11 @@ namespace BerichtManager
 				FillText(WordApp, Doc.FormFields[8], rtbSchool.Text);
 				FitToPage(Doc);
 				Doc.Save();
+				if (WasEdited)
+				{
+					UploadedReports.SetEdited(Path.Combine(Doc.Path, Doc.Name).Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First(), true);
+					UpdateTree();
+				}
 				ThemedMessageBox.Show(ActiveTheme, "Saved changes", "Saved");
 				WasEdited = false;
 			}
@@ -1967,6 +1980,7 @@ namespace BerichtManager
 				doc.Close();
 
 			UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.Uploaded, report.LfdNR);
+			UploadedReports.SetEdited(tvReports.SelectedNode.FullPath, false);
 			UpdateTree();
 			ThemedMessageBox.Show(ActiveTheme, text: "Report was successfully updated", title: "Update complete");
 		}
