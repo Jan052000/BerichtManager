@@ -1287,7 +1287,7 @@ namespace BerichtManager
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miUploadAsNext.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$") && !ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _);
 			miHandInSingle.Enabled = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text) && ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status) && (status == ReportNode.UploadStatuses.Uploaded);
-			miUpdateReport.Enabled = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text) && ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _);
+			miUpdateReport.Enabled = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text) && ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status1) && (status1 == ReportNode.UploadStatuses.Uploaded || status1 == ReportNode.UploadStatuses.Rejected);
 			return;
 		}
 
