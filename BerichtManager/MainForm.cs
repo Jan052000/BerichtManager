@@ -1827,15 +1827,15 @@ namespace BerichtManager
 				ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} was not uploaded yet", title: "Hand in failed");
 				return;
 			}
+			if (!(report.LfdNR is int lfdnr))
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {FullSelectedPath} could not be read", title: "Hand in failed");
+				return;
+			}
 			//Prevent unsaved changes from being left locally
 			if (report.WasEditedLocally)
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: $"Please save report {FullSelectedPath} to IHK before handing it in", "Can not hand in unsaved report");
-				return;
-			}
-			if (!(report.LfdNR is int lfdnr))
-			{
-				ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {FullSelectedPath} could not be read", title: "Hand in failed");
 				return;
 			}
 			if (!await TryHandIn(lfdnr))
@@ -1883,16 +1883,16 @@ namespace BerichtManager
 					ThemedMessageBox.Show(ActiveTheme, text: $"Report {fullPath} could not be handed in due to its upload status", title: "Hand in failed");
 					continue;
 				}
+				if (!(report.LfdNR is int lfdnr))
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {fullPath} could not be read and report could not be handed in as a result", title: "Hand in failed");
+					continue;
+				}
 				//Prevent unsaved changes from being left locally
 				if (report.WasEditedLocally)
 				{
 					ThemedMessageBox.Show(ActiveTheme, text: $"Please save report {FullSelectedPath} to IHK before handing it in", "Can not hand in unsaved report");
 					return;
-				}
-				if (!(report.LfdNR is int lfdnr))
-				{
-					ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {fullPath} could not be read and report could not be handed in as a result", title: "Hand in failed");
-					continue;
 				}
 				if (!await TryHandIn(lfdnr))
 				{
