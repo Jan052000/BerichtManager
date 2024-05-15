@@ -1285,7 +1285,7 @@ namespace BerichtManager
 			//miPrint.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miDelete.Enabled = isInLogs || tvReports.SelectedNode.Text.EndsWith(".docx") || tvReports.SelectedNode.Text.StartsWith("~$");
 			//miDelete.Visible = isInLogs || tvReports.SelectedNode.Text.EndsWith(".docx") || tvReports.SelectedNode.Text.StartsWith("~$");
-			miQuickEditOptions.Enabled = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
+			miQuickEditOptions.Enabled = !isInLogs && isNameValid;
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miUploadAsNext.Enabled = !isInLogs && isNameValid && !isUploaded;
 			miHandInSingle.Enabled = isNameValid && isUploaded && (status == ReportNode.UploadStatuses.Uploaded);
