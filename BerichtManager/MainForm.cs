@@ -1577,6 +1577,7 @@ namespace BerichtManager
 		{
 			if (!HasWordStarted())
 				return;
+			//should not happen as menu item should be disabled
 			if (ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _))
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: "Report was already uploaded", title: "Report already uploaded");
@@ -1836,9 +1837,36 @@ namespace BerichtManager
 			//Prevent unsaved changes from being left locally
 			if (report.WasEditedLocally)
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: $"Please save report {FullSelectedPath} to IHK before handing it in", "Can not hand in unsaved report");
-				return;
+				if (ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} has local changes, do you want to upload them now?", title: "Upload changes?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: "Hand in was canceled", title: "Hand in canceled");
+					return;
+				}
+				if (!WordInitialized)
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: "Word has not started yet, hand in was canceled", title: "Hand in canceled");
+					return;
+				}
+
+				Word.Document doc;
+				if (DocIsSamePathAsSelected())
+					doc = Doc;
+				else
+					doc = WordApp.Documents.Open(FullSelectedPath);
+				UploadResult result = await TryUpdateReport(doc, lfdnr);
+				if (!DocIsSamePathAsSelected())
+					doc.Close();
+
+				if (result == null)
+				{
+					ThemedMessageBox.Show(ActiveTheme, text: "Update of report failed, hand in was canceled", title: "Hand in canceled");
+					return;
+				}
+
+				if (!HandleUpdateResults(result.Result, report.StartDate))
+					return;
 			}
+
 			if (!await TryHandIn(lfdnr))
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} could not be handed in", title: "Hand in failed");
@@ -1848,6 +1876,35 @@ namespace BerichtManager
 			UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.HandedIn, lfdnr);
 			UpdateTree();
 			ThemedMessageBox.Show(ActiveTheme, text: "Hand in successful", title: "Report handed in");
+		}
+
+		/// <summary>
+		/// Handles success and shows message boxes if not
+		/// </summary>
+		/// <param name="result"><see cref="CreateResults"/> of update process</param>
+		/// <param name="startDate"><see cref="DateTime"/> of report start date</param>
+		/// <returns><see langword="true"/> if <paramref name="result"/> is <see cref="CreateResults.Success"/> and <see langword="false"/> otherwise</returns>
+		private bool HandleUpdateResults(CreateResults result, DateTime startDate)
+		{
+			switch (result)
+			{
+				case CreateResults.Success:
+					UploadedReports.SetEdited(startDate, false);
+					break;
+				case CreateResults.Unauthorized:
+					ThemedMessageBox.Show(ActiveTheme, text: "Login session has expired, try restarting report manager, hand in was skipped", title: "Login session expired");
+					break;
+				case CreateResults.CreationFailed:
+					ThemedMessageBox.Show(ActiveTheme, text: "Report could not be loaded from IHK server, hand in was skipped", title: "Unable to edit report");
+					break;
+				case CreateResults.UploadFailed:
+					ThemedMessageBox.Show(ActiveTheme, text: "Report could not be updated, hand in was skipped", title: "Handin failed");
+					break;
+				default:
+					ThemedMessageBox.Show(ActiveTheme, text: "Unknown upload result, hand in was skipped", title: "Unknown result");
+					break;
+			}
+			return result == CreateResults.Success;
 		}
 
 		private async void HandInSelection(object sender, EventArgs e)
@@ -1866,6 +1923,11 @@ namespace BerichtManager
 			if (fs.ShowDialog() != DialogResult.OK)
 				return;
 			ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
+
+			bool updateSet = false;
+			bool autoUpdateAllChanges = false;
+			List<string> skippedPaths = new List<string>();
+			List<string> failedPaths = new List<string>();
 
 			bool needsUpdate = false;
 			int handedIn = 0;
@@ -1892,12 +1954,59 @@ namespace BerichtManager
 				//Prevent unsaved changes from being left locally
 				if (report.WasEditedLocally)
 				{
-					ThemedMessageBox.Show(ActiveTheme, text: $"Please save report {FullSelectedPath} to IHK before handing it in", "Can not hand in unsaved report");
-					return;
+					if (!WordInitialized)
+					{
+						ThemedMessageBox.Show(ActiveTheme, text: "Word has not started yet, hand in was canceled", title: "Hand in canceled");
+						return;
+					}
+					//Check if changes should be uploaded or not
+					if (!updateSet)
+					{
+						autoUpdateAllChanges = ThemedMessageBox.Show(ActiveTheme, text: "Should all local changes be uploaded to IHK?", title: "Automatically upload changes?") == DialogResult.Yes;
+						updateSet = true;
+					}
+
+					//Check if local changes should be uploaded
+					if (!autoUpdateAllChanges)
+					{
+						skippedPaths.Add(fullPath);
+						continue;
+					}
+
+					//Open document if it is not open
+					bool shouldClose = false;
+					Word.Document doc = GetDocumentIfOpen(fullPath);
+					if (doc == null)
+					{
+						doc = WordApp.Documents.Open(fullPath);
+						shouldClose = true;
+					}
+
+					UploadResult result = await TryUpdateReport(doc, lfdnr);
+
+					//Close report if it was not opened before
+					if (shouldClose)
+						doc.Close();
+
+					if (result == null)
+					{
+						ThemedMessageBox.Show(ActiveTheme, text: "Update of report failed, hand in was skipped", title: "Hand in skipped");
+						return;
+					}
+
+					if (result.Result != CreateResults.Success)
+					{
+						if (ThemedMessageBox.Show(ActiveTheme, text: $"Update of report {fullPath} failed, do you want to continue trying to hand in reports?", title: "Update failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+							break;
+						else
+							continue;
+					}
 				}
+
 				if (!await TryHandIn(lfdnr))
 				{
-					if (ThemedMessageBox.Show(ActiveTheme, text: $"Hand in of report {fullPath} failed, do you want to continue handing in reports?", title: "Hand in failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+					failedPaths.Add(fullPath);
+					if (ThemedMessageBox.Show(ActiveTheme, text: $"Hand in of report {fullPath} failed, do you want to continue trying to hand in reports?", title: "Hand in failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 						break;
 					else
 						continue;
@@ -1913,10 +2022,37 @@ namespace BerichtManager
 				return;
 			}
 			UpdateTree();
-			string text = $"{handedIn} reports were successfully handed in";
-			if (handedIn == reports.Count)
+			string text = $"{handedIn} / {reports.Count} reports were successfully handed in";
+			if (handedIn == reports.Count && skippedPaths.Count == 0)
 				text = "All " + text;
+			if (skippedPaths.Count > 0)
+				text += "\nSkipped reports:";
+			skippedPaths.ForEach(path => text += $"\n- {path}");
+			if (failedPaths.Count > 0)
+				text += "\nFailed hand ins:";
+			failedPaths.ForEach(path => text += $"\n- {path}");
 			ThemedMessageBox.Show(ActiveTheme, text: text, title: "Hand in complete");
+		}
+
+		/// <summary>
+		/// Checks if a document at <paramref name="path"/> is open in <see cref="WordApp"/>
+		/// </summary>
+		/// <param name="path">Path of <see cref="Word.Document"/> to find</param>
+		/// <returns><see cref="Word.Document"/> if document is opened in <see cref="WordApp"/> and <see langword="null"/> otherwise</returns>
+		private Word.Document GetDocumentIfOpen(string path)
+		{
+			if (!HasWordStarted())
+				return null;
+			Word.Document document = null;
+			foreach (Word.Document doc in WordApp.Documents)
+			{
+				if (doc.Path == path || doc.Path == Path.Combine(ActivePath, "..", path))
+				{
+					document = doc;
+					break;
+				}
+			}
+			return document;
 		}
 
 		/// <summary>

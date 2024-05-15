@@ -158,6 +158,22 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Sets synchronization status of local report with IHK
+		/// </summary>
+		/// <param name="startDate"><see cref="DateTime"/> of report start date</param>
+		/// <param name="wasEdited">Status of synchronization with IHK</param>
+		public static void SetEdited(DateTime startDate, bool wasEdited)
+		{
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> reports))
+				return;
+			UploadedReport foundReport = reports.Values.ToList().Find(x => x.StartDate.Date == startDate.Date);
+			if (!(foundReport is UploadedReport toMark))
+				return;
+			toMark.WasEditedLocally = wasEdited;
+			Instance.Save();
+		}
+
+		/// <summary>
 		/// Loads the uploaded repor dictionary from file
 		/// </summary>
 		private void Load()
