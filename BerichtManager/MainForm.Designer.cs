@@ -54,6 +54,7 @@ namespace BerichtManager
 			this.miUploadAllSelected = new System.Windows.Forms.ToolStripMenuItem();
 			this.miHandInSingle = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRcHandInSelection = new System.Windows.Forms.ToolStripMenuItem();
+			this.miUpdateReport = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRefresh = new System.Windows.Forms.ToolStripMenuItem();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
 			this.rtbWork = new System.Windows.Forms.RichTextBox();
@@ -79,7 +80,6 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.miUpdateReport = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -178,12 +178,14 @@ namespace BerichtManager
 			this.miIHKOptions.Name = "miIHKOptions";
 			this.miIHKOptions.Size = new System.Drawing.Size(180, 22);
 			this.miIHKOptions.Text = "IHK";
+			this.miIHKOptions.ToolTipText = "All options for interactions with IHK";
 			// 
 			// miRcUpdateStatuses
 			// 
 			this.miRcUpdateStatuses.Name = "miRcUpdateStatuses";
 			this.miRcUpdateStatuses.Size = new System.Drawing.Size(180, 22);
 			this.miRcUpdateStatuses.Text = "Update statuses";
+			this.miRcUpdateStatuses.ToolTipText = "Update statuses of reports";
 			this.miRcUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
 			// 
 			// miUploadAsNext
@@ -191,6 +193,7 @@ namespace BerichtManager
 			this.miUploadAsNext.Name = "miUploadAsNext";
 			this.miUploadAsNext.Size = new System.Drawing.Size(180, 22);
 			this.miUploadAsNext.Text = "Upload";
+			this.miUploadAsNext.ToolTipText = "Upload the selected report as next report";
 			this.miUploadAsNext.Click += new System.EventHandler(this.miUploadAsNext_Click);
 			// 
 			// miUploadAllSelected
@@ -198,6 +201,7 @@ namespace BerichtManager
 			this.miUploadAllSelected.Name = "miUploadAllSelected";
 			this.miUploadAllSelected.Size = new System.Drawing.Size(180, 22);
 			this.miUploadAllSelected.Text = "Upload selection";
+			this.miUploadAllSelected.ToolTipText = "Upload all reports selected in following form";
 			this.miUploadAllSelected.Click += new System.EventHandler(this.miUploadAllSelected_Click);
 			// 
 			// miHandInSingle
@@ -205,6 +209,7 @@ namespace BerichtManager
 			this.miHandInSingle.Name = "miHandInSingle";
 			this.miHandInSingle.Size = new System.Drawing.Size(180, 22);
 			this.miHandInSingle.Text = "Hand in";
+			this.miHandInSingle.ToolTipText = "Hand in this report";
 			this.miHandInSingle.Click += new System.EventHandler(this.miHandInSingle_Click);
 			// 
 			// miRcHandInSelection
@@ -212,7 +217,16 @@ namespace BerichtManager
 			this.miRcHandInSelection.Name = "miRcHandInSelection";
 			this.miRcHandInSelection.Size = new System.Drawing.Size(180, 22);
 			this.miRcHandInSelection.Text = "Hand in selection";
+			this.miRcHandInSelection.ToolTipText = "Hand in all reports selected in following form";
 			this.miRcHandInSelection.Click += new System.EventHandler(this.HandInSelection);
+			// 
+			// miUpdateReport
+			// 
+			this.miUpdateReport.Name = "miUpdateReport";
+			this.miUpdateReport.Size = new System.Drawing.Size(180, 22);
+			this.miUpdateReport.Text = "Update report";
+			this.miUpdateReport.ToolTipText = "Upload local changes to IHK";
+			this.miUpdateReport.Click += new System.EventHandler(this.SendReportToIHK);
 			// 
 			// miRefresh
 			// 
@@ -377,26 +391,30 @@ namespace BerichtManager
 			this.miIHK.Name = "miIHK";
 			this.miIHK.Size = new System.Drawing.Size(180, 22);
 			this.miIHK.Text = "IHK";
+			this.miIHK.ToolTipText = "All options for interactions with IHK";
 			// 
 			// miUpdateStatuses
 			// 
 			this.miUpdateStatuses.Name = "miUpdateStatuses";
-			this.miUpdateStatuses.Size = new System.Drawing.Size(166, 22);
+			this.miUpdateStatuses.Size = new System.Drawing.Size(180, 22);
 			this.miUpdateStatuses.Text = "Update statuses";
+			this.miUpdateStatuses.ToolTipText = "Update statuses of reports";
 			this.miUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
 			// 
 			// miUploadSelection
 			// 
 			this.miUploadSelection.Name = "miUploadSelection";
-			this.miUploadSelection.Size = new System.Drawing.Size(166, 22);
+			this.miUploadSelection.Size = new System.Drawing.Size(180, 22);
 			this.miUploadSelection.Text = "Upload selection";
+			this.miUploadSelection.ToolTipText = "Upload all reports selected in following form";
 			this.miUploadSelection.Click += new System.EventHandler(this.miUploadAllSelected_Click);
 			// 
 			// miHandInSelection
 			// 
 			this.miHandInSelection.Name = "miHandInSelection";
-			this.miHandInSelection.Size = new System.Drawing.Size(166, 22);
+			this.miHandInSelection.Size = new System.Drawing.Size(180, 22);
 			this.miHandInSelection.Text = "Hand in selection";
+			this.miHandInSelection.ToolTipText = "Hand in all reports selected in following form";
 			this.miHandInSelection.Click += new System.EventHandler(this.HandInSelection);
 			// 
 			// miCloseReport
@@ -446,13 +464,6 @@ namespace BerichtManager
 			this.miClose.Text = "Close";
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
-			// 
-			// miUpdateReport
-			// 
-			this.miUpdateReport.Name = "miUpdateReport";
-			this.miUpdateReport.Size = new System.Drawing.Size(180, 22);
-			this.miUpdateReport.Text = "Update report";
-			this.miUpdateReport.Click += new System.EventHandler(this.SendReportToIHK);
 			// 
 			// MainForm
 			// 
