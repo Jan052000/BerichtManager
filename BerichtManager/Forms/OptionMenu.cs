@@ -80,7 +80,7 @@ namespace BerichtManager.Forms
 			tbNamingPattern.Text = ConfigHandler.NamingPattern();
 
 			//IHK
-			nudLastUploadedReportNumber.Value = ConfigHandler.LastIHKReportNr();
+			nudUploadDelay.Value = ConfigHandler.IHKUploadDelay();
 			tbJobField.Text = ConfigHandler.IHKJobField();
 			tbSupervisorMail.Text = ConfigHandler.IHKSupervisorEMail();
 			cbAutoSyncStatusesWithIHK.Checked = ConfigHandler.AutoSyncStatusesWithIHK();
@@ -223,7 +223,7 @@ namespace BerichtManager.Forms
 				ConfigHandler.PublishPath(tbUpdate.Text);
 			ConfigHandler.SaveConfig();
 			//IHK
-			ConfigHandler.LastIHKReportNr((int)nudLastUploadedReportNumber.Value);
+			ConfigHandler.IHKUploadDelay((int)nudUploadDelay.Value);
 			ConfigHandler.IHKJobField(tbJobField.Text);
 			ConfigHandler.IHKSupervisorEMail(tbSupervisorMail.Text);
 			ConfigHandler.AutoSyncStatusesWithIHK(cbAutoSyncStatusesWithIHK.Checked);

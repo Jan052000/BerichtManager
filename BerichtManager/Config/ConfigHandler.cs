@@ -81,7 +81,8 @@ namespace BerichtManager.Config
 			{"IHKStayLoggedIn", (Type.GetType("System.Boolean"), false)},
 			{"IHKJobField", (Type.GetType("System.String"), "")},
 			{"IHKSupervisorEMail", (Type.GetType("System.String"), "")},
-			{"IHKBaseUrl", (Type.GetType("System.String"), "https://www.bildung-ihk-nordwestfalen.de/")}
+			{"IHKBaseUrl", (Type.GetType("System.String"), "https://www.bildung-ihk-nordwestfalen.de/")},
+			{"IHKUploadDelay", (Type.GetType("System.Int32"), 500)}
 		};
 		#endregion
 
@@ -629,24 +630,6 @@ namespace BerichtManager.Config
 		}
 
 		/// <summary>
-		/// Gets the report number of the last uploaded report
-		/// </summary>
-		/// <returns>Report number of the last uploaded report</returns>
-		public int LastIHKReportNr()
-		{
-			return GenericGet<int>("LastIHKReportNr");
-		}
-
-		/// <summary>
-		/// Sets the report number of the last uploaded report
-		/// </summary>
-		/// <param name="lastHKReportNr">Report number of the last uploaded report</param>
-		public void LastIHKReportNr(int lastHKReportNr)
-		{
-			GenericSet("LastIHKReportNr", lastHKReportNr);
-		}
-
-		/// <summary>
 		/// Gets username for IHK login
 		/// </summary>
 		/// <returns>Username for IHK login</returns>
@@ -811,6 +794,24 @@ namespace BerichtManager.Config
 		public void IHKBaseUrl(string url)
 		{
 			GenericSet("IHKBaseUrl", url);
+		}
+
+		/// <summary>
+		/// Gets delay to be used between mass IHK uploads in ms
+		/// </summary>
+		/// <returns>Delay to be used between mass IHK uploads in ms</returns>
+		public int IHKUploadDelay()
+		{
+			return GenericGet<int>("IHKUploadDelay");
+		}
+
+		/// <summary>
+		/// Sets delay to be used between mass IHK uploads in ms
+		/// </summary>
+		/// <param name="delay">Delay between uploads in ms</param>
+		public void IHKUploadDelay(int delay)
+		{
+			GenericSet("IHKUploadDelay", delay);
 		}
 
 		private void SortConfig()

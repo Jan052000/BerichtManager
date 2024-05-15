@@ -1679,6 +1679,7 @@ namespace BerichtManager
 						return;
 				}
 				doc.Close(SaveChanges: false);
+				await Task.Delay(ConfigHandler.IHKUploadDelay());
 			}
 
 			OpenAllDocuments(openReports, activePath);
@@ -2014,6 +2015,7 @@ namespace BerichtManager
 				needsUpdate = true;
 				handedIn++;
 				UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.HandedIn, report.LfdNR);
+				await Task.Delay(ConfigHandler.IHKUploadDelay());
 			}
 
 			if (!needsUpdate)
