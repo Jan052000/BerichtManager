@@ -12,7 +12,7 @@ namespace BerichtManager.UploadChecking
 		/// <summary>
 		/// Path to directory containing config file
 		/// </summary>
-		private static string ConfigFolderPath { get; } = Environment.CurrentDirectory + "\\Config";
+		private static string ConfigFolderPath { get; } = Path.Combine(Environment.CurrentDirectory, "Config");
 		/// <summary>
 		/// Name of config file
 		/// </summary>
@@ -192,7 +192,7 @@ namespace BerichtManager.UploadChecking
 		/// </summary>
 		private void Save()
 		{
-			File.WriteAllText(FullPath, JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate}));
+			File.WriteAllText(FullPath, JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate }));
 		}
 	}
 }
