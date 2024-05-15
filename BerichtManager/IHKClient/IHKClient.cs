@@ -363,8 +363,7 @@ namespace BerichtManager.IHKClient
 				throw new NoFormFoundException();
 			if (!FindAllInputInElement(doc.Forms[0], out List<HtmlElement> inputs))
 				throw new NoInputsFoundException();
-			//IHK always sends an extra field which has nothing to do with the report
-			if (inputs.Count - report.ReportContent.GetType().GetProperties().Length > 1)
+			if (inputs.Count - report.ReportContent.GetType().GetProperties().Length != 0)
 			{
 				foreach (HtmlElement htmlElement in inputs)
 				{
@@ -422,8 +421,9 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <param name="root"><see cref="HtmlElement"/> root of form or element to check</param>
 		/// <param name="inputs"><see cref="List{T}"/> of <see cref="HtmlElement"/> inputs</param>
+		/// <param name="addDisabled"><see langword="true"/> to add disabled html elements to output</param>
 		/// <returns><see langword="true"/> if any inputs were found and <see langword="false"/> otherwise</returns>
-		private bool FindAllInputInElement(HtmlElement root, out List<HtmlElement> inputs)
+		private bool FindAllInputInElement(HtmlElement root, out List<HtmlElement> inputs, bool addDisabled = false)
 		{
 			inputs = new List<HtmlElement>();
 			foreach (HtmlElement element in root.Children)
@@ -434,6 +434,8 @@ namespace BerichtManager.IHKClient
 				{
 					if (FindAllInputInElement(element, out List<HtmlElement> childInputs))
 					{
+						if (!addDisabled)
+							childInputs = childInputs.Where(x => x.Enabled).ToList();
 						inputs.AddRange(childInputs);
 					}
 				}
