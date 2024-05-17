@@ -2018,12 +2018,13 @@ namespace BerichtManager
 				await Task.Delay(ConfigHandler.IHKUploadDelay());
 			}
 
-			if (!needsUpdate)
+			if (reports.Count == 0)
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: "All reports were already handed in", title: "Hand in complete");
 				return;
 			}
-			UpdateTree();
+			if (needsUpdate)
+				UpdateTree();
 			string text = $"{handedIn} / {reports.Count} reports were successfully handed in";
 			if (handedIn == reports.Count && skippedPaths.Count == 0)
 				text = "All " + text;
