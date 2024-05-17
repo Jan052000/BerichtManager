@@ -91,6 +91,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\EventProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EventProgressForm.Designer.cs">
+      <DependentUpon>EventProgressForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="HelperClasses\FolderSelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +200,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectEditFrom.resx">
       <DependentUpon>SelectEditFrom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EventProgressForm.resx">
+      <DependentUpon>EventProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HelperClasses\FolderSelect.resx">
       <DependentUpon>FolderSelect.cs</DependentUpon>

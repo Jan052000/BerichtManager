@@ -1625,6 +1625,9 @@ namespace BerichtManager
 				return;
 			if (ThemedMessageBox.Show(ActiveTheme, text: "Warning, this will upload all reports selected in the next window in the order they appear!\nDo you want to proceed?", title: "Caution", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
+			EventProgressForm progressForm = new EventProgressForm("Upload progress");
+			bool shouldStop = false;
+			progressForm.FormClosed += (s, ev) => shouldStop = true;
 
 			List<string> files = new List<string>();
 			if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
@@ -1634,6 +1637,7 @@ namespace BerichtManager
 			if (fs.ShowDialog() != DialogResult.OK)
 				return;
 			ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
+			progressForm.Status = $"Uploading {reports.Count} reports";
 
 			string activePath = "";
 			try
@@ -1641,23 +1645,30 @@ namespace BerichtManager
 				activePath = Path.Combine(Doc?.Path, Doc?.Name);
 			}
 			catch { }
+			progressForm.Status = "Closing open reports";
 			List<string> openReports = CloseAllReports();
 
 			foreach (TreeNode report in reports)
 			{
 				string nodePath = GetFullNodePath(report);
 				string path = Path.Combine(ActivePath, "..", nodePath);
+
+				progressForm.Status = $"Uploading {nodePath}";
+
 				Word.Document doc = WordApp.Documents.Open(path);
 				if (doc.FormFields.Count < 10)
 				{
+					progressForm.Status = $"Uploading aborted: Invalid dcument";
 					ThemedMessageBox.Show(ActiveTheme, text: $"Invalid document, please add missing form fields to {path}.\nUploading is stopped", title: "Invalid document");
 					doc.Close(SaveChanges: false);
 					OpenAllDocuments(openReports, activePath);
 					return;
 				}
+				progressForm.Status = $"Uploading {reports.Count}:";
 				UploadResult result = await TryUploadReportToIHK(doc);
 				if (result == null)
 				{
+					progressForm.Status = $"Uploading aborted: upload failed";
 					ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
 					doc.Close(SaveChanges: false);
 					OpenAllDocuments(openReports, activePath);
@@ -1672,19 +1683,30 @@ namespace BerichtManager
 						ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
 						doc.Close(SaveChanges: false);
 						OpenAllDocuments(openReports, activePath);
+						progressForm.Status = $"Abort: Unauthorized";
 						return;
 					default:
 						ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
 						doc.Close(SaveChanges: false);
 						OpenAllDocuments(openReports, activePath);
+						progressForm.Status = $"Abort: Upload failed";
 						return;
 				}
 				doc.Close(SaveChanges: false);
+
+				if (shouldStop)
+				{
+					progressForm.Status = $"Stopping";
+					break;
+				}
+
 				await Task.Delay(ConfigHandler.IHKUploadDelay());
 			}
 
+			progressForm.Status = "Opening closed reports";
 			OpenAllDocuments(openReports, activePath);
-
+			progressForm.Status = $"Done";
+			progressForm.Done();
 			string text = "";
 			if (reports.Count == 1)
 				text = "Upload of report was succesful";
@@ -1913,6 +1935,9 @@ namespace BerichtManager
 		{
 			if (ThemedMessageBox.Show(ActiveTheme, text: "Warning, this will hand in all reports selected in the next window in the order they appear!\nDo you want to proceed?", title: "Caution", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
+			EventProgressForm progressForm = new EventProgressForm("Hand in progress");
+			bool shouldStop = false;
+			progressForm.FormClosed += (s, ev) => shouldStop = true;
 
 			List<string> files = new List<string>();
 			if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
@@ -1937,20 +1962,24 @@ namespace BerichtManager
 			{
 				string nodePath = GetFullNodePath(reportNode);
 				string fullPath = Path.GetFullPath(Path.Combine(ActivePath, "..", nodePath));
+				progressForm.Status = $"Handing in {fullPath}:";
 				//Final fail save
 				if (!uploadedPaths.TryGetValue(nodePath, out UploadedReport report))
 				{
 					ThemedMessageBox.Show(ActiveTheme, text: $"Report {fullPath} was not uploaded and could not be handed in as a result", title: "Hand in failed");
+					progressForm.Status = "\t- skipped: Not uploaded";
 					continue;
 				}
 				if (report.Status != ReportNode.UploadStatuses.Uploaded)
 				{
 					ThemedMessageBox.Show(ActiveTheme, text: $"Report {fullPath} could not be handed in due to its upload status", title: "Hand in failed");
+					progressForm.Status = "\t- skipped: Can not be handed in";
 					continue;
 				}
 				if (!(report.LfdNR is int lfdnr))
 				{
 					ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {fullPath} could not be read and report could not be handed in as a result", title: "Hand in failed");
+					progressForm.Status = "\t- skipped: Unable to read lfdnr";
 					continue;
 				}
 				//Prevent unsaved changes from being left locally
@@ -1972,6 +2001,7 @@ namespace BerichtManager
 					if (!autoUpdateAllChanges)
 					{
 						skippedPaths.Add(fullPath);
+						progressForm.Status = "\t- skipped: Unsaved changes";
 						continue;
 					}
 
@@ -1984,6 +2014,7 @@ namespace BerichtManager
 						shouldClose = true;
 					}
 
+					progressForm.Status = "\t- Uploading changes";
 					UploadResult result = await TryUpdateReport(doc, lfdnr);
 
 					//Close report if it was not opened before
@@ -1993,31 +2024,57 @@ namespace BerichtManager
 					if (result == null)
 					{
 						ThemedMessageBox.Show(ActiveTheme, text: "Update of report failed, hand in was skipped", title: "Hand in skipped");
+						progressForm.Status = "\t- skipped: Uploading changes failed";
 						return;
 					}
 
 					if (result.Result != CreateResults.Success)
 					{
 						if (ThemedMessageBox.Show(ActiveTheme, text: $"Update of report {fullPath} failed, do you want to continue trying to hand in reports?", title: "Update failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+						{
+							progressForm.Status = "\t- skipped: Uploading changes failed";
 							break;
+						}
 						else
+						{
+							progressForm.Status = "Abort hand in: Update failed";
 							continue;
+						}
 					}
+
 				}
 
+				progressForm.Status = "\t- Handing in";
 				if (!await TryHandIn(lfdnr))
 				{
 					failedPaths.Add(fullPath);
 					if (ThemedMessageBox.Show(ActiveTheme, text: $"Hand in of report {fullPath} failed, do you want to continue trying to hand in reports?", title: "Hand in failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+					{
+						progressForm.Status = "\t- skipped: Hand in failed";
 						break;
+					}
 					else
+					{
+						progressForm.Status = "Abort hand in: hand in failed";
 						continue;
+					}
 				}
 				needsUpdate = true;
 				handedIn++;
+				progressForm.Status = "\t- Updating status";
 				UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.HandedIn, report.LfdNR);
+
+				if (shouldStop)
+				{
+					progressForm.Status = "Stopped";
+					break;
+				}
+
 				await Task.Delay(ConfigHandler.IHKUploadDelay());
+				progressForm.Status = "\t- Success";
 			}
+			progressForm.Status = "Done";
+			progressForm.EventsText += "\nDone";
 
 			if (reports.Count == 0)
 			{
@@ -2035,6 +2092,7 @@ namespace BerichtManager
 			if (failedPaths.Count > 0)
 				text += "\nFailed hand ins:";
 			failedPaths.ForEach(path => text += $"\n- {path}");
+			progressForm.Done();
 			ThemedMessageBox.Show(ActiveTheme, text: text, title: "Hand in complete");
 		}
 
