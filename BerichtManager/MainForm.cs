@@ -1638,7 +1638,7 @@ namespace BerichtManager
 			string activePath = "";
 			try
 			{
-				activePath = Doc?.Path;
+				activePath = Path.Combine(Doc?.Path, Doc?.Name);
 			}
 			catch { }
 			List<string> openReports = CloseAllReports();
