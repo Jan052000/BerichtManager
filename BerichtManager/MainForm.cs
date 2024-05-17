@@ -1645,8 +1645,9 @@ namespace BerichtManager
 
 			foreach (TreeNode report in reports)
 			{
-				string path = Path.GetFullPath($"{ConfigHandler.ReportPath()}\\..\\{GetFullNodePath(report)}");
-				Word.Document doc = WordApp.Documents.Open(Path.GetFullPath(path));
+				string nodePath = GetFullNodePath(report);
+				string path = Path.Combine(ActivePath, "..", nodePath);
+				Word.Document doc = WordApp.Documents.Open(path);
 				if (doc.FormFields.Count < 10)
 				{
 					ThemedMessageBox.Show(ActiveTheme, text: $"Invalid document, please add missing form fields to {path}.\nUploading is stopped", title: "Invalid document");
@@ -1665,7 +1666,7 @@ namespace BerichtManager
 				switch (result.Result)
 				{
 					case CreateResults.Success:
-						UploadedReports.Instance.AddReport(GetFullNodePath(report), new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
+						UploadedReports.Instance.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 						break;
 					case CreateResults.Unauthorized:
 						ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
