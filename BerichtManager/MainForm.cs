@@ -1629,7 +1629,7 @@ namespace BerichtManager
 			return Task.Run(async () =>
 			{
 				bool shouldStop = false;
-				progressForm.FormClosed += (s, ev) => shouldStop = true;
+				progressForm.Stop += () => shouldStop = true;
 
 				List<string> files = new List<string>();
 				if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
@@ -1955,7 +1955,7 @@ namespace BerichtManager
 			return Task.Run(async () =>
 			{
 				bool shouldStop = false;
-				progressForm.FormClosed += (s, ev) => shouldStop = true;
+				progressForm.Stop += () => shouldStop = true;
 
 				List<string> files = new List<string>();
 				if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
