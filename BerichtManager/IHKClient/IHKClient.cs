@@ -325,12 +325,13 @@ namespace BerichtManager.IHKClient
 					List<string> classes = element.GetAttribute("className").Trim().Split(' ').ToList();
 					hasAllClasses &= classes.Count == selector.Classes.Count;
 					if (hasAllClasses)
+					{
 						classes.ForEach(cssClass =>
 						{
 							hasAllClasses &= selector.Classes.Contains(cssClass);
 						});
-					if (hasAllClasses)
 						selected.Add(element);
+					}
 				}
 			});
 
