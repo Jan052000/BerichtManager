@@ -202,7 +202,7 @@ namespace BerichtManager
 			this.miUploadAllSelected.Size = new System.Drawing.Size(166, 22);
 			this.miUploadAllSelected.Text = "Upload selection";
 			this.miUploadAllSelected.ToolTipText = "Upload all reports selected in following form";
-			this.miUploadAllSelected.Click += new System.EventHandler(this.miUploadAllSelected_Click);
+			this.miUploadAllSelected.Click += new System.EventHandler(this.UploadSelectionClick);
 			// 
 			// miHandInSingle
 			// 
@@ -218,7 +218,7 @@ namespace BerichtManager
 			this.miRcHandInSelection.Size = new System.Drawing.Size(166, 22);
 			this.miRcHandInSelection.Text = "Hand in selection";
 			this.miRcHandInSelection.ToolTipText = "Hand in all reports selected in following form";
-			this.miRcHandInSelection.Click += new System.EventHandler(this.HandInSelection);
+			this.miRcHandInSelection.Click += new System.EventHandler(this.HandInSelectionClick);
 			// 
 			// miUpdateReport
 			// 
@@ -407,7 +407,7 @@ namespace BerichtManager
 			this.miUploadSelection.Size = new System.Drawing.Size(166, 22);
 			this.miUploadSelection.Text = "Upload selection";
 			this.miUploadSelection.ToolTipText = "Upload all reports selected in following form";
-			this.miUploadSelection.Click += new System.EventHandler(this.miUploadAllSelected_Click);
+			this.miUploadSelection.Click += new System.EventHandler(this.UploadSelectionClick);
 			// 
 			// miHandInSelection
 			// 
@@ -415,7 +415,7 @@ namespace BerichtManager
 			this.miHandInSelection.Size = new System.Drawing.Size(166, 22);
 			this.miHandInSelection.Text = "Hand in selection";
 			this.miHandInSelection.ToolTipText = "Hand in all reports selected in following form";
-			this.miHandInSelection.Click += new System.EventHandler(this.HandInSelection);
+			this.miHandInSelection.Click += new System.EventHandler(this.HandInSelectionClick);
 			// 
 			// miCloseReport
 			// 
