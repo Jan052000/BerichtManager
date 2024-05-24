@@ -5,7 +5,6 @@ using System.Net;
 using BerichtManager.Config;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Reflection;
 using BerichtManager.IHKClient.Exceptions;
 using Word = Microsoft.Office.Interop.Word;
@@ -13,6 +12,8 @@ using BerichtManager.HelperClasses;
 using System.Text.RegularExpressions;
 using BerichtManager.UploadChecking;
 using System.Globalization;
+using System.Threading;
+using BerichtManager.HelperClasses.HtmlClasses;
 
 namespace BerichtManager.IHKClient
 {
@@ -238,7 +239,7 @@ namespace BerichtManager.IHKClient
 					return;
 				if (!new ReportStatuses().TryGetValue(rows[(int)ReportElementFields.Status].InnerText.Trim(), out ReportNode.UploadStatuses status))
 					return;
-				if (ExtractLfdNr(rows[(int)ReportElementFields.ButtonAction].InnerHtml.Trim(), out int? lfdnr))
+				if (ExtractLfdNr(rows[(int)ReportElementFields.ButtonAction].InnerHTML.Trim(), out int? lfdnr))
 					uploadedReports.Add(new UploadedReport(startDate, status: status, lfdNr: lfdnr));
 			});
 			return uploadedReports;
@@ -305,7 +306,7 @@ namespace BerichtManager.IHKClient
 			if (cssSelector.Contains(' '))
 				cssSelector = cssSelector.Replace(" ", "");
 			List<Selector> selectors = new List<Selector>();
-
+			//(?<Tag>.+?[^\.](?=\.))(?<Classes>(?=\.).+?[^\.])*?(?> +|$|#)
 			Regex select = new Regex("((?<Tag>.+?(?=\\.|>|\\ |$))(?<Classes>\\..+?)*?)(( *> *)|\\ |$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 			foreach (Match match in select.Matches(cssSelector))
 			{
@@ -319,10 +320,10 @@ namespace BerichtManager.IHKClient
 
 			selectors.ForEach(selector =>
 			{
-				foreach (HtmlElement element in root.GetElementsByTagName(selector.TagName))
+				foreach (HtmlElement element in root.GetElementsByTag(selector.TagName))
 				{
 					bool hasAllClasses = true;
-					List<string> classes = element.GetAttribute("className").Trim().Split(' ').ToList();
+					List<string> classes = element.Classes;
 					hasAllClasses &= classes.Count == selector.Classes.Count;
 					if (hasAllClasses)
 					{
@@ -403,14 +404,14 @@ namespace BerichtManager.IHKClient
 				//Fill props with values from input
 				matchingProps.ForEach(prop =>
 				{
-					switch (input.GetAttribute("type").ToLower())
+					switch (input.Type.ToLower())
 					{
 						case "file":
 							//Uploading files is not implemented
 							prop.SetValue(report.ReportContent, new byte[0]);
 							break;
 						default:
-							prop.SetValue(report.ReportContent, Convert.ChangeType(input.GetAttribute("value"), prop.PropertyType));
+							prop.SetValue(report.ReportContent, Convert.ChangeType(input.Value, prop.PropertyType));
 							break;
 					}
 				});
@@ -429,7 +430,7 @@ namespace BerichtManager.IHKClient
 			inputs = new List<HtmlElement>();
 			foreach (HtmlElement element in root.Children)
 			{
-				if (element.TagName.Equals("input", StringComparison.CurrentCultureIgnoreCase) || element.TagName.Equals("textarea", StringComparison.CurrentCultureIgnoreCase))
+				if (element.Tag.Equals("input", StringComparison.CurrentCultureIgnoreCase) || element.Tag.Equals("textarea", StringComparison.CurrentCultureIgnoreCase))
 					inputs.Add(element);
 				else
 				{
@@ -504,7 +505,7 @@ namespace BerichtManager.IHKClient
 			if (!(inputs.Find(element => element.Name == "token") is HtmlElement tokenElement))
 				throw new InputFieldsMismatchException();
 
-			response = await PostAndRefer("tibrosBB/azubiHeftEintragSenden.jsp", new FormUrlEncodedContent(new Dictionary<string, string> { { "token", tokenElement.GetAttribute("value") }, { "senden", "" } }));
+			response = await PostAndRefer("tibrosBB/azubiHeftEintragSenden.jsp", new FormUrlEncodedContent(new Dictionary<string, string> { { "token", tokenElement.Value }, { "senden", "" } }));
 			if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.Found)
 				return false;
 
@@ -611,13 +612,22 @@ namespace BerichtManager.IHKClient
 		/// <returns>Parsed <see cref="HtmlDocument"/></returns>
 		private HtmlDocument GetHtmlDocument(string html)
 		{
-			WebBrowser browser = new WebBrowser();
-			browser.ScriptErrorsSuppressed = true;
-			browser.DocumentText = html;
-			browser.Document.OpenNew(true);
-			browser.Document.Write(html);
-			browser.Refresh();
-			return browser.Document;
+			HtmlDocument result = null;
+			Thread browserThread = new Thread(() =>
+			{
+				System.Windows.Forms.WebBrowser browser = new System.Windows.Forms.WebBrowser();
+				browser.ScriptErrorsSuppressed = true;
+				browser.DocumentText = html;
+				browser.Document.OpenNew(true);
+				browser.Document.Write(html);
+				browser.Refresh();
+				result = new HtmlDocument(browser.Document);
+				var s = browser.Document.GetElementsByTagName("div");
+			});
+			browserThread.SetApartmentState(ApartmentState.STA);
+			browserThread.Start();
+			browserThread.Join();
+			return result;
 		}
 	}
 }

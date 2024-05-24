@@ -1635,7 +1635,10 @@ namespace BerichtManager
 				if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
 					files = uploadedPaths.Keys.ToList();
 
-				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node => files.Contains(GetFullNodePath(node)));
+				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
+				{
+					return files.Contains(GetFullNodePath(node)) || (!ReportFinder.IsReportNameValid(node.Text) && node.Nodes.Count == 0);
+				});
 				if (fs.ShowDialog() != DialogResult.OK)
 					return;
 				ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
@@ -1715,7 +1718,13 @@ namespace BerichtManager
 				else
 					text = $"Upload of all {reports.Count} reports was successful";
 				ThemedMessageBox.Show(ActiveTheme, text: text, title: "Upload finished");
-				UpdateTree();
+				if (InvokeRequired)
+					BeginInvoke(new MethodInvoker(() =>
+					{
+						UpdateTree();
+					}));
+				else
+					UpdateTree();
 			});
 		}
 
@@ -2100,7 +2109,15 @@ namespace BerichtManager
 					return;
 				}
 				if (needsUpdate)
-					UpdateTree();
+				{
+					if (InvokeRequired)
+						BeginInvoke(new MethodInvoker(() =>
+						{
+							UpdateTree();
+						}));
+					else
+						UpdateTree();
+				}
 				string text = $"{handedIn} / {reports.Count} reports were successfully handed in";
 				if (handedIn == reports.Count && skippedPaths.Count == 0)
 					text = "All " + text;

@@ -88,9 +88,19 @@ namespace BerichtManager.Forms
 		public void Done()
 		{
 			ShouldClose = true;
-			btStop.Text = "Close";
-			btStop.Click -= btStop_Click;
-			btStop.Click += (s, e) => Close();
+			if (btStop.InvokeRequired)
+				btStop.BeginInvoke(new MethodInvoker(() =>
+				{
+					btStop.Text = "Close";
+					btStop.Click -= btStop_Click;
+					btStop.Click += (s, e) => Close();
+				}));
+			else
+			{
+				btStop.Text = "Close";
+				btStop.Click -= btStop_Click;
+				btStop.Click += (s, e) => Close();
+			}
 			DialogResult = DialogResult.OK;
 		}
 
