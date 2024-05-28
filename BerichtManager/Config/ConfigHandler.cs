@@ -82,7 +82,8 @@ namespace BerichtManager.Config
 			{"IHKJobField", (Type.GetType("System.String"), "")},
 			{"IHKSupervisorEMail", (Type.GetType("System.String"), "")},
 			{"IHKBaseUrl", (Type.GetType("System.String"), "https://www.bildung-ihk-nordwestfalen.de/")},
-			{"IHKUploadDelay", (Type.GetType("System.Int32"), 500)}
+			{"IHKUploadDelay", (Type.GetType("System.Int32"), 500)},
+			{"IHKCheckMatchingStartDates", (Type.GetType("System.Boolean"), true)}
 		};
 		#endregion
 
@@ -812,6 +813,24 @@ namespace BerichtManager.Config
 		public void IHKUploadDelay(int delay)
 		{
 			GenericSet("IHKUploadDelay", delay);
+		}
+
+		/// <summary>
+		/// Gets flag for if IHK report creation should check for matching start dates
+		/// </summary>
+		/// <returns>If IHK report creation should check for matching start dates</returns>
+		public bool IHKCheckMatchingStartDates()
+		{
+			return GenericGet<bool>("IHKCheckMatchingStartDates");
+		}
+
+		/// <summary>
+		/// Sets flag for if IHK report creation should check for matching start dates
+		/// </summary>
+		/// <param name="checkMatchingStartDates">If IHK report creation should check for matching start dates</param>
+		public void IHKCheckMatchingStartDates(bool checkMatchingStartDates)
+		{
+			GenericSet("IHKCheckMatchingStartDates", checkMatchingStartDates);
 		}
 
 		private void SortConfig()

@@ -77,6 +77,7 @@ namespace BerichtManager.Forms
 			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.cbIHKCheckMatchingStartDates = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
@@ -364,6 +365,7 @@ namespace BerichtManager.Forms
 			// gbIHK
 			// 
 			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbIHK.Controls.Add(this.cbIHKCheckMatchingStartDates);
 			this.gbIHK.Controls.Add(this.laIHKBaseUrl);
 			this.gbIHK.Controls.Add(this.tbIHKBaseUrl);
 			this.gbIHK.Controls.Add(this.cbAutoSyncStatusesWithIHK);
@@ -645,6 +647,19 @@ namespace BerichtManager.Forms
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
+			// cbIHKCheckMatchingStartDates
+			// 
+			this.cbIHKCheckMatchingStartDates.AutoSize = true;
+			this.cbIHKCheckMatchingStartDates.Location = new System.Drawing.Point(276, 118);
+			this.cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
+			this.cbIHKCheckMatchingStartDates.Size = new System.Drawing.Size(205, 17);
+			this.cbIHKCheckMatchingStartDates.TabIndex = 55;
+			this.cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
+			this.toolTip1.SetToolTip(this.cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is" +
+        " the same as the report");
+			this.cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
+			this.cbIHKCheckMatchingStartDates.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -728,5 +743,6 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.CheckBox cbAutoSyncStatusesWithIHK;
 		private System.Windows.Forms.Label laIHKBaseUrl;
 		private System.Windows.Forms.TextBox tbIHKBaseUrl;
+		private System.Windows.Forms.CheckBox cbIHKCheckMatchingStartDates;
 	}
 }

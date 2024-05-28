@@ -343,11 +343,12 @@ namespace BerichtManager.IHKClient
 		/// Creates and saves the report on IHK online campus
 		/// </summary>
 		/// <param name="document"><see cref="Word.Document"/> to upload</param>
+		/// <param name="checkMatchingStartDates">If IHK report creation should check for matching start dates</param>
 		/// <returns><see cref="UploadResult"/> object containing status and start date of report</returns>
 		/// <inheritdoc cref="CreateOrEditReport(Word.Document, int)" path="/exception"/>
-		public async Task<UploadResult> CreateReport(Word.Document document)
+		public async Task<UploadResult> CreateReport(Word.Document document, bool checkMatchingStartDates = false)
 		{
-			return await CreateOrEditReport(document);
+			return await CreateOrEditReport(document, checkMatchingStartDates: checkMatchingStartDates);
 		}
 
 		/// <summary>
@@ -535,11 +536,12 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <param name="document"><see cref="Word.Document"/> to use for content</param>
 		/// <param name="lfdnr">Number of report on IHK servers if it should be edited</param>
+		/// <param name="checkMatchingStartDates">If IHK report creation should check for matching start dates</param>
 		/// <returns><see cref="UploadResult"/></returns>
 		/// <inheritdoc cref="FillReportContent(Report, HtmlDocument)" path="/exception"/>
-		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document)" path="/exception"/>
+		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document, Report, bool)" path="/exception"/>
 		/// <exception cref="HttpRequestException"></exception>
-		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int lfdnr = -1)
+		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int lfdnr = -1, bool checkMatchingStartDates = false)
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
@@ -559,7 +561,7 @@ namespace BerichtManager.IHKClient
 			Report report = new Report();
 			FillReportContent(report, doc);
 			//Overwrite contents from IHK
-			ReportTransformer.WordToIHK(document, report);
+			ReportTransformer.WordToIHK(document, report, checkMatchingStartDates);
 			MultipartFormDataContent content = GetMultipartFormDataContent(report.ReportContent);
 			//Add necessary save parameter IHK needs to save reports
 			StringContent save = new StringContent("");

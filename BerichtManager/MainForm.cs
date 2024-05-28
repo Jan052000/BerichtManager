@@ -18,6 +18,7 @@ using BerichtManager.UploadChecking;
 using System.Linq;
 using BerichtManager.IHKClient;
 using System.Net.Http;
+using BerichtManager.IHKClient.Exceptions;
 
 namespace BerichtManager
 {
@@ -1541,12 +1542,17 @@ namespace BerichtManager
 		{
 			try
 			{
-				return await IHKClient.CreateReport(doc);
+				return await IHKClient.CreateReport(doc, ConfigHandler.IHKCheckMatchingStartDates());
 			}
 			catch (HttpRequestException ex)
 			{
 				Logger.LogError(ex);
 				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+				return null;
+			}
+			catch (StartDateMismatchException ex)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: ex.Message, title: ex.GetType().Name);
 				return null;
 			}
 			catch (Exception ex)
