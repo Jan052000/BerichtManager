@@ -222,7 +222,6 @@ namespace BerichtManager.Forms
 			}
 			if (ConfigHandler.PublishPath() != tbUpdate.Text)
 				ConfigHandler.PublishPath(tbUpdate.Text);
-			ConfigHandler.SaveConfig();
 			//IHK
 			ConfigHandler.IHKUploadDelay((int)nudUploadDelay.Value);
 			ConfigHandler.IHKJobField(tbJobField.Text);
@@ -232,6 +231,8 @@ namespace BerichtManager.Forms
 				IHKBaseAddressChanged();
 			ConfigHandler.IHKBaseUrl(tbIHKBaseUrl.Text);
 			ConfigHandler.IHKCheckMatchingStartDates(cbIHKCheckMatchingStartDates.Checked);
+
+			ConfigHandler.SaveConfig();
 		}
 
 		/// <summary>
