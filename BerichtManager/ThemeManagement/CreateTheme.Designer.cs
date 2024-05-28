@@ -95,7 +95,7 @@
 			this.laTBDisabledBackColor.Name = "laTBDisabledBackColor";
 			this.laTBDisabledBackColor.Size = new System.Drawing.Size(141, 13);
 			this.laTBDisabledBackColor.TabIndex = 2;
-			this.laTBDisabledBackColor.Text = "TextBox disable dback color";
+			this.laTBDisabledBackColor.Text = "TextBox disabled back color";
 			// 
 			// laTBBorderColor
 			// 
