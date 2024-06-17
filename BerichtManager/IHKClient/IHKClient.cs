@@ -150,16 +150,15 @@ namespace BerichtManager.IHKClient
 			HttpResponseMessage response = await GetAndRefer(path);
 			if (!response.IsSuccessStatusCode)
 				return false;
-			if (response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
-			{
-				if (setCookies.Count() == 0)
-					return false;
-				List<Cookie> cookies = CookieContainer.GetCookies(FromRelativeUri(path)).Cast<Cookie>().ToList();
-				if (cookies.Count == 0)
-					return false;
-				cookies.ForEach(cookie => HttpClient.DefaultRequestHeaders.Add("Cookie", cookie.ToString()));
-				HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(path);
-			}
+			if (!response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
+				return false;
+			if (setCookies.Count() == 0)
+				return false;
+			List<Cookie> cookies = CookieContainer.GetCookies(FromRelativeUri(path)).Cast<Cookie>().ToList();
+			if (cookies.Count == 0)
+				return false;
+			cookies.ForEach(cookie => HttpClient.DefaultRequestHeaders.Add("Cookie", cookie.ToString()));
+			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(path);
 			return true;
 		}
 
