@@ -202,12 +202,23 @@ namespace BerichtManager
 		/// </summary>
 		private void UpdateTree()
 		{
-			tvReports.Nodes.Clear();
-			TreeNode root = CreateDirectoryNode(Info);
-			tvReports.Nodes.Add(root);
-			FillStatuses(root);
-			MarkEdited(root);
-			tvReports.Sort();
+			void update()
+			{
+				tvReports.Nodes.Clear();
+				TreeNode root = CreateDirectoryNode(Info);
+				tvReports.Nodes.Add(root);
+				FillStatuses(root);
+				MarkEdited(root);
+				tvReports.Sort();
+			}
+
+			if (InvokeRequired)
+				BeginInvoke(new MethodInvoker(() =>
+				{
+					update();
+				}));
+			else
+				update();
 		}
 
 		/// <summary>
@@ -1724,13 +1735,7 @@ namespace BerichtManager
 				else
 					text = $"Upload of all {reports.Count} reports was successful";
 				ThemedMessageBox.Show(ActiveTheme, text: text, title: "Upload finished");
-				if (InvokeRequired)
-					BeginInvoke(new MethodInvoker(() =>
-					{
-						UpdateTree();
-					}));
-				else
-					UpdateTree();
+				UpdateTree();
 			});
 		}
 
@@ -2115,15 +2120,7 @@ namespace BerichtManager
 					return;
 				}
 				if (needsUpdate)
-				{
-					if (InvokeRequired)
-						BeginInvoke(new MethodInvoker(() =>
-						{
-							UpdateTree();
-						}));
-					else
-						UpdateTree();
-				}
+					UpdateTree();
 				string text = $"{handedIn} / {reports.Count} reports were successfully handed in";
 				if (handedIn == reports.Count && skippedPaths.Count == 0)
 					text = "All " + text;
