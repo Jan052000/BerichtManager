@@ -2026,7 +2026,7 @@ namespace BerichtManager
 						//Check if changes should be uploaded or not
 						if (!updateSet)
 						{
-							autoUpdateAllChanges = ThemedMessageBox.Show(ActiveTheme, text: "Should all local changes be uploaded to IHK?", title: "Automatically upload changes?") == DialogResult.Yes;
+							autoUpdateAllChanges = ThemedMessageBox.Show(ActiveTheme, text: "Should all local changes be uploaded to IHK?", title: "Automatically upload changes?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes;
 							updateSet = true;
 						}
 
