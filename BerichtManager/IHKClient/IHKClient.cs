@@ -37,7 +37,7 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// Base url for IHK endpoint
 		/// </summary>
-		private string BASEURL { get => ConfigHandler.Instance.IHKBaseUrl(); }
+		private string BASEURL { get => ConfigHandler.Instance.IHKBaseUrl; }
 		/// <summary>
 		/// Wether or not the client is logged in
 		/// </summary>
@@ -176,8 +176,8 @@ namespace BerichtManager.IHKClient
 				return false;
 
 			string uri = "tibrosBB/azubiHome.jsp";
-			string username = ConfigHandler.Instance.IHKUserName();
-			string password = ConfigHandler.Instance.IHKPassword();
+			string username = ConfigHandler.Instance.IHKUserName;
+			string password = ConfigHandler.Instance.IHKPassword;
 			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
 			{
 				User user = ConfigHandler.Instance.DoIHKLogin();

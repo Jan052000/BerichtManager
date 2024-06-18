@@ -55,12 +55,12 @@ namespace BerichtManager.Forms
 			}
 			else
 			{
-				nudFontSize.Value = (decimal)ConfigHandler.EditorFontSize();
-				cbFontFamily.Text = ConfigHandler.EditorFont();
-				rtInput.Font = new Font(ConfigHandler.EditorFont(), (float)nudFontSize.Value);
+				nudFontSize.Value = (decimal)ConfigHandler.EditorFontSize;
+				cbFontFamily.Text = ConfigHandler.EditorFont;
+				rtInput.Font = new Font(ConfigHandler.EditorFont, (float)nudFontSize.Value);
 				for (int i = 1; tabstops.Count < 32; i++)
 				{
-					tabstops.Add(i * ConfigHandler.TabStops());
+					tabstops.Add(i * ConfigHandler.TabStops);
 				}
 			}
 			foreach (FontFamily family in (new InstalledFontCollection()).Families)
@@ -89,13 +89,13 @@ namespace BerichtManager.Forms
 				return;
 			if (StopConfigCalls)
 				return;
-			if (((float)nudFontSize.Value) != ConfigHandler.EditorFontSize())
+			if (((float)nudFontSize.Value) != ConfigHandler.EditorFontSize)
 			{
 				if (ThemedMessageBox.Show(text: "Do you want to save the font size of the editor?", title: "Save font size", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					if (float.TryParse(nudFontSize.Text, out float size))
 					{
-						ConfigHandler.EditorFontSize(size);
+						ConfigHandler.EditorFontSize = size;
 						ConfigHandler.SaveConfig();
 						RefreshConfigs();
 					}
@@ -109,9 +109,9 @@ namespace BerichtManager.Forms
 				return;
 			if (StopConfigCalls)
 				return;
-			if (rtInput.Font.FontFamily.Name != ConfigHandler.EditorFont())
+			if (rtInput.Font.FontFamily.Name != ConfigHandler.EditorFont)
 			{
-				ConfigHandler.EditorFont(rtInput.Font.FontFamily.Name);
+				ConfigHandler.EditorFont = rtInput.Font.FontFamily.Name;
 				ConfigHandler.SaveConfig();
 				RefreshConfigs();
 			}

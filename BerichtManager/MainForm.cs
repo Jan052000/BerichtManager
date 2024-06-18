@@ -113,16 +113,16 @@ namespace BerichtManager
 				control.KeyDown += DetectKeys;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
-			Info = new DirectoryInfo(ConfigHandler.ReportPath());
-			ActivePath = ConfigHandler.ReportPath();
+			Info = new DirectoryInfo(ConfigHandler.ReportPath);
+			ActivePath = ConfigHandler.ReportPath;
 			UpdateTree();
-			if (ConfigHandler.LastCreated() == "")
+			if (ConfigHandler.LastCreated == "")
 			{
 				miEditLatest.Enabled = false;
 			}
 			SetComponentPositions();
-			UpdateTabStops(this, ConfigHandler.TabStops());
-			if (File.Exists(ConfigHandler.PublishPath()) && CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(ConfigHandler.PublishPath()).FileVersion) > 0)
+			UpdateTabStops(this, ConfigHandler.TabStops);
+			if (File.Exists(ConfigHandler.PublishPath) && CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(ConfigHandler.PublishPath).FileVersion) > 0)
 				VersionString += "*";
 			WordTaskFactory.StartNew(RestartWord);
 		}
@@ -181,8 +181,8 @@ namespace BerichtManager
 			bounds.X = paFileTree.Bounds.Right + 1;
 			bounds.Width = Width - 1 - paFileTree.Bounds.Width;
 			scTextBoxes.Bounds = bounds;
-			rtbSchool.Font = new Font(rtbSchool.Font.FontFamily, ConfigHandler.EditorFontSize());
-			rtbWork.Font = new Font(rtbWork.Font.FontFamily, ConfigHandler.EditorFontSize());
+			rtbSchool.Font = new Font(rtbSchool.Font.FontFamily, ConfigHandler.EditorFontSize);
+			rtbWork.Font = new Font(rtbWork.Font.FontFamily, ConfigHandler.EditorFontSize);
 		}
 
 		/// <summary>
@@ -321,10 +321,10 @@ namespace BerichtManager
 		private void SetFontInDoc(Word.Document doc, Word.Application app)
 		{
 			doc.Content.Select();
-			if (app.Selection.Font.Name != ConfigHandler.EditorFont())
+			if (app.Selection.Font.Name != ConfigHandler.EditorFont)
 			{
-				app.Selection.Font.Name = ConfigHandler.EditorFont();
-				ThemedMessageBox.Show(text: "Changed report Font to: " + ConfigHandler.EditorFont(), title: "Font changed!");
+				app.Selection.Font.Name = ConfigHandler.EditorFont;
+				ThemedMessageBox.Show(text: "Changed report Font to: " + ConfigHandler.EditorFont, title: "Font changed!");
 			}
 			try
 			{
@@ -369,7 +369,7 @@ namespace BerichtManager
 			bool ldocWasSaved = false;
 			if (!File.Exists(templatePath))
 			{
-				ThemedMessageBox.Show(text: ConfigHandler.TemplatePath() + " was not found was it moved or deleted?", title: "Template not found");
+				ThemedMessageBox.Show(text: ConfigHandler.TemplatePath + " was not found was it moved or deleted?", title: "Template not found");
 				return;
 			}
 			try
@@ -389,9 +389,9 @@ namespace BerichtManager
 				//Fill name
 				IEnumerator enumerator = ldoc.FormFields.GetEnumerator();
 				enumerator.MoveNext();
-				if (!string.IsNullOrEmpty(ConfigHandler.ReportUserName()))
+				if (!string.IsNullOrEmpty(ConfigHandler.ReportUserName))
 				{
-					((Word.FormField)enumerator.Current).Result = ConfigHandler.ReportUserName();
+					((Word.FormField)enumerator.Current).Result = ConfigHandler.ReportUserName;
 				}
 				else
 				{
@@ -399,9 +399,9 @@ namespace BerichtManager
 					form.RefreshConfigs += RefreshConfig;
 					if (form.ShowDialog() == DialogResult.OK)
 					{
-						ConfigHandler.ReportUserName(form.Result);
+						ConfigHandler.ReportUserName = form.Result;
 						ConfigHandler.SaveConfig();
-						((Word.FormField)enumerator.Current).Result = ConfigHandler.ReportUserName();
+						((Word.FormField)enumerator.Current).Result = ConfigHandler.ReportUserName;
 					}
 					else
 					{
@@ -413,7 +413,7 @@ namespace BerichtManager
 				enumerator.MoveNext();
 
 				//Enter report nr.
-				FillText(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber() - reportDifference).ToString());
+				FillText(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber - reportDifference).ToString());
 
 				//Enter week start and end
 				DateTime today = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day);
@@ -422,7 +422,7 @@ namespace BerichtManager
 				enumerator.MoveNext();
 				((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
 				enumerator.MoveNext();
-				if (ConfigHandler.EndWeekOnFriday())
+				if (ConfigHandler.EndWeekOnFriday)
 				{
 					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
 				}
@@ -439,8 +439,8 @@ namespace BerichtManager
 				enumerator.MoveNext();
 				if (vacation)
 				{
-					if (ConfigHandler.UseUserPrefix())
-						FillText(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix() + "Urlaub");
+					if (ConfigHandler.UseCustomPrefix)
+						FillText(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix + "Urlaub");
 					else
 						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 				}
@@ -473,8 +473,8 @@ namespace BerichtManager
 				enumerator.MoveNext();
 				if (vacation)
 				{
-					if (ConfigHandler.UseUserPrefix())
-						FillText(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix() + "Urlaub");
+					if (ConfigHandler.UseCustomPrefix)
+						FillText(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix + "Urlaub");
 					else
 						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
 				}
@@ -554,15 +554,15 @@ namespace BerichtManager
 
 
 				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
-				string name = NamingPatternResolver.ResolveName(weekOfYear.ToString(), ConfigHandler.ReportNumber().ToString());
+				string name = NamingPatternResolver.ResolveName(weekOfYear.ToString(), ConfigHandler.ReportNumber.ToString());
 				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
 				FitToPage(ldoc);
 				ldoc.SaveAs2(FileName: path);
 				UpdateTree();
 
-				ConfigHandler.ReportNumber(ConfigHandler.ReportNumber() + 1);
-				ConfigHandler.LastReportKW(Culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday));
-				ConfigHandler.LastCreated(path);
+				ConfigHandler.ReportNumber++;
+				ConfigHandler.LastReportWeekOfYear = Culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				ConfigHandler.LastCreated = path;
 				ConfigHandler.SaveConfig();
 				miEditLatest.Enabled = true;
 				ThemedMessageBox.Show(text: "Created Document at: " + path);
@@ -638,15 +638,15 @@ namespace BerichtManager
 		{
 			DateTimeFormatInfo dfi = Culture.DateTimeFormat;
 			int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-			int reportNr = ConfigHandler.LastReportKW();
+			int reportNr = ConfigHandler.LastReportWeekOfYear;
 
-			if (ConfigHandler.LastReportKW() < weekOfYear)
+			if (ConfigHandler.LastReportWeekOfYear < weekOfYear)
 			{
 				//Missing reports in current year
 				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					CreateDocument(ConfigHandler.TemplatePath(), today.AddDays(i * 7), WordApp, vacation: vacation);
+					CreateDocument(ConfigHandler.TemplatePath, today.AddDays(i * 7), WordApp, vacation: vacation);
 				}
 			}
 			else
@@ -662,7 +662,7 @@ namespace BerichtManager
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					CreateDocument(ConfigHandler.TemplatePath(), today.AddDays(i * 7), WordApp, vacation: vacation);
+					CreateDocument(ConfigHandler.TemplatePath, today.AddDays(i * 7), WordApp, vacation: vacation);
 				}
 			}
 		}
@@ -679,7 +679,7 @@ namespace BerichtManager
 				return;
 			}
 			//Check if a report was created
-			if (ConfigHandler.LastReportKW() > 0)
+			if (ConfigHandler.LastReportWeekOfYear > 0)
 			{
 				//Check if report for last week was created
 				if (GetDistanceToToday() > 1)
@@ -698,7 +698,7 @@ namespace BerichtManager
 				}
 			}
 
-			CreateDocument(ConfigHandler.TemplatePath(), baseDate: DateTime.Today, WordApp, isSingle: true);
+			CreateDocument(ConfigHandler.TemplatePath, baseDate: DateTime.Today, WordApp, isSingle: true);
 		}
 
 		/// <summary>
@@ -707,7 +707,7 @@ namespace BerichtManager
 		/// <returns>The number of weeks since last report creation</returns>
 		private int GetDistanceToToday()
 		{
-			int lastReportKW = ConfigHandler.LastReportKW();
+			int lastReportKW = ConfigHandler.LastReportWeekOfYear;
 			int todaysWeek = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			//Both weeks are in the same year
 			if (lastReportKW <= todaysWeek)
@@ -729,10 +729,10 @@ namespace BerichtManager
 			if (DocIsSamePathAsSelected())
 				return;
 			SaveOrExit();
-			if (ConfigHandler.LegacyEdit())
-				Edit(ConfigHandler.LastCreated());
+			if (ConfigHandler.UseLegacyEdit)
+				Edit(ConfigHandler.LastCreated);
 			else
-				EditInTb(ConfigHandler.LastCreated());
+				EditInTb(ConfigHandler.LastCreated);
 		}
 
 		private void btPrint_Click(object sender, EventArgs e)
@@ -781,11 +781,11 @@ namespace BerichtManager
 			if (printDialog.ShowDialog() != DialogResult.OK) return;
 			foreach (string key in unPrintedFiles.Keys)
 			{
-				if (unPrintedFiles[key].Contains(ConfigHandler.LastCreated()))
+				if (unPrintedFiles[key].Contains(ConfigHandler.LastCreated))
 				{
-					if (ThemedMessageBox.Show(text: "Do you want to also print the last created report?\n(" + ConfigHandler.LastCreated() + ")", title: "Print last created?", buttons: MessageBoxButtons.YesNo) == DialogResult.No)
+					if (ThemedMessageBox.Show(text: "Do you want to also print the last created report?\n(" + ConfigHandler.LastCreated + ")", title: "Print last created?", buttons: MessageBoxButtons.YesNo) == DialogResult.No)
 					{
-						unPrintedFiles[key].Remove(ConfigHandler.LastCreated());
+						unPrintedFiles[key].Remove(ConfigHandler.LastCreated);
 					}
 				}
 			}
@@ -1256,13 +1256,13 @@ namespace BerichtManager
 				EditMode = false;
 				WasEdited = false;
 			}
-			if (path == ConfigHandler.LastCreated())
+			if (path == ConfigHandler.LastCreated)
 			{
-				if (ConfigHandler.LastReportKW() == Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
+				if (ConfigHandler.LastReportWeekOfYear == Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
 				{
-					if (ConfigHandler.ReportNumber() > 1)
-						ConfigHandler.ReportNumber(ConfigHandler.ReportNumber() - 1);
-					ConfigHandler.LastReportKW(Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1);
+					if (ConfigHandler.ReportNumber > 1)
+						ConfigHandler.ReportNumber--;
+					ConfigHandler.LastReportWeekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1;
 					ConfigHandler.SaveConfig();
 				}
 			}
@@ -1282,7 +1282,7 @@ namespace BerichtManager
 			if (DocIsSamePathAsSelected())
 				return;
 			SaveOrExit();
-			if (ConfigHandler.LegacyEdit())
+			if (ConfigHandler.UseLegacyEdit)
 			{
 				Edit(FullSelectedPath);
 			}
@@ -1363,7 +1363,7 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			int tabStops = ConfigHandler.TabStops();
+			int tabStops = ConfigHandler.TabStops;
 			OptionMenu optionMenu = new OptionMenu();
 			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
 			optionMenu.ReportFolderChanged += ReportFolderChanged;
@@ -1719,7 +1719,7 @@ namespace BerichtManager
 		{
 			try
 			{
-				return await IHKClient.CreateReport(doc, ConfigHandler.IHKCheckMatchingStartDates());
+				return await IHKClient.CreateReport(doc, ConfigHandler.IHKCheckMatchingStartDates);
 			}
 			catch (HttpRequestException ex)
 			{
@@ -1888,7 +1888,7 @@ namespace BerichtManager
 						break;
 					}
 
-					await Task.Delay(ConfigHandler.IHKUploadDelay());
+					await Task.Delay(ConfigHandler.IHKUploadDelay);
 				}
 
 				progressForm.Status = "Opening closed reports";
@@ -1978,7 +1978,7 @@ namespace BerichtManager
 
 		private async void MainForm_Load(object sender, EventArgs e)
 		{
-			if (ConfigHandler.AutoSyncStatusesWithIHK() && await UpdateStatuses())
+			if (ConfigHandler.AutoSyncStatusesWithIHK && await UpdateStatuses())
 				UpdateTree();
 		}
 
@@ -2240,7 +2240,7 @@ namespace BerichtManager
 						break;
 					}
 
-					await Task.Delay(ConfigHandler.IHKUploadDelay());
+					await Task.Delay(ConfigHandler.IHKUploadDelay);
 					progressForm.Status = "\t- Success";
 				}
 				progressForm.Status = "Done";

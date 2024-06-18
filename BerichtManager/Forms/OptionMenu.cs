@@ -57,36 +57,36 @@ namespace BerichtManager.Forms
 			ThemeName = ThemeManager.Instance.ActiveTheme.Name;
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			//Set values of fields to values in config
-			cbUseCustomPrefix.Checked = ConfigHandler.UseUserPrefix();
-			cbShouldUseUntis.Checked = ConfigHandler.UseWebUntis();
-			cbEndOfWeek.Checked = ConfigHandler.EndWeekOnFriday();
-			tbCustomPrefix.Text = ConfigHandler.CustomPrefix();
-			tbServer.Text = ConfigHandler.WebUntisServer();
-			tbSchool.Text = ConfigHandler.SchoolName();
-			cbLegacyEdit.Checked = ConfigHandler.LegacyEdit();
+			cbUseCustomPrefix.Checked = ConfigHandler.UseCustomPrefix;
+			cbShouldUseUntis.Checked = ConfigHandler.UseWebUntis;
+			cbEndOfWeek.Checked = ConfigHandler.EndWeekOnFriday;
+			tbCustomPrefix.Text = ConfigHandler.CustomPrefix;
+			tbServer.Text = ConfigHandler.WebUntisServer;
+			tbSchool.Text = ConfigHandler.SchoolName;
+			cbLegacyEdit.Checked = ConfigHandler.UseLegacyEdit;
 
 			ThemeManager.Instance.ThemeNames.ForEach(name => coTheme.Items.Add(name));
-			int selectedIndex = coTheme.Items.IndexOf(ConfigHandler.ActiveTheme());
+			int selectedIndex = coTheme.Items.IndexOf(ConfigHandler.ActiveTheme);
 			coTheme.SelectedIndex = selectedIndex;
 			ThemeName = coTheme.Text;
 			ThemeManager.Instance.UpdatedThemesList += UpdateThemesList;
 
-			tbTemplate.Text = ConfigHandler.TemplatePath();
-			tbName.Text = ConfigHandler.ReportUserName();
-			nudNumber.Value = ConfigHandler.ReportNumber();
-			nudTabStops.Value = ConfigHandler.TabStops();
-			nudFontSize.Value = (decimal)ConfigHandler.EditorFontSize();
-			tbFolder.Text = ConfigHandler.ReportPath();
-			tbUpdate.Text = ConfigHandler.PublishPath();
-			tbNamingPattern.Text = ConfigHandler.NamingPattern();
+			tbTemplate.Text = ConfigHandler.TemplatePath;
+			tbName.Text = ConfigHandler.ReportUserName;
+			nudNumber.Value = ConfigHandler.ReportNumber;
+			nudTabStops.Value = ConfigHandler.TabStops;
+			nudFontSize.Value = (decimal)ConfigHandler.EditorFontSize;
+			tbFolder.Text = ConfigHandler.ReportPath;
+			tbUpdate.Text = ConfigHandler.PublishPath;
+			tbNamingPattern.Text = ConfigHandler.NamingPattern;
 
 			//IHK
-			nudUploadDelay.Value = ConfigHandler.IHKUploadDelay();
-			tbJobField.Text = ConfigHandler.IHKJobField();
-			tbSupervisorMail.Text = ConfigHandler.IHKSupervisorEMail();
-			cbAutoSyncStatusesWithIHK.Checked = ConfigHandler.AutoSyncStatusesWithIHK();
-			tbIHKBaseUrl.Text = ConfigHandler.IHKBaseUrl();
-			cbIHKCheckMatchingStartDates.Checked = ConfigHandler.IHKCheckMatchingStartDates();
+			nudUploadDelay.Value = ConfigHandler.IHKUploadDelay;
+			tbJobField.Text = ConfigHandler.IHKJobField;
+			tbSupervisorMail.Text = ConfigHandler.IHKSupervisorEMail;
+			cbAutoSyncStatusesWithIHK.Checked = ConfigHandler.AutoSyncStatusesWithIHK;
+			tbIHKBaseUrl.Text = ConfigHandler.IHKBaseUrl;
+			cbIHKCheckMatchingStartDates.Checked = ConfigHandler.IHKCheckMatchingStartDates;
 
 			IsDirty = false;
 			btSave.Enabled = false;
@@ -178,36 +178,36 @@ namespace BerichtManager.Forms
 		private void SaveConfigChanges()
 		{
 			//Prefix
-			ConfigHandler.UseUserPrefix(cbUseCustomPrefix.Checked);
+			ConfigHandler.UseCustomPrefix = cbUseCustomPrefix.Checked;
 			if (cbUseCustomPrefix.Checked)
-				ConfigHandler.CustomPrefix(tbCustomPrefix.Text);
+				ConfigHandler.CustomPrefix = tbCustomPrefix.Text;
 			//WebUntis
-			ConfigHandler.UseWebUntis(cbShouldUseUntis.Checked);
+			ConfigHandler.UseWebUntis = cbShouldUseUntis.Checked;
 			if (cbShouldUseUntis.Checked)
 			{
-				ConfigHandler.WebUntisServer(tbServer.Text);
-				ConfigHandler.SchoolName(tbSchool.Text);
+				ConfigHandler.WebUntisServer = tbServer.Text;
+				ConfigHandler.SchoolName = tbSchool.Text;
 			}
 			//Report
-			ConfigHandler.ReportUserName(tbName.Text);
-			ConfigHandler.TemplatePath(tbTemplate.Text);
-			ConfigHandler.ReportNumber((int)nudNumber.Value);
-			ConfigHandler.EndWeekOnFriday(cbEndOfWeek.Checked);
-			ConfigHandler.NamingPattern(tbNamingPattern.Text);
+			ConfigHandler.ReportUserName = tbName.Text;
+			ConfigHandler.TemplatePath = tbTemplate.Text;
+			ConfigHandler.ReportNumber = (int)nudNumber.Value;
+			ConfigHandler.EndWeekOnFriday = cbEndOfWeek.Checked;
+			ConfigHandler.NamingPattern = tbNamingPattern.Text;
 			//Manager
-			if (ConfigHandler.TabStops() != (int)nudTabStops.Value)
+			if (ConfigHandler.TabStops != (int)nudTabStops.Value)
 			{
-				ConfigHandler.TabStops((int)nudTabStops.Value);
+				ConfigHandler.TabStops = (int)nudTabStops.Value;
 				TabStopsChanged(this, (int)nudTabStops.Value);
 			}
-			ConfigHandler.LegacyEdit(cbLegacyEdit.Checked);
-			if (nudFontSize.Value != (decimal)ConfigHandler.EditorFontSize())
+			ConfigHandler.UseLegacyEdit = cbLegacyEdit.Checked;
+			if (nudFontSize.Value != (decimal)ConfigHandler.EditorFontSize)
 			{
-				ConfigHandler.EditorFontSize((float)nudFontSize.Value);
+				ConfigHandler.EditorFontSize = (float)nudFontSize.Value;
 				FontSizeChanged((float)nudFontSize.Value);
 
 			}
-			ConfigHandler.ActiveTheme(coTheme.Text);
+			ConfigHandler.ActiveTheme = coTheme.Text;
 			if (ThemeName != coTheme.Text)
 			{
 				ThemeName = coTheme.Text;
@@ -215,23 +215,23 @@ namespace BerichtManager.Forms
 				ThemeSetter.SetThemes(this, activeTheme);
 				ActiveThemeChanged(this, activeTheme);
 			}
-			if (ConfigHandler.ReportPath() != tbFolder.Text)
+			if (ConfigHandler.ReportPath != tbFolder.Text)
 			{
 				if (ThemedMessageBox.Show(text: "Do you want to switch over imediately?", title: "Change directory?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 					ReportFolderChanged(this, tbFolder.Text);
-				ConfigHandler.ReportPath(tbFolder.Text);
+				ConfigHandler.ReportPath = tbFolder.Text;
 			}
-			if (ConfigHandler.PublishPath() != tbUpdate.Text)
-				ConfigHandler.PublishPath(tbUpdate.Text);
+			if (ConfigHandler.PublishPath != tbUpdate.Text)
+				ConfigHandler.PublishPath = tbUpdate.Text;
 			//IHK
-			ConfigHandler.IHKUploadDelay((int)nudUploadDelay.Value);
-			ConfigHandler.IHKJobField(tbJobField.Text);
-			ConfigHandler.IHKSupervisorEMail(tbSupervisorMail.Text);
-			ConfigHandler.AutoSyncStatusesWithIHK(cbAutoSyncStatusesWithIHK.Checked);
-			if (ConfigHandler.IHKBaseUrl() != tbIHKBaseUrl.Text)
+			ConfigHandler.IHKUploadDelay = (int)nudUploadDelay.Value;
+			ConfigHandler.IHKJobField = tbJobField.Text;
+			ConfigHandler.IHKSupervisorEMail = tbSupervisorMail.Text;
+			ConfigHandler.AutoSyncStatusesWithIHK = cbAutoSyncStatusesWithIHK.Checked;
+			if (ConfigHandler.IHKBaseUrl != tbIHKBaseUrl.Text)
 				IHKBaseAddressChanged();
-			ConfigHandler.IHKBaseUrl(tbIHKBaseUrl.Text);
-			ConfigHandler.IHKCheckMatchingStartDates(cbIHKCheckMatchingStartDates.Checked);
+			ConfigHandler.IHKBaseUrl = tbIHKBaseUrl.Text;
+			ConfigHandler.IHKCheckMatchingStartDates = cbIHKCheckMatchingStartDates.Checked;
 
 			ConfigHandler.SaveConfig();
 		}

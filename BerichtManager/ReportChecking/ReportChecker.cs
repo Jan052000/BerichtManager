@@ -63,7 +63,7 @@ namespace BerichtManager.ReportChecking
 			foreach (TreeNode report in reportNodes)
 			{
 				string path = GenerateTreePath(report);
-				Word.Document doc = WordApp.Documents.Open(FileName: Path.Combine(ConfigHandler.Instance.ReportPath(), path), ReadOnly: true);
+				Word.Document doc = WordApp.Documents.Open(FileName: Path.Combine(ConfigHandler.Instance.ReportPath, path), ReadOnly: true);
 				if (doc.FormFields.Count < 10)
 				{
 					ThemedMessageBox.Show(text: $"The report {path} does not contain the necessary form fields, checking was canceled", title: "Invalid report");

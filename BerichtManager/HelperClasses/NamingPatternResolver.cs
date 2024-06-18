@@ -30,7 +30,7 @@ namespace BerichtManager.HelperClasses
 		/// <returns>Resolved name according to pattern in <see cref="ConfigHandler"/></returns>
 		public static string ResolveName(string calendarWeek, string reportNumber)
 		{
-			return ConfigHandler.Instance.NamingPattern().Replace(CalendarWeek, calendarWeek).Replace(ReportNumber, reportNumber);
+			return ConfigHandler.Instance.NamingPattern.Replace(CalendarWeek, calendarWeek).Replace(ReportNumber, reportNumber);
 		}
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace BerichtManager.HelperClasses
 		/// <returns>Resolved name according to pattern in <see cref="ConfigHandler"/></returns>
 		public static string ResolveName(DateTime baseDate, string reportNumber)
 		{
-			return ConfigHandler.Instance.NamingPattern().Replace(CalendarWeek, Culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()).Replace(ReportNumber, reportNumber);
+			return ConfigHandler.Instance.NamingPattern.Replace(CalendarWeek, Culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()).Replace(ReportNumber, reportNumber);
 		}
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace BerichtManager.HelperClasses
 		{
 			int reportNumber = -1;
 			int calendarWeek = -1;
-			Regex regex = new Regex($@"({ConfigHandler.Instance.NamingPattern().Replace(CalendarWeek, @"(?<CW>\d+)").Replace(ReportNumber, @"(?<RN>\d+)")}.+?$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+			Regex regex = new Regex($@"({ConfigHandler.Instance.NamingPattern.Replace(CalendarWeek, @"(?<CW>\d+)").Replace(ReportNumber, @"(?<RN>\d+)")}.+?$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 			MatchCollection matches = regex.Matches(fileName);
 			foreach (Match match in matches)
 			{

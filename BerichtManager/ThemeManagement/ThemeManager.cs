@@ -42,7 +42,7 @@ namespace BerichtManager.ThemeManagement
 		{
 			get
 			{
-				ITheme activeTheme = Singleton.GetTheme(Config.ConfigHandler.Instance.ActiveTheme());
+				ITheme activeTheme = Singleton.GetTheme(Config.ConfigHandler.Instance.ActiveTheme);
 				if (activeTheme == null) activeTheme = new DarkMode();
 				return activeTheme;
 			}

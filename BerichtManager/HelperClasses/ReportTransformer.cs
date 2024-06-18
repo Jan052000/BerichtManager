@@ -23,9 +23,9 @@ namespace BerichtManager.HelperClasses
 			//Dates are auto filled by IHK
 			//report.ReportContent.StartDate = doc.FormFields[3].Result;
 			//report.ReportContent.EndDate = doc.FormFields[4].Result;
-			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField();
-			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail();
-			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail();
+			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField;
+			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail;
+			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail;
 			report.ReportContent.JobFieldContent = doc.FormFields[6].Result.Replace("\v", "\n");
 			report.ReportContent.SeminarsField = doc.FormFields[7].Result.Replace("\v", "\n");
 			report.ReportContent.SchoolField = doc.FormFields[8].Result.Replace("\v", "\n");
@@ -51,9 +51,9 @@ namespace BerichtManager.HelperClasses
 			//Dates are auto filled by IHK
 			//report.ReportContent.StartDate = doc.FormFields[3].Result;
 			//report.ReportContent.EndDate = doc.FormFields[4].Result;
-			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField();
-			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail();
-			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail();
+			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField;
+			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail;
+			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail;
 			report.ReportContent.JobFieldContent = doc.FormFields[6].Result.Replace("\v", "\n");
 			report.ReportContent.SeminarsField = doc.FormFields[7].Result.Replace("\v", "\n");
 			report.ReportContent.SchoolField = doc.FormFields[8].Result.Replace("\v", "\n");

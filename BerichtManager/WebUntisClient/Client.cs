@@ -37,8 +37,8 @@ namespace BerichtManager.WebUntisClient
 		private void UpdateConfigData()
 		{
 			//Get school and server
-			SchoolName = ConfigHandler.SchoolName();
-			Server = ConfigHandler.WebUntisServer();
+			SchoolName = ConfigHandler.SchoolName;
+			Server = ConfigHandler.WebUntisServer;
 		}
 
 		/// <summary>
@@ -47,7 +47,7 @@ namespace BerichtManager.WebUntisClient
 		/// <returns>List containing names of classes in time table</returns>
 		public List<string> GetClassesFromWebUntis()
 		{
-			if (!ConfigHandler.UseWebUntis()) return new List<string>();
+			if (!ConfigHandler.UseWebUntis) return new List<string>();
 
 			UpdateConfigData();
 
@@ -62,14 +62,14 @@ namespace BerichtManager.WebUntisClient
 			string jSpringURL = "https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check";
 
 			//Generate Headers and Login
-			if (ConfigHandler.StayLoggedIn())
+			if (ConfigHandler.WebUntisStayLoggedIn)
 			{
 				//Obtain JSessionId
 				Dictionary<string, string> content = new Dictionary<string, string>()
 				{
 					{ "school", SchoolName },
-					{ "j_username", ConfigHandler.WebUntisUsername() },
-					{ "j_password", ConfigHandler.WebUntisPassword() },
+					{ "j_username", ConfigHandler.WebUntisUsername },
+					{ "j_password", ConfigHandler.WebUntisPassword },
 					{ "token", "" }
 				};
 				responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(content)).Result;
@@ -212,7 +212,7 @@ namespace BerichtManager.WebUntisClient
 			});
 
 			//Crosscheck ClassIds to Coursenames
-			bool useUserPrefix = ConfigHandler.UseUserPrefix();
+			bool useUserPrefix = ConfigHandler.UseCustomPrefix;
 			rootObject.result.data.elements.ForEach((element) =>
 			{
 				if (element.type == 3 && classids.Contains(element.id))
@@ -221,21 +221,21 @@ namespace BerichtManager.WebUntisClient
 					{
 						if (cancelled[element.id])
 						{
-							if (!classes.Contains(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "\n"))
+							if (!classes.Contains(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n"))
 							{
-								classes.Add(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "Ausgefallen\n");
+								classes.Add(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "Ausgefallen\n");
 							}
 						}
 						else
 						{
-							if (classes.Contains(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "Ausgefallen\n"))
+							if (classes.Contains(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "Ausgefallen\n"))
 							{
-								classes.Remove(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "Ausgefallen\n");
-								classes.Add(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "\n");
+								classes.Remove(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "Ausgefallen\n");
+								classes.Add(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n");
 							}
 							else
 							{
-								classes.Add(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "\n");
+								classes.Add(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n");
 							}
 						}
 					}
@@ -286,8 +286,8 @@ namespace BerichtManager.WebUntisClient
 					bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
 					if (isInWeek || isStarting || isEnding || weekInEvent)
 					{
-						if (ConfigHandler.UseUserPrefix())
-							classes.Add(ConfigHandler.CustomPrefix() + holiday.longName + "\n");
+						if (ConfigHandler.UseCustomPrefix)
+							classes.Add(ConfigHandler.CustomPrefix + holiday.longName + "\n");
 						else
 							classes.Add("-" + holiday.longName + "\n");
 					}
@@ -324,14 +324,14 @@ namespace BerichtManager.WebUntisClient
 				Dictionary<string, string> loginContent;
 
 				//Generate Headers and Login
-				if (ConfigHandler.StayLoggedIn())
+				if (ConfigHandler.WebUntisStayLoggedIn)
 				{
 					//Obtain JSessionId
 					loginContent = new Dictionary<string, string>()
 					{
 						{ "school", SchoolName },
-						{ "j_username", ConfigHandler.WebUntisUsername() },
-						{ "j_password", ConfigHandler.WebUntisPassword() },
+						{ "j_username", ConfigHandler.WebUntisUsername },
+						{ "j_password", ConfigHandler.WebUntisPassword },
 						{ "token", "" }
 					};
 				}
@@ -432,8 +432,8 @@ namespace BerichtManager.WebUntisClient
 				bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
 				if (isInWeek || isStarting || isEnding || weekInEvent)
 				{
-					if (ConfigHandler.UseUserPrefix())
-						str += ConfigHandler.CustomPrefix() + holiday.longName + "\n";
+					if (ConfigHandler.UseCustomPrefix)
+						str += ConfigHandler.CustomPrefix + holiday.longName + "\n";
 					else
 						str += "-" + holiday.longName + "\n";
 				}
