@@ -18,12 +18,13 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		private MessageBoxButtons Buttons { get; set; }
 
-		private ThemedMessageBox(ITheme theme, string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+		private ThemedMessageBox(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
 		{
 			InitializeComponent();
 			InitializeButtons(buttons);
 			SizeToButtons();
 			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
+			ITheme theme = ThemeManager.Instance.ActiveTheme;
 			if (theme == null) theme = new DarkMode();
 			ThemeSetter.SetThemes(this, theme);
 			this.Text = title;
@@ -42,9 +43,9 @@ namespace BerichtManager.OwnControls
 		/// <param name="title">Title of the message box</param>
 		/// <param name="buttons">Configuration of the buttons on message box</param>
 		/// <returns></returns>
-		public static DialogResult Show(ITheme theme, string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+		public static DialogResult Show(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
 		{
-			return new ThemedMessageBox(theme, text: text, title: title, buttons: buttons).ShowDialog();
+			return new ThemedMessageBox(text: text, title: title, buttons: buttons).ShowDialog();
 		}
 
 		/// <summary>

@@ -65,7 +65,7 @@ namespace BerichtManager.ThemeManagement
 		{
 			if (string.IsNullOrEmpty(tbName.Text))
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Name may not be left empty", "Name empty");
+				ThemedMessageBox.Show(text: "Name may not be left empty", title: "Name empty");
 				return;
 			}
 			ColorConverter colorConverter = new ColorConverter();
@@ -105,7 +105,7 @@ namespace BerichtManager.ThemeManagement
 				DialogResult = DialogResult.Cancel;
 				return;
 			}
-			ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Changes saved", "Changes saved");
+			ThemedMessageBox.Show(text: "Changes saved", title: "Changes saved");
 			DialogResult = DialogResult.OK;
 			Close();
 		}

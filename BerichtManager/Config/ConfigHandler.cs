@@ -120,9 +120,9 @@ namespace BerichtManager.Config
 							case "TemplatePath":
 								OpenFileDialog dialog = new OpenFileDialog();
 								dialog.Filter = "Word Templates (*.dotx)|*.dotx";
-								ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Please select a word template to use", "Select a template");
+								ThemedMessageBox.Show(text: "Please select a word template to use", title: "Select a template");
 								if (dialog.ShowDialog() == DialogResult.OK)
-									ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Template selected: " + dialog.FileName, "Info");
+									ThemedMessageBox.Show(text: "Template selected: " + dialog.FileName, title: "Info");
 								ConfigObject.Add("TemplatePath", dialog.FileName);
 								break;
 							case "ReportNR":
@@ -133,7 +133,7 @@ namespace BerichtManager.Config
 										ConfigObject.Add(new JProperty("ReportNR", value));
 									else
 									{
-										ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Invalid number, defaulting to 1! (This can be changed later in options menu)", "Invalid number!");
+										ThemedMessageBox.Show(text: "Invalid number, defaulting to 1! (This can be changed later in options menu)", title: "Invalid number!");
 										ConfigObject.Add(new JProperty("ReportNR", 1));
 									}
 								}
@@ -750,13 +750,13 @@ namespace BerichtManager.Config
 			}
 			catch (FormatException)
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: "Invalid e-mail", title: "Invalid mail");
+				ThemedMessageBox.Show(text: "Invalid e-mail", title: "Invalid mail");
 				GenericSet("IHKSupervisorEMail", "");
 			}
 			catch (Exception e)
 			{
 				string logPath = Logger.LogError(e);
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: "Something went wrong saving the supervisor e-mail, a log was saved to:\n" + logPath, title: "An error occurred");
+				ThemedMessageBox.Show(text: "Something went wrong saving the supervisor e-mail, a log was saved to:\n" + logPath, title: "An error occurred");
 			}
 		}
 

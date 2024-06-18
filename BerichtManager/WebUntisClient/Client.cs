@@ -79,7 +79,7 @@ namespace BerichtManager.WebUntisClient
 				Config.User user = ConfigHandler.DoWebUntisLogin();
 				if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");
+					ThemedMessageBox.Show(text: "You need to login to automatically enter classes");
 					return classes;
 				}
 				else
@@ -128,7 +128,7 @@ namespace BerichtManager.WebUntisClient
 			}
 			else
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+				ThemedMessageBox.Show(text: "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
 				return new List<string>();
 			}
 
@@ -140,7 +140,7 @@ namespace BerichtManager.WebUntisClient
 			responseMessage = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
 			if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Your account is unauthorized", "Unauthorized");
+				ThemedMessageBox.Show(text: "Your account is unauthorized", title: "Unauthorized");
 				return new List<string>();
 			}
 			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result);
@@ -152,7 +152,7 @@ namespace BerichtManager.WebUntisClient
 			//Check account privilages
 			if (!Enum.TryParse<ElementTypes>(yearData.user.roles[0], out ElementTypes elementType))
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Could not resolve the rights your account has\non the WebUntis server of your school", "Unknown account type");
+				ThemedMessageBox.Show(text: "Could not resolve the rights your account has\non the WebUntis server of your school", title: "Unknown account type");
 				return new List<string>();
 			}
 
@@ -163,7 +163,7 @@ namespace BerichtManager.WebUntisClient
 			}
 			else
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Your account does not have the rights to view its timetable", "Insifficient permissions");
+				ThemedMessageBox.Show(text: "Your account does not have the rights to view its timetable", title: "Insifficient permissions");
 				return new List<string>();
 			}
 			//responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=" + configHandler.TableElementType() + "&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
@@ -275,7 +275,7 @@ namespace BerichtManager.WebUntisClient
 				Holidays holidays = GetHolidays(client);
 				if (holidays.result == null)
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "An error has occurred on the web untis server", "Server did not respond");
+					ThemedMessageBox.Show(text: "An error has occurred on the web untis server", title: "Server did not respond");
 					return new List<string>();
 				}
 				holidays.result.ForEach((holiday) =>
@@ -340,7 +340,7 @@ namespace BerichtManager.WebUntisClient
 					Config.User user = ConfigHandler.DoWebUntisLogin();
 					if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 					{
-						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");
+						ThemedMessageBox.Show(text: "You need to login to automatically enter classes");
 						return null;
 					}
 					else
@@ -389,7 +389,7 @@ namespace BerichtManager.WebUntisClient
 				}
 				else
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+					ThemedMessageBox.Show(text: "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
 					return null;
 				}
 			}

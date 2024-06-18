@@ -91,7 +91,7 @@ namespace BerichtManager.Forms
 				return;
 			if (((float)nudFontSize.Value) != ConfigHandler.EditorFontSize())
 			{
-				if (ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Do you want to save the font size of the editor?", "Save font size", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (ThemedMessageBox.Show(text: "Do you want to save the font size of the editor?", title: "Save font size", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					if (float.TryParse(nudFontSize.Text, out float size))
 					{

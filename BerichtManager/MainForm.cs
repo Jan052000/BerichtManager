@@ -319,7 +319,7 @@ namespace BerichtManager
 			if (app.Selection.Font.Name != ConfigHandler.EditorFont())
 			{
 				app.Selection.Font.Name = ConfigHandler.EditorFont();
-				ThemedMessageBox.Show(ActiveTheme, "Changed report Font to: " + ConfigHandler.EditorFont(), "Font changed!");
+				ThemedMessageBox.Show(text: "Changed report Font to: " + ConfigHandler.EditorFont(), title: "Font changed!");
 			}
 			try
 			{
@@ -364,7 +364,7 @@ namespace BerichtManager
 			bool ldocWasSaved = false;
 			if (!File.Exists(templatePath))
 			{
-				ThemedMessageBox.Show(ActiveTheme, ConfigHandler.TemplatePath() + " was not found was it moved or deleted?", "Template not found");
+				ThemedMessageBox.Show(text: ConfigHandler.TemplatePath() + " was not found was it moved or deleted?", title: "Template not found");
 				return;
 			}
 			try
@@ -374,7 +374,7 @@ namespace BerichtManager
 
 				if (ldoc.FormFields.Count != 10)
 				{
-					ThemedMessageBox.Show(ActiveTheme, "Invalid template");
+					ThemedMessageBox.Show(text: "Invalid template");
 					ldoc.Close(SaveChanges: false);
 					ldoc = null;
 					return;
@@ -400,7 +400,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						ThemedMessageBox.Show(ActiveTheme, "Cannot proceed without a name!", "Name required!");
+						ThemedMessageBox.Show(text: "Cannot proceed without a name!", title: "Name required!");
 						return;
 					}
 					form.RefreshConfigs -= RefreshConfig;
@@ -509,7 +509,7 @@ namespace BerichtManager
 					}
 					catch (AggregateException e)
 					{
-						ThemedMessageBox.Show(ActiveTheme, "Unable to process classes from web\n(try to cancel the creation process and start again)");
+						ThemedMessageBox.Show(text: "Unable to process classes from web\n(try to cancel the creation process and start again)");
 						Logger.LogError(e);
 					}
 					form = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", isCreate: true, text: classes);
@@ -560,7 +560,7 @@ namespace BerichtManager
 				ConfigHandler.LastCreated(path);
 				ConfigHandler.SaveConfig();
 				miEditLatest.Enabled = true;
-				ThemedMessageBox.Show(ActiveTheme, "Created Document at: " + path);
+				ThemedMessageBox.Show(text: "Created Document at: " + path);
 				ldocWasSaved = true;
 
 				ldoc.Close();
@@ -581,11 +581,11 @@ namespace BerichtManager
 					case -2147023179:
 					//{"Der Remoteprozeduraufruf ist fehlgeschlagen. (Ausnahme von HRESULT: 0x800706BE)"}
 					case -2147023170:
-						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please wait while it restarts");
+						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please wait while it restarts");
 						RestartWord();
 						if (ldocWasSaved)
 						{
-							ThemedMessageBox.Show(ActiveTheme, text: "Unable to automatically open report, Word was closed unexpectedly", "Loading was cancelled because word closed");
+							ThemedMessageBox.Show(text: "Unable to automatically open report, Word was closed unexpectedly", title: "Loading was cancelled because word closed");
 							return;
 						}
 						CreateDocument(templatePath, baseDate, WordApp, vacation: vacation, reportDifference: reportDifference, isSingle: isSingle);
@@ -602,11 +602,11 @@ namespace BerichtManager
 						}
 						break;
 					case -2146233088:
-						ThemedMessageBox.Show(ActiveTheme, "Connection refused by remotehost");
+						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
 					default:
 						Logger.LogError(ex);
-						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
+						ThemedMessageBox.Show(text: ex.StackTrace);
 						try
 						{
 							ldoc.Close(SaveChanges: false);
@@ -670,7 +670,7 @@ namespace BerichtManager
 			int currentWeek = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 			if (File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\WochenberichtKW" + currentWeek + ".docx") || File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\Gedruckt\\WochenberichtKW" + currentWeek + ".docx"))
 			{
-				ThemedMessageBox.Show(ActiveTheme, "A report has already been created for this week");
+				ThemedMessageBox.Show(text: "A report has already been created for this week");
 				return;
 			}
 			//Check if a report was created
@@ -679,13 +679,13 @@ namespace BerichtManager
 				//Check if report for last week was created
 				if (GetDistanceToToday() > 1)
 				{
-					if (ThemedMessageBox.Show(ActiveTheme, "You missed some reports were you on vacation?", "Vacation?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					if (ThemedMessageBox.Show(text: "You missed some reports were you on vacation?", title: "Vacation?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
 						CreateMissing(vacation: true);
 					}
 					else
 					{
-						if (ThemedMessageBox.Show(ActiveTheme, "Do you want to create empty reports then?", "Create?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						if (ThemedMessageBox.Show(text: "Do you want to create empty reports then?", title: "Create?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 						{
 							CreateMissing();
 						}
@@ -736,7 +736,7 @@ namespace BerichtManager
 
 			if (tvReports.SelectedNode == null)
 			{
-				ThemedMessageBox.Show(ActiveTheme, "No report selected");
+				ThemedMessageBox.Show(text: "No report selected");
 				return;
 			}
 			PrintDocument(FullSelectedPath);
@@ -768,7 +768,7 @@ namespace BerichtManager
 			}
 			if (unPrintedFiles.Count == 0)
 			{
-				ThemedMessageBox.Show(ActiveTheme, "No unprinted reports found");
+				ThemedMessageBox.Show(text: "No unprinted reports found");
 				return;
 			}
 
@@ -778,7 +778,7 @@ namespace BerichtManager
 			{
 				if (unPrintedFiles[key].Contains(ConfigHandler.LastCreated()))
 				{
-					if (ThemedMessageBox.Show(ActiveTheme, "Do you want to also print the last created report?\n(" + ConfigHandler.LastCreated() + ")", "Print last created?", MessageBoxButtons.YesNo) == DialogResult.No)
+					if (ThemedMessageBox.Show(text: "Do you want to also print the last created report?\n(" + ConfigHandler.LastCreated() + ")", title: "Print last created?", buttons: MessageBoxButtons.YesNo) == DialogResult.No)
 					{
 						unPrintedFiles[key].Remove(ConfigHandler.LastCreated());
 					}
@@ -814,7 +814,7 @@ namespace BerichtManager
 					catch (Exception ex)
 					{
 						Logger.LogError(ex);
-						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace, "Error while printing" + filePath);
+						ThemedMessageBox.Show(text: ex.StackTrace, title: "Error while printing" + filePath);
 						Console.Write(ex.StackTrace);
 					}
 				});
@@ -841,7 +841,7 @@ namespace BerichtManager
 
 					if (Doc.FormFields.Count != 10)
 					{
-						ThemedMessageBox.Show(ActiveTheme, "Invalid document (you will have to manually edit)");
+						ThemedMessageBox.Show(text: "Invalid document (you will have to manually edit)");
 						Doc.Close(SaveChanges: false);
 						Doc = null;
 						return;
@@ -917,11 +917,11 @@ namespace BerichtManager
 					rtbSchool.Text = Doc.FormFields[8].Result;
 					EditMode = true;
 					WasEdited = false;
-					ThemedMessageBox.Show(ActiveTheme, "Saved changes", "Saved");
+					ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
 				}
 				else
 				{
-					ThemedMessageBox.Show(ActiveTheme, path + " not found was it deleted or moved?");
+					ThemedMessageBox.Show(text: path + " not found was it deleted or moved?");
 				}
 			}
 			catch (Exception ex)
@@ -929,11 +929,11 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						ThemedMessageBox.Show(ActiveTheme, "an unexpected problem occured this progam will now close!");
+						ThemedMessageBox.Show(text: "an unexpected problem occured this progam will now close!");
 						break;
 					case -2147467262:
 					case -2146823679:
-						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please try again shortly");
+						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
 					case -2146822750:
@@ -943,11 +943,11 @@ namespace BerichtManager
 						doc = null;*/
 						break;
 					case -2146233088:
-						ThemedMessageBox.Show(ActiveTheme, "Connection refused by remotehost");
+						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
 					default:
 						Logger.LogError(ex);
-						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
+						ThemedMessageBox.Show(text: ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
 				}
@@ -976,7 +976,7 @@ namespace BerichtManager
 				Doc = WordApp.Documents.Open(path);
 				if (Doc.FormFields.Count != 10)
 				{
-					ThemedMessageBox.Show(ActiveTheme, "Invalid document (you will have to manually edit)");
+					ThemedMessageBox.Show(text: "Invalid document (you will have to manually edit)");
 					Doc.Close(SaveChanges: false);
 					Doc = null;
 					EditMode = false;
@@ -993,11 +993,11 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						ThemedMessageBox.Show(ActiveTheme, "an unexpected problem occured this progam will now close!");
+						ThemedMessageBox.Show(text: "an unexpected problem occured this progam will now close!");
 						break;
 					case -2147467262:
 					case -2146823679:
-						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please try again shortly");
+						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
 					case -2146822750:
@@ -1007,11 +1007,11 @@ namespace BerichtManager
 						doc = null;*/
 						break;
 					case -2146233088:
-						ThemedMessageBox.Show(ActiveTheme, "Connection refused by remotehost");
+						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
 					default:
 						Logger.LogError(ex);
-						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
+						ThemedMessageBox.Show(text: ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
 				}
@@ -1036,7 +1036,7 @@ namespace BerichtManager
 					UploadedReports.SetEdited(Path.Combine(Doc.Path, Doc.Name).Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First(), true);
 					UpdateTree();
 				}
-				ThemedMessageBox.Show(ActiveTheme, "Saved changes", "Saved");
+				ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
 				WasEdited = false;
 			}
 			catch (Exception ex)
@@ -1044,22 +1044,22 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						ThemedMessageBox.Show(ActiveTheme, "an unexpected problem occured this progam will now close!");
+						ThemedMessageBox.Show(text: "an unexpected problem occured this progam will now close!");
 						break;
 					case -2147467262:
 					case -2146823679:
-						ThemedMessageBox.Show(ActiveTheme, "Word closed unexpectedly and is restarting please try again shortly");
+						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
 					case -2146822750:
 						//Document is one page already
 						break;
 					case -2146233088:
-						ThemedMessageBox.Show(ActiveTheme, "Connection refused by remotehost");
+						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
 					default:
 						Logger.LogError(ex);
-						ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
+						ThemedMessageBox.Show(text: ex.StackTrace);
 						Console.Write(ex.StackTrace);
 						break;
 				}
@@ -1083,7 +1083,7 @@ namespace BerichtManager
 				return;
 			}
 
-			if (ThemedMessageBox.Show(ActiveTheme, "Save unsaved changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			if (ThemedMessageBox.Show(text: "Save unsaved changes?", title: "Save?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 				SaveFromTb();
 			Doc.Close(SaveChanges: false);
 			Doc = null;
@@ -1117,13 +1117,13 @@ namespace BerichtManager
 		{
 			if (Path.GetExtension(path) != ".docx")
 			{
-				ThemedMessageBox.Show(ActiveTheme, "You may only print Documents(*.docx) files");
+				ThemedMessageBox.Show(text: "You may only print Documents(*.docx) files");
 				return;
 			}
 			DirectoryInfo printed = new DirectoryInfo(Path.GetDirectoryName(path));
 			if (printed.Name == "Gedruckt")
 			{
-				if (ThemedMessageBox.Show(ActiveTheme, "Report was already printed do you want to print it again?", "Reprint?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				if (ThemedMessageBox.Show(text: "Report was already printed do you want to print it again?", title: "Reprint?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				{
 					return;
 				}
@@ -1165,7 +1165,7 @@ namespace BerichtManager
 			catch (Exception ex)
 			{
 				Logger.LogError(ex);
-				ThemedMessageBox.Show(ActiveTheme, ex.StackTrace);
+				ThemedMessageBox.Show(text: ex.StackTrace);
 				Console.Write(ex.StackTrace);
 			}
 		}
@@ -1180,18 +1180,18 @@ namespace BerichtManager
 			{
 				if (File.GetAttributes(path) == FileAttributes.Directory)
 				{
-					ThemedMessageBox.Show(ActiveTheme, "You may not delete folders using the manager");
+					ThemedMessageBox.Show(text: "You may not delete folders using the manager");
 					return;
 				}
-				ThemedMessageBox.Show(ActiveTheme, path + " not Found (was it moved or deleted?)");
+				ThemedMessageBox.Show(text: path + " not Found (was it moved or deleted?)");
 				return;
 			}
 			if (Path.GetExtension(path) != ".docx" && !path.Contains("\\Logs") && !Path.GetFileName(path).StartsWith("~$"))
 			{
-				ThemedMessageBox.Show(ActiveTheme, "You may only delete Word documents (*.docx) or their temporary files");
+				ThemedMessageBox.Show(text: "You may only delete Word documents (*.docx) or their temporary files");
 				return;
 			}
-			if (ThemedMessageBox.Show(ActiveTheme, "Are you sure you want to delete the selected file?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+			if (ThemedMessageBox.Show(text: "Are you sure you want to delete the selected file?", title: "Delete?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 			if (path == Doc?.Path + "\\" + Doc?.Name)
 			{
@@ -1214,7 +1214,7 @@ namespace BerichtManager
 			}
 			File.Delete(path);
 			UpdateTree();
-			ThemedMessageBox.Show(ActiveTheme, "File deleted successfully");
+			ThemedMessageBox.Show(text: "File deleted successfully");
 		}
 
 		private void tvReports_DoubleClick(object sender, EventArgs e)
@@ -1382,7 +1382,7 @@ namespace BerichtManager
 		{
 			try
 			{
-				if (EditMode && WasEdited && ThemedMessageBox.Show(ActiveTheme, "Do you want to save unsaved changes?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (EditMode && WasEdited && ThemedMessageBox.Show(text: "Do you want to save unsaved changes?", title: "Save changes?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					SaveFromTb();
 				}
@@ -1442,7 +1442,7 @@ namespace BerichtManager
 				case Keys.Escape:
 					if (Doc == null || !EditMode)
 					{
-						ThemedMessageBox.Show(ActiveTheme, "No opened report to close", "Could not close");
+						ThemedMessageBox.Show(text: "No opened report to close", title: "Could not close");
 						return;
 					}
 					CloseOpenDocument();
@@ -1463,7 +1463,7 @@ namespace BerichtManager
 		{
 			if (!CheckIfWordRunning())
 			{
-				ThemedMessageBox.Show(ActiveTheme, "Word is still starting, please try again", "Please try again");
+				ThemedMessageBox.Show(text: "Word is still starting, please try again", title: "Please try again");
 				return false;
 			}
 			return true;
@@ -1474,7 +1474,7 @@ namespace BerichtManager
 			if (Directory.Exists(ActivePath))
 				Process.Start(ActivePath);
 			else
-				ThemedMessageBox.Show(ActiveTheme, "The working directory has been deleted from an external source", "You may have a problem");
+				ThemedMessageBox.Show(text: "The working directory has been deleted from an external source", title: "You may have a problem");
 		}
 
 		/// <summary>
@@ -1541,7 +1541,7 @@ namespace BerichtManager
 		{
 			if (Doc == null || !EditMode)
 			{
-				ThemedMessageBox.Show(ActiveTheme, "No opened report to close", "Could not close");
+				ThemedMessageBox.Show(text: "No opened report to close", title: "Could not close");
 				return;
 			}
 			CloseOpenDocument();
@@ -1574,7 +1574,7 @@ namespace BerichtManager
 				return;
 			if (select.FilteredNode == null)
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: "No file or folder was selected, check was canceled", title: "No selection was made");
+				ThemedMessageBox.Show(text: "No file or folder was selected, check was canceled", title: "No selection was made");
 				return;
 			}
 			string activePath = "";
@@ -1598,13 +1598,13 @@ namespace BerichtManager
 				return;
 			if (discrepancies.Count == 0)
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: "No discrepancies found", "Check done");
+				ThemedMessageBox.Show(text: "No discrepancies found", "Check done");
 				return;
 			}
 			StringBuilder message = new StringBuilder();
 			message.AppendLine("At least one discrepancy was found:");
 			discrepancies.ForEach(d => message.AppendLine(d.ToString()));
-			ThemedMessageBox.Show(ActiveTheme, text: message.ToString(), title: "Discrepancy found");
+			ThemedMessageBox.Show(text: message.ToString(), title: "Discrepancy found");
 		}
 
 		/// <summary>
@@ -1670,17 +1670,17 @@ namespace BerichtManager
 			catch (HttpRequestException ex)
 			{
 				Logger.LogError(ex);
-				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+				ThemedMessageBox.Show(text: "A network error has occurred, please check your connection", title: "Network error");
 				return null;
 			}
 			catch (StartDateMismatchException ex)
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: ex.Message, title: ex.GetType().Name);
+				ThemedMessageBox.Show(text: ex.Message, title: ex.GetType().Name);
 				return null;
 			}
 			catch (Exception ex)
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
+				ThemedMessageBox.Show(text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
 				return null;
 			}
 		}
@@ -1709,7 +1709,7 @@ namespace BerichtManager
 			//should not happen as menu item should be disabled
 			if (ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _))
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: "Report was already uploaded", title: "Report already uploaded");
+				ThemedMessageBox.Show(text: "Report was already uploaded", title: "Report already uploaded");
 				return;
 			}
 			Word.Document doc;
@@ -1723,7 +1723,7 @@ namespace BerichtManager
 				doc = WordApp.Documents.Open(FullSelectedPath);
 			if (doc.FormFields.Count < 10)
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please upload manually", title: "Invalid document");
+				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
 				doc.Close(SaveChanges: false);
 				return;
 			}
@@ -1733,14 +1733,14 @@ namespace BerichtManager
 			switch (result.Result)
 			{
 				case CreateResults.Success:
-					ThemedMessageBox.Show(ActiveTheme, text: "Report uploaded successfully", title: "Upload successful");
+					ThemedMessageBox.Show(text: "Report uploaded successfully", title: "Upload successful");
 					UploadedReports.Instance.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 					break;
 				case CreateResults.Unauthorized:
-					ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
+					ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
 					break;
 				default:
-					ThemedMessageBox.Show(ActiveTheme, text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
+					ThemedMessageBox.Show(text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
 					break;
 			}
 			if (close)
@@ -1793,7 +1793,7 @@ namespace BerichtManager
 					if (doc.FormFields.Count < 10)
 					{
 						progressForm.Status = $"Uploading aborted: Invalid dcument";
-						ThemedMessageBox.Show(ActiveTheme, text: $"Invalid document, please add missing form fields to {path}.\nUploading is stopped", title: "Invalid document");
+						ThemedMessageBox.Show(text: $"Invalid document, please add missing form fields to {path}.\nUploading is stopped", title: "Invalid document");
 						doc.Close(SaveChanges: false);
 						OpenAllDocuments(openReports, activePath);
 						return;
@@ -1803,7 +1803,7 @@ namespace BerichtManager
 					if (result == null)
 					{
 						progressForm.Status = $"Uploading aborted: upload failed";
-						ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
+						ThemedMessageBox.Show(text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
 						doc.Close(SaveChanges: false);
 						OpenAllDocuments(openReports, activePath);
 						return;
@@ -1814,13 +1814,13 @@ namespace BerichtManager
 							UploadedReports.Instance.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 							break;
 						case CreateResults.Unauthorized:
-							ThemedMessageBox.Show(ActiveTheme, text: "Session has expired please try again", "Session expired");
+							ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
 							doc.Close(SaveChanges: false);
 							OpenAllDocuments(openReports, activePath);
 							progressForm.Status = $"Abort: Unauthorized";
 							return;
 						default:
-							ThemedMessageBox.Show(ActiveTheme, text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
+							ThemedMessageBox.Show(text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
 							doc.Close(SaveChanges: false);
 							OpenAllDocuments(openReports, activePath);
 							progressForm.Status = $"Abort: Upload failed";
@@ -1846,7 +1846,7 @@ namespace BerichtManager
 					text = "Upload of report was succesful";
 				else
 					text = $"Upload of all {reports.Count} reports was successful";
-				ThemedMessageBox.Show(ActiveTheme, text: text, title: "Upload finished");
+				ThemedMessageBox.Show(text: text, title: "Upload finished");
 				UpdateTree();
 			});
 		}
@@ -1855,7 +1855,7 @@ namespace BerichtManager
 		{
 			if (!HasWordStarted())
 				return;
-			if (ThemedMessageBox.Show(ActiveTheme, text: "Warning, this will upload all reports selected in the next window in the order they appear!\nDo you want to proceed?", title: "Caution", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+			if (ThemedMessageBox.Show(text: "Warning, this will upload all reports selected in the next window in the order they appear!\nDo you want to proceed?", title: "Caution", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 			EventProgressForm progressForm = new EventProgressForm("Upload progress");
 			progressForm.Show();
@@ -1891,7 +1891,7 @@ namespace BerichtManager
 			catch (HttpRequestException ex)
 			{
 				Logger.LogError(ex);
-				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+				ThemedMessageBox.Show(text: "A network error has occurred, please check your connection", title: "Network error");
 			}
 		}
 
@@ -1909,15 +1909,15 @@ namespace BerichtManager
 				if (result)
 				{
 					UpdateTree();
-					ThemedMessageBox.Show(ActiveTheme, text: "Update complete.", title: "Update complete");
+					ThemedMessageBox.Show(text: "Update complete.", title: "Update complete");
 				}
 				else
-					ThemedMessageBox.Show(ActiveTheme, text: "Already up to date", title: "Update complete");
+					ThemedMessageBox.Show(text: "Already up to date", title: "Update complete");
 			}
 			catch (HttpRequestException ex)
 			{
 				Logger.LogError(ex);
-				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+				ThemedMessageBox.Show(text: "A network error has occurred, please check your connection", title: "Network error");
 			}
 			return result;
 		}
@@ -1942,11 +1942,11 @@ namespace BerichtManager
 			catch (HttpRequestException ex)
 			{
 				Logger.LogError(ex);
-				ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+				ThemedMessageBox.Show(text: "A network error has occurred, please check your connection", title: "Network error");
 			}
 			catch (Exception ex)
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
+				ThemedMessageBox.Show(text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
 			}
 			return false;
 		}
@@ -1956,31 +1956,31 @@ namespace BerichtManager
 			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> reports))
 			{
 				//Should never happen as menu item should be diabled
-				ThemedMessageBox.Show(ActiveTheme, text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
+				ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
 				return;
 			}
 			if (!reports.TryGetValue(tvReports.SelectedNode.FullPath, out UploadedReport report))
 			{
 				//Should never happen as menu item should be diabled
-				ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} was not uploaded yet", title: "Hand in failed");
+				ThemedMessageBox.Show(text: $"Report {FullSelectedPath} was not uploaded yet", title: "Hand in failed");
 				return;
 			}
 			if (!(report.LfdNR is int lfdnr))
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {FullSelectedPath} could not be read", title: "Hand in failed");
+				ThemedMessageBox.Show(text: $"Lfdnr of {FullSelectedPath} could not be read", title: "Hand in failed");
 				return;
 			}
 			//Prevent unsaved changes from being left locally
 			if (report.WasEditedLocally)
 			{
-				if (ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} has local changes, do you want to upload them now?", title: "Upload changes?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+				if (ThemedMessageBox.Show(text: $"Report {FullSelectedPath} has local changes, do you want to upload them now?", title: "Upload changes?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				{
-					ThemedMessageBox.Show(ActiveTheme, text: "Hand in was canceled", title: "Hand in canceled");
+					ThemedMessageBox.Show(text: "Hand in was canceled", title: "Hand in canceled");
 					return;
 				}
 				if (!CheckIfWordRunning())
 				{
-					ThemedMessageBox.Show(ActiveTheme, text: "Word has not started yet, hand in was canceled", title: "Hand in canceled");
+					ThemedMessageBox.Show(text: "Word has not started yet, hand in was canceled", title: "Hand in canceled");
 					return;
 				}
 
@@ -1995,7 +1995,7 @@ namespace BerichtManager
 
 				if (result == null)
 				{
-					ThemedMessageBox.Show(ActiveTheme, text: "Update of report failed, hand in was canceled", title: "Hand in canceled");
+					ThemedMessageBox.Show(text: "Update of report failed, hand in was canceled", title: "Hand in canceled");
 					return;
 				}
 
@@ -2005,13 +2005,13 @@ namespace BerichtManager
 
 			if (!await TryHandIn(lfdnr))
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: $"Report {FullSelectedPath} could not be handed in", title: "Hand in failed");
+				ThemedMessageBox.Show(text: $"Report {FullSelectedPath} could not be handed in", title: "Hand in failed");
 				return;
 			}
 
 			UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.HandedIn, lfdnr);
 			UpdateTree();
-			ThemedMessageBox.Show(ActiveTheme, text: "Hand in successful", title: "Report handed in");
+			ThemedMessageBox.Show(text: "Hand in successful", title: "Report handed in");
 		}
 
 		/// <summary>
@@ -2028,16 +2028,16 @@ namespace BerichtManager
 					UploadedReports.SetEdited(startDate, false);
 					break;
 				case CreateResults.Unauthorized:
-					ThemedMessageBox.Show(ActiveTheme, text: "Login session has expired, try restarting report manager, hand in was skipped", title: "Login session expired");
+					ThemedMessageBox.Show(text: "Login session has expired, try restarting report manager, hand in was skipped", title: "Login session expired");
 					break;
 				case CreateResults.CreationFailed:
-					ThemedMessageBox.Show(ActiveTheme, text: "Report could not be loaded from IHK server, hand in was skipped", title: "Unable to edit report");
+					ThemedMessageBox.Show(text: "Report could not be loaded from IHK server, hand in was skipped", title: "Unable to edit report");
 					break;
 				case CreateResults.UploadFailed:
-					ThemedMessageBox.Show(ActiveTheme, text: "Report could not be updated, hand in was skipped", title: "Handin failed");
+					ThemedMessageBox.Show(text: "Report could not be updated, hand in was skipped", title: "Handin failed");
 					break;
 				default:
-					ThemedMessageBox.Show(ActiveTheme, text: "Unknown upload result, hand in was skipped", title: "Unknown result");
+					ThemedMessageBox.Show(text: "Unknown upload result, hand in was skipped", title: "Unknown result");
 					break;
 			}
 			return result == CreateResults.Success;
@@ -2082,19 +2082,19 @@ namespace BerichtManager
 					//Final fail save
 					if (!uploadedPaths.TryGetValue(nodePath, out UploadedReport report))
 					{
-						ThemedMessageBox.Show(ActiveTheme, text: $"Report {fullPath} was not uploaded and could not be handed in as a result", title: "Hand in failed");
+						ThemedMessageBox.Show(text: $"Report {fullPath} was not uploaded and could not be handed in as a result", title: "Hand in failed");
 						progressForm.Status = "\t- skipped: Not uploaded";
 						continue;
 					}
 					if (report.Status != ReportNode.UploadStatuses.Uploaded)
 					{
-						ThemedMessageBox.Show(ActiveTheme, text: $"Report {fullPath} could not be handed in due to its upload status", title: "Hand in failed");
+						ThemedMessageBox.Show(text: $"Report {fullPath} could not be handed in due to its upload status", title: "Hand in failed");
 						progressForm.Status = "\t- skipped: Can not be handed in";
 						continue;
 					}
 					if (!(report.LfdNR is int lfdnr))
 					{
-						ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {fullPath} could not be read and report could not be handed in as a result", title: "Hand in failed");
+						ThemedMessageBox.Show(text: $"Lfdnr of {fullPath} could not be read and report could not be handed in as a result", title: "Hand in failed");
 						progressForm.Status = "\t- skipped: Unable to read lfdnr";
 						continue;
 					}
@@ -2103,13 +2103,13 @@ namespace BerichtManager
 					{
 						if (!CheckIfWordRunning())
 						{
-							ThemedMessageBox.Show(ActiveTheme, text: "Word has not started yet, hand in was canceled", title: "Hand in canceled");
+							ThemedMessageBox.Show(text: "Word has not started yet, hand in was canceled", title: "Hand in canceled");
 							return;
 						}
 						//Check if changes should be uploaded or not
 						if (!updateSet)
 						{
-							autoUpdateAllChanges = ThemedMessageBox.Show(ActiveTheme, text: "Should all local changes be uploaded to IHK?", title: "Automatically upload changes?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes;
+							autoUpdateAllChanges = ThemedMessageBox.Show(text: "Should all local changes be uploaded to IHK?", title: "Automatically upload changes?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes;
 							updateSet = true;
 						}
 
@@ -2139,14 +2139,14 @@ namespace BerichtManager
 
 						if (result == null)
 						{
-							ThemedMessageBox.Show(ActiveTheme, text: "Update of report failed, hand in was skipped", title: "Hand in skipped");
+							ThemedMessageBox.Show(text: "Update of report failed, hand in was skipped", title: "Hand in skipped");
 							progressForm.Status = "\t- skipped: Uploading changes failed";
 							return;
 						}
 
 						if (result.Result != CreateResults.Success)
 						{
-							if (ThemedMessageBox.Show(ActiveTheme, text: $"Update of report {fullPath} failed, do you want to continue trying to hand in reports?", title: "Update failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+							if (ThemedMessageBox.Show(text: $"Update of report {fullPath} failed, do you want to continue trying to hand in reports?", title: "Update failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 							{
 								progressForm.Status = "\t- skipped: Uploading changes failed";
 								break;
@@ -2164,7 +2164,7 @@ namespace BerichtManager
 					if (!await TryHandIn(lfdnr))
 					{
 						failedPaths.Add(fullPath);
-						if (ThemedMessageBox.Show(ActiveTheme, text: $"Hand in of report {fullPath} failed, do you want to continue trying to hand in reports?", title: "Hand in failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+						if (ThemedMessageBox.Show(text: $"Hand in of report {fullPath} failed, do you want to continue trying to hand in reports?", title: "Hand in failed", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 						{
 							progressForm.Status = "\t- skipped: Hand in failed";
 							break;
@@ -2194,7 +2194,7 @@ namespace BerichtManager
 
 				if (reports.Count == 0)
 				{
-					ThemedMessageBox.Show(ActiveTheme, text: "All reports were already handed in", title: "Hand in complete");
+					ThemedMessageBox.Show(text: "All reports were already handed in", title: "Hand in complete");
 					return;
 				}
 				if (needsUpdate)
@@ -2209,13 +2209,13 @@ namespace BerichtManager
 					text += "\nFailed hand ins:";
 				failedPaths.ForEach(path => text += $"\n- {path}");
 				progressForm.Done();
-				ThemedMessageBox.Show(ActiveTheme, text: text, title: "Hand in complete");
+				ThemedMessageBox.Show(text: text, title: "Hand in complete");
 			});
 		}
 
 		private async void HandInSelectionClick(object sender, EventArgs e)
 		{
-			if (ThemedMessageBox.Show(ActiveTheme, text: "Warning, this will hand in all reports selected in the next window in the order they appear!\nDo you want to proceed?", title: "Caution", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+			if (ThemedMessageBox.Show(text: "Warning, this will hand in all reports selected in the next window in the order they appear!\nDo you want to proceed?", title: "Caution", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 			EventProgressForm progressForm = new EventProgressForm("Hand in progress");
 			progressForm.Show();
@@ -2260,14 +2260,14 @@ namespace BerichtManager
 				switch (ex)
 				{
 					case InvalidDocumentException _:
-						ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please upload manually", title: "Invalid document");
+						ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
 						return null;
 					case HttpRequestException _:
 						Logger.LogError(ex);
-						ThemedMessageBox.Show(ActiveTheme, text: "A network error has occurred, please check your connection", title: "Network error");
+						ThemedMessageBox.Show(text: "A network error has occurred, please check your connection", title: "Network error");
 						return null;
 					default:
-						ThemedMessageBox.Show(ActiveTheme, text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
+						ThemedMessageBox.Show(text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
 						return null;
 				}
 			}
@@ -2279,12 +2279,12 @@ namespace BerichtManager
 				return;
 			if (!CheckNetwork())
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: "No network connection", title: "No connection");
+				ThemedMessageBox.Show(text: "No network connection", title: "No connection");
 				return;
 			}
 			if (!UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report))
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: $"Could not find report {FullSelectedPath} in uploaded list, please add {tvReports.SelectedNode.FullPath} if it is uploaded", title: "Report not found");
+				ThemedMessageBox.Show(text: $"Could not find report {FullSelectedPath} in uploaded list, please add {tvReports.SelectedNode.FullPath} if it is uploaded", title: "Report not found");
 				return;
 			}
 			Word.Document doc;
@@ -2299,13 +2299,13 @@ namespace BerichtManager
 				doc = WordApp.Documents.Open(FullSelectedPath);
 			if (doc.FormFields.Count < 10)
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: "Invalid document, please upload manually", title: "Invalid document");
+				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
 				doc.Close(SaveChanges: false);
 				return;
 			}
 			if (!(report.LfdNR is int lfdnr))
 			{
-				ThemedMessageBox.Show(ActiveTheme, text: $"Unable to load lfdnr from {FullSelectedPath}, verify that it is correct", title: "Unable to edit");
+				ThemedMessageBox.Show(text: $"Unable to load lfdnr from {FullSelectedPath}, verify that it is correct", title: "Unable to edit");
 				return;
 			}
 
@@ -2318,7 +2318,7 @@ namespace BerichtManager
 			UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.Uploaded, report.LfdNR);
 			UploadedReports.SetEdited(tvReports.SelectedNode.FullPath, false);
 			UpdateTree();
-			ThemedMessageBox.Show(ActiveTheme, text: "Report was successfully updated", title: "Update complete");
+			ThemedMessageBox.Show(text: "Report was successfully updated", title: "Update complete");
 		}
 
 		/// <summary>

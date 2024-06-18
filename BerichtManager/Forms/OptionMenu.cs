@@ -131,7 +131,7 @@ namespace BerichtManager.Forms
 		{
 			if (IsDirty)
 			{
-				if (ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Save changes?", "Save?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (ThemedMessageBox.Show(text: "Save changes?", title: "Save?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					try
 					{
@@ -140,7 +140,7 @@ namespace BerichtManager.Forms
 					catch (Exception ex)
 					{
 						HelperClasses.Logger.LogError(ex);
-						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, ex.StackTrace);
+						ThemedMessageBox.Show(text: ex.StackTrace);
 					}
 				}
 			}
@@ -165,7 +165,7 @@ namespace BerichtManager.Forms
 				catch (Exception ex)
 				{
 					HelperClasses.Logger.LogError(ex);
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, ex.StackTrace);
+					ThemedMessageBox.Show(text: ex.StackTrace);
 				}
 			}
 			btSave.Enabled = false;
@@ -217,7 +217,7 @@ namespace BerichtManager.Forms
 			}
 			if (ConfigHandler.ReportPath() != tbFolder.Text)
 			{
-				if (ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Do you want to switch over imediately?", "Change directory?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				if (ThemedMessageBox.Show(text: "Do you want to switch over imediately?", title: "Change directory?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 					ReportFolderChanged(this, tbFolder.Text);
 				ConfigHandler.ReportPath(tbFolder.Text);
 			}
@@ -256,7 +256,7 @@ namespace BerichtManager.Forms
 		{
 			MarkAsDirty(sender, e);
 			if (!NamingPatternResolver.PatternContainsValues(tbNamingPattern.Text))
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: "Caution: pattern does not contain any identifying values, new reports would overwrite each other!", title: "Warning!");
+				ThemedMessageBox.Show(text: "Caution: pattern does not contain any identifying values, new reports would overwrite each other!", title: "Warning!");
 		}
 
 		private void cbShouldUseUntis_CheckedChanged(object sender, EventArgs e)

@@ -66,7 +66,7 @@ namespace BerichtManager.ReportChecking
 				Word.Document doc = WordApp.Documents.Open(FileName: Path.Combine(ConfigHandler.Instance.ReportPath(), path), ReadOnly: true);
 				if (doc.FormFields.Count < 10)
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"The report {path} does not contain the necessary form fields, checking was canceled", title: "Invalid report");
+					ThemedMessageBox.Show(text: $"The report {path} does not contain the necessary form fields, checking was canceled", title: "Invalid report");
 					doc.Close(SaveChanges: false);
 					return false;
 				}
@@ -77,7 +77,7 @@ namespace BerichtManager.ReportChecking
 				}
 				else
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read report number from {path}, checking was canceled", title: "Unable to read report number");
+					ThemedMessageBox.Show(text: $"Unable to read report number from {path}, checking was canceled", title: "Unable to read report number");
 					doc.Close(SaveChanges: false);
 					return false;
 				}
@@ -88,7 +88,7 @@ namespace BerichtManager.ReportChecking
 				}
 				else
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: $"Unable to read start date from {path}, checking was canceled", title: "Unable to read start date");
+					ThemedMessageBox.Show(text: $"Unable to read start date from {path}, checking was canceled", title: "Unable to read start date");
 					doc.Close(SaveChanges: false);
 					return false;
 				}
