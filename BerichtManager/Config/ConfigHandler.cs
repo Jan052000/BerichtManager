@@ -154,8 +154,20 @@ namespace BerichtManager.Config
 					}
 				}
 			}
+
 			if (!isComplete)
+			{
+				//Clean unused fields
+				List<string> removeFields = new List<string>();
+				foreach (KeyValuePair<string, JToken> kvp in ConfigObject)
+				{
+					if (!Config.ContainsKey(kvp.Key))
+						removeFields.Add(kvp.Key);
+				}
+				removeFields.ForEach(field => ConfigObject.Remove(field));
+
 				File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
+			}
 		}
 
 		/// <summary>
