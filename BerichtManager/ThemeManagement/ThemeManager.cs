@@ -202,6 +202,8 @@ namespace BerichtManager.ThemeManagement
 		[DefaultValue(typeof(Color), "White")]
 		public Color TreeViewHighlightedNodeColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
+		public Color TreeViewReportOpenedHighlightColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ReportUploadedColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color ReportHandedInColor { get; set; }
@@ -209,5 +211,6 @@ namespace BerichtManager.ThemeManagement
 		public Color ReportAcceptedColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color ReportRejectedColor { get; set; }
+
 	}
 }

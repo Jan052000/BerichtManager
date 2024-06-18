@@ -98,6 +98,11 @@ namespace BerichtManager
 			get => Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath);
 		}
 
+		/// <summary>
+		/// <see cref="ReportNode"/> of report opened for edit in <see cref="WordApp"/>
+		/// </summary>
+		private ReportNode OpenedReportNode { get; set; } = null;
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -955,6 +960,49 @@ namespace BerichtManager
 		}
 
 		/// <summary>
+		/// Retrieves a <see cref="TreeNode"/> from <see cref="tvReports"/> that lies at <paramref name="path"/>
+		/// </summary>
+		/// <param name="path">Path of report</param>
+		/// <returns><see cref="TreeNode"/> that <paramref name="path"/> leads to</returns>
+		private TreeNode GetNodeFromPath(string path)
+		{
+			List<string> segments = path.Replace("/", "\\").Split('\\').ToList();
+			segments.RemoveRange(0, segments.IndexOf(tvReports.Nodes[0].Text) + 1);
+			TreeNode result = tvReports.Nodes[0];
+
+			foreach (string segment in segments)
+			{
+				foreach (TreeNode node in result.Nodes)
+				{
+					if (node.Text == segment)
+					{
+						result = node;
+						break;
+					}
+				}
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Switches <see cref="OpenedReportNode"/> to <paramref name="node"/>
+		/// </summary>
+		/// <param name="node"><see cref="ReportNode"/> to mark as open for edit</param>
+		private void SwitchOpenedNode(ReportNode node)
+		{
+			if (OpenedReportNode != null)
+			{
+				OpenedReportNode.IsOpened = false;
+				tvReports.Invalidate(OpenedReportNode.Bounds);
+			}
+			OpenedReportNode = node;
+			if (node == null)
+				return;
+			node.IsOpened = true;
+		}
+
+		/// <summary>
 		/// Opens the ontents for work and school form fields in textboxes
 		/// </summary>
 		/// <param name="path">document to open</param>
@@ -983,6 +1031,10 @@ namespace BerichtManager
 					WasEdited = false;
 					return;
 				}
+
+				if (GetNodeFromPath(path) is ReportNode reportNode)
+					SwitchOpenedNode(reportNode);
+
 				rtbWork.Text = Doc.FormFields[6].Result;
 				rtbSchool.Text = Doc.FormFields[8].Result;
 				EditMode = true;
@@ -1080,6 +1132,7 @@ namespace BerichtManager
 				Doc.Close(SaveChanges: false);
 				Doc = null;
 				EditMode = false;
+				SwitchOpenedNode(null);
 				return;
 			}
 
@@ -1089,6 +1142,7 @@ namespace BerichtManager
 			Doc = null;
 			EditMode = false;
 			WasEdited = false;
+			SwitchOpenedNode(null);
 		}
 
 		/// <summary>

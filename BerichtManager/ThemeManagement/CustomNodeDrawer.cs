@@ -45,6 +45,11 @@ namespace BerichtManager.ThemeManagement
 		private Color CheckBoxBackColor { get => Theme.BackColor; }
 
 		/// <summary>
+		/// <see cref="Color"/> of background of node which has its report open for edit
+		/// </summary>
+		private Color ReportOpenedColor { get => Theme.TreeViewReportOpenedHighlightColor; }
+
+		/// <summary>
 		/// Icon displayed before a collapsed node
 		/// </summary>
 		private readonly Bitmap FolderClosedIcon = new Bitmap(Properties.Resources.Folder_Closed);
@@ -77,6 +82,9 @@ namespace BerichtManager.ThemeManagement
 			else
 				using (Brush backColor = new SolidBrush(BackColor))
 					e.Graphics.FillRectangle(backColor, e.Bounds);
+			if (e.Node is ReportNode node && node.IsOpened)
+				using (Brush editHighlight = new SolidBrush(ReportOpenedColor))
+					e.Graphics.FillRectangle(editHighlight, e.Node.Bounds);
 
 			//When treeview has checkboxes enabled
 			if (e.Node.TreeView.CheckBoxes)
