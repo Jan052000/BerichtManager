@@ -181,6 +181,8 @@ namespace BerichtManager.IHKClient
 			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
 			{
 				User user = ConfigHandler.Instance.DoIHKLogin();
+				if (user == null)
+					return false;
 				username = user.Username;
 				password = user.Password;
 				if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))

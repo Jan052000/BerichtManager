@@ -686,7 +686,7 @@ namespace BerichtManager.Config
 		/// <summary>
 		/// Opens a <see cref="Login"/> form and saves the login data
 		/// </summary>
-		/// <returns>New <see cref="User"/> containing username and password</returns>
+		/// <returns>New <see cref="User"/> containing username and password or <see langword="null"/> if login was aborted</returns>
 		public User DoIHKLogin()
 		{
 			Login login = new Login("IHK");
@@ -705,7 +705,7 @@ namespace BerichtManager.Config
 				}
 				IHKStayLoggedIn(login.KeepLoggedIn);
 				SaveConfig();
-				user = new User(username: IHKUserName(), password: IHKPassword());
+				user = new User(username: login.Username, password: login.Password);
 			}
 			return user;
 		}
