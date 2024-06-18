@@ -45,6 +45,11 @@ namespace BerichtManager.Forms
 		/// </summary>
 		public event fontSizeChanged FontSizeChanged;
 
+		/// <summary>
+		/// Emits when ihk base address has been changed
+		/// </summary>
+		public event IHKBaseAddressChangedDelegate IHKBaseAddressChanged;
+
 		public OptionMenu()
 		{
 			InitializeComponent();
@@ -74,6 +79,14 @@ namespace BerichtManager.Forms
 			tbFolder.Text = ConfigHandler.ReportPath();
 			tbUpdate.Text = ConfigHandler.PublishPath();
 			tbNamingPattern.Text = ConfigHandler.NamingPattern();
+
+			//IHK
+			nudUploadDelay.Value = ConfigHandler.IHKUploadDelay();
+			tbJobField.Text = ConfigHandler.IHKJobField();
+			tbSupervisorMail.Text = ConfigHandler.IHKSupervisorEMail();
+			cbAutoSyncStatusesWithIHK.Checked = ConfigHandler.AutoSyncStatusesWithIHK();
+			tbIHKBaseUrl.Text = ConfigHandler.IHKBaseUrl();
+			cbIHKCheckMatchingStartDates.Checked = ConfigHandler.IHKCheckMatchingStartDates();
 
 			IsDirty = false;
 			btSave.Enabled = false;
@@ -108,6 +121,11 @@ namespace BerichtManager.Forms
 		/// </summary>
 		/// <param name="fontSize">Size to change font to</param>
 		public delegate void fontSizeChanged(float fontSize);
+
+		/// <summary>
+		/// Delegate for the <see cref="IHKBaseAddressChanged"/> event
+		/// </summary>
+		public delegate void IHKBaseAddressChangedDelegate();
 
 		private void btClose_Click(object sender, EventArgs e)
 		{
@@ -205,6 +223,16 @@ namespace BerichtManager.Forms
 			}
 			if (ConfigHandler.PublishPath() != tbUpdate.Text)
 				ConfigHandler.PublishPath(tbUpdate.Text);
+			//IHK
+			ConfigHandler.IHKUploadDelay((int)nudUploadDelay.Value);
+			ConfigHandler.IHKJobField(tbJobField.Text);
+			ConfigHandler.IHKSupervisorEMail(tbSupervisorMail.Text);
+			ConfigHandler.AutoSyncStatusesWithIHK(cbAutoSyncStatusesWithIHK.Checked);
+			if (ConfigHandler.IHKBaseUrl() != tbIHKBaseUrl.Text)
+				IHKBaseAddressChanged();
+			ConfigHandler.IHKBaseUrl(tbIHKBaseUrl.Text);
+			ConfigHandler.IHKCheckMatchingStartDates(cbIHKCheckMatchingStartDates.Checked);
+
 			ConfigHandler.SaveConfig();
 		}
 
@@ -322,6 +350,11 @@ namespace BerichtManager.Forms
 		private void OptionMenu_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			ThemeManager.Instance.UpdatedThemesList -= UpdateThemesList;
+		}
+
+		private void btIHKLogin_Click(object sender, EventArgs e)
+		{
+			ConfigHandler.DoIHKLogin();
 		}
 	}
 }

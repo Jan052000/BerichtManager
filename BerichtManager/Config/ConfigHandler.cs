@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using BerichtManager.ThemeManagement;
 using BerichtManager.OwnControls;
+using System.Net.Mail;
+using BerichtManager.HelperClasses;
 
 namespace BerichtManager.Config
 {
@@ -71,7 +73,16 @@ namespace BerichtManager.Config
 			{"ReportPath", (Type.GetType("System.String"), Path.GetFullPath(".\\.."))},
 			{"PublishPath", (Type.GetType("System.String"), "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
 			{"TabStops", (Type.GetType("System.Int32"), 20)},
-			{"NamingPattern", (Type.GetType("System.String"), "WochenberichtKW~+CW+~")}
+			{"NamingPattern", (Type.GetType("System.String"), "WochenberichtKW~+CW+~")},
+			{"AutoSyncStatusesWithIHK", (Type.GetType("System.Boolean"), false)},
+			{"IHKUserName", (Type.GetType("System.String"), "")},
+			{"IHKPassword", (Type.GetType("System.String"), "")},
+			{"IHKStayLoggedIn", (Type.GetType("System.Boolean"), false)},
+			{"IHKJobField", (Type.GetType("System.String"), "")},
+			{"IHKSupervisorEMail", (Type.GetType("System.String"), "")},
+			{"IHKBaseUrl", (Type.GetType("System.String"), "https://www.bildung-ihk-nordwestfalen.de/")},
+			{"IHKUploadDelay", (Type.GetType("System.Int32"), 500)},
+			{"IHKCheckMatchingStartDates", (Type.GetType("System.Boolean"), true)}
 		};
 		#endregion
 
@@ -616,6 +627,209 @@ namespace BerichtManager.Config
 		public void NamingPattern(string pattern)
 		{
 			GenericSet("NamingPattern", pattern);
+		}
+
+		/// <summary>
+		/// Gets username for IHK login
+		/// </summary>
+		/// <returns>Username for IHK login</returns>
+		public string IHKUserName()
+		{
+			return GenericGet<string>("IHKUserName");
+		}
+
+		/// <summary>
+		/// Gets username for IHK login
+		/// </summary>
+		/// <param name="userName">Username for IHK login</param>
+		private void IHKUserName(string userName)
+		{
+			GenericSet("IHKUserName", userName);
+		}
+
+		/// <summary>
+		/// Gets decoded password for IHK login
+		/// </summary>
+		/// <returns>Decoded password for IHK login</returns>
+		public string IHKPassword()
+		{
+			return UserHandler.DecodePassword(GenericGet<string>("IHKPassword"));
+		}
+
+		/// <summary>
+		/// Sets encoded password for IHK login
+		/// </summary>
+		/// <param name="password">Decoded password for IHK login</param>
+		private void IHKPassword(string password)
+		{
+			GenericSet("IHKPassword", UserHandler.EncodePassword(password));
+		}
+
+		/// <summary>
+		/// Gets wether or not the user wants to stay logged in to IHK
+		/// </summary>
+		/// <returns><see langword="true"/> if user wants to stay logged in and <see langword="false"/> otherwise</returns>
+		public bool IHKStayLoggedIn()
+		{
+			return GenericGet<bool>("IHKStayLoggedIn");
+		}
+
+		/// <summary>
+		/// Sets wether or not the user wants to stay logged in to IHK
+		/// </summary>
+		/// <param name="stayLoggedIn">Wether or not the user wants to stay logged in to IHK</param>
+		private void IHKStayLoggedIn(bool stayLoggedIn)
+		{
+			GenericSet("IHKStayLoggedIn", stayLoggedIn);
+		}
+
+		/// <summary>
+		/// Opens a <see cref="Login"/> form and saves the login data
+		/// </summary>
+		/// <returns>New <see cref="User"/> containing username and password or <see langword="null"/> if login was aborted</returns>
+		public User DoIHKLogin()
+		{
+			Login login = new Login("IHK");
+			User user = null;
+			if (login.ShowDialog() == DialogResult.OK)
+			{
+				if (login.KeepLoggedIn)
+				{
+					IHKUserName(login.Username);
+					IHKPassword(login.Password);
+				}
+				else
+				{
+					IHKUserName("");
+					IHKPassword("");
+				}
+				IHKStayLoggedIn(login.KeepLoggedIn);
+				SaveConfig();
+				user = new User(username: login.Username, password: login.Password);
+			}
+			return user;
+		}
+
+		/// <summary>
+		/// Gets job field
+		/// </summary>
+		/// <returns>Job field</returns>
+		public string IHKJobField()
+		{
+			return GenericGet<string>("IHKJobField");
+		}
+
+		/// <summary>
+		/// Sets job field
+		/// </summary>
+		/// <param name="field">Job field</param>
+		public void IHKJobField(string field)
+		{
+			GenericSet("IHKJobField", field);
+		}
+
+		/// <summary>
+		/// Gets supervisor e-mail
+		/// </summary>
+		/// <returns>Supervisor e-mail</returns>
+		public string IHKSupervisorEMail()
+		{
+			return GenericGet<string>("IHKSupervisorEMail");
+		}
+
+		/// <summary>
+		/// Sets supervisor e-mail
+		/// </summary>
+		/// <param name="e-mail">Supervisor e-mail</param>
+		public void IHKSupervisorEMail(string email)
+		{
+			try
+			{
+				MailAddress mailAddress = new MailAddress(email);
+				GenericSet("IHKSupervisorEMail", email);
+			}
+			catch (FormatException)
+			{
+				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: "Invalid e-mail", title: "Invalid mail");
+				GenericSet("IHKSupervisorEMail", "");
+			}
+			catch (Exception e)
+			{
+				string logPath = Logger.LogError(e);
+				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, text: "Something went wrong saving the supervisor e-mail, a log was saved to:\n" + logPath, title: "An error occurred");
+			}
+		}
+
+		/// <summary>
+		/// Gets wether or not report statuses should be fetched on startup
+		/// </summary>
+		/// <returns>if reports should be automatically synchronized with IHK on create and close</returns>
+		public bool AutoSyncStatusesWithIHK()
+		{
+			return GenericGet<bool>("AutoSyncStatusesWithIHK");
+		}
+
+		/// <summary>
+		/// Sets wether or not report statuses should be fetched on startup
+		/// </summary>
+		/// <param name="autoSync">if reports should be automatically synchronized with IHK on create and close</param>
+		public void AutoSyncStatusesWithIHK(bool autoSync)
+		{
+			GenericSet("AutoSyncStatusesWithIHK", autoSync);
+		}
+
+		/// <summary>
+		/// Gets base url for <see cref="IHKClient.IHKClient"/>
+		/// </summary>
+		/// <returns>Base url of IHK portal</returns>
+		public string IHKBaseUrl()
+		{
+			return GenericGet<string>("IHKBaseUrl");
+		}
+
+		/// <summary>
+		/// Sets base url for <see cref="IHKClient.IHKClient"/>
+		/// </summary>
+		/// <param name="url">Base url of IHK portal</param>
+		public void IHKBaseUrl(string url)
+		{
+			GenericSet("IHKBaseUrl", url);
+		}
+
+		/// <summary>
+		/// Gets delay to be used between mass IHK uploads in ms
+		/// </summary>
+		/// <returns>Delay to be used between mass IHK uploads in ms</returns>
+		public int IHKUploadDelay()
+		{
+			return GenericGet<int>("IHKUploadDelay");
+		}
+
+		/// <summary>
+		/// Sets delay to be used between mass IHK uploads in ms
+		/// </summary>
+		/// <param name="delay">Delay between uploads in ms</param>
+		public void IHKUploadDelay(int delay)
+		{
+			GenericSet("IHKUploadDelay", delay);
+		}
+
+		/// <summary>
+		/// Gets flag for if IHK report creation should check for matching start dates
+		/// </summary>
+		/// <returns>If IHK report creation should check for matching start dates</returns>
+		public bool IHKCheckMatchingStartDates()
+		{
+			return GenericGet<bool>("IHKCheckMatchingStartDates");
+		}
+
+		/// <summary>
+		/// Sets flag for if IHK report creation should check for matching start dates
+		/// </summary>
+		/// <param name="checkMatchingStartDates">If IHK report creation should check for matching start dates</param>
+		public void IHKCheckMatchingStartDates(bool checkMatchingStartDates)
+		{
+			GenericSet("IHKCheckMatchingStartDates", checkMatchingStartDates);
 		}
 
 		private void SortConfig()

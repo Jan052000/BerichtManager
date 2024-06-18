@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using BerichtManager.UploadChecking;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
@@ -65,7 +66,7 @@ namespace BerichtManager.ThemeManagement
 		/// Draws nodes to treeview
 		/// </summary>
 		/// <param name="e">Event that is passed down when drawing nodes</param>
-		public void DrawNode(DrawTreeNodeEventArgs e)
+		public void DrawNode(DrawTreeNodeEventArgs e, bool drawUploadStatus = true)
 		{
 			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
 				return;
@@ -113,6 +114,43 @@ namespace BerichtManager.ThemeManagement
 						e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
 					else
 						e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
+				}
+			}
+
+			if (drawUploadStatus && e.Node is ReportNode report && report.UploadStatus != ReportNode.UploadStatuses.None)
+			{
+				//Offset of node left + right
+				int nodeOffset = 6;
+				//Default color is invisible white
+				Color? statusColor = Color.FromArgb(0, Color.White);
+				switch (report.UploadStatus)
+				{
+					case ReportNode.UploadStatuses.Uploaded:
+						statusColor = Theme.ReportUploadedColor;
+						break;
+					case ReportNode.UploadStatuses.HandedIn:
+						statusColor = Theme.ReportHandedInColor;
+						break;
+					case ReportNode.UploadStatuses.Accepted:
+						statusColor = Theme.ReportAcceptedColor;
+						break;
+					case ReportNode.UploadStatuses.Rejected:
+						statusColor = Theme.ReportRejectedColor;
+						break;
+				}
+				Rectangle ellipseRect = new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - nodeOffset - 1, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);//new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y - e.Node.Bounds.Height - 2 + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
+				using (Pen outline = new Pen((Color)statusColor))
+					e.Graphics.DrawEllipse(outline, ellipseRect);
+				using (SolidBrush upload = new SolidBrush((Color)statusColor))
+					e.Graphics.FillEllipse(upload, ellipseRect);
+				if (report.WasEditedLocally)
+				{
+					int editedCircleOffset = 1;
+					Rectangle r = new Rectangle(ellipseRect.X + editedCircleOffset, ellipseRect.Y + editedCircleOffset, ellipseRect.Width - editedCircleOffset * 2, ellipseRect.Height - editedCircleOffset * 2);
+					using (SolidBrush editBrush = new SolidBrush(Color.Black))
+						e.Graphics.FillEllipse(editBrush, r);
+					using (Pen smoothe = new Pen((Color)statusColor))
+						e.Graphics.DrawEllipse(smoothe, r);
 				}
 			}
 		}

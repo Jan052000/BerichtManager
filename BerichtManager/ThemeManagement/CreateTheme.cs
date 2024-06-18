@@ -88,6 +88,10 @@ namespace BerichtManager.ThemeManagement
 				MenuStripDropdownBackColor = (Color)colorConverter.ConvertFromString(tbMenuStripDropDown.Text),
 				MenuStripSelectedDropDownBackColor = (Color)colorConverter.ConvertFromString(tbMenuStripSelectedDropDown.Text),
 				Name = tbName.Text,
+				ReportAcceptedColor = (Color)colorConverter.ConvertFromString(tbReportAccepted.Text),
+				ReportHandedInColor = (Color)colorConverter.ConvertFromString(tbReportHandedIn.Text),
+				ReportRejectedColor = (Color)colorConverter.ConvertFromString(tbReportRejected.Text),
+				ReportUploadedColor = (Color)colorConverter.ConvertFromString(tbReportUploaded.Text),
 				SplitterColor = (Color)colorConverter.ConvertFromString(tbSplitter.Text),
 				TextBoxArrowColor = (Color)colorConverter.ConvertFromString(tbTBArrowColor.Text),
 				TextBoxBackColor = (Color)colorConverter.ConvertFromString(tbBack.Text),
@@ -137,6 +141,10 @@ namespace BerichtManager.ThemeManagement
 			tbTBBorderColor.Text = ColorTranslator.ToHtml(theme.TextBoxBorderColor);
 			tbTBDisabledBackColor.Text = ColorTranslator.ToHtml(theme.TextBoxDisabledBackColor);
 			tbTVDottedLine.Text = ColorTranslator.ToHtml(theme.TreeViewDottedLineColor);
+			tbReportAccepted.Text = ColorTranslator.ToHtml(theme.ReportAcceptedColor);
+			tbReportHandedIn.Text = ColorTranslator.ToHtml(theme.ReportHandedInColor);
+			tbReportRejected.Text = ColorTranslator.ToHtml(theme.ReportRejectedColor);
+			tbReportUploaded.Text = ColorTranslator.ToHtml(theme.ReportUploadedColor);
 		}
 	}
 }

@@ -48,6 +48,13 @@ namespace BerichtManager
 			this.tiQuickEditWork = new System.Windows.Forms.ToolStripMenuItem();
 			this.miQuickEditSchool = new System.Windows.Forms.ToolStripMenuItem();
 			this.miPrint = new System.Windows.Forms.ToolStripMenuItem();
+			this.miIHKOptions = new System.Windows.Forms.ToolStripMenuItem();
+			this.miRcUpdateStatuses = new System.Windows.Forms.ToolStripMenuItem();
+			this.miUploadAsNext = new System.Windows.Forms.ToolStripMenuItem();
+			this.miUploadAllSelected = new System.Windows.Forms.ToolStripMenuItem();
+			this.miHandInSingle = new System.Windows.Forms.ToolStripMenuItem();
+			this.miRcHandInSelection = new System.Windows.Forms.ToolStripMenuItem();
+			this.miUpdateReport = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRefresh = new System.Windows.Forms.ToolStripMenuItem();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
 			this.rtbWork = new System.Windows.Forms.RichTextBox();
@@ -63,6 +70,10 @@ namespace BerichtManager
 			this.miCreate = new System.Windows.Forms.ToolStripMenuItem();
 			this.miEditLatest = new System.Windows.Forms.ToolStripMenuItem();
 			this.miPrintAll = new System.Windows.Forms.ToolStripMenuItem();
+			this.miIHK = new System.Windows.Forms.ToolStripMenuItem();
+			this.miUpdateStatuses = new System.Windows.Forms.ToolStripMenuItem();
+			this.miUploadSelection = new System.Windows.Forms.ToolStripMenuItem();
+			this.miHandInSelection = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRevealInExplorer = new System.Windows.Forms.ToolStripMenuItem();
 			this.miCloseReport = new System.Windows.Forms.ToolStripMenuItem();
 			this.miCheckDiscrepancy = new System.Windows.Forms.ToolStripMenuItem();
@@ -109,9 +120,10 @@ namespace BerichtManager
             this.miEdit,
             this.miQuickEditOptions,
             this.miPrint,
+            this.miIHKOptions,
             this.miRefresh});
 			this.toRightClickMenu.Name = "contextMenuStrip1";
-			this.toRightClickMenu.Size = new System.Drawing.Size(147, 114);
+			this.toRightClickMenu.Size = new System.Drawing.Size(147, 136);
 			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
 			// 
 			// miDelete
@@ -157,6 +169,68 @@ namespace BerichtManager
 			this.miPrint.Size = new System.Drawing.Size(146, 22);
 			this.miPrint.Text = "Print";
 			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
+			// 
+			// miIHKOptions
+			// 
+			this.miIHKOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miRcUpdateStatuses,
+            this.miUploadAsNext,
+            this.miUploadAllSelected,
+            this.miHandInSingle,
+            this.miRcHandInSelection,
+            this.miUpdateReport});
+			this.miIHKOptions.Name = "miIHKOptions";
+			this.miIHKOptions.Size = new System.Drawing.Size(146, 22);
+			this.miIHKOptions.Text = "IHK";
+			this.miIHKOptions.ToolTipText = "All options for interactions with IHK";
+			// 
+			// miRcUpdateStatuses
+			// 
+			this.miRcUpdateStatuses.Name = "miRcUpdateStatuses";
+			this.miRcUpdateStatuses.Size = new System.Drawing.Size(166, 22);
+			this.miRcUpdateStatuses.Text = "Update statuses";
+			this.miRcUpdateStatuses.ToolTipText = "Update statuses of reports";
+			this.miRcUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
+			// 
+			// miUploadAsNext
+			// 
+			this.miUploadAsNext.Name = "miUploadAsNext";
+			this.miUploadAsNext.Size = new System.Drawing.Size(166, 22);
+			this.miUploadAsNext.Text = "Upload";
+			this.miUploadAsNext.ToolTipText = "Upload the selected report as next report";
+			this.miUploadAsNext.Click += new System.EventHandler(this.miUploadAsNext_Click);
+			// 
+			// miUploadAllSelected
+			// 
+			this.miUploadAllSelected.Name = "miUploadAllSelected";
+			this.miUploadAllSelected.Size = new System.Drawing.Size(166, 22);
+			this.miUploadAllSelected.Text = "Upload selection";
+			this.miUploadAllSelected.ToolTipText = "Upload all reports selected in following form";
+			this.miUploadAllSelected.Click += new System.EventHandler(this.UploadSelectionClick);
+			// 
+			// miHandInSingle
+			// 
+			this.miHandInSingle.Name = "miHandInSingle";
+			this.miHandInSingle.Size = new System.Drawing.Size(166, 22);
+			this.miHandInSingle.Text = "Hand in";
+			this.miHandInSingle.ToolTipText = "Hand in this report";
+			this.miHandInSingle.Click += new System.EventHandler(this.miHandInSingle_Click);
+			// 
+			// miRcHandInSelection
+			// 
+			this.miRcHandInSelection.Name = "miRcHandInSelection";
+			this.miRcHandInSelection.Size = new System.Drawing.Size(166, 22);
+			this.miRcHandInSelection.Text = "Hand in selection";
+			this.miRcHandInSelection.ToolTipText = "Hand in all reports selected in following form";
+			this.miRcHandInSelection.Click += new System.EventHandler(this.HandInSelectionClick);
+			// 
+			// miUpdateReport
+			// 
+			this.miUpdateReport.Name = "miUpdateReport";
+			this.miUpdateReport.Size = new System.Drawing.Size(166, 22);
+			this.miUpdateReport.Text = "Update report";
+			this.miUpdateReport.ToolTipText = "Upload local changes to IHK";
+			this.miUpdateReport.Click += new System.EventHandler(this.SendReportToIHK);
 			// 
 			// miRefresh
 			// 
@@ -285,6 +359,7 @@ namespace BerichtManager
             this.miEditLatest,
             this.miPrintAll,
             this.miCheckDiscrepancy,
+            this.miIHK,
             this.miCloseReport,
             this.miRevealInExplorer});
 			this.miFile.Name = "miFile";
@@ -311,6 +386,48 @@ namespace BerichtManager
 			this.miPrintAll.Size = new System.Drawing.Size(191, 22);
 			this.miPrintAll.Text = "Print all";
 			this.miPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
+			// 
+			// miIHK
+			// 
+			this.miIHK.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miUpdateStatuses,
+            this.miUploadSelection,
+            this.miHandInSelection});
+			this.miIHK.Name = "miIHK";
+			this.miIHK.Size = new System.Drawing.Size(180, 22);
+			this.miIHK.Text = "IHK";
+			this.miIHK.ToolTipText = "All options for interactions with IHK";
+			// 
+			// miUpdateStatuses
+			// 
+			this.miUpdateStatuses.Name = "miUpdateStatuses";
+			this.miUpdateStatuses.Size = new System.Drawing.Size(166, 22);
+			this.miUpdateStatuses.Text = "Update statuses";
+			this.miUpdateStatuses.ToolTipText = "Update statuses of reports";
+			this.miUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
+			// 
+			// miUploadSelection
+			// 
+			this.miUploadSelection.Name = "miUploadSelection";
+			this.miUploadSelection.Size = new System.Drawing.Size(166, 22);
+			this.miUploadSelection.Text = "Upload selection";
+			this.miUploadSelection.ToolTipText = "Upload all reports selected in following form";
+			this.miUploadSelection.Click += new System.EventHandler(this.UploadSelectionClick);
+			// 
+			// miHandInSelection
+			// 
+			this.miHandInSelection.Name = "miHandInSelection";
+			this.miHandInSelection.Size = new System.Drawing.Size(166, 22);
+			this.miHandInSelection.Text = "Hand in selection";
+			this.miHandInSelection.ToolTipText = "Hand in all reports selected in following form";
+			this.miHandInSelection.Click += new System.EventHandler(this.HandInSelectionClick);
+			// 
+			// miCloseReport
+			// 
+			this.miCloseReport.Name = "miCloseReport";
+			this.miCloseReport.Size = new System.Drawing.Size(180, 22);
+			this.miCloseReport.Text = "Close Report";
+			this.miCloseReport.Click += new System.EventHandler(this.miCloseReport_Click);
 			// 
 			// miRevealInExplorer
 			// 
@@ -405,6 +522,7 @@ namespace BerichtManager
 			this.Name = "MainForm";
 			this.Text = "Bericht Manager";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+			this.Shown += new System.EventHandler(this.MainForm_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
 			this.toRightClickMenu.ResumeLayout(false);
 			this.paMainView.ResumeLayout(false);
@@ -456,6 +574,17 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miNumbers;
 		private System.Windows.Forms.ToolStripMenuItem miDates;
 		private System.Windows.Forms.ToolStripMenuItem miFullCheck;
+		private System.Windows.Forms.ToolStripMenuItem miIHKOptions;
+		private System.Windows.Forms.ToolStripMenuItem miUploadAsNext;
+		private System.Windows.Forms.ToolStripMenuItem miUploadAllSelected;
+		private System.Windows.Forms.ToolStripMenuItem miUploadSelection;
+		private System.Windows.Forms.ToolStripMenuItem miUpdateStatuses;
+		private System.Windows.Forms.ToolStripMenuItem miRcUpdateStatuses;
+		private System.Windows.Forms.ToolStripMenuItem miIHK;
+		private System.Windows.Forms.ToolStripMenuItem miHandInSingle;
+		private System.Windows.Forms.ToolStripMenuItem miHandInSelection;
+		private System.Windows.Forms.ToolStripMenuItem miRcHandInSelection;
+		private System.Windows.Forms.ToolStripMenuItem miUpdateReport;
 	}
 }
 
