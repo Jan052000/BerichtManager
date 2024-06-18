@@ -1373,7 +1373,7 @@ namespace BerichtManager
 
 		private void miWordVisible_Click(object sender, EventArgs e)
 		{
-			if (WordIsOpen)
+			if (CheckIfWordRunning())
 				WordApp.Visible = miWordVisible.Checked;
 			WordVisible = miWordVisible.Checked;
 		}
@@ -1507,6 +1507,7 @@ namespace BerichtManager
 			}
 			catch
 			{
+				WordIsOpen = false;
 				return false;
 			}
 			return true;
