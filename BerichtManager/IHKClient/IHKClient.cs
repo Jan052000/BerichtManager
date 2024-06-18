@@ -179,7 +179,13 @@ namespace BerichtManager.IHKClient
 			string username = ConfigHandler.Instance.IHKUserName();
 			string password = ConfigHandler.Instance.IHKPassword();
 			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-				return false;
+			{
+				User user = ConfigHandler.Instance.DoIHKLogin();
+				username = user.Username;
+				password = user.Password;
+				if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+					return false;
+			}
 			Dictionary<string, string> content = new Dictionary<string, string>()
 			{
 				{ "login", username },
