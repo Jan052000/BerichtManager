@@ -251,7 +251,7 @@ namespace BerichtManager.OwnControls
 				DefWndProc(ref m);
 				using (Graphics g = Graphics.FromHwnd(m.HWnd))
 				{
-					g.Clear(Enabled ? borderColor : disabledColor);
+					g.Clear(Enabled ? BackColor : disabledColor);
 					using (Brush b = Enabled ? new SolidBrush(dropDownButtonColor) : new SolidBrush(disabledColor))
 					{
 						g.FillRectangle(b, dropDownRect);
