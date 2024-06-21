@@ -98,10 +98,23 @@ namespace BerichtManager
 			get => Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath);
 		}
 
+		private ReportNode _OpenedReportNode { get; set; } = null;
 		/// <summary>
 		/// <see cref="ReportNode"/> of report opened for edit in <see cref="WordApp"/>
 		/// </summary>
-		private ReportNode OpenedReportNode { get; set; } = null;
+		private ReportNode OpenedReportNode
+		{
+			get => _OpenedReportNode;
+			set
+			{
+				if (_OpenedReportNode != value)
+				{
+					_OpenedReportNode = value;
+					if (value != null)
+						_OpenedReportNode.IsOpened = true;
+				}
+			}
+		}
 
 		public MainForm()
 		{
@@ -212,11 +225,14 @@ namespace BerichtManager
 		{
 			void update()
 			{
+				string openedNodePath = GetFullNodePath(OpenedReportNode);
 				tvReports.Nodes.Clear();
 				TreeNode root = CreateDirectoryNode(Info);
 				tvReports.Nodes.Add(root);
 				FillStatuses(root);
 				MarkEdited(root);
+				if (openedNodePath is string)
+					OpenedReportNode = GetNodeFromPath(openedNodePath) as ReportNode;
 				tvReports.Sort();
 			}
 
@@ -992,14 +1008,8 @@ namespace BerichtManager
 		private void SwitchOpenedNode(ReportNode node)
 		{
 			if (OpenedReportNode != null)
-			{
-				OpenedReportNode.IsOpened = false;
 				tvReports.Invalidate(OpenedReportNode.Bounds);
-			}
 			OpenedReportNode = node;
-			if (node == null)
-				return;
-			node.IsOpened = true;
 		}
 
 		/// <summary>
@@ -1921,10 +1931,12 @@ namespace BerichtManager
 		/// </summary>
 		/// <param name="node"><see cref="TreeNode"/> to get path for</param>
 		/// <param name="separator">String to separate path elements with</param>
-		/// <returns>Full path separated by <paramref name="separator"/></returns>
+		/// <returns>Full path separated by <paramref name="separator"/> or <see langword="null"/> if <paramref name="node"/> is <see langword="null"/></returns>
 		private string GetFullNodePath(TreeNode node, string separator = "\\")
 		{
 			TreeNode current = node;
+			if (node == null)
+				return null;
 
 			string path = node.Text;
 			while (current.Parent != null)
