@@ -1007,8 +1007,13 @@ namespace BerichtManager
 		/// <param name="node"><see cref="ReportNode"/> to mark as open for edit</param>
 		private void SwitchOpenedNode(ReportNode node)
 		{
+			if (OpenedReportNode == node)
+				return;
 			if (OpenedReportNode != null)
+			{
+				OpenedReportNode.IsOpened = false;
 				tvReports.Invalidate(OpenedReportNode.Bounds);
+			}
 			OpenedReportNode = node;
 		}
 
@@ -1133,6 +1138,7 @@ namespace BerichtManager
 		/// </summary>
 		private void SaveOrExit()
 		{
+			SwitchOpenedNode(null);
 			if (Doc == null)
 				return;
 			if (!EditMode)
@@ -1142,7 +1148,6 @@ namespace BerichtManager
 				Doc.Close(SaveChanges: false);
 				Doc = null;
 				EditMode = false;
-				SwitchOpenedNode(null);
 				return;
 			}
 
@@ -1152,7 +1157,6 @@ namespace BerichtManager
 			Doc = null;
 			EditMode = false;
 			WasEdited = false;
-			SwitchOpenedNode(null);
 		}
 
 		/// <summary>
