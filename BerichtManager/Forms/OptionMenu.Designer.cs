@@ -52,6 +52,7 @@ namespace BerichtManager.Forms
 			this.tbServer = new System.Windows.Forms.TextBox();
 			this.cbUseCustomPrefix = new System.Windows.Forms.CheckBox();
 			this.tbCustomPrefix = new System.Windows.Forms.TextBox();
+			this.cbIHKCheckMatchingStartDates = new System.Windows.Forms.CheckBox();
 			this.gbIHK = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.laIHKBaseUrl = new System.Windows.Forms.Label();
 			this.tbIHKBaseUrl = new System.Windows.Forms.TextBox();
@@ -77,7 +78,6 @@ namespace BerichtManager.Forms
 			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.cbIHKCheckMatchingStartDates = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
@@ -275,6 +275,11 @@ namespace BerichtManager.Forms
 			// nudNumber
 			// 
 			this.nudNumber.Location = new System.Drawing.Point(98, 70);
+			this.nudNumber.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
 			this.nudNumber.Name = "nudNumber";
 			this.nudNumber.Size = new System.Drawing.Size(120, 20);
 			this.nudNumber.TabIndex = 21;
@@ -361,6 +366,19 @@ namespace BerichtManager.Forms
 			this.tbCustomPrefix.TabIndex = 3;
 			this.toolTip1.SetToolTip(this.tbCustomPrefix, "Prefix to be used in school field");
 			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// cbIHKCheckMatchingStartDates
+			// 
+			this.cbIHKCheckMatchingStartDates.AutoSize = true;
+			this.cbIHKCheckMatchingStartDates.Location = new System.Drawing.Point(276, 118);
+			this.cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
+			this.cbIHKCheckMatchingStartDates.Size = new System.Drawing.Size(205, 17);
+			this.cbIHKCheckMatchingStartDates.TabIndex = 55;
+			this.cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
+			this.toolTip1.SetToolTip(this.cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is" +
+        " the same as the report");
+			this.cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
+			this.cbIHKCheckMatchingStartDates.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// gbIHK
 			// 
@@ -646,19 +664,6 @@ namespace BerichtManager.Forms
 			this.btClose.Text = "Close";
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
-			// 
-			// cbIHKCheckMatchingStartDates
-			// 
-			this.cbIHKCheckMatchingStartDates.AutoSize = true;
-			this.cbIHKCheckMatchingStartDates.Location = new System.Drawing.Point(276, 118);
-			this.cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
-			this.cbIHKCheckMatchingStartDates.Size = new System.Drawing.Size(205, 17);
-			this.cbIHKCheckMatchingStartDates.TabIndex = 55;
-			this.cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
-			this.toolTip1.SetToolTip(this.cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is" +
-        " the same as the report");
-			this.cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
-			this.cbIHKCheckMatchingStartDates.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// OptionMenu
 			// 
