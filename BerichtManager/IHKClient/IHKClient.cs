@@ -631,7 +631,6 @@ namespace BerichtManager.IHKClient
 				browser.Document.Write(html);
 				browser.Refresh();
 				result = new HtmlDocument(browser.Document);
-				var s = browser.Document.GetElementsByTagName("div");
 			});
 			browserThread.SetApartmentState(ApartmentState.STA);
 			browserThread.Start();
