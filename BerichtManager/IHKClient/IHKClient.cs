@@ -224,7 +224,7 @@ namespace BerichtManager.IHKClient
 			if (!response.IsSuccessStatusCode)
 				return new List<UploadedReport>();
 			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-			List<HtmlElement> reportElements = CSSSelect(doc.Body, "div.reihe");
+			List<HtmlElement> reportElements = doc.Body.CSSSelect(doc.Body, "div.reihe");
 			ResetTimer();
 			return TransformHtmlToReports(reportElements);
 		}
@@ -240,7 +240,7 @@ namespace BerichtManager.IHKClient
 			List<UploadedReport> uploadedReports = new List<UploadedReport>();
 			reportElements.ForEach(reportElement =>
 			{
-				List<HtmlElement> rows = CSSSelect(reportElement, "div.col-md-8");
+				List<HtmlElement> rows = reportElement.CSSSelect(reportElement, "div.col-md-8");
 				Regex datesRegex = new Regex("(\\d+?\\.\\d+?\\.\\d+)");
 				if (!DateTime.TryParseExact(datesRegex.Match(rows[(int)ReportElementFields.TimeSpan].InnerText).Value, "dd.MM.yyyy", null, DateTimeStyles.None, out DateTime startDate))
 					return;
@@ -299,51 +299,6 @@ namespace BerichtManager.IHKClient
 			/// Button actions
 			/// </summary>
 			ButtonAction
-		}
-
-		/// <summary>
-		/// Searches <paramref name="root"/> for all <see cref="HtmlElement"/>s that fit <paramref name="cssSelector"/>
-		/// </summary>
-		/// <param name="root">Root <see cref="HtmlElement"/> to search</param>
-		/// <param name="cssSelector">Selector to use</param>
-		/// <returns><see cref="List{T}"/> of matching <see cref="HtmlElement"/>s</returns>
-		private List<HtmlElement> CSSSelect(HtmlElement root, string cssSelector)
-		{
-			List<HtmlElement> selected = new List<HtmlElement>();
-			if (cssSelector.Contains(' '))
-				cssSelector = cssSelector.Replace(" ", "");
-			List<Selector> selectors = new List<Selector>();
-			//(?<Tag>.+?[^\.](?=\.))(?<Classes>(?=\.).+?[^\.])*?(?> +|$|#)
-			Regex select = new Regex("((?<Tag>.+?(?=\\.|>|\\ |$))(?<Classes>\\..+?)*?)(( *> *)|\\ |$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-			foreach (Match match in select.Matches(cssSelector))
-			{
-				List<string> classes = new List<string>();
-				for (int i = 0; i < match.Groups["Classes"].Captures.Count; i++)
-				{
-					classes.Add(match.Groups["Classes"].Captures[i].Value.Substring(1));
-				}
-				selectors.Add(new Selector(match.Groups["Tag"].Value, classes));
-			}
-
-			selectors.ForEach(selector =>
-			{
-				foreach (HtmlElement element in root.GetElementsByTag(selector.TagName))
-				{
-					bool hasAllClasses = true;
-					List<string> classes = element.Classes;
-					hasAllClasses &= classes.Count == selector.Classes.Count;
-					if (hasAllClasses)
-					{
-						classes.ForEach(cssClass =>
-						{
-							hasAllClasses &= selector.Classes.Contains(cssClass);
-						});
-						selected.Add(element);
-					}
-				}
-			});
-
-			return selected;
 		}
 
 		/// <summary>
@@ -587,7 +542,7 @@ namespace BerichtManager.IHKClient
 			if (lfdnr < 0)
 			{
 				doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-				List<UploadedReport> uploadedReports = TransformHtmlToReports(CSSSelect(doc.Body, "div.reihe"));
+				List<UploadedReport> uploadedReports = TransformHtmlToReports(doc.Body.CSSSelect(doc.Body, "div.reihe"));
 				if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
 					lfdNR = currentReport.LfdNR;
 			}

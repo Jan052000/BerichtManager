@@ -1,7 +1,9 @@
-﻿using System;
+﻿using BerichtManager.IHKClient;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace BerichtManager.HelperClasses.HtmlClasses
 {
@@ -75,7 +77,8 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 			Classes = element.GetAttribute("className").Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 			Name = element.Name;
 			ID = element.Id;
-			InnerHTML = element.InnerText;
+			InnerText = element.InnerText;
+			InnerHTML = element.InnerHtml;
 			OuterHTML = element.OuterHtml;
 			Children = new List<HtmlElement>();
 			foreach (System.Windows.Forms.HtmlElement child in element.Children)
@@ -152,6 +155,49 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 				}
 			}
 			return result;
+		}
+
+		/// <summary>
+		/// Searches <paramref name="root"/> for all <see cref="HtmlElement"/>s that fit <paramref name="cssSelector"/>
+		/// </summary>
+		/// <param name="root">Root <see cref="HtmlElement"/> to search</param>
+		/// <param name="cssSelector">Selector to use</param>
+		/// <returns><see cref="List{T}"/> of matching <see cref="HtmlElement"/>s</returns>
+		public List<HtmlElement> CSSSelect(HtmlElement root, string cssSelector)
+		{
+			List<HtmlElement> selected = new List<HtmlElement>();
+			if (cssSelector.Contains(' '))
+				cssSelector = cssSelector.Replace(" ", "");
+			List<Selector> selectors = new List<Selector>();
+			//(?<Tag>.+?[^\.](?=\.))(?<Classes>(?=\.).+?[^\.])*?(?> +|$|#)
+			Regex select = new Regex("((?<Tag>.+?(?=\\.|>|\\ |$))(?<Classes>\\..+?)*?)(( *> *)|\\ |$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+			foreach (Match match in select.Matches(cssSelector))
+			{
+				List<string> classes = new List<string>();
+				for (int i = 0; i < match.Groups["Classes"].Captures.Count; i++)
+				{
+					classes.Add(match.Groups["Classes"].Captures[i].Value.Substring(1));
+				}
+				selectors.Add(new Selector(match.Groups["Tag"].Value, classes));
+			}
+
+			selectors.ForEach(selector =>
+			{
+				foreach (HtmlElement element in root.GetElementsByTag(selector.TagName, ignoreCase: true))
+				{
+					bool hasAllClasses = true;
+					List<string> classes = element.Classes;
+					hasAllClasses &= classes.Count == selector.Classes.Count;
+					classes.ForEach(cssClass =>
+					{
+						hasAllClasses &= selector.Classes.Contains(cssClass);
+					});
+					if (hasAllClasses)
+						selected.Add(element);
+				}
+			});
+
+			return selected;
 		}
 	}
 }
