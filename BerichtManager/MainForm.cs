@@ -1704,7 +1704,7 @@ namespace BerichtManager
 			{
 				result.Add(doc.FullName);
 				if (doc == Doc)
-					SaveOrExit();
+					CloseOpenDocument();
 				else
 					doc.Close();
 			}
