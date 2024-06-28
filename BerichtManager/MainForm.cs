@@ -1684,6 +1684,8 @@ namespace BerichtManager
 		{
 			paths.ForEach(path =>
 			{
+				if (string.IsNullOrWhiteSpace(path))
+					return;
 				if (path == activePath)
 					EditInTb(path);
 				else
@@ -1700,7 +1702,7 @@ namespace BerichtManager
 			List<string> result = new List<string>();
 			foreach (Word.Document doc in WordApp.Documents)
 			{
-				result.Add(doc.Path);
+				result.Add(doc.FullName);
 				if (doc == Doc)
 					SaveOrExit();
 				else
