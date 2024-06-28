@@ -166,8 +166,6 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		public List<HtmlElement> CSSSelect(HtmlElement root, string cssSelector)
 		{
 			List<HtmlElement> selected = new List<HtmlElement>();
-			if (cssSelector.Contains(' '))
-				cssSelector = cssSelector.Replace(" ", "");
 			List<Selector> selectors = new List<Selector>();
 			//(?<Tag>.+?[^\.](?=\.))(?<Classes>(?=\.).+?[^\.])*?(?> +|$|#)
 			Regex select = new Regex("((?<Tag>.+?(?=\\.|>|\\ |$))(?<Classes>\\..+?)*?)(( *> *)|\\ |$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
