@@ -64,7 +64,7 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
-		/// Updates the upload status of the rpeort starting on <paramref name="startDate"/>
+		/// Updates the upload status of the rpeort starting on <paramref name="startDate"/> and will update lfdnr if <paramref name="lfdnr"/> is set and lfdnr is not set
 		/// </summary>
 		/// <param name="startDate"><see cref="DateTime"/> of rpeort start date</param>
 		/// <param name="status"><see cref="ReportNode.UploadStatuses"/> to update to</param>
@@ -75,17 +75,19 @@ namespace BerichtManager.UploadChecking
 			bool save = false;
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 				return save;
-			List<UploadedReport> uploadedReports = paths.Where(kvp => kvp.Value.StartDate == startDate && (!kvp.Value.LfdNR.HasValue || kvp.Value.LfdNR == lfdnr)).ToList().Select(x => x.Value).ToList();
-			uploadedReports.ForEach(report =>
+			UploadedReport toUpdate = paths.Values.ToList().Find(report => report.StartDate == startDate);
+			if (toUpdate == null)
+				return false;
+			if (toUpdate.Status != status)
 			{
-				save |= report.Status != status;
-				report.Status = status;
-				if (!report.LfdNR.HasValue && lfdnr.HasValue)
-				{
-					report.LfdNR = lfdnr;
-					save = true;
-				}
-			});
+				toUpdate.Status = status;
+				save = true;
+			}
+			if (toUpdate.LfdNR != lfdnr)
+			{
+				toUpdate.LfdNR = lfdnr;
+				save = true;
+			}
 			if (save)
 				Instance.Save();
 			return save;
@@ -120,6 +122,24 @@ namespace BerichtManager.UploadChecking
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 				return false;
 			UploadedReport foundReport = paths.Values.ToList().Find(x => x.StartDate.Date == startDate.Date);
+			if (!(foundReport is UploadedReport result))
+				return false;
+			report = result;
+			return true;
+		}
+
+		/// <summary>
+		/// Searches for a report with lfdnr of <paramref name="lfdnr"/> under active path in <see cref="ConfigHandler"/>
+		/// </summary>
+		/// <param name="lfdnr">Identification number of report on IHK servers</param>
+		/// <param name="report">Found <see cref="UploadedReport"/> or <see langword="null"/> if it was not found</param>
+		/// <returns><see langword="true"/> if a report was found and <see langword="false"/> otherwise</returns>
+		public static bool GetUploadedReport(int lfdnr, out UploadedReport report)
+		{
+			report = null;
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
+				return false;
+			UploadedReport foundReport = paths.Values.ToList().Find(r => r.LfdNR == lfdnr);
 			if (!(foundReport is UploadedReport result))
 				return false;
 			report = result;

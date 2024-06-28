@@ -1840,7 +1840,10 @@ namespace BerichtManager
 					return files.Contains(GetFullNodePath(node)) || (!ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0);
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
+				{
+					progressForm.Done();
 					return;
+				}
 				ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
 				progressForm.Status = $"Uploading {reports.Count} reports";
 
@@ -1867,9 +1870,9 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: $"Invalid document, please add missing form fields to {path}.\nUploading is stopped", title: "Invalid document");
 						doc.Close(SaveChanges: false);
 						OpenAllDocuments(openReports, activePath);
+						progressForm.Done();
 						return;
 					}
-					progressForm.Status = $"Uploading {reports.Count}:";
 					UploadResult result = await TryUploadReportToIHK(doc);
 					if (result == null)
 					{
@@ -1877,6 +1880,7 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
 						doc.Close(SaveChanges: false);
 						OpenAllDocuments(openReports, activePath);
+						progressForm.Done();
 						return;
 					}
 					switch (result.Result)
@@ -1889,12 +1893,14 @@ namespace BerichtManager
 							doc.Close(SaveChanges: false);
 							OpenAllDocuments(openReports, activePath);
 							progressForm.Status = $"Abort: Unauthorized";
+							progressForm.Done();
 							return;
 						default:
 							ThemedMessageBox.Show(text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
 							doc.Close(SaveChanges: false);
 							OpenAllDocuments(openReports, activePath);
 							progressForm.Status = $"Abort: Upload failed";
+							progressForm.Done();
 							return;
 					}
 					doc.Close(SaveChanges: false);
@@ -2137,7 +2143,10 @@ namespace BerichtManager
 					return (node is ReportNode reportNode) && (!files.Contains(GetFullNodePath(node)) || (uploadedPaths.TryGetValue(GetFullNodePath(node), out UploadedReport report) && report.Status != ReportNode.UploadStatuses.Uploaded));
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
+				{
+					progressForm.Done();
 					return;
+				}
 				ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
 
 				bool updateSet = false;
@@ -2268,6 +2277,7 @@ namespace BerichtManager
 				if (reports.Count == 0)
 				{
 					ThemedMessageBox.Show(text: "All reports were already handed in", title: "Hand in complete");
+					progressForm.Done();
 					return;
 				}
 				if (needsUpdate)
