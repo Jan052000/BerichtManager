@@ -494,16 +494,16 @@ namespace BerichtManager.IHKClient
 		}
 
 		/// <summary>
-		/// Creates or edits reports based on <paramref name="lfdnr"/>
+		/// Creates or edits reports based on <paramref name="lfdNR"/>
 		/// </summary>
 		/// <param name="document"><see cref="Word.Document"/> to use for content</param>
-		/// <param name="lfdnr">Number of report on IHK servers if it should be edited</param>
+		/// <param name="lfdNR">Number of report on IHK servers if it should be edited</param>
 		/// <param name="checkMatchingStartDates">If IHK report creation should check for matching start dates</param>
 		/// <returns><see cref="UploadResult"/></returns>
 		/// <inheritdoc cref="FillReportContent(Report, HtmlDocument)" path="/exception"/>
 		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document, Report, bool)" path="/exception"/>
 		/// <exception cref="HttpRequestException"></exception>
-		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int lfdnr = -1, bool checkMatchingStartDates = false)
+		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int lfdNR = -1, bool checkMatchingStartDates = false)
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
@@ -512,8 +512,8 @@ namespace BerichtManager.IHKClient
 			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
 				return new UploadResult(CreateResults.Unauthorized);
 			HttpResponseMessage response;
-			if (lfdnr >= 0)
-				response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdnr}");
+			if (lfdNR >= 0)
+				response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdNR}");
 			else
 				response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
 			if (!response.IsSuccessStatusCode)
@@ -537,14 +537,14 @@ namespace BerichtManager.IHKClient
 				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
 				response = await GetAndRefer(response.Headers.Location);
-			int? lfdNR = lfdnr;
+			int? lfdnr = lfdNR;
 			//Get lfdnr from last report in list as shown in html on IHK site
 			if (lfdnr < 0)
 			{
 				doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
 				List<UploadedReport> uploadedReports = TransformHtmlToReports(doc.Body.CSSSelect(doc.Body, "div.reihe"));
 				if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
-					lfdNR = currentReport.LfdNR;
+					lfdnr = currentReport.LfdNR;
 			}
 			ResetTimer();
 			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate), lfdnr: lfdnr);
