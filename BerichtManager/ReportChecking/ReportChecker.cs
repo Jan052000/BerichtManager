@@ -1,4 +1,5 @@
 using BerichtManager.Config;
+using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ReportChecking.Discrepancies;
 using BerichtManager.ThemeManagement;
@@ -184,16 +185,6 @@ namespace BerichtManager.ReportChecking
 		}
 
 		/// <summary>
-		/// Checks if report name is valid and not a temp
-		/// </summary>
-		/// <param name="name">Name of report to check</param>
-		/// <returns><see langword="true"/> if report is valid and <see langword="false"/> otherise</returns>
-		private bool IsReportValid(string name)
-		{
-			return name.EndsWith(".docx") && !name.StartsWith("~$");
-		}
-
-		/// <summary>
 		/// Finds reports in <paramref name="node"/> and its cildren
 		/// </summary>
 		/// <param name="node">Directory to search</param>
@@ -205,7 +196,7 @@ namespace BerichtManager.ReportChecking
 				reports = new List<TreeNode>();
 			foreach (TreeNode child in node.Nodes)
 			{
-				if (IsReportValid(child.Text))
+				if (ReportUtils.IsNameValid(child.Text))
 					reports.Add(child);
 				else
 					FindReports(child, reports);

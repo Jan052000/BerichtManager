@@ -257,7 +257,7 @@ namespace BerichtManager
 			foreach (var directory in directoryInfo.GetDirectories())
 				directoryNode.Nodes.Add(CreateDirectoryNode(directory));
 			foreach (var file in directoryInfo.GetFiles())
-				if (ReportFinder.IsReportNameValid(file.Name))
+				if (ReportUtils.IsNameValid(file.Name))
 					directoryNode.Nodes.Add(new ReportNode(file.Name));
 				else
 					directoryNode.Nodes.Add(new TreeNode(file.Name));
@@ -855,7 +855,7 @@ namespace BerichtManager
 			{
 				if (File.Exists(path))
 				{
-					if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
+					if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 						return;
 					if (!DocIsSamePathAsSelected())
 						Doc = WordApp.Documents.Open(path);
@@ -1034,7 +1034,7 @@ namespace BerichtManager
 					return;
 				if (!File.Exists(path))
 					return;
-				if (Path.GetExtension(path) != ".docx" || Path.GetFileName(path).StartsWith("~$"))
+				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 					return;
 				Doc = WordApp.Documents.Open(path);
 				if (Doc.FormFields.Count != 10)
@@ -1288,7 +1288,7 @@ namespace BerichtManager
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
 			if ((File.GetAttributes(FullSelectedPath) & FileAttributes.Directory) == FileAttributes.Directory) return;
-			if (Path.GetExtension(FullSelectedPath) != ".docx" || Path.GetFileName(FullSelectedPath).StartsWith("~$"))
+			if (!ReportUtils.IsNameValid(Path.GetFileName(FullSelectedPath)))
 				return;
 			if (!HasWordStarted()) return;
 			if (tvReports.SelectedNode == null)
@@ -1360,7 +1360,7 @@ namespace BerichtManager
 					isInLogs = true;
 				}
 			}
-			bool isNameValid = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text);
+			bool isNameValid = ReportUtils.IsNameValid(tvReports.SelectedNode.Text);
 			bool isUploaded = ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status);
 			miEdit.Enabled = !isInLogs && isNameValid;
 			//miEdit.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
@@ -1498,7 +1498,8 @@ namespace BerichtManager
 						}
 						return;
 					}
-					if (Path.GetExtension(FullSelectedPath) != ".docx" || Path.GetFileName(FullSelectedPath).StartsWith("~$")) return;
+					if (!ReportUtils.IsNameValid(Path.GetFileName(FullSelectedPath)))
+						return;
 					if (!HasWordStarted()) return;
 					if (DocIsSamePathAsSelected()) return;
 					SaveOrExit();
@@ -1836,7 +1837,7 @@ namespace BerichtManager
 
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
-					return files.Contains(GetFullNodePath(node)) || (!ReportFinder.IsReportNameValid(node.Text) && node.Nodes.Count == 0);
+					return files.Contains(GetFullNodePath(node)) || (!ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0);
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
 					return;
