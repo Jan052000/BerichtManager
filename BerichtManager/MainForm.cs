@@ -1985,8 +1985,9 @@ namespace BerichtManager
 					bool isReport = (node is ReportNode reportNode);
 					bool isUploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport report);
 					bool statusIsUploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
+					bool rejectedWasEdited = report?.Status == ReportNode.UploadStatuses.Rejected && (report?.WasEditedLocally).Value;
 					bool emptyNonReportNode = !ReportFinder.IsReportNameValid(node.Text) && node.Nodes.Count == 0;
-					return isReport && (!isUploaded || !statusIsUploaded) || emptyNonReportNode;
+					return isReport && (!isUploaded || !statusIsUploaded) && !rejectedWasEdited || emptyNonReportNode;
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
 				{
