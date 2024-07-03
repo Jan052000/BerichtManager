@@ -13,23 +13,11 @@ namespace BerichtManager.HelperClasses
 		/// </summary>
 		/// <param name="doc"><see cref="Word.Document"/> to convert</param>
 		/// <returns>A new <see cref="Report"/> object which has its fields filled with values from <paramref name="doc"/></returns>
-		/// <exception cref="InvalidDocumentException">Thrown if the document does not have the needed form fields</exception>
-		public static Report WordToIHK(Word.Document doc)
+		/// <inheritdoc cref="WordToIHK(Word.Document, Report, bool)" path="/exception"/>
+		public static Report WordToIHK(Word.Document doc, bool throwMismatchStartDate = false)
 		{
-			if (doc.FormFields.Count < 10)
-				throw new InvalidDocumentException();
-
 			Report report = new Report();
-			//Dates are auto filled by IHK
-			//report.ReportContent.StartDate = doc.FormFields[3].Result;
-			//report.ReportContent.EndDate = doc.FormFields[4].Result;
-			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField();
-			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail();
-			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail();
-			report.ReportContent.JobFieldContent = doc.FormFields[6].Result.Replace("\v", "\n");
-			report.ReportContent.SeminarsField = doc.FormFields[7].Result.Replace("\v", "\n");
-			report.ReportContent.SchoolField = doc.FormFields[8].Result.Replace("\v", "\n");
-
+			WordToIHK(doc, report, throwMismatchStartDate);
 			return report;
 		}
 
@@ -54,9 +42,19 @@ namespace BerichtManager.HelperClasses
 			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField();
 			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail();
 			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail();
-			report.ReportContent.JobFieldContent = doc.FormFields[6].Result.Replace("\v", "\n");
-			report.ReportContent.SeminarsField = doc.FormFields[7].Result.Replace("\v", "\n");
-			report.ReportContent.SchoolField = doc.FormFields[8].Result.Replace("\v", "\n");
+			report.ReportContent.JobFieldContent = TransformTextToIHK(doc.FormFields[6].Result);
+			report.ReportContent.SeminarsField = TransformTextToIHK(doc.FormFields[7].Result);
+			report.ReportContent.SchoolField = TransformTextToIHK(doc.FormFields[8].Result);
+		}
+
+		/// <summary>
+		/// Replaces all new line characters with \n
+		/// </summary>
+		/// <param name="text">Text to replace new lines in</param>
+		/// <returns>String with all new line characters replaced with \n</returns>
+		private static string TransformTextToIHK(string text)
+		{
+			return text.Replace("\v", "\n").Replace("\r\n", "\n").Replace("\r", "\n");
 		}
 	}
 
