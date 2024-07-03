@@ -75,6 +75,8 @@ namespace BerichtManager.HelperClasses
 			if (filter(node))
 				return null;
 
+			bool hadChildren = node.Nodes.Count > 0;
+
 			List<TreeNode> children = new List<TreeNode>();
 			foreach (TreeNode child in node.Nodes)
 			{
@@ -84,6 +86,8 @@ namespace BerichtManager.HelperClasses
 
 			node.Nodes.Clear();
 			children.ForEach(child => node.Nodes.Add(child));
+			if (hadChildren && children.Count == 0)
+				return null;
 
 			return node;
 		}
