@@ -1313,7 +1313,7 @@ namespace BerichtManager
 			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report);//UploadedReports.GetUploadStatus(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status);
 			bool uploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
 			bool rejected = report?.Status == ReportNode.UploadStatuses.Rejected;
-			bool wasEdited = (report?.WasEditedLocally).Value;
+			bool wasEdited = report != null && (report?.WasEditedLocally).Value;
 
 
 			miEdit.Enabled = !isInLogs && isNameValid;
