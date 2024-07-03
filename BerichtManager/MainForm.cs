@@ -1316,7 +1316,7 @@ namespace BerichtManager
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miUploadAsNext.Enabled = !isInLogs && isNameValid && !isUploaded;
 			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected || wasEdited);
-			miUpdateReport.Enabled = isNameValid && isUploaded && (status == ReportNode.UploadStatuses.Uploaded || status == ReportNode.UploadStatuses.Rejected);
+			miUpdateReport.Enabled = isNameValid && isUploaded && wasEdited;
 		}
 
 		private void btOptions_Click(object sender, EventArgs e)
