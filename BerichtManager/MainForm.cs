@@ -1025,13 +1025,23 @@ namespace BerichtManager
 				if (Doc == null || WordApp == null || !WasEdited)
 					return;
 				//Stop saving of accepted reports
-				if (UploadedReports.GetUploadedReport(Doc.FullName, out UploadedReport report) && report.Status == ReportNode.UploadStatuses.Accepted)
+				if (UploadedReports.GetUploadedReport(Doc.FullName, out UploadedReport report))
 				{
-					rtbWork.Text = Doc.FormFields[6].Result;
-					rtbSchool.Text = Doc.FormFields[8].Result;
-					WasEdited = false;
-					ThemedMessageBox.Show(ActiveTheme, text: "Can not change accepted report", title: "Save not possible");
-					return;
+					switch (report.Status)
+					{
+						case ReportNode.UploadStatuses.Accepted:
+							rtbWork.Text = Doc.FormFields[6].Result;
+							rtbSchool.Text = Doc.FormFields[8].Result;
+							WasEdited = false;
+							ThemedMessageBox.Show(ActiveTheme, text: "Can not change accepted report", title: "Save not possible");
+							return;
+						case ReportNode.UploadStatuses.HandedIn:
+							rtbWork.Text = Doc.FormFields[6].Result;
+							rtbSchool.Text = Doc.FormFields[8].Result;
+							WasEdited = false;
+							ThemedMessageBox.Show(ActiveTheme, text: "Can not change handed in report", title: "Save not possible");
+							return;
+					}
 				}
 
 				FillText(WordApp, Doc.FormFields[6], rtbWork.Text);
