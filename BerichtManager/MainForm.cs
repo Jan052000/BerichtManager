@@ -1300,7 +1300,12 @@ namespace BerichtManager
 				}
 			}
 			bool isNameValid = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text);
-			bool isUploaded = UploadedReports.GetUploadStatus(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status);
+			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report);//UploadedReports.GetUploadStatus(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status);
+			bool uploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
+			bool rejected = report?.Status == ReportNode.UploadStatuses.Rejected;
+			bool wasEdited = (report?.WasEditedLocally).Value;
+
+
 			miEdit.Enabled = !isInLogs && isNameValid;
 			//miEdit.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miPrint.Enabled = !isInLogs && isNameValid;
@@ -1310,7 +1315,7 @@ namespace BerichtManager
 			miQuickEditOptions.Enabled = !isInLogs && isNameValid;
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miUploadAsNext.Enabled = !isInLogs && isNameValid && !isUploaded;
-			miHandInSingle.Enabled = isNameValid && isUploaded && (status == ReportNode.UploadStatuses.Uploaded);
+			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected || wasEdited);
 			miUpdateReport.Enabled = isNameValid && isUploaded && (status == ReportNode.UploadStatuses.Uploaded || status == ReportNode.UploadStatuses.Rejected);
 		}
 
