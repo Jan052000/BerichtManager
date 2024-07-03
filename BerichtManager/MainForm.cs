@@ -248,7 +248,7 @@ namespace BerichtManager
 		{
 			if (root is ReportNode report)
 			{
-				if (ReportIsAlreadyUploaded(GetFullNodePath(root), out ReportNode.UploadStatuses status))
+				if (UploadedReports.GetUploadStatus(GetFullNodePath(root), out ReportNode.UploadStatuses status))
 					report.UploadStatus = status;
 			}
 			foreach (TreeNode node in root.Nodes)
@@ -1300,7 +1300,7 @@ namespace BerichtManager
 				}
 			}
 			bool isNameValid = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text);
-			bool isUploaded = ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status);
+			bool isUploaded = UploadedReports.GetUploadStatus(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status);
 			miEdit.Enabled = !isInLogs && isNameValid;
 			//miEdit.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miPrint.Enabled = !isInLogs && isNameValid;
@@ -1583,29 +1583,12 @@ namespace BerichtManager
 			}
 		}
 
-		/// <summary>
-		/// Checks if a report has already been uploaded
-		/// </summary>
-		/// <param name="reportNodePath">Path of report to add</param>
-		/// <param name="updatedStatus"><see cref="ReportNode.UploadStatuses"/> of report</param>
-		/// <returns><see langword="true"/> if report is marked as uploaded and <see langword="false"/> if not</returns>
-		private bool ReportIsAlreadyUploaded(string reportNodePath, out ReportNode.UploadStatuses updatedStatus)
-		{
-			updatedStatus = ReportNode.UploadStatuses.None;
-			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> reports))
-				return false;
-			if (!reports.TryGetValue(reportNodePath, out UploadedReport ustatus))
-				return false;
-			updatedStatus = ustatus.Status;
-			return updatedStatus != ReportNode.UploadStatuses.None;
-		}
-
 		private async void miUploadAsNext_Click(object sender, EventArgs e)
 		{
 			if (!HasWordStarted())
 				return;
 			//should not happen as menu item should be disabled
-			if (ReportIsAlreadyUploaded(tvReports.SelectedNode.FullPath, out _))
+			if (UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out _))
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: "Report was already uploaded", title: "Report already uploaded");
 				return;

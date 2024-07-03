@@ -94,6 +94,21 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Gets status of uploaded report if it was uploaded
+		/// </summary>
+		/// <param name="path">Path of report</param>
+		/// <param name="status">Upload status of report at <paramref name="path"/></param>
+		/// <returns><see langword="true"/> if report is uploaded and <see langword="false"/> otherwise</returns>
+		public static bool GetUploadStatus(string path, out ReportNode.UploadStatuses status)
+		{
+			status = ReportNode.UploadStatuses.None;
+			if (!GetUploadedReport(path, out UploadedReport result))
+				return false;
+			status = result.Status;
+			return true;
+		}
+
+		/// <summary>
 		/// Searches for a report with path <paramref name="path"/> under active path in <see cref="ConfigHandler"/>
 		/// </summary>
 		/// <param name="path">Path of report</param>
