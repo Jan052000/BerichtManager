@@ -1982,7 +1982,11 @@ namespace BerichtManager
 
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
-					return (node is ReportNode reportNode) && (!files.Contains(GetFullNodePath(node)) || (uploadedPaths.TryGetValue(GetFullNodePath(node), out UploadedReport report) && report.Status != ReportNode.UploadStatuses.Uploaded)) || (!ReportFinder.IsReportNameValid(node.Text) && node.Nodes.Count == 0);
+					bool isReport = (node is ReportNode reportNode);
+					bool isUploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport report);
+					bool statusIsUploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
+					bool emptyNonReportNode = !ReportFinder.IsReportNameValid(node.Text) && node.Nodes.Count == 0;
+					return isReport && (!isUploaded || !statusIsUploaded) || emptyNonReportNode;
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
 				{
