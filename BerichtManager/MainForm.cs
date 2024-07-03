@@ -1022,8 +1022,18 @@ namespace BerichtManager
 		{
 			try
 			{
-				if (Doc == null || WordApp == null)
+				if (Doc == null || WordApp == null || !WasEdited)
 					return;
+				//Stop saving of accepted reports
+				if (UploadedReports.GetUploadedReport(Doc.FullName, out UploadedReport report) && report.Status == ReportNode.UploadStatuses.Accepted)
+				{
+					rtbWork.Text = Doc.FormFields[6].Result;
+					rtbSchool.Text = Doc.FormFields[8].Result;
+					WasEdited = false;
+					ThemedMessageBox.Show(ActiveTheme, text: "Can not change accepted report", title: "Save not possible");
+					return;
+				}
+
 				FillText(WordApp, Doc.FormFields[6], rtbWork.Text);
 				FillText(WordApp, Doc.FormFields[8], rtbSchool.Text);
 				FitToPage(Doc);

@@ -102,6 +102,18 @@ namespace BerichtManager.UploadChecking
 		public static bool GetUploadedReport(string path, out UploadedReport report)
 		{
 			report = null;
+
+			//Handle static file path
+			if (Path.IsPathRooted(path))
+			{
+				if (!path.StartsWith(ConfigHandler.Instance.ReportPath()))
+					return false;
+				string toSplit = path.Replace('/', '\\');
+				List<string> splitPath = toSplit.Split('\\').ToList();
+				string reportRoot = ConfigHandler.Instance.ReportPath().Replace('/', '\\').Split('\\').Last();
+				splitPath.RemoveRange(0, splitPath.IndexOf(reportRoot));
+				path = String.Join('\\'.ToString(), splitPath);
+			}
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
 				return false;
 			if (!paths.TryGetValue(path, out UploadedReport result))
