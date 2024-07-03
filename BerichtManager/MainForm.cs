@@ -2212,6 +2212,8 @@ namespace BerichtManager
 				ThemedMessageBox.Show(ActiveTheme, text: $"Could not find report {FullSelectedPath} in uploaded list, please add {tvReports.SelectedNode.FullPath} if it is uploaded", title: "Report not found");
 				return;
 			}
+			if (!report.WasEditedLocally)
+				return;
 			Word.Document doc;
 			//Prevent word app from showing when opening an already open document
 			bool close = true;
