@@ -303,6 +303,7 @@ namespace BerichtManager
 		/// <param name="text">The Text to Fill</param>
 		private void FillText(Word.Application app, Word.FormField field, string text)
 		{
+			text = ReportUtils.TransformTextToWord(text);
 			field.Select();
 			for (int i = 1; i < 6; i++)
 			{
@@ -313,7 +314,7 @@ namespace BerichtManager
 			if (text.Length > 254)
 			{
 				field.Result = " ";
-				app.Selection.Text = text.Replace("\n", "\v").Substring(0, 200);
+				app.Selection.Text = text.Substring(0, 200);
 				field.Result = field.Result.TrimEnd() + " ";
 				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
 				app.Selection.TypeText(text.Substring(200));
@@ -325,7 +326,7 @@ namespace BerichtManager
 			}
 			else
 			{
-				field.Result = text.Replace("\n", "\v");
+				field.Result = text;
 			}
 		}
 

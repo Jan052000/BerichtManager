@@ -1,4 +1,6 @@
-﻿namespace BerichtManager.HelperClasses
+﻿using System.Collections.Generic;
+
+namespace BerichtManager.HelperClasses
 {
 	/// <summary>
 	/// Class holding methods used for interacting with properties of reports
@@ -13,6 +15,29 @@
 		public static bool IsNameValid(string name)
 		{
 			return !string.IsNullOrEmpty(name) && !name.StartsWith("~$") && name.EndsWith(".docx");
+		}
+
+		/// <summary>
+		/// Replaces all new line characters with \v
+		/// </summary>
+		/// <param name="text">Text to replace new lines in</param>
+		/// <returns>String with all new line characters replaced with \v</returns>
+		public static string TransformTextToWord(string text)
+		{
+			return ReplaceAllNewLine(text, "\v");
+		}
+
+		private static string ReplaceAllNewLine(string text, string newNewLine)
+		{
+			string result = text;
+			List<string> newLines = new List<string>() { "\r\n", "\r", "\n", "\v" };
+			foreach (string newLine in newLines)
+			{
+				if (newLine == newNewLine)
+					continue;
+				result = result.Replace(newLine, newNewLine);
+			}
+			return result;
 		}
 	}
 }
