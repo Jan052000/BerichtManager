@@ -2276,5 +2276,165 @@ namespace BerichtManager
 		{
 			return System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
 		}
+
+		/// <summary>
+		/// Checks all word document reports for wrong newlines
+		/// </summary>
+		/// <param name="progressForm"><see cref="EventProgressForm"/> to show progress on</param>
+		/// <returns><see cref="List{}"/> of <see cref="ReportNode"/>s which contain wrong newlines</returns>
+		private Task<List<ReportNode>> CheckWordDocuments(EventProgressForm progressForm)
+		{
+			return Task.Run(() =>
+			{
+				bool stop = false;
+				void HandleStop()
+				{
+					stop = true;
+				}
+				progressForm.Stop += HandleStop;
+				bool newLineError = false;
+				List<ReportNode> result = new List<ReportNode>();
+
+				ReportFinder.FindReports(tvReports.Nodes[0], out List<TreeNode> reportNodes);
+				if (reportNodes.Count == 0)
+					return new List<ReportNode>();
+
+				//Find all report containing odd new lines not previously replaced
+				int rchecked = 0;
+				List<string> checkFor = new List<string>() { "\r\n", "\r", "\n" };
+				foreach (TreeNode node in reportNodes)
+				{
+					if (stop)
+					{
+						progressForm.Status = "Stopping";
+						break;
+					}
+					bool errorFound = false;
+					Word.Document doc = WordApp.Documents.Open(Path.GetFullPath(Path.Combine(ConfigHandler.ReportPath(), "..", GetFullNodePath(node))));
+
+					checkFor.ForEach(newLine =>
+					{
+						errorFound |= doc.FormFields[6].Result.Contains(newLine);
+						errorFound |= doc.FormFields[7].Result.Contains(newLine);
+						errorFound |= doc.FormFields[8].Result.Contains(newLine);
+					});
+
+					bool canBeUpdated = node is ReportNode report && UploadedReports.GetUploadStatus(GetFullNodePath(node), out var status) && (status == ReportNode.UploadStatuses.Uploaded || status == ReportNode.UploadStatuses.Rejected);
+					progressForm.Status = $"-{doc.FullName}: {(errorFound ? "flagged" + (canBeUpdated ? "" : "but can not be updated on IHK") : "no misplaced new lines")}";
+					doc.Close(SaveChanges: false);
+					newLineError |= errorFound;
+					//Flag report if error was found, node is report and report is uploaded or rejected
+					if (errorFound && node is ReportNode reportNode && (reportNode.UploadStatus == ReportNode.UploadStatuses.Uploaded || reportNode.UploadStatus == ReportNode.UploadStatuses.Rejected))
+						result.Add(reportNode);
+					rchecked++;
+				}
+
+				progressForm.Status = $"Checked {rchecked} {(rchecked != 1 ? "reports" : "report")}";
+				progressForm.Stop -= HandleStop;
+
+				return result;
+			});
+		}
+
+		/// <summary>
+		/// Generates a full file path to a file represented by <paramref name="node"/>
+		/// </summary>
+		/// <param name="node"><see cref="TreeNode"/> to get full file path for</param>
+		/// <returns>Full file path to file represented by <paramref name="node"/></returns>
+		private string GetFullPath(TreeNode node)
+		{
+			return Path.GetFullPath(Path.Combine("..", "..", GetFullNodePath(node)));
+		}
+
+		/// <summary>
+		/// Checks the format of word reports and corrects them on both local and IHK reports
+		/// </summary>
+		/// <param name="sender"><see cref="Control"/> that raised the event</param>
+		/// <param name="e"><see cref="EventArgs"/> of event</param>
+		private async void CheckFormat(object sender, EventArgs e)
+		{
+			if (!HasWordStarted())
+				return;
+
+			//Create progress form
+			bool stop = false;
+			EventProgressForm progressForm = new EventProgressForm("Checking formats");
+			progressForm.Stop += () => stop = true;
+			progressForm.Show();
+			progressForm.Status = "Indexing word reports:";
+
+
+			//Close documents
+			progressForm.Status = "Closing open documents";
+			string activePath = Doc?.FullName;
+			List<string> closedDocs = CloseAllReports();
+
+			if (stop)
+				return;
+
+			//Check word documents
+			List<ReportNode> formatErrors = new List<ReportNode>();
+			try
+			{
+				formatErrors = await CheckWordDocuments(progressForm);
+			}
+			catch (Exception ex)
+			{
+				progressForm.Status = $"{ex.GetType().Name} occurred, stopping";
+				stop = true;
+			}
+
+			if (stop)
+			{
+				progressForm.Status = "Stopped";
+				progressForm.Done();
+				return;
+			}
+			if (formatErrors.Count == 0)
+			{
+				progressForm.Status = "No formatting errors found";
+				progressForm.Done();
+				return;
+			}
+
+			int edited = 0;
+
+			bool shouldEdit = ThemedMessageBox.Show(ActiveTheme, text: $"Correct formatting of {formatErrors.Count} {(formatErrors.Count == 1 ? "report" : "reports")}?",
+				title: "Correct formatting?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes;
+			if (shouldEdit)
+			{
+				foreach (ReportNode node in formatErrors)
+				{
+					Word.Document report = WordApp.Documents.Open(GetFullPath(node));
+
+					if (report.FormFields.Count < 10)
+					{
+						ThemedMessageBox.Show(ActiveTheme, text: $"Report {report.FullName} has an invalid form field count", title: "Invalid document");
+						continue;
+					}
+
+					string work = report.FormFields[6].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
+					string seminars = report.FormFields[7].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
+					string school = report.FormFields[8].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
+
+					FillText(WordApp, report.FormFields[6], work);
+					FillText(WordApp, report.FormFields[7], seminars);
+					FillText(WordApp, report.FormFields[8], school);
+
+					report.Close(SaveChanges: true);
+
+					UploadedReports.UpdateReport(GetFullNodePath(node), wasEdited: true);
+					edited++;
+				}
+
+				progressForm.Status = $"Edited {edited} {(edited == 1 ? "report" : "reports")}";
+			}
+
+			progressForm.Status = "Opening closed reports";
+			OpenAllDocuments(closedDocs, activePath);
+			progressForm.Status = "Done";
+
+			progressForm.Done();
+		}
 	}
 }

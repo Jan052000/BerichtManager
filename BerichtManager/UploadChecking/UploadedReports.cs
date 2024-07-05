@@ -94,6 +94,38 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Updates an <see cref="UploadedReport"/> at <paramref name="path"/>
+		/// </summary>
+		/// <param name="path">Path of report</param>
+		/// <param name="status">New upload status</param>
+		/// <param name="lfdnr">New lfdnr</param>
+		/// <param name="wasEdited">New edited status</param>
+		public static void UpdateReport(string path, ReportNode.UploadStatuses? status = null, int? lfdnr = null, bool? wasEdited = null)
+		{
+			bool save = false;
+			if (!GetUploadedReport(path, out UploadedReport report))
+				return;
+			if (report.Status != status && status.HasValue)
+			{
+				save = true;
+				report.Status = status.Value;
+			}
+			if (report.LfdNR != lfdnr && lfdnr.HasValue)
+			{
+				save = true;
+				report.LfdNR = lfdnr.Value;
+			}
+			if (report.WasEditedLocally != wasEdited && wasEdited.HasValue)
+			{
+				save = true;
+				report.WasEditedLocally = wasEdited.Value;
+			}
+
+			if (save)
+				Instance.Save();
+		}
+
+		/// <summary>
 		/// Gets status of uploaded report if it was uploaded
 		/// </summary>
 		/// <param name="path">Path of report</param>
