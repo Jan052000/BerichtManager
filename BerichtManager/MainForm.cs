@@ -2294,10 +2294,23 @@ namespace BerichtManager
 				progressForm.Stop += HandleStop;
 				bool newLineError = false;
 				List<ReportNode> result = new List<ReportNode>();
-
-				ReportFinder.FindReports(tvReports.Nodes[0], out List<TreeNode> reportNodes);
-				if (reportNodes.Count == 0)
+				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
+				{
+					return !ReportFinder.IsReportNameValid(node.Text) && node.Nodes.Count == 0;
+				});
+				if (fs.ShowDialog() != DialogResult.OK)
+				{
+					progressForm.Status = "File selection was canceled";
+					progressForm.Done();
 					return new List<ReportNode>();
+				}
+
+				ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reportNodes);
+				if (reportNodes.Count == 0)
+				{
+					progressForm.Status = "No reports selected";
+					return new List<ReportNode>();
+				}
 
 				//Find all report containing odd new lines not previously replaced
 				int rchecked = 0;
@@ -2320,7 +2333,7 @@ namespace BerichtManager
 					});
 
 					bool canBeUpdated = node is ReportNode report && UploadedReports.GetUploadStatus(GetFullNodePath(node), out var status) && (status == ReportNode.UploadStatuses.Uploaded || status == ReportNode.UploadStatuses.Rejected);
-					progressForm.Status = $"-{doc.FullName}: {(errorFound ? "flagged" + (canBeUpdated ? "" : "but can not be updated on IHK") : "no misplaced new lines")}";
+					progressForm.Status = $"-{doc.FullName}: {(errorFound ? "flagged" + (canBeUpdated ? "" : " but can not be updated on IHK") : "no misplaced new lines")}";
 					doc.Close(SaveChanges: false);
 					newLineError |= errorFound;
 					//Flag report if error was found, node is report and report is uploaded or rejected
