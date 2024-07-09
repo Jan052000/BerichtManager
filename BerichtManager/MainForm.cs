@@ -2547,6 +2547,7 @@ namespace BerichtManager
 
 			bool shouldEdit = ThemedMessageBox.Show(ActiveTheme, text: $"Correct formatting of {formatErrors.Count} {(formatErrors.Count == 1 ? "report" : "reports")}?",
 				title: "Correct formatting?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes;
+			Dictionary<string, string> skipped = new Dictionary<string, string>();
 			if (shouldEdit)
 			{
 				foreach (ReportNode node in formatErrors)
@@ -2555,10 +2556,12 @@ namespace BerichtManager
 
 					if (report.FormFields.Count < 10)
 					{
-						ThemedMessageBox.Show(ActiveTheme, text: $"Report {report.FullName} has an invalid form field count", title: "Invalid document");
+						progressForm.Status = $"Skipped {report.FullName} as it has an invalid number of form fields";
+						skipped.Add(report.FullName, "invalid number of form fields");
 						continue;
 					}
 
+					progressForm.Status = $"Editing {report.FullName}";
 					string work = report.FormFields[6].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
 					string seminars = report.FormFields[7].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
 					string school = report.FormFields[8].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
@@ -2572,8 +2575,6 @@ namespace BerichtManager
 					UploadedReports.UpdateReport(GetFullNodePath(node), wasEdited: true);
 					edited++;
 				}
-
-				progressForm.Status = $"Edited {edited} {(edited == 1 ? "report" : "reports")}";
 			}
 
 			progressForm.Status = "Opening closed reports";
@@ -2581,6 +2582,15 @@ namespace BerichtManager
 			progressForm.Status = "Done";
 
 			progressForm.Done();
+
+			string resultsMessage = $"Found {formatErrors} {(formatErrors.Count == 1 ? "error" : "errors")} and fixed {formatErrors.Count - skipped.Count} / {formatErrors.Count} of them.";
+			if (skipped.Count > 0)
+				resultsMessage += "\nSkipped:";
+			foreach (KeyValuePair<string, string> kvp in skipped)
+			{
+				resultsMessage += $"\n\t- {kvp.Key}, {kvp.Value}";
+			}
+			ThemedMessageBox.Show(ActiveTheme, text: resultsMessage);
 
 			if (formatErrors.Count > 0 && shouldEdit)
 				UpdateTree();
