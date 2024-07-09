@@ -2268,6 +2268,133 @@ namespace BerichtManager
 			ThemedMessageBox.Show(ActiveTheme, text: "Report was successfully updated", title: "Update complete");
 		}
 
+		private async void SendSelectionToIHK(object sender, EventArgs e)
+		{
+			if (!HasWordStarted())
+				return;
+			if (!CheckNetwork())
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: "No network connection", title: "No connection");
+				return;
+			}
+
+			EventProgressForm progressForm = new EventProgressForm("Updating IHK reports");
+			bool stop = false;
+			progressForm.Stop += () => stop = true;
+			progressForm.Show();
+			progressForm.Status = "Selecting reports";
+
+			FolderSelect select = new FolderSelect(tvReports.Nodes[0], (node) =>
+			{
+				bool isReport = node is ReportNode;
+				bool emptyNonReport = !ReportFinder.IsReportNameValid(node.Text) && node.Nodes.Count == 0;
+				bool uploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport report);
+				bool validStatus = uploaded && (report.Status == ReportNode.UploadStatuses.Uploaded || report.Status == ReportNode.UploadStatuses.Rejected);
+				bool wasEdited = report != null && report.WasEditedLocally;
+				return isReport && (!wasEdited || !validStatus) || emptyNonReport;
+			});
+
+			if (select.ShowDialog() != DialogResult.OK)
+			{
+				progressForm.Status = "File selection was canceled";
+				progressForm.Done();
+				return;
+			}
+
+			ReportFinder.FindReports(select.FilteredNode, out List<TreeNode> reportNodes);
+			if (reportNodes.Count == 0)
+			{
+				progressForm.Status = "No reports selected";
+				progressForm.Done();
+				return;
+			}
+			else
+				progressForm.Status = $"{reportNodes.Count} {(reportNodes.Count == 1 ? "report" : "reports")} were selected";
+
+			progressForm.Status = "Closing all reports";
+			string activePath = Doc?.FullName;
+			List<string> openReports = CloseAllReports();
+
+			Dictionary<string, string> skipped = new Dictionary<string, string>();
+			foreach (TreeNode node in reportNodes)
+			{
+				if (stop)
+				{
+					progressForm.Status = "Stopping";
+					break;
+				}
+				string fullPath = GetFullPath(node);
+				progressForm.Status = $"Updating {fullPath}:";
+				if(!UploadedReports.GetUploadedReport(fullPath, out UploadedReport report))
+				{
+					progressForm.Status = "Skipped, not a report";
+					skipped.Add(fullPath, "not a report");
+					continue;
+				}
+				if (!(report.LfdNR is int lfdnr))
+				{
+					progressForm.Status = "Skipped, lfdnr not found";
+					skipped.Add(fullPath, "lfdnr not found");
+					continue;
+				}
+
+				Word.Document doc = WordApp.Documents.Open(fullPath);
+				if (doc.FormFields.Count < 10)
+				{
+					progressForm.Status = "Skipped, invalid form field count";
+					skipped.Add(fullPath, "invalid form field count");
+					continue;
+				}
+
+				UploadResult result = null;
+				try
+				{
+					result = await IHKClient.EditReport(doc, lfdnr);
+				}
+				catch (Exception ex)
+				{
+					progressForm.Status = $"Skipped, Upload failed with {ex.GetType().Name}";
+					skipped.Add(fullPath, $"{ex.GetType().Name}");
+					doc.Close(SaveChanges: false);
+					continue;
+				}
+				switch (result.Result)
+				{
+					case CreateResults.Success:
+						progressForm.Status = "\t-Updated";
+						UploadedReports.SetEdited(fullPath, false);
+						break;
+					default:
+						progressForm.Status = "Skipped, Upload failed";
+						skipped.Add(fullPath, $"Upload failed {result.Result}");
+						break;
+				}
+
+				doc.Close(SaveChanges: false);
+			}
+
+			if (stop)
+				progressForm.Status = "Stopped";
+
+			progressForm.Status = "Opening closed reports";
+			OpenAllDocuments(openReports, activePath);
+			progressForm.Status = "Calculating statistics";
+
+			string resultsMessage = $"Uploaded {reportNodes.Count - skipped.Count} / {reportNodes.Count} reports";
+			if (skipped.Count > 0)
+				resultsMessage += "\nSkipped:";
+			foreach (KeyValuePair<string, string> kvp in skipped)
+			{
+				resultsMessage += $"\n- {kvp.Key}, {kvp.Value}";
+			}
+
+			progressForm.Status = "Done";
+			progressForm.Done();
+			ThemedMessageBox.Show(ActiveTheme, text: resultsMessage, title: "Update results");
+			if (reportNodes.Count > 0)
+				UpdateTree();
+		}
+
 		/// <summary>
 		/// Checks
 		/// </summary>
