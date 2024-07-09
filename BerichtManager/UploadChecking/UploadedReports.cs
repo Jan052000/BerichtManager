@@ -1,4 +1,4 @@
-﻿using BerichtManager.Config;
+using BerichtManager.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -94,6 +94,53 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Updates an <see cref="UploadedReport"/> at <paramref name="path"/>
+		/// </summary>
+		/// <param name="path">Path of report</param>
+		/// <param name="status">New upload status</param>
+		/// <param name="lfdnr">New lfdnr</param>
+		/// <param name="wasEdited">New edited status</param>
+		public static void UpdateReport(string path, ReportNode.UploadStatuses? status = null, int? lfdnr = null, bool? wasEdited = null)
+		{
+			bool save = false;
+			if (!GetUploadedReport(path, out UploadedReport report))
+				return;
+			if (report.Status != status && status.HasValue)
+			{
+				save = true;
+				report.Status = status.Value;
+			}
+			if (report.LfdNR != lfdnr && lfdnr.HasValue)
+			{
+				save = true;
+				report.LfdNR = lfdnr.Value;
+			}
+			if (report.WasEditedLocally != wasEdited && wasEdited.HasValue)
+			{
+				save = true;
+				report.WasEditedLocally = wasEdited.Value;
+			}
+
+			if (save)
+				Instance.Save();
+		}
+
+		/// <summary>
+		/// Gets status of uploaded report if it was uploaded
+		/// </summary>
+		/// <param name="path">Path of report</param>
+		/// <param name="status">Upload status of report at <paramref name="path"/></param>
+		/// <returns><see langword="true"/> if report is uploaded and <see langword="false"/> otherwise</returns>
+		public static bool GetUploadStatus(string path, out ReportNode.UploadStatuses status)
+		{
+			status = ReportNode.UploadStatuses.None;
+			if (!GetUploadedReport(path, out UploadedReport result))
+				return false;
+			status = result.Status;
+			return true;
+		}
+
+		/// <summary>
 		/// Searches for a report with path <paramref name="path"/> under active path in <see cref="ConfigHandler"/>
 		/// </summary>
 		/// <param name="path">Path of report</param>
@@ -102,6 +149,18 @@ namespace BerichtManager.UploadChecking
 		public static bool GetUploadedReport(string path, out UploadedReport report)
 		{
 			report = null;
+
+			//Handle static file path
+			if (Path.IsPathRooted(path))
+			{
+				if (!path.StartsWith(ConfigHandler.Instance.ReportPath))
+					return false;
+				string toSplit = path.Replace('/', '\\');
+				List<string> splitPath = toSplit.Split('\\').ToList();
+				string reportRoot = ConfigHandler.Instance.ReportPath.Replace('/', '\\').Split('\\').Last();
+				splitPath.RemoveRange(0, splitPath.IndexOf(reportRoot));
+				path = String.Join('\\'.ToString(), splitPath);
+			}
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 				return false;
 			if (!paths.TryGetValue(path, out UploadedReport result))

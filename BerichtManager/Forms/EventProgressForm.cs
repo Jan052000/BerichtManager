@@ -18,13 +18,16 @@ namespace BerichtManager.Forms
 			get => eventsText;
 			set
 			{
-				if (eventsText != value)
+				if (eventsText != value && !string.IsNullOrWhiteSpace(value))
 				{
+					bool wasEmpty = string.IsNullOrWhiteSpace(eventsText);
 					eventsText = value;
+					if (wasEmpty)
+						eventsText = eventsText.Trim();
 					if (rtbEvents.InvokeRequired)
-						rtbEvents.Invoke(new Action(() => rtbEvents.Text = value));
+						rtbEvents.Invoke(new Action(() => rtbEvents.Text = eventsText));
 					else
-						rtbEvents.Text = value;
+						rtbEvents.Text = eventsText;
 				}
 			}
 		}
@@ -34,7 +37,7 @@ namespace BerichtManager.Forms
 		/// </summary>
 		private string status { get; set; } = "";
 		/// <summary>
-		/// Sets a new trimed status in <see cref="rtbStatus"/> and adds formatted previous status to <see cref="rtbEvents"/> or gets the formatted status
+		/// Sets a new trimmed status in <see cref="rtbStatus"/> and adds formatted previous status to <see cref="rtbEvents"/> or gets the formatted status
 		/// </summary>
 		public string Status
 		{
