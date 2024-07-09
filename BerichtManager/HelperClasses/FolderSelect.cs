@@ -41,7 +41,7 @@ namespace BerichtManager.HelperClasses
 		/// Creates a new <see cref="Form"/> of <see cref="FolderSelect"/>
 		/// </summary>
 		/// <param name="node">Initial <see cref="TreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
-		/// <param name="filter"><see cref="NodeFilter"/> used to filter <paramref name="node"/></param>
+		/// <param name="filter"><see cref="NodeFilter"/> used to filter <paramref name="node"/> removes nodes if <see langword="true"/> is returned</param>
 		public FolderSelect(TreeNode node, NodeFilter filter)
 		{
 			InitializeComponent();

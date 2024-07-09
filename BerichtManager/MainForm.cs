@@ -2413,10 +2413,136 @@ namespace BerichtManager
 			if (close)
 				doc.Close();
 
-			UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.Uploaded, report.LfdNR);
 			UploadedReports.SetEdited(tvReports.SelectedNode.FullPath, false);
 			UpdateTree();
 			ThemedMessageBox.Show(text: "Report was successfully updated", title: "Update complete");
+		}
+
+		private async void SendSelectionToIHK(object sender, EventArgs e)
+		{
+			if (!HasWordStarted())
+				return;
+			if (!CheckNetwork())
+			{
+				ThemedMessageBox.Show(text: "No network connection", title: "No connection");
+				return;
+			}
+
+			EventProgressForm progressForm = new EventProgressForm("Updating IHK reports");
+			bool stop = false;
+			progressForm.Stop += () => stop = true;
+			progressForm.Show();
+			progressForm.Status = "Selecting reports";
+
+			FolderSelect select = new FolderSelect(tvReports.Nodes[0], (node) =>
+			{
+				bool isReport = node is ReportNode;
+				bool emptyNonReport = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
+				bool uploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport report);
+				bool validStatus = uploaded && (report.Status == ReportNode.UploadStatuses.Uploaded || report.Status == ReportNode.UploadStatuses.Rejected);
+				bool wasEdited = report != null && report.WasEditedLocally;
+				return isReport && (!wasEdited || !validStatus) || emptyNonReport;
+			});
+
+			if (select.ShowDialog() != DialogResult.OK)
+			{
+				progressForm.Status = "File selection was canceled";
+				progressForm.Done();
+				return;
+			}
+
+			ReportFinder.FindReports(select.FilteredNode, out List<TreeNode> reportNodes);
+			if (reportNodes.Count == 0)
+			{
+				progressForm.Status = "No reports selected";
+				progressForm.Done();
+				return;
+			}
+			else
+				progressForm.Status = $"{reportNodes.Count} {(reportNodes.Count == 1 ? "report" : "reports")} were selected";
+
+			progressForm.Status = "Closing all reports";
+			string activePath = Doc?.FullName;
+			List<string> openReports = CloseAllReports();
+
+			Dictionary<string, string> skipped = new Dictionary<string, string>();
+			foreach (TreeNode node in reportNodes)
+			{
+				if (stop)
+				{
+					progressForm.Status = "Stopping";
+					break;
+				}
+				string fullPath = GetFullPath(node);
+				progressForm.Status = $"Updating {fullPath}:";
+				if(!UploadedReports.GetUploadedReport(fullPath, out UploadedReport report))
+				{
+					progressForm.Status = "Skipped, not a report";
+					skipped.Add(fullPath, "not a report");
+					continue;
+				}
+				if (!(report.LfdNR is int lfdnr))
+				{
+					progressForm.Status = "Skipped, lfdnr not found";
+					skipped.Add(fullPath, "lfdnr not found");
+					continue;
+				}
+
+				Word.Document doc = WordApp.Documents.Open(fullPath);
+				if (doc.FormFields.Count < 10)
+				{
+					progressForm.Status = "Skipped, invalid form field count";
+					skipped.Add(fullPath, "invalid form field count");
+					continue;
+				}
+
+				UploadResult result = null;
+				try
+				{
+					result = await IHKClient.EditReport(doc, lfdnr);
+				}
+				catch (Exception ex)
+				{
+					progressForm.Status = $"Skipped, Upload failed with {ex.GetType().Name}";
+					skipped.Add(fullPath, $"{ex.GetType().Name}");
+					doc.Close(SaveChanges: false);
+					continue;
+				}
+				switch (result.Result)
+				{
+					case CreateResults.Success:
+						progressForm.Status = "\t-Updated";
+						UploadedReports.SetEdited(fullPath, false);
+						break;
+					default:
+						progressForm.Status = "Skipped, Upload failed";
+						skipped.Add(fullPath, $"Upload failed {result.Result}");
+						break;
+				}
+
+				doc.Close(SaveChanges: false);
+			}
+
+			if (stop)
+				progressForm.Status = "Stopped";
+
+			progressForm.Status = "Opening closed reports";
+			OpenAllDocuments(openReports, activePath);
+			progressForm.Status = "Calculating statistics";
+
+			string resultsMessage = $"Uploaded {reportNodes.Count - skipped.Count} / {reportNodes.Count} reports";
+			if (skipped.Count > 0)
+				resultsMessage += "\nSkipped:";
+			foreach (KeyValuePair<string, string> kvp in skipped)
+			{
+				resultsMessage += $"\n- {kvp.Key}, {kvp.Value}";
+			}
+
+			progressForm.Status = "Done";
+			progressForm.Done();
+			ThemedMessageBox.Show(text: resultsMessage, title: "Update results");
+			if (reportNodes.Count > 0)
+				UpdateTree();
 		}
 
 		/// <summary>
@@ -2475,6 +2601,12 @@ namespace BerichtManager
 					}
 					bool errorFound = false;
 					Word.Document doc = WordApp.Documents.Open(Path.GetFullPath(Path.Combine(ConfigHandler.ReportPath, "..", GetFullNodePath(node))));
+
+					if (doc.FormFields.Count < 10)
+					{
+						progressForm.Status = $"-{doc.FullName}: Skipped, invalid number of form fields";
+						continue;
+					}
 
 					checkFor.ForEach(newLine =>
 					{
@@ -2565,6 +2697,7 @@ namespace BerichtManager
 
 			bool shouldEdit = ThemedMessageBox.Show(text: $"Correct formatting of {formatErrors.Count} {(formatErrors.Count == 1 ? "report" : "reports")}?",
 				title: "Correct formatting?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes;
+			Dictionary<string, string> skipped = new Dictionary<string, string>();
 			if (shouldEdit)
 			{
 				foreach (ReportNode node in formatErrors)
@@ -2573,10 +2706,12 @@ namespace BerichtManager
 
 					if (report.FormFields.Count < 10)
 					{
-						ThemedMessageBox.Show(text: $"Report {report.FullName} has an invalid form field count", title: "Invalid document");
+						progressForm.Status = $"Skipped {report.FullName} as it has an invalid number of form fields";
+						skipped.Add(report.FullName, "invalid number of form fields");
 						continue;
 					}
 
+					progressForm.Status = $"Editing {report.FullName}";
 					string work = report.FormFields[6].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
 					string seminars = report.FormFields[7].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
 					string school = report.FormFields[8].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
@@ -2590,8 +2725,6 @@ namespace BerichtManager
 					UploadedReports.UpdateReport(GetFullNodePath(node), wasEdited: true);
 					edited++;
 				}
-
-				progressForm.Status = $"Edited {edited} {(edited == 1 ? "report" : "reports")}";
 			}
 
 			progressForm.Status = "Opening closed reports";
@@ -2599,6 +2732,18 @@ namespace BerichtManager
 			progressForm.Status = "Done";
 
 			progressForm.Done();
+
+			string resultsMessage = $"Found {formatErrors} {(formatErrors.Count == 1 ? "error" : "errors")} and fixed {formatErrors.Count - skipped.Count} / {formatErrors.Count} of them.";
+			if (skipped.Count > 0)
+				resultsMessage += "\nSkipped:";
+			foreach (KeyValuePair<string, string> kvp in skipped)
+			{
+				resultsMessage += $"\n\t- {kvp.Key}, {kvp.Value}";
+			}
+			ThemedMessageBox.Show(text: resultsMessage);
+
+			if (formatErrors.Count > 0 && shouldEdit)
+				UpdateTree();
 		}
 	}
 }

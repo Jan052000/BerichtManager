@@ -228,9 +228,7 @@ namespace BerichtManager.UploadChecking
 		/// <param name="wasEdited">Status of synchronization with IHK</param>
 		public static void SetEdited(string path, bool wasEdited)
 		{
-			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> reports))
-				return;
-			if (!reports.TryGetValue(path, out UploadedReport toMark))
+			if (!GetUploadedReport(path, out UploadedReport toMark))
 				return;
 			toMark.WasEditedLocally = wasEdited;
 			Instance.Save();
