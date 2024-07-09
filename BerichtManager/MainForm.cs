@@ -2454,6 +2454,9 @@ namespace BerichtManager
 			progressForm.Status = "Done";
 
 			progressForm.Done();
+
+			if (formatErrors.Count > 0 && shouldEdit)
+				UpdateTree();
 		}
 	}
 }
