@@ -2325,6 +2325,12 @@ namespace BerichtManager
 					bool errorFound = false;
 					Word.Document doc = WordApp.Documents.Open(Path.GetFullPath(Path.Combine(ConfigHandler.ReportPath(), "..", GetFullNodePath(node))));
 
+					if (doc.FormFields.Count < 10)
+					{
+						progressForm.Status = $"-{doc.FullName}: Skipped, invalid number of form fields";
+						continue;
+					}
+
 					checkFor.ForEach(newLine =>
 					{
 						errorFound |= doc.FormFields[6].Result.Contains(newLine);
