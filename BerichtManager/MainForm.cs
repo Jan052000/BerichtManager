@@ -2262,7 +2262,6 @@ namespace BerichtManager
 			if (close)
 				doc.Close();
 
-			UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.Uploaded, report.LfdNR);
 			UploadedReports.SetEdited(tvReports.SelectedNode.FullPath, false);
 			UpdateTree();
 			ThemedMessageBox.Show(ActiveTheme, text: "Report was successfully updated", title: "Update complete");
