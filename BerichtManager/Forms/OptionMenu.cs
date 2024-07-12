@@ -52,7 +52,7 @@ namespace BerichtManager.Forms
 		public OptionMenu()
 		{
 			InitializeComponent();
-			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			ThemeSetter.SetThemes(this);
 			ThemeName = ThemeManager.Instance.ActiveTheme.Name;
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = ConfigHandler.UseCustomPrefix;
@@ -210,7 +210,7 @@ namespace BerichtManager.Forms
 			{
 				ThemeName = coTheme.Text;
 				ITheme activeTheme = ThemeManager.Instance.GetTheme(ThemeName);
-				ThemeSetter.SetThemes(this, activeTheme);
+				ThemeSetter.SetThemes(this);
 				ActiveThemeChanged(this, activeTheme);
 			}
 			if (ConfigHandler.ReportPath != tbFolder.Text)
@@ -266,8 +266,8 @@ namespace BerichtManager.Forms
 			ITheme theme = ThemeManager.Instance.GetTheme(ThemeName);
 			if (theme == null)
 				return;
-			ThemeSetter.SetThemes(tbSchool, theme);
-			ThemeSetter.SetThemes(tbServer, theme);
+			ThemeSetter.SetThemes(tbSchool);
+			ThemeSetter.SetThemes(tbServer);
 		}
 
 		private void btLogin_Click(object sender, EventArgs e)

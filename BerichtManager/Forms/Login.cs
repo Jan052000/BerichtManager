@@ -30,7 +30,7 @@ namespace BerichtManager.Forms
 		public Login(string logInTo)
 		{
 			InitializeComponent();
-			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			ThemeSetter.SetThemes(this);
 			laLogin.Text = laLogin.Text.Replace("{Placeholder}", logInTo);
 			laLogin.Width = TextRenderer.MeasureText(laLogin.Text, laLogin.Font).Width;
 			laLogin.Location = new Point(Width / 2 - laLogin.Width / 2, laLogin.Location.Y);

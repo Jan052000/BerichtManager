@@ -39,7 +39,7 @@ namespace BerichtManager.Forms
 		{
 			InitializeComponent();
 			if (!stopConfigCalls) ConfigHandler = ConfigHandler.Instance;
-			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			ThemeSetter.SetThemes(this);
 			this.Text = title;
 			List<int> tabstops = new List<int>();
 			if (stopConfigCalls)

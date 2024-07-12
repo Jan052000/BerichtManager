@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 using BerichtManager.ThemeManagement;
-using BerichtManager.ThemeManagement.DefaultThemes;
 
 namespace BerichtManager.OwnControls
 {
@@ -22,9 +21,7 @@ namespace BerichtManager.OwnControls
 			InitializeComponent();
 			InitializeButtons(buttons);
 			SizeToButtons();
-			ITheme theme = ThemeManager.Instance.ActiveTheme;
-			if (theme == null) theme = new DarkMode();
-			ThemeSetter.SetThemes(this, theme);
+			ThemeSetter.SetThemes(this);
 			this.Text = title;
 			rtbText.Text = text;
 			Message = text;

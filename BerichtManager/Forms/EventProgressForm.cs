@@ -81,7 +81,7 @@ namespace BerichtManager.Forms
 		public EventProgressForm(string title)
 		{
 			InitializeComponent();
-			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			ThemeSetter.SetThemes(this);
 			Text = title;
 		}
 

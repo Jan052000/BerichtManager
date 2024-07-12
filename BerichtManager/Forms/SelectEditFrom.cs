@@ -12,7 +12,7 @@ namespace BerichtManager.Forms
 		public SelectEditFrom()
 		{
 			InitializeComponent();
-			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			ThemeSetter.SetThemes(this);
 			SelectedItems = new List<EditState>();
 			btConfirm.Text = "Close";
 		}

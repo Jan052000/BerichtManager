@@ -11,7 +11,7 @@ namespace BerichtManager.ThemeManagement
 		{
 			InitializeComponent();
 			InitializeEdit(edit);
-			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			ThemeSetter.SetThemes(this);
 			btSave.Focus();
 			ColorConverter colorConverter = new ColorConverter();
 			foreach (Control control in Controls)
