@@ -1310,7 +1310,7 @@ namespace BerichtManager
 				}
 			}
 			bool isNameValid = ReportFinder.IsReportNameValid(tvReports.SelectedNode.Text);
-			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report);//UploadedReports.GetUploadStatus(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status);
+			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report);
 			bool uploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
 			bool rejected = report?.Status == ReportNode.UploadStatuses.Rejected;
 			bool wasEdited = report != null && (report?.WasEditedLocally).Value;
@@ -1325,8 +1325,8 @@ namespace BerichtManager
 			miQuickEditOptions.Enabled = !isInLogs && isNameValid;
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miUploadAsNext.Enabled = !isInLogs && isNameValid && !isUploaded;
-			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected || wasEdited);
-			miUpdateReport.Enabled = isNameValid && isUploaded && wasEdited;
+			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected && wasEdited);
+			miUpdateReport.Enabled = isNameValid && isUploaded && wasEdited && (uploaded || rejected);
 		}
 
 		private void btOptions_Click(object sender, EventArgs e)
@@ -1906,6 +1906,12 @@ namespace BerichtManager
 				ThemedMessageBox.Show(ActiveTheme, text: $"Lfdnr of {FullSelectedPath} could not be read", title: "Hand in failed");
 				return;
 			}
+			if (report.Status != ReportNode.UploadStatuses.Uploaded && report.Status != ReportNode.UploadStatuses.Rejected)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"Can not update {FullSelectedPath} as it can not be changed on IHK server", title: "Can not update");
+				return;
+			}
+
 			//Prevent unsaved changes from being left locally
 			if (report.WasEditedLocally)
 			{
@@ -2230,6 +2236,11 @@ namespace BerichtManager
 			if (!UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report))
 			{
 				ThemedMessageBox.Show(ActiveTheme, text: $"Could not find report {FullSelectedPath} in uploaded list, please add {tvReports.SelectedNode.FullPath} if it is uploaded", title: "Report not found");
+				return;
+			}
+			if(report.Status != ReportNode.UploadStatuses.Uploaded && report.Status != ReportNode.UploadStatuses.Rejected)
+			{
+				ThemedMessageBox.Show(ActiveTheme, text: $"Can not update {FullSelectedPath} as it can not be changed on IHK server", title: "Can not update");
 				return;
 			}
 			if (!report.WasEditedLocally)
