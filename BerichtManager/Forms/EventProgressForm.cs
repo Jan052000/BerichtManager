@@ -90,19 +90,21 @@ namespace BerichtManager.Forms
 		/// </summary>
 		public void Done()
 		{
-			ShouldClose = true;
-			if (btStop.InvokeRequired)
-				btStop.BeginInvoke(new MethodInvoker(() =>
-				{
-					btStop.Text = "Close";
-					btStop.Click -= btStop_Click;
-					btStop.Click += (s, e) => Close();
-				}));
-			else
+			void done()
 			{
 				btStop.Text = "Close";
 				btStop.Click -= btStop_Click;
 				btStop.Click += (s, e) => Close();
+			}
+			ShouldClose = true;
+			if (btStop.InvokeRequired)
+				btStop.BeginInvoke(new MethodInvoker(() =>
+				{
+					done();
+				}));
+			else
+			{
+				done();
 			}
 			DialogResult = DialogResult.OK;
 		}
