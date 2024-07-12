@@ -1,6 +1,5 @@
 using BerichtManager.Config;
 using BerichtManager.OwnControls;
-using BerichtManager.ThemeManagement;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

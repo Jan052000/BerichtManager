@@ -1,5 +1,6 @@
 ﻿using BerichtManager.OwnControls;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace BerichtManager.ThemeManagement
@@ -45,6 +46,7 @@ namespace BerichtManager.ThemeManagement
 					break;
 				case Form form:
 					form.BackColor = theme.BackColor;
+					form.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 					break;
 				case FocusColoredFlatButton flatButton:
 					flatButton.BackColor = theme.ButtonColor;

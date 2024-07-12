@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using BerichtManager.ThemeManagement;
 using BerichtManager.ThemeManagement.DefaultThemes;
@@ -23,7 +22,6 @@ namespace BerichtManager.OwnControls
 			InitializeComponent();
 			InitializeButtons(buttons);
 			SizeToButtons();
-			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			ITheme theme = ThemeManager.Instance.ActiveTheme;
 			if (theme == null) theme = new DarkMode();
 			ThemeSetter.SetThemes(this, theme);

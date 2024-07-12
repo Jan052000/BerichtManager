@@ -3,7 +3,6 @@ using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -55,7 +54,6 @@ namespace BerichtManager.Forms
 			InitializeComponent();
 			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
 			ThemeName = ThemeManager.Instance.ActiveTheme.Name;
-			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = ConfigHandler.UseCustomPrefix;
 			cbShouldUseUntis.Checked = ConfigHandler.UseWebUntis;

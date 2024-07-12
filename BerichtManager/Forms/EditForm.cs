@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
-using System.IO;
 using System.Windows.Forms;
 
 namespace BerichtManager.Forms
@@ -41,7 +40,6 @@ namespace BerichtManager.Forms
 			InitializeComponent();
 			if (!stopConfigCalls) ConfigHandler = ConfigHandler.Instance;
 			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
-			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			this.Text = title;
 			List<int> tabstops = new List<int>();
 			if (stopConfigCalls)

@@ -2,7 +2,6 @@ using BerichtManager.Config;
 using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ReportChecking.Discrepancies;
-using BerichtManager.ThemeManagement;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

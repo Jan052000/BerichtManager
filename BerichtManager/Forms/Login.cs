@@ -1,7 +1,6 @@
 ﻿using BerichtManager.ThemeManagement;
 using System;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 
 namespace BerichtManager.Forms
@@ -32,7 +31,6 @@ namespace BerichtManager.Forms
 		{
 			InitializeComponent();
 			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
-			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			laLogin.Text = laLogin.Text.Replace("{Placeholder}", logInTo);
 			laLogin.Width = TextRenderer.MeasureText(laLogin.Text, laLogin.Font).Width;
 			laLogin.Location = new Point(Width / 2 - laLogin.Width / 2, laLogin.Location.Y);
