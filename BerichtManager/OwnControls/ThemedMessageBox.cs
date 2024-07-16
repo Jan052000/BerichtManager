@@ -37,10 +37,23 @@ namespace BerichtManager.OwnControls
 		/// <param name="text">Text to be displayed on the message box</param>
 		/// <param name="title">Title of the message box</param>
 		/// <param name="buttons">Configuration of the buttons on message box</param>
-		/// <returns></returns>
+		/// <returns><see cref="DialogResult"/> of clicked button</returns>
 		public static DialogResult Show(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
 		{
 			return new ThemedMessageBox(text: text, title: title, buttons: buttons).ShowDialog();
+		}
+
+		/// <summary>
+		/// Shows a themed message box and does not block execution
+		/// </summary>
+		/// <param name="theme">Theme to style the message box after</param>
+		/// <param name="text">Text to be displayed on the message box</param>
+		/// <param name="title">Title of the message box</param>
+		/// <param name="buttons">Configuration of the buttons on message box</param>
+		public static void Info(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+		{
+			((Control)new ThemedMessageBox(text: text, title: title, buttons: buttons)).Show();
+			
 		}
 
 		/// <summary>
