@@ -5,7 +5,7 @@ namespace BerichtManager.IHKClient
 	/// <summary>
 	/// Class to hold values used to select <see cref="HtmlElement"/>s
 	/// </summary>
-	public class Selector
+	public class CSSSelector
 	{
 		/// <summary>
 		/// Tag name of element
@@ -17,11 +17,11 @@ namespace BerichtManager.IHKClient
 		public List<string> Classes { get; set; }
 
 		/// <summary>
-		/// Creates a new <see cref="Selector"/> object
+		/// Creates a new <see cref="CSSSelector"/> object
 		/// </summary>
 		/// <param name="tagName">Tag name of <see cref="HtmlElement"/></param>
 		/// <param name="classes">Class names of <see cref="HtmlElement"/></param>
-		public Selector(string tagName, List<string> classes)
+		public CSSSelector(string tagName, List<string> classes)
 		{
 			TagName = tagName;
 			Classes = classes;

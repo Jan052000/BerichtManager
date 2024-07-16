@@ -1,4 +1,4 @@
-﻿using BerichtManager.IHKClient;
+using BerichtManager.IHKClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -166,7 +166,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		public List<HtmlElement> CSSSelect(HtmlElement root, string cssSelector)
 		{
 			List<HtmlElement> selected = new List<HtmlElement>();
-			List<Selector> selectors = new List<Selector>();
+			List<CSSSelector> selectors = new List<CSSSelector>();
 			//(?<Tag>.+?[^\.](?=\.))(?<Classes>(?=\.).+?[^\.])*?(?> +|$|#)
 			Regex select = new Regex("((?<Tag>.+?(?=\\.|>|\\ |$))(?<Classes>\\..+?)*?)(( *> *)|\\ |$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 			foreach (Match match in select.Matches(cssSelector))
@@ -176,7 +176,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 				{
 					classes.Add(match.Groups["Classes"].Captures[i].Value.Substring(1));
 				}
-				selectors.Add(new Selector(match.Groups["Tag"].Value, classes));
+				selectors.Add(new CSSSelector(match.Groups["Tag"].Value, classes));
 			}
 
 			selectors.ForEach(selector =>
