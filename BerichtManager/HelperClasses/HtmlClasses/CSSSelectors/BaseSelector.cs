@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -16,16 +16,16 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 		/// <summary>
 		/// <see cref="Regex"/> string used to match title
 		/// </summary>
-		protected string TagRegex { get; } = @"(?<!(.|#|\n))(?<Tag>.[^\.|#| ]+?)(?=(\.|#|$|\n| ))";
+		protected string TagRegex { get; } = @"^.+?(?=\.| |$|\n|#)";
 		/// <summary>
 		/// <see cref="Regex"/> string used to match classes
 		/// </summary>
 		/// Old @"(?<Class>(?<=\.)[a-zA-z0-9]+?)(?=(\.|#|$|\n| ))"
-		protected string ClassesRegex { get; } = @"(?<Class>(?<=\.).[^\.|#| ]+?)(?=(\.|#|$|\n| ))";
+		protected string ClassesRegex { get; } = @"(?<=\.).+?(?=\.| |$|\n|#)";
 		/// <summary>
 		/// <see cref="Regex"/> string used to match ids
 		/// </summary>
-		protected string IDRegex { get; } = @"(?<IDs>(?<=\#).[^\.|#| ]+?)(?=(\.|#|$|\n| ))";
+		protected string IDRegex { get; } = @"(?<=#).+?(?=\.|$|\n| |#)";
 		/// <summary>
 		/// Root <see cref="HtmlElement"/> to search if start of chain
 		/// </summary>
@@ -71,7 +71,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 			List<HtmlElement> result = new List<HtmlElement>();
 			foreach (HtmlElement element in elements)
 			{
-				if (element.Tag.ToLower() != tag.ToLower() && !string.IsNullOrEmpty(tag))
+				if (element.Tag.ToLower() != tag.ToLower() && !string.IsNullOrEmpty(tag) && tag != "*")
 					continue;
 				bool hasAllClasses = true;
 				classes.ForEach(_class => hasAllClasses &= element.Classes.Contains(_class));
