@@ -163,7 +163,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// <param name="root">Root <see cref="HtmlElement"/> to search</param>
 		/// <param name="cssSelector">Selector to use</param>
 		/// <returns><see cref="List{T}"/> of matching <see cref="HtmlElement"/>s</returns>
-		public List<HtmlElement> CSSSelect(HtmlElement root, string cssSelector)
+		public List<HtmlElement> CSSSelect(string cssSelector)
 		{
 			List<HtmlElement> selected = new List<HtmlElement>();
 			List<CSSSelector> selectors = new List<CSSSelector>();
@@ -188,7 +188,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 
 			selectors.ForEach(selector =>
 			{
-				foreach (HtmlElement element in root.GetElementsByTag(selector.TagName, ignoreCase: true))
+				foreach (HtmlElement element in GetElementsByTag(selector.TagName, ignoreCase: true))
 				{
 					bool hasAllClasses = true;
 					List<string> classes = element.Classes;
