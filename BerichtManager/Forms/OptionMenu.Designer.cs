@@ -99,6 +99,8 @@ namespace BerichtManager.Forms
 			// 
 			// tbSupervisorMail
 			// 
+			this.tbSupervisorMail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbSupervisorMail.Location = new System.Drawing.Point(98, 66);
 			this.tbSupervisorMail.Name = "tbSupervisorMail";
 			this.tbSupervisorMail.Size = new System.Drawing.Size(696, 20);
@@ -413,6 +415,8 @@ namespace BerichtManager.Forms
 			// 
 			// tbIHKBaseUrl
 			// 
+			this.tbIHKBaseUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
 			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
 			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
@@ -677,7 +681,7 @@ namespace BerichtManager.Forms
 			this.Controls.Add(this.gbPrefix);
 			this.Controls.Add(this.btSave);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(816, 577);
+			this.MinimumSize = new System.Drawing.Size(816, 626);
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionMenu_FormClosing);
