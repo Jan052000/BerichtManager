@@ -168,6 +168,13 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 			List<HtmlElement> selected = new List<HtmlElement>();
 			List<CSSSelector> selectors = new List<CSSSelector>();
 			//(?<Tag>.+?[^\.](?=\.))(?<Classes>(?=\.).+?[^\.])*?(?> +|$|#)
+
+			//Remove hindering spaces
+			Regex sanitizerChildren = new Regex(@"(( +?)?(?=>)>( +?)?(?=[a-zA-z0-9]|$))");
+			cssSelector = sanitizerChildren.Replace(cssSelector, ">");
+			Regex sanitizerSpaces = new Regex(@"( +?(?=[a-zA-z0-9]|$))");
+			cssSelector = sanitizerSpaces.Replace(cssSelector, " ");
+
 			Regex select = new Regex("((?<Tag>.+?(?=\\.|>|\\ |$))(?<Classes>\\..+?)*?)(( *> *)|\\ |$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
 			foreach (Match match in select.Matches(cssSelector))
 			{
