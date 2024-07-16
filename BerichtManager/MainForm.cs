@@ -123,7 +123,6 @@ namespace BerichtManager
 			NodeDrawer = new CustomNodeDrawer();
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
-			this.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
 			ActivePath = ConfigHandler.ReportPath;
