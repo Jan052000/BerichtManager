@@ -10,34 +10,15 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 		/// <summary>
 		/// Creates a new <see cref="ChildSelector"/> object
 		/// </summary>
-		/// <param name="selector">The part of the CSS selector to be handled</param>
-		/// <param name="next">Next <see cref="BaseSelector"/> in the chain</param>
-		/// <param name="root">Root <see cref="HtmlElement"/> to search</param>
-		public ChildSelector(string selector, BaseSelector next, HtmlElement root) : base(selector)
+		/// <inheritdoc cref="BaseSelector(string, BaseSelector, HtmlElement)" path="/param"/>
+		public ChildSelector(string selector, BaseSelector next, HtmlElement root) : base(selector, next, root)
 		{
-			Next = next;
-			Root = root;
+
 		}
 
-		public override List<HtmlElement> Search(List<HtmlElement> elements)
+		protected override List<HtmlElement> SelectElements(HtmlElement element)
 		{
-			if (Root != null)
-				if (Next == null)
-					return SearchElements(Root.Children);
-				else
-					return Next.Search(SearchElements(Root.Children));
-
-			List<HtmlElement> result = new List<HtmlElement>();
-
-			foreach (var element in elements)
-			{
-				if (Next == null)
-					result.AddRange(SearchElements(element.Children));
-				else
-					result.AddRange(Next.Search(SearchElements(element.Children)) ?? new List<HtmlElement>());
-			}
-
-			return result;
+			return element.Children;
 		}
 	}
 }
