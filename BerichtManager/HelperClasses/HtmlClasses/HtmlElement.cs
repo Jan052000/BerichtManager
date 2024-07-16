@@ -1,9 +1,8 @@
-using BerichtManager.IHKClient;
+﻿using BerichtManager.HelperClasses.HtmlClasses.CSSSelectors;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace BerichtManager.HelperClasses.HtmlClasses
 {
@@ -165,42 +164,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// <returns><see cref="List{T}"/> of matching <see cref="HtmlElement"/>s</returns>
 		public List<HtmlElement> CSSSelect(string cssSelector)
 		{
-			List<HtmlElement> selected = new List<HtmlElement>();
-			List<CSSSelector> selectors = new List<CSSSelector>();
-			//(?<Tag>.+?[^\.](?=\.))(?<Classes>(?=\.).+?[^\.])*?(?> +|$|#)
-
-			//Remove hindering spaces
-			Regex sanitizerChildren = new Regex(@"(( +?)?(?=>)>( +?)?(?=[a-zA-z0-9]|$))");
-			cssSelector = sanitizerChildren.Replace(cssSelector, ">");
-			Regex sanitizerSpaces = new Regex(@"( +?(?=[a-zA-z0-9]|$))");
-			cssSelector = sanitizerSpaces.Replace(cssSelector, " ");
-
-			Regex select = new Regex("((?<Tag>.+?(?=\\.|>|\\ |$))(?<Classes>\\..+?)*?)(( *> *)|\\ |$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-			foreach (Match match in select.Matches(cssSelector))
-			{
-				List<string> classes = new List<string>();
-				for (int i = 0; i < match.Groups["Classes"].Captures.Count; i++)
-				{
-					classes.Add(match.Groups["Classes"].Captures[i].Value.Substring(1));
-				}
-				selectors.Add(new CSSSelector(match.Groups["Tag"].Value, classes));
-			}
-
-			selectors.ForEach(selector =>
-			{
-				foreach (HtmlElement element in GetElementsByTag(selector.TagName, ignoreCase: true))
-				{
-					bool hasAllClasses = true;
-					selector.Classes.ForEach(cssClass =>
-					{
-						hasAllClasses &= element.Classes.Contains(cssClass);
-					});
-					if (hasAllClasses)
-						selected.Add(element);
-				}
-			});
-
-			return selected;
+			return new CSSSelectorChain(cssSelector, this).StartSearch();
 		}
 	}
 }
