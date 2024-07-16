@@ -191,11 +191,9 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 				foreach (HtmlElement element in GetElementsByTag(selector.TagName, ignoreCase: true))
 				{
 					bool hasAllClasses = true;
-					List<string> classes = element.Classes;
-					hasAllClasses &= classes.Count == selector.Classes.Count;
-					classes.ForEach(cssClass =>
+					selector.Classes.ForEach(cssClass =>
 					{
-						hasAllClasses &= selector.Classes.Contains(cssClass);
+						hasAllClasses &= element.Classes.Contains(cssClass);
 					});
 					if (hasAllClasses)
 						selected.Add(element);
