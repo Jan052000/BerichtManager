@@ -584,7 +584,7 @@ namespace BerichtManager.IHKClient
 			int commentIndex = 2 * (int)EditFormInfoFields.Comment + 1;
 			if (list.Count < commentIndex)
 				return new CommentResult(CommentResult.ResultStatus.CommentFieldNotFound);
-			return new CommentResult(CommentResult.ResultStatus.Success, list[commentIndex].InnerText);
+			return new CommentResult(CommentResult.ResultStatus.Success, comment: list[commentIndex].InnerText);
 		}
 
 		/// <summary>
