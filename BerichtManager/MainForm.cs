@@ -1397,6 +1397,7 @@ namespace BerichtManager
 			miUploadAsNext.Enabled = !isInLogs && isNameValid && !isUploaded;
 			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected || wasEdited);
 			miUpdateReport.Enabled = isNameValid && isUploaded && wasEdited;
+			miRcShowComment.Enabled = isNameValid && isUploaded && report.LfdNR.HasValue;
 		}
 
 		private void btOptions_Click(object sender, EventArgs e)
@@ -2474,7 +2475,7 @@ namespace BerichtManager
 				}
 				string fullPath = GetFullPath(node);
 				progressForm.Status = $"Updating {fullPath}:";
-				if(!UploadedReports.GetUploadedReport(fullPath, out UploadedReport report))
+				if (!UploadedReports.GetUploadedReport(fullPath, out UploadedReport report))
 				{
 					progressForm.Status = "Skipped, not a report";
 					skipped.Add(fullPath, "not a report");
@@ -2743,6 +2744,44 @@ namespace BerichtManager
 
 			if (formatErrors.Count > 0 && shouldEdit)
 				UpdateTree();
+		}
+
+		private async void miRcShowComment_Click(object sender, EventArgs e)
+		{
+			if (!ReportUtils.IsNameValid(tvReports.SelectedNode.Text))
+				return;
+			if (!UploadedReports.GetUploadedReport(FullSelectedPath, out UploadedReport report))
+			{
+				ThemedMessageBox.Show(text: "Report not uploaded", title: "Unable to fetch comment");
+				return;
+			}
+			if (!report.LfdNR.HasValue || report.LfdNR < 0)
+			{
+				ThemedMessageBox.Show(text: "Unable to read lfdnr, check if it has been save correctly", title: "Unable to read lfdnr");
+				return;
+			}
+
+			CommentResult result = await IHKClient.GetCommentFromReport(report.LfdNR);
+			HandleCommentResult(result);
+		}
+
+		private void HandleCommentResult(CommentResult result)
+		{
+			switch (result.UploadResult)
+			{
+				case CommentResult.ResultStatus.Success:
+					if (string.IsNullOrEmpty(result.Comment))
+						ThemedMessageBox.Info(text: "No comment found", title: "Comment");
+					else
+						ThemedMessageBox.Info(text: $"Comment:\n{result.Comment}", title: "Comment");
+					break;
+				case CommentResult.ResultStatus.Exception:
+					ThemedMessageBox.Info(text: $"A(n) {result.Exception?.GetType().Name} occurred, the comment could not be fetched", title: result.Exception?.GetType().Name);
+					break;
+				default:
+					ThemedMessageBox.Info(text: $"Fetching comment failed: {result.UploadResult}", title: "Failed fetching comment");
+					break;
+			}
 		}
 	}
 }
