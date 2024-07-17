@@ -109,6 +109,7 @@
     <Compile Include="HelperClasses\HtmlClasses\CSSSelectors\Selector.cs" />
     <Compile Include="HelperClasses\HtmlClasses\CSSSelectors\UnhandledTypeException.cs" />
     <Compile Include="HelperClasses\ReportUtils.cs" />
+    <Compile Include="IHKClient\CommentResult.cs" />
     <Compile Include="ReportChecking\Discrepancies\DateDiscrepancy.cs" />
     <Compile Include="ReportChecking\Discrepancies\DuplicateDiscrepancy.cs" />
     <Compile Include="ReportChecking\Discrepancies\DuplicateNumbersDiscrepancy.cs" />

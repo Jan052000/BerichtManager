@@ -551,6 +551,79 @@ namespace BerichtManager.IHKClient
 		}
 
 		/// <summary>
+		/// Gets the supervisors' comment for the report with number <paramref name="lfdNR"/>
+		/// </summary>
+		/// <param name="lfdNR">Number of report on IHK servers</param>
+		/// <returns>The <see cref="CommentResult"/> of fetching the comment</returns>
+		public async Task<CommentResult> GetCommentFromReport(int? lfdNR)
+		{
+			if (!lfdNR.HasValue || lfdNR < 0)
+				return new CommentResult(CommentResult.ResultStatus.NoLfdnr);
+			if (!LoggedIn && !await DoLogin())
+				return new CommentResult(CommentResult.ResultStatus.LoginFailed);
+			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
+				return new CommentResult(CommentResult.ResultStatus.Unauthorized);
+			HttpResponseMessage response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdNR}");
+			if (!response.IsSuccessStatusCode)
+				return new CommentResult(CommentResult.ResultStatus.OpenReportFailed);
+
+			HtmlDocument doc = new HtmlDocument(await response.Content.ReadAsStringAsync());
+			await GetAndRefer("tibrosBB/azubiHeft.jsp");
+
+			return GetComment(doc);
+		}
+
+		/// <summary>
+		/// Searches <paramref name="doc"/> for the supervisors' comment
+		/// </summary>
+		/// <param name="doc"><see cref="HtmlDocument"/> to search for a comment</param>
+		/// <returns><see cref="CommentResult"/> of finding the comment</returns>
+		private CommentResult GetComment(HtmlDocument doc)
+		{
+			List<HtmlElement> list = doc.Body.CSSSelect("div.noc_table > div.row > div");
+			int commentIndex = 2 * (int)EditFormInfoFields.Comment + 1;
+			if (list.Count < commentIndex)
+				return new CommentResult(CommentResult.ResultStatus.CommentFieldNotFound);
+			return new CommentResult(CommentResult.ResultStatus.Success, list[commentIndex].InnerText);
+		}
+
+		/// <summary>
+		/// Indexes of edit form info fields
+		/// (are in pairs of 2)
+		/// </summary>
+		public enum EditFormInfoFields
+		{
+			/// <summary>
+			/// Index of azubi name
+			/// </summary>
+			Name,
+			/// <summary>
+			/// Index of azubi number
+			/// </summary>
+			AzubiNumber,
+			/// <summary>
+			/// Index of job title
+			/// </summary>
+			JobTitle,
+			/// <summary>
+			/// Index of span where the contract is binding
+			/// </summary>
+			ContractSpan,
+			/// <summary>
+			/// Index of report status
+			/// </summary>
+			Status,
+			/// <summary>
+			/// Index of date the report was accepted
+			/// </summary>
+			AcceptDate,
+			/// <summary>
+			/// Index of comment
+			/// </summary>
+			Comment
+		}
+
+		/// <summary>
 		/// Makes sure the referer is set to <paramref name="path"/>
 		/// </summary>
 		/// <param name="path">Relative path</param>
