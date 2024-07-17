@@ -81,7 +81,8 @@ namespace BerichtManager.Config
 			{"IHKSupervisorEMail", (Type.GetType("System.String"), "")},
 			{"IHKBaseUrl", (Type.GetType("System.String"), "https://www.bildung-ihk-nordwestfalen.de/")},
 			{"IHKUploadDelay", (Type.GetType("System.Int32"), 500)},
-			{"IHKCheckMatchingStartDates", (Type.GetType("System.Boolean"), true)}
+			{"IHKCheckMatchingStartDates", (Type.GetType("System.Boolean"), true)},
+			{"IHKAutoGetComment", (Type.GetType("System.Boolean"), false)}
 		};
 		#endregion
 
@@ -380,6 +381,15 @@ namespace BerichtManager.Config
 		{
 			get => GenericGet<bool>("IHKCheckMatchingStartDates");
 			set => GenericSet("IHKCheckMatchingStartDates", value);
+		}
+
+		/// <summary>
+		/// Wether or not to fetch supervisor for report when editing
+		/// </summary>
+		public bool IHKAutoGetComment
+		{
+			get => GenericGet<bool>("IHKAutoGetComment");
+			set => GenericSet("IHKAutoGetComment", value);
 		}
 		#endregion
 

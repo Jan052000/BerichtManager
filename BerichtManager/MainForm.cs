@@ -1036,6 +1036,24 @@ namespace BerichtManager
 					return;
 				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 					return;
+
+				if (ConfigHandler.IHKAutoGetComment && UploadedReports.GetUploadedReport(path, out UploadedReport report) && report.LfdNR.HasValue && report.LfdNR > 0)
+				{
+					Task<CommentResult> commentTask = Task.Run(async () =>
+					{
+						try
+						{
+							return await IHKClient.GetCommentFromReport(report.LfdNR);
+						}
+						catch (Exception ex)
+						{
+							return new CommentResult(CommentResult.ResultStatus.Exception, exception: ex);
+						}
+					});
+					CommentResult result = commentTask.Result;
+					HandleCommentResult(result);
+				}
+
 				Doc = WordApp.Documents.Open(path);
 				if (Doc.FormFields.Count != 10)
 				{
@@ -1078,7 +1096,7 @@ namespace BerichtManager
 						break;
 					default:
 						Logger.LogError(ex);
-						ThemedMessageBox.Show(text: ex.StackTrace);
+						ThemedMessageBox.Show(text: ex.StackTrace, title: ex.GetType().Name);
 						Console.Write(ex.StackTrace);
 						break;
 				}
