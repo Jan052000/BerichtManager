@@ -1613,7 +1613,7 @@ namespace BerichtManager
 			if (CheckIfWordRunning())
 				return;
 			WordApp = new Word.Application();
-			((Word.ApplicationEvents4_Event)WordApp).Quit += () => { OnWordClose(); };
+			((Word.ApplicationEvents4_Event)WordApp).Quit += OnWordClose;
 			WordIsOpen = true;
 		}
 
