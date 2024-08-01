@@ -569,6 +569,7 @@ namespace BerichtManager.IHKClient
 
 			HtmlDocument doc = new HtmlDocument(await response.Content.ReadAsStringAsync());
 			await GetAndRefer("tibrosBB/azubiHeft.jsp");
+			ResetTimer();
 
 			return GetComment(doc);
 		}
