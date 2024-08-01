@@ -2747,9 +2747,9 @@ namespace BerichtManager
 					}
 
 					progressForm.Status = $"Editing {report.FullName}";
-					string work = report.FormFields[6].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
-					string seminars = report.FormFields[7].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
-					string school = report.FormFields[8].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
+					string work = ReportUtils.TransformTextToWord(report.FormFields[6].Result);
+					string seminars = ReportUtils.TransformTextToWord(report.FormFields[7].Result);
+					string school = ReportUtils.TransformTextToWord(report.FormFields[8].Result);
 
 					FillText(WordApp, report.FormFields[6], work);
 					FillText(WordApp, report.FormFields[7], seminars);
