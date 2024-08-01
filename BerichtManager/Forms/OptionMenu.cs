@@ -22,7 +22,7 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// Name of the active theme
 		/// </summary>
-		public string ThemeName { get; set; }
+		private string ThemeName { get => ThemeManager.Instance.ActiveTheme.Name; }
 
 		/// <summary>
 		/// Emits when the active theme changes
@@ -53,7 +53,6 @@ namespace BerichtManager.Forms
 		{
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
-			ThemeName = ThemeManager.Instance.ActiveTheme.Name;
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = ConfigHandler.UseCustomPrefix;
 			cbShouldUseUntis.Checked = ConfigHandler.UseWebUntis;
@@ -66,7 +65,6 @@ namespace BerichtManager.Forms
 			ThemeManager.Instance.ThemeNames.ForEach(name => coTheme.Items.Add(name));
 			int selectedIndex = coTheme.Items.IndexOf(ConfigHandler.ActiveTheme);
 			coTheme.SelectedIndex = selectedIndex;
-			ThemeName = coTheme.Text;
 			ThemeManager.Instance.UpdatedThemesList += UpdateThemesList;
 
 			tbTemplate.Text = ConfigHandler.TemplatePath;
@@ -205,10 +203,9 @@ namespace BerichtManager.Forms
 				FontSizeChanged((float)nudFontSize.Value);
 
 			}
-			ConfigHandler.ActiveTheme = coTheme.Text;
 			if (ThemeName != coTheme.Text)
 			{
-				ThemeName = coTheme.Text;
+				ConfigHandler.ActiveTheme = coTheme.Text;
 				ITheme activeTheme = ThemeManager.Instance.GetTheme(ThemeName);
 				ThemeSetter.SetThemes(this);
 				ActiveThemeChanged(this, activeTheme);
