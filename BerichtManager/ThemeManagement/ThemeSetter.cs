@@ -1,5 +1,6 @@
 ﻿using BerichtManager.OwnControls;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace BerichtManager.ThemeManagement
@@ -10,82 +11,87 @@ namespace BerichtManager.ThemeManagement
 	internal class ThemeSetter
 	{
 		/// <summary>
+		/// Active theme set in <see cref="ThemeManager"/>
+		/// </summary>
+		private static ITheme Theme { get => ThemeManager.Instance.ActiveTheme; }
+
+		/// <summary>
 		/// Sets theme for <see href="control"/> and its children
 		/// </summary>
 		/// <param name="control">Top control to set theme for</param>
-		/// <param name="theme">Theme to be used for styling</param>
-		public static void SetThemes(Control control, ITheme theme)
+		public static void SetThemes(Control control)
 		{
 			switch (control)
 			{
 				case RichTextBox rtb:
-					rtb.BackColor = theme.TextBoxBackColor;
+					rtb.BackColor = Theme.TextBoxBackColor;
 					rtb.BorderStyle = BorderStyle.None;
 					break;
 				case TextBox tb:
 					if (tb.Enabled)
-						tb.BackColor = theme.TextBoxBackColor;
+						tb.BackColor = Theme.TextBoxBackColor;
 					else
-						tb.BackColor = theme.TextBoxDisabledBackColor;
+						tb.BackColor = Theme.TextBoxDisabledBackColor;
 					tb.BorderStyle = BorderStyle.FixedSingle;
 					break;
 				case ColoredComboBox comboBox:
-					comboBox.BackColor = theme.TextBoxBackColor;
-					comboBox.BorderColor = theme.TextBoxBorderColor;
-					comboBox.ArrowColor = theme.TextBoxArrowColor;
-					comboBox.DropDownButtonColor = theme.ColoredComboBoxDropDownButtonBackColor;
-					comboBox.TextColor = theme.ColoredComboBoxTextColor;
-					comboBox.DisabledColor = theme.ColoredComboBoxDisabledColor;
-					comboBox.DisabledTextColor = theme.ColoredComboBoxDisabledTextColor;
-					comboBox.HighlightColor = theme.ColoredComboBoxHighlightColor;
+					comboBox.BackColor = Theme.TextBoxBackColor;
+					comboBox.BorderColor = Theme.TextBoxBorderColor;
+					comboBox.ArrowColor = Theme.TextBoxArrowColor;
+					comboBox.DropDownButtonColor = Theme.ColoredComboBoxDropDownButtonBackColor;
+					comboBox.TextColor = Theme.ColoredComboBoxTextColor;
+					comboBox.DisabledColor = Theme.ColoredComboBoxDisabledColor;
+					comboBox.DisabledTextColor = Theme.ColoredComboBoxDisabledTextColor;
+					comboBox.HighlightColor = Theme.ColoredComboBoxHighlightColor;
 					break;
 				case TreeView treeView:
-					treeView.BackColor = theme.BackColor;
-					treeView.ForeColor = theme.ForeColor;
+					treeView.BackColor = Theme.BackColor;
+					treeView.ForeColor = Theme.ForeColor;
 					break;
 				case Form form:
-					form.BackColor = theme.BackColor;
+					form.BackColor = Theme.BackColor;
+					form.Icon = Icon.ExtractAssociatedIcon(Path.GetFullPath(".\\BerichtManager.exe"));
 					break;
 				case FocusColoredFlatButton flatButton:
-					flatButton.BackColor = theme.ButtonColor;
-					flatButton.ButtonDisabledColor = theme.ButtonDisabledColor;
+					flatButton.BackColor = Theme.ButtonColor;
+					flatButton.ButtonDisabledColor = Theme.ButtonDisabledColor;
 					flatButton.FlatStyle = FlatStyle.Flat;
-					flatButton.ButtonFocusBoxColor = theme.ButtonFocusedBorderColor;
-					flatButton.ButtonFocusBoxWidth = theme.ButtonFocusBorderWidth;
-					flatButton.ButtonDisabledColor = theme.ButtonDisabledColor;
-					flatButton.ButtonDisabledTextColor = theme.ButtonDisabledTextColor;
-					flatButton.ButtonHoverColor = theme.ButtonHoverColor;
+					flatButton.ButtonFocusBoxColor = Theme.ButtonFocusedBorderColor;
+					flatButton.ButtonFocusBoxWidth = Theme.ButtonFocusBorderWidth;
+					flatButton.ButtonDisabledColor = Theme.ButtonDisabledColor;
+					flatButton.ButtonDisabledTextColor = Theme.ButtonDisabledTextColor;
+					flatButton.ButtonHoverColor = Theme.ButtonHoverColor;
 					break;
 				case Button button:
 					if (button.Enabled)
-						button.BackColor = theme.ButtonColor;
+						button.BackColor = Theme.ButtonColor;
 					else
-						button.BackColor = theme.ButtonDisabledColor;
+						button.BackColor = Theme.ButtonDisabledColor;
 					button.FlatStyle = FlatStyle.Flat;
 					button.FlatAppearance.BorderSize = 0;
 					break;
 				case SplitContainer splitContainer:
 				case Splitter splitter:
-					control.BackColor = theme.SplitterColor;
+					control.BackColor = Theme.SplitterColor;
 					break;
 				case MenuStrip menuStrip:
-					menuStrip.BackColor = theme.MenuStripBackColor;
-					menuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(theme), theme);
+					menuStrip.BackColor = Theme.MenuStripBackColor;
+					menuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(Theme), Theme);
 					break;
 				case ContextMenuStrip contextMenuStrip:
-					contextMenuStrip.BackColor = theme.MenuStripBackColor;
-					contextMenuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(theme), theme);
+					contextMenuStrip.BackColor = Theme.MenuStripBackColor;
+					contextMenuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(Theme), Theme);
 					break;
 				case ColoredGroupBox coloredGroupBox:
-					coloredGroupBox.BackColor = theme.BackColor;
-					coloredGroupBox.TitleColor = theme.ForeColor;
-					coloredGroupBox.BorderColor = theme.SplitterColor;
+					coloredGroupBox.BackColor = Theme.BackColor;
+					coloredGroupBox.TitleColor = Theme.ForeColor;
+					coloredGroupBox.BorderColor = Theme.SplitterColor;
 					break;
 			}
-			control.ForeColor = theme.ForeColor;
+			control.ForeColor = Theme.ForeColor;
 			foreach (Control control1 in control.Controls)
 			{
-				SetThemes(control1, theme);
+				SetThemes(control1);
 			}
 		}
 	}

@@ -16,6 +16,10 @@ namespace BerichtManager.UploadChecking
 		/// Marks report as edited only locally
 		/// </summary>
 		public bool WasEditedLocally { get; set; } = false;
+		/// <summary>
+		/// Marks the report behind this node as opened
+		/// </summary>
+		public bool IsOpened { get; set; } = false;
 
 		/// <summary>
 		/// Statuses of report on IHK servers

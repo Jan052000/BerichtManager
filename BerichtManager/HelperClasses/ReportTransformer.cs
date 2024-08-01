@@ -1,4 +1,4 @@
-﻿using BerichtManager.IHKClient;
+using BerichtManager.IHKClient;
 using Word = Microsoft.Office.Interop.Word;
 using System;
 using BerichtManager.Config;
@@ -39,9 +39,9 @@ namespace BerichtManager.HelperClasses
 			//Dates are auto filled by IHK
 			//report.ReportContent.StartDate = doc.FormFields[3].Result;
 			//report.ReportContent.EndDate = doc.FormFields[4].Result;
-			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField();
-			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail();
-			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail();
+			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField;
+			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail;
+			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail;
 			report.ReportContent.JobFieldContent = TransformTextToIHK(doc.FormFields[6].Result);
 			report.ReportContent.SeminarsField = TransformTextToIHK(doc.FormFields[7].Result);
 			report.ReportContent.SchoolField = TransformTextToIHK(doc.FormFields[8].Result);

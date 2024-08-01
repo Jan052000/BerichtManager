@@ -103,11 +103,25 @@
     <Compile Include="HelperClasses\FolderSelect.Designer.cs">
       <DependentUpon>FolderSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="HelperClasses\HtmlClasses\CSSSelectors\BaseSelector.cs" />
+    <Compile Include="HelperClasses\HtmlClasses\CSSSelectors\ChildSelector.cs" />
+    <Compile Include="HelperClasses\HtmlClasses\CSSSelectors\CSSSelectorChain.cs" />
+    <Compile Include="HelperClasses\HtmlClasses\CSSSelectors\Selector.cs" />
+    <Compile Include="HelperClasses\HtmlClasses\CSSSelectors\UnhandledTypeException.cs" />
+    <Compile Include="HelperClasses\ReportUtils.cs" />
+    <Compile Include="IHKClient\CommentResult.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DateDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DuplicateDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DuplicateNumbersDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\DuplicateStartDatesDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\IReportDiscrepancy.cs" />
+    <Compile Include="ReportChecking\Discrepancies\NumberDiscrepancy.cs" />
+    <Compile Include="ReportChecking\ReportChecker.cs" />
+    <Compile Include="ReportChecking\Discrepancies\SingleDiscrepancy.cs" />
     <Compile Include="HelperClasses\HtmlClasses\HtmlDocument.cs" />
     <Compile Include="HelperClasses\HtmlClasses\HtmlElement.cs" />
     <Compile Include="HelperClasses\ReportFinder.cs" />
     <Compile Include="IHKClient\CreateResults.cs" />
-    <Compile Include="IHKClient\CssSelector.cs" />
     <Compile Include="IHKClient\Exceptions\StartDateMismatchException.cs" />
     <Compile Include="IHKClient\UploadResult.cs" />
     <Compile Include="UploadChecking\ReportNode.cs" />

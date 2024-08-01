@@ -33,7 +33,7 @@ namespace BerichtManager.HelperClasses
 		public FolderSelect(TreeNode node)
 		{
 			InitializeComponent();
-			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			ThemeSetter.SetThemes(this);
 			AddNode(node);
 		}
 
@@ -45,7 +45,7 @@ namespace BerichtManager.HelperClasses
 		public FolderSelect(TreeNode node, NodeFilter filter)
 		{
 			InitializeComponent();
-			ThemeSetter.SetThemes(this, ThemeManager.Instance.ActiveTheme);
+			ThemeSetter.SetThemes(this);
 			FilterNode(AddNode(node), filter);
 		}
 

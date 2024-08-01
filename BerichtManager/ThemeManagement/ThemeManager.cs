@@ -42,7 +42,7 @@ namespace BerichtManager.ThemeManagement
 		{
 			get
 			{
-				ITheme activeTheme = Singleton.GetTheme(Config.ConfigHandler.Instance.ActiveTheme());
+				ITheme activeTheme = Singleton.GetTheme(Config.ConfigHandler.Instance.ActiveTheme);
 				if (activeTheme == null) activeTheme = new DarkMode();
 				return activeTheme;
 			}
@@ -90,7 +90,7 @@ namespace BerichtManager.ThemeManagement
 				}
 				catch
 				{
-					ThemedMessageBox.Show(Instance.ActiveTheme, "Unable to load " + file + "!", "Errow while loading theme");
+					ThemedMessageBox.Show(text: "Unable to load " + file + "!", title: "Errow while loading theme");
 				}
 			});
 			return themes;
@@ -127,7 +127,7 @@ namespace BerichtManager.ThemeManagement
 			SaveStatusCodes returnCode = SaveStatusCodes.Success;
 			if (File.Exists(themesFolderPath + theme.Name + ".bmtheme") || ThemeNames.Contains(theme.Name))
 			{
-				if (ThemedMessageBox.Show(Instance.ActiveTheme, "Overwrite existing file: " + themesFolderPath + theme.Name + ".bmtheme ?", "Overwrite file?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				if (ThemedMessageBox.Show(text: "Overwrite existing file: " + themesFolderPath + theme.Name + ".bmtheme ?", title: "Overwrite file?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 					return SaveStatusCodes.OverwriteDeclined;
 			}
 			else returnCode = SaveStatusCodes.NewThemeCreated;
@@ -202,6 +202,8 @@ namespace BerichtManager.ThemeManagement
 		[DefaultValue(typeof(Color), "White")]
 		public Color TreeViewHighlightedNodeColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
+		public Color TreeViewReportOpenedHighlightColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
 		public Color ReportUploadedColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color ReportHandedInColor { get; set; }
@@ -209,5 +211,6 @@ namespace BerichtManager.ThemeManagement
 		public Color ReportAcceptedColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color ReportRejectedColor { get; set; }
+
 	}
 }

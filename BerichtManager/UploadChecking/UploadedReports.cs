@@ -51,10 +51,10 @@ namespace BerichtManager.UploadChecking
 		/// <inheritdoc cref="Dictionary{TKey, TValue}.Add(TKey, TValue)" path="/exception"/>
 		public void AddReport(string path, UploadedReport report)
 		{
-			if (!TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
+			if (!TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 			{
 				paths = new Dictionary<string, UploadedReport>();
-				Add(ConfigHandler.Instance.ReportPath(), paths);
+				Add(ConfigHandler.Instance.ReportPath, paths);
 			}
 			if (paths.ContainsKey(path))
 				paths[path] = report;
@@ -73,7 +73,7 @@ namespace BerichtManager.UploadChecking
 		public static bool UpdateReportStatus(DateTime startDate, ReportNode.UploadStatuses status, int? lfdnr)
 		{
 			bool save = false;
-			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 				return save;
 			UploadedReport toUpdate = paths.Values.ToList().Find(report => report.StartDate == startDate);
 			if (toUpdate == null)
@@ -153,15 +153,15 @@ namespace BerichtManager.UploadChecking
 			//Handle static file path
 			if (Path.IsPathRooted(path))
 			{
-				if (!path.StartsWith(ConfigHandler.Instance.ReportPath()))
+				if (!path.StartsWith(ConfigHandler.Instance.ReportPath))
 					return false;
 				string toSplit = path.Replace('/', '\\');
 				List<string> splitPath = toSplit.Split('\\').ToList();
-				string reportRoot = ConfigHandler.Instance.ReportPath().Replace('/', '\\').Split('\\').Last();
+				string reportRoot = ConfigHandler.Instance.ReportPath.Replace('/', '\\').Split('\\').Last();
 				splitPath.RemoveRange(0, splitPath.IndexOf(reportRoot));
 				path = String.Join('\\'.ToString(), splitPath);
 			}
-			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 				return false;
 			if (!paths.TryGetValue(path, out UploadedReport result))
 				return false;
@@ -178,7 +178,7 @@ namespace BerichtManager.UploadChecking
 		public static bool GetUploadedReport(DateTime startDate, out UploadedReport report)
 		{
 			report = null;
-			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 				return false;
 			UploadedReport foundReport = paths.Values.ToList().Find(x => x.StartDate.Date == startDate.Date);
 			if (!(foundReport is UploadedReport result))
@@ -196,7 +196,7 @@ namespace BerichtManager.UploadChecking
 		public static bool GetUploadedReport(int lfdnr, out UploadedReport report)
 		{
 			report = null;
-			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> paths))
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 				return false;
 			UploadedReport foundReport = paths.Values.ToList().Find(r => r.LfdNR == lfdnr);
 			if (!(foundReport is UploadedReport result))
@@ -212,7 +212,7 @@ namespace BerichtManager.UploadChecking
 		/// <param name="newPath">New path relative to <see cref="ConfigHandler.Instance"/>s report path</param>
 		public static void MoveReport(string oldPath, string newPath)
 		{
-			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> reports))
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> reports))
 				return;
 			if (!reports.TryGetValue(oldPath, out UploadedReport toMove))
 				return;
@@ -241,7 +241,7 @@ namespace BerichtManager.UploadChecking
 		/// <param name="wasEdited">Status of synchronization with IHK</param>
 		public static void SetEdited(DateTime startDate, bool wasEdited)
 		{
-			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath(), out Dictionary<string, UploadedReport> reports))
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> reports))
 				return;
 			UploadedReport foundReport = reports.Values.ToList().Find(x => x.StartDate.Date == startDate.Date);
 			if (!(foundReport is UploadedReport toMark))

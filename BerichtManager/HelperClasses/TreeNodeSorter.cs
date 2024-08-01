@@ -9,15 +9,32 @@ namespace BerichtManager.HelperClasses
 		{
 			TreeNode xNode = x as TreeNode;
 			TreeNode yNode = y as TreeNode;
-			if(xNode.Text.Contains("WochenberichtKW") && yNode.Text.Contains("WochenberichtKW"))
+			if (ReportUtils.IsNameValid(xNode.Text) && ReportUtils.IsNameValid(yNode.Text))
 			{
-				string xNumber = xNode.Text.Replace("WochenberichtKW", "").Replace(".docx", "");
-				if (!int.TryParse(xNumber, out int xnumber))
-					return string.Compare(xNode.Text, yNode.Text);
-				string yNumber = yNode.Text.Replace("WochenberichtKW", "").Replace(".docx", "");
-				if (!int.TryParse(yNumber, out int ynumber))
-					return string.Compare(xNode.Text, yNode.Text);
-				return xnumber.CompareTo(ynumber);
+				int result = 0;
+				ResolvedValues xResult = NamingPatternResolver.GetValuesFromName(xNode.Text);
+				ResolvedValues yResult = NamingPatternResolver.GetValuesFromName(yNode.Text);
+				if (xResult.ReportNumber > 0 && yResult.ReportNumber > 0)
+					switch (xResult.ReportNumber - yResult.ReportNumber)
+					{
+						case int diff when diff < 0:
+							result--;
+							break;
+						case int diff when diff > 0:
+							result++;
+							break;
+					}
+				if (xResult.CalendarWeek > 0 && yResult.CalendarWeek > 0)
+					switch (xResult.CalendarWeek - yResult.CalendarWeek)
+					{
+						case int diff when diff < 0:
+							result--;
+							break;
+						case int diff when diff > 0:
+							result++;
+							break;
+					}
+				return result;
 			}
 			return string.Compare(xNode.Text, yNode.Text);
 		}

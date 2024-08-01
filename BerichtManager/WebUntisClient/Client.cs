@@ -1,6 +1,5 @@
 using BerichtManager.Config;
 using BerichtManager.OwnControls;
-using BerichtManager.ThemeManagement;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -37,8 +36,8 @@ namespace BerichtManager.WebUntisClient
 		private void UpdateConfigData()
 		{
 			//Get school and server
-			SchoolName = ConfigHandler.SchoolName();
-			Server = ConfigHandler.WebUntisServer();
+			SchoolName = ConfigHandler.SchoolName;
+			Server = ConfigHandler.WebUntisServer;
 		}
 
 		/// <summary>
@@ -47,7 +46,7 @@ namespace BerichtManager.WebUntisClient
 		/// <returns>List containing names of classes in time table</returns>
 		public List<string> GetClassesFromWebUntis()
 		{
-			if (!ConfigHandler.UseWebUntis()) return new List<string>();
+			if (!ConfigHandler.UseWebUntis) return new List<string>();
 
 			UpdateConfigData();
 
@@ -62,14 +61,14 @@ namespace BerichtManager.WebUntisClient
 			string jSpringURL = "https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check";
 
 			//Generate Headers and Login
-			if (ConfigHandler.StayLoggedIn())
+			if (ConfigHandler.WebUntisStayLoggedIn)
 			{
 				//Obtain JSessionId
 				Dictionary<string, string> content = new Dictionary<string, string>()
 				{
 					{ "school", SchoolName },
-					{ "j_username", ConfigHandler.WebUntisUsername() },
-					{ "j_password", ConfigHandler.WebUntisPassword() },
+					{ "j_username", ConfigHandler.WebUntisUsername },
+					{ "j_password", ConfigHandler.WebUntisPassword },
 					{ "token", "" }
 				};
 				responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(content)).Result;
@@ -79,7 +78,7 @@ namespace BerichtManager.WebUntisClient
 				Config.User user = ConfigHandler.DoWebUntisLogin();
 				if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");
+					ThemedMessageBox.Show(text: "You need to login to automatically enter classes");
 					return classes;
 				}
 				else
@@ -128,7 +127,7 @@ namespace BerichtManager.WebUntisClient
 			}
 			else
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+				ThemedMessageBox.Show(text: "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
 				return new List<string>();
 			}
 
@@ -140,7 +139,7 @@ namespace BerichtManager.WebUntisClient
 			responseMessage = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
 			if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Your account is unauthorized", "Unauthorized");
+				ThemedMessageBox.Show(text: "Your account is unauthorized", title: "Unauthorized");
 				return new List<string>();
 			}
 			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result);
@@ -152,7 +151,7 @@ namespace BerichtManager.WebUntisClient
 			//Check account privilages
 			if (!Enum.TryParse<ElementTypes>(yearData.user.roles[0], out ElementTypes elementType))
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Could not resolve the rights your account has\non the WebUntis server of your school", "Unknown account type");
+				ThemedMessageBox.Show(text: "Could not resolve the rights your account has\non the WebUntis server of your school", title: "Unknown account type");
 				return new List<string>();
 			}
 
@@ -163,7 +162,7 @@ namespace BerichtManager.WebUntisClient
 			}
 			else
 			{
-				ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "Your account does not have the rights to view its timetable", "Insifficient permissions");
+				ThemedMessageBox.Show(text: "Your account does not have the rights to view its timetable", title: "Insifficient permissions");
 				return new List<string>();
 			}
 			//responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=" + configHandler.TableElementType() + "&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
@@ -212,7 +211,7 @@ namespace BerichtManager.WebUntisClient
 			});
 
 			//Crosscheck ClassIds to Coursenames
-			bool useUserPrefix = ConfigHandler.UseUserPrefix();
+			bool useUserPrefix = ConfigHandler.UseCustomPrefix;
 			rootObject.result.data.elements.ForEach((element) =>
 			{
 				if (element.type == 3 && classids.Contains(element.id))
@@ -221,21 +220,21 @@ namespace BerichtManager.WebUntisClient
 					{
 						if (cancelled[element.id])
 						{
-							if (!classes.Contains(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "\n"))
+							if (!classes.Contains(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n"))
 							{
-								classes.Add(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "Ausgefallen\n");
+								classes.Add(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "Ausgefallen\n");
 							}
 						}
 						else
 						{
-							if (classes.Contains(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "Ausgefallen\n"))
+							if (classes.Contains(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "Ausgefallen\n"))
 							{
-								classes.Remove(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "Ausgefallen\n");
-								classes.Add(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "\n");
+								classes.Remove(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "Ausgefallen\n");
+								classes.Add(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n");
 							}
 							else
 							{
-								classes.Add(ConfigHandler.CustomPrefix() + element.name + "\n\t" + ConfigHandler.CustomPrefix() + "\n");
+								classes.Add(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n");
 							}
 						}
 					}
@@ -275,7 +274,7 @@ namespace BerichtManager.WebUntisClient
 				Holidays holidays = GetHolidays(client);
 				if (holidays.result == null)
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "An error has occurred on the web untis server", "Server did not respond");
+					ThemedMessageBox.Show(text: "An error has occurred on the web untis server", title: "Server did not respond");
 					return new List<string>();
 				}
 				holidays.result.ForEach((holiday) =>
@@ -286,8 +285,8 @@ namespace BerichtManager.WebUntisClient
 					bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
 					if (isInWeek || isStarting || isEnding || weekInEvent)
 					{
-						if (ConfigHandler.UseUserPrefix())
-							classes.Add(ConfigHandler.CustomPrefix() + holiday.longName + "\n");
+						if (ConfigHandler.UseCustomPrefix)
+							classes.Add(ConfigHandler.CustomPrefix + holiday.longName + "\n");
 						else
 							classes.Add("-" + holiday.longName + "\n");
 					}
@@ -324,14 +323,14 @@ namespace BerichtManager.WebUntisClient
 				Dictionary<string, string> loginContent;
 
 				//Generate Headers and Login
-				if (ConfigHandler.StayLoggedIn())
+				if (ConfigHandler.WebUntisStayLoggedIn)
 				{
 					//Obtain JSessionId
 					loginContent = new Dictionary<string, string>()
 					{
 						{ "school", SchoolName },
-						{ "j_username", ConfigHandler.WebUntisUsername() },
-						{ "j_password", ConfigHandler.WebUntisPassword() },
+						{ "j_username", ConfigHandler.WebUntisUsername },
+						{ "j_password", ConfigHandler.WebUntisPassword },
 						{ "token", "" }
 					};
 				}
@@ -340,7 +339,7 @@ namespace BerichtManager.WebUntisClient
 					Config.User user = ConfigHandler.DoWebUntisLogin();
 					if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
 					{
-						ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "You need to login to automatically enter classes");
+						ThemedMessageBox.Show(text: "You need to login to automatically enter classes");
 						return null;
 					}
 					else
@@ -389,7 +388,7 @@ namespace BerichtManager.WebUntisClient
 				}
 				else
 				{
-					ThemedMessageBox.Show(ThemeManager.Instance.ActiveTheme, "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
+					ThemedMessageBox.Show(text: "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
 					return null;
 				}
 			}
@@ -432,8 +431,8 @@ namespace BerichtManager.WebUntisClient
 				bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
 				if (isInWeek || isStarting || isEnding || weekInEvent)
 				{
-					if (ConfigHandler.UseUserPrefix())
-						str += ConfigHandler.CustomPrefix() + holiday.longName + "\n";
+					if (ConfigHandler.UseCustomPrefix)
+						str += ConfigHandler.CustomPrefix + holiday.longName + "\n";
 					else
 						str += "-" + holiday.longName + "\n";
 				}

@@ -37,7 +37,7 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// Base url for IHK endpoint
 		/// </summary>
-		private string BASEURL { get => ConfigHandler.Instance.IHKBaseUrl(); }
+		private string BASEURL { get => ConfigHandler.Instance.IHKBaseUrl; }
 		/// <summary>
 		/// Wether or not the client is logged in
 		/// </summary>
@@ -176,8 +176,8 @@ namespace BerichtManager.IHKClient
 				return false;
 
 			string uri = "tibrosBB/azubiHome.jsp";
-			string username = ConfigHandler.Instance.IHKUserName();
-			string password = ConfigHandler.Instance.IHKPassword();
+			string username = ConfigHandler.Instance.IHKUserName;
+			string password = ConfigHandler.Instance.IHKPassword;
 			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
 			{
 				User user = ConfigHandler.Instance.DoIHKLogin();
@@ -224,7 +224,7 @@ namespace BerichtManager.IHKClient
 			if (!response.IsSuccessStatusCode)
 				return new List<UploadedReport>();
 			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-			List<HtmlElement> reportElements = doc.Body.CSSSelect(doc.Body, "div.reihe");
+			List<HtmlElement> reportElements = doc.Body.CSSSelect("div.reihe");
 			ResetTimer();
 			return TransformHtmlToReports(reportElements);
 		}
@@ -240,7 +240,7 @@ namespace BerichtManager.IHKClient
 			List<UploadedReport> uploadedReports = new List<UploadedReport>();
 			reportElements.ForEach(reportElement =>
 			{
-				List<HtmlElement> rows = reportElement.CSSSelect(reportElement, "div.col-md-8");
+				List<HtmlElement> rows = reportElement.CSSSelect("div.col-md-8");
 				Regex datesRegex = new Regex("(\\d+?\\.\\d+?\\.\\d+)");
 				if (!DateTime.TryParseExact(datesRegex.Match(rows[(int)ReportElementFields.TimeSpan].InnerText).Value, "dd.MM.yyyy", null, DateTimeStyles.None, out DateTime startDate))
 					return;
@@ -542,12 +542,86 @@ namespace BerichtManager.IHKClient
 			if (!lfdnr.HasValue || lfdnr < 0)
 			{
 				doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-				List<UploadedReport> uploadedReports = TransformHtmlToReports(doc.Body.CSSSelect(doc.Body, "div.reihe"));
+				List<UploadedReport> uploadedReports = TransformHtmlToReports(doc.Body.CSSSelect("div.reihe"));
 				if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
 					lfdnr = currentReport.LfdNR;
 			}
 			ResetTimer();
 			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate), lfdnr: lfdnr);
+		}
+
+		/// <summary>
+		/// Gets the supervisors' comment for the report with number <paramref name="lfdNR"/>
+		/// </summary>
+		/// <param name="lfdNR">Number of report on IHK servers</param>
+		/// <returns>The <see cref="CommentResult"/> of fetching the comment</returns>
+		public async Task<CommentResult> GetCommentFromReport(int? lfdNR)
+		{
+			if (!lfdNR.HasValue || lfdNR < 0)
+				return new CommentResult(CommentResult.ResultStatus.NoLfdnr);
+			if (!LoggedIn && !await DoLogin())
+				return new CommentResult(CommentResult.ResultStatus.LoginFailed);
+			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
+				return new CommentResult(CommentResult.ResultStatus.Unauthorized);
+			HttpResponseMessage response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdNR}");
+			if (!response.IsSuccessStatusCode)
+				return new CommentResult(CommentResult.ResultStatus.OpenReportFailed);
+
+			HtmlDocument doc = new HtmlDocument(await response.Content.ReadAsStringAsync());
+			await GetAndRefer("tibrosBB/azubiHeft.jsp");
+			ResetTimer();
+
+			return GetComment(doc);
+		}
+
+		/// <summary>
+		/// Searches <paramref name="doc"/> for the supervisors' comment
+		/// </summary>
+		/// <param name="doc"><see cref="HtmlDocument"/> to search for a comment</param>
+		/// <returns><see cref="CommentResult"/> of finding the comment</returns>
+		private CommentResult GetComment(HtmlDocument doc)
+		{
+			List<HtmlElement> list = doc.Body.CSSSelect("div.noc_table > div.row > div");
+			int commentIndex = 2 * (int)EditFormInfoFields.Comment + 1;
+			if (list.Count < commentIndex)
+				return new CommentResult(CommentResult.ResultStatus.CommentFieldNotFound);
+			return new CommentResult(CommentResult.ResultStatus.Success, comment: list[commentIndex].InnerText);
+		}
+
+		/// <summary>
+		/// Indexes of edit form info fields
+		/// (are in pairs of 2)
+		/// </summary>
+		public enum EditFormInfoFields
+		{
+			/// <summary>
+			/// Index of azubi name
+			/// </summary>
+			Name,
+			/// <summary>
+			/// Index of azubi number
+			/// </summary>
+			AzubiNumber,
+			/// <summary>
+			/// Index of job title
+			/// </summary>
+			JobTitle,
+			/// <summary>
+			/// Index of span where the contract is binding
+			/// </summary>
+			ContractSpan,
+			/// <summary>
+			/// Index of report status
+			/// </summary>
+			Status,
+			/// <summary>
+			/// Index of date the report was accepted
+			/// </summary>
+			AcceptDate,
+			/// <summary>
+			/// Index of comment
+			/// </summary>
+			Comment
 		}
 
 		/// <summary>

@@ -84,6 +84,8 @@
 			this.tbReportRejected = new System.Windows.Forms.TextBox();
 			this.laReportAccepted = new System.Windows.Forms.Label();
 			this.laReportRejected = new System.Windows.Forms.Label();
+			this.tbTVEditHighlight = new System.Windows.Forms.TextBox();
+			this.laTVEditHighlight = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.nudButtonFocusBorderWidth)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -103,7 +105,7 @@
 			this.laTBDisabledBackColor.Name = "laTBDisabledBackColor";
 			this.laTBDisabledBackColor.Size = new System.Drawing.Size(141, 13);
 			this.laTBDisabledBackColor.TabIndex = 2;
-			this.laTBDisabledBackColor.Text = "TextBox disable dback color";
+			this.laTBDisabledBackColor.Text = "TextBox disabled back color";
 			// 
 			// laTBBorderColor
 			// 
@@ -243,7 +245,7 @@
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(294, 685);
+			this.btClose.Location = new System.Drawing.Point(294, 711);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 34;
@@ -254,7 +256,7 @@
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(294, 655);
+			this.btSave.Location = new System.Drawing.Point(294, 681);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
 			this.btSave.TabIndex = 35;
@@ -614,7 +616,7 @@
 			// 
 			// tbReportUploaded
 			// 
-			this.tbReportUploaded.Location = new System.Drawing.Point(188, 610);
+			this.tbReportUploaded.Location = new System.Drawing.Point(188, 636);
 			this.tbReportUploaded.Name = "tbReportUploaded";
 			this.tbReportUploaded.ReadOnly = true;
 			this.tbReportUploaded.Size = new System.Drawing.Size(100, 20);
@@ -625,7 +627,7 @@
 			// 
 			// tbReportHandedIn
 			// 
-			this.tbReportHandedIn.Location = new System.Drawing.Point(188, 636);
+			this.tbReportHandedIn.Location = new System.Drawing.Point(188, 662);
 			this.tbReportHandedIn.Name = "tbReportHandedIn";
 			this.tbReportHandedIn.ReadOnly = true;
 			this.tbReportHandedIn.Size = new System.Drawing.Size(100, 20);
@@ -637,7 +639,7 @@
 			// laReportUploaded
 			// 
 			this.laReportUploaded.AutoSize = true;
-			this.laReportUploaded.Location = new System.Drawing.Point(12, 613);
+			this.laReportUploaded.Location = new System.Drawing.Point(12, 639);
 			this.laReportUploaded.Name = "laReportUploaded";
 			this.laReportUploaded.Size = new System.Drawing.Size(86, 13);
 			this.laReportUploaded.TabIndex = 69;
@@ -646,7 +648,7 @@
 			// laReportHandedIn
 			// 
 			this.laReportHandedIn.AutoSize = true;
-			this.laReportHandedIn.Location = new System.Drawing.Point(12, 639);
+			this.laReportHandedIn.Location = new System.Drawing.Point(12, 665);
 			this.laReportHandedIn.Name = "laReportHandedIn";
 			this.laReportHandedIn.Size = new System.Drawing.Size(89, 13);
 			this.laReportHandedIn.TabIndex = 70;
@@ -654,7 +656,7 @@
 			// 
 			// tbReportAccepted
 			// 
-			this.tbReportAccepted.Location = new System.Drawing.Point(188, 662);
+			this.tbReportAccepted.Location = new System.Drawing.Point(188, 688);
 			this.tbReportAccepted.Name = "tbReportAccepted";
 			this.tbReportAccepted.ReadOnly = true;
 			this.tbReportAccepted.Size = new System.Drawing.Size(100, 20);
@@ -665,7 +667,7 @@
 			// 
 			// tbReportRejected
 			// 
-			this.tbReportRejected.Location = new System.Drawing.Point(188, 688);
+			this.tbReportRejected.Location = new System.Drawing.Point(188, 714);
 			this.tbReportRejected.Name = "tbReportRejected";
 			this.tbReportRejected.ReadOnly = true;
 			this.tbReportRejected.Size = new System.Drawing.Size(100, 20);
@@ -677,7 +679,7 @@
 			// laReportAccepted
 			// 
 			this.laReportAccepted.AutoSize = true;
-			this.laReportAccepted.Location = new System.Drawing.Point(12, 665);
+			this.laReportAccepted.Location = new System.Drawing.Point(12, 691);
 			this.laReportAccepted.Name = "laReportAccepted";
 			this.laReportAccepted.Size = new System.Drawing.Size(87, 13);
 			this.laReportAccepted.TabIndex = 73;
@@ -686,17 +688,39 @@
 			// laReportRejected
 			// 
 			this.laReportRejected.AutoSize = true;
-			this.laReportRejected.Location = new System.Drawing.Point(12, 691);
+			this.laReportRejected.Location = new System.Drawing.Point(12, 717);
 			this.laReportRejected.Name = "laReportRejected";
 			this.laReportRejected.Size = new System.Drawing.Size(80, 13);
 			this.laReportRejected.TabIndex = 74;
 			this.laReportRejected.Text = "Report rejected";
 			// 
+			// tbTVEditHighlight
+			// 
+			this.tbTVEditHighlight.Location = new System.Drawing.Point(188, 610);
+			this.tbTVEditHighlight.Name = "tbTVEditHighlight";
+			this.tbTVEditHighlight.ReadOnly = true;
+			this.tbTVEditHighlight.Size = new System.Drawing.Size(100, 20);
+			this.tbTVEditHighlight.TabIndex = 75;
+			this.tbTVEditHighlight.Text = "-1";
+			this.tbTVEditHighlight.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
+			this.tbTVEditHighlight.Enter += new System.EventHandler(this.TextBox_Entered);
+			// 
+			// laTVEditHighlight
+			// 
+			this.laTVEditHighlight.AutoSize = true;
+			this.laTVEditHighlight.Location = new System.Drawing.Point(12, 613);
+			this.laTVEditHighlight.Name = "laTVEditHighlight";
+			this.laTVEditHighlight.Size = new System.Drawing.Size(140, 13);
+			this.laTVEditHighlight.TabIndex = 76;
+			this.laTVEditHighlight.Text = "TreeView edit highlight color";
+			// 
 			// CreateTheme
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(381, 720);
+			this.ClientSize = new System.Drawing.Size(381, 746);
+			this.Controls.Add(this.laTVEditHighlight);
+			this.Controls.Add(this.tbTVEditHighlight);
 			this.Controls.Add(this.laReportRejected);
 			this.Controls.Add(this.laReportAccepted);
 			this.Controls.Add(this.tbReportRejected);
@@ -820,5 +844,7 @@
 		private System.Windows.Forms.TextBox tbReportRejected;
 		private System.Windows.Forms.Label laReportAccepted;
 		private System.Windows.Forms.Label laReportRejected;
+		private System.Windows.Forms.TextBox tbTVEditHighlight;
+		private System.Windows.Forms.Label laTVEditHighlight;
 	}
 }

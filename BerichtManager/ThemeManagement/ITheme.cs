@@ -28,6 +28,7 @@ namespace BerichtManager.ThemeManagement
 		Color SplitterColor { get; }
 		Color TreeViewDottedLineColor { get; }
 		Color TreeViewHighlightedNodeColor { get; }
+		Color TreeViewReportOpenedHighlightColor { get; }
 		Color ReportUploadedColor { get; }
 		Color ReportHandedInColor { get; }
 		Color ReportAcceptedColor { get; }

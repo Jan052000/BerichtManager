@@ -30,61 +30,62 @@ namespace BerichtManager.Forms
 		{
 			this.components = new System.ComponentModel.Container();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.tbSupervisorMail = new System.Windows.Forms.TextBox();
-			this.tbJobField = new System.Windows.Forms.TextBox();
-			this.btIHKLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.nudUploadDelay = new System.Windows.Forms.NumericUpDown();
-			this.nudTabStops = new System.Windows.Forms.NumericUpDown();
-			this.cbLegacyEdit = new System.Windows.Forms.CheckBox();
-			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
-			this.btCreateTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.tbUpdate = new System.Windows.Forms.TextBox();
-			this.btEditTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.tbFolder = new System.Windows.Forms.TextBox();
-			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
-			this.tbNamingPattern = new System.Windows.Forms.TextBox();
-			this.tbName = new System.Windows.Forms.TextBox();
-			this.nudNumber = new System.Windows.Forms.NumericUpDown();
-			this.tbTemplate = new System.Windows.Forms.TextBox();
-			this.cbShouldUseUntis = new System.Windows.Forms.CheckBox();
-			this.tbSchool = new System.Windows.Forms.TextBox();
-			this.btLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.tbServer = new System.Windows.Forms.TextBox();
-			this.cbUseCustomPrefix = new System.Windows.Forms.CheckBox();
-			this.tbCustomPrefix = new System.Windows.Forms.TextBox();
 			this.gbIHK = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.cbIHKCheckMatchingStartDates = new System.Windows.Forms.CheckBox();
 			this.laIHKBaseUrl = new System.Windows.Forms.Label();
 			this.tbIHKBaseUrl = new System.Windows.Forms.TextBox();
 			this.cbAutoSyncStatusesWithIHK = new System.Windows.Forms.CheckBox();
 			this.laSupervisorMail = new System.Windows.Forms.Label();
+			this.tbSupervisorMail = new System.Windows.Forms.TextBox();
 			this.laJobField = new System.Windows.Forms.Label();
+			this.tbJobField = new System.Windows.Forms.TextBox();
+			this.btIHKLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.nudUploadDelay = new System.Windows.Forms.NumericUpDown();
 			this.laUploadDelay = new System.Windows.Forms.Label();
 			this.gbManagerOptions = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.laFontSize = new System.Windows.Forms.Label();
 			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
 			this.laTabStop = new System.Windows.Forms.Label();
+			this.nudTabStops = new System.Windows.Forms.NumericUpDown();
 			this.laFolder = new System.Windows.Forms.Label();
+			this.cbLegacyEdit = new System.Windows.Forms.CheckBox();
+			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
+			this.btCreateTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.tbUpdate = new System.Windows.Forms.TextBox();
 			this.laTheme = new System.Windows.Forms.Label();
 			this.laUpdate = new System.Windows.Forms.Label();
+			this.btEditTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.tbFolder = new System.Windows.Forms.TextBox();
 			this.gbConfig = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
+			this.tbNamingPattern = new System.Windows.Forms.TextBox();
+			this.tbName = new System.Windows.Forms.TextBox();
 			this.laNumber = new System.Windows.Forms.Label();
 			this.laName = new System.Windows.Forms.Label();
+			this.nudNumber = new System.Windows.Forms.NumericUpDown();
 			this.laNamingPattern = new System.Windows.Forms.Label();
+			this.tbTemplate = new System.Windows.Forms.TextBox();
 			this.laTemplate = new System.Windows.Forms.Label();
 			this.gbWebUntis = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.cbShouldUseUntis = new System.Windows.Forms.CheckBox();
+			this.tbSchool = new System.Windows.Forms.TextBox();
+			this.btLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.laSchool = new System.Windows.Forms.Label();
+			this.tbServer = new System.Windows.Forms.TextBox();
 			this.laServer = new System.Windows.Forms.Label();
 			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.cbUseCustomPrefix = new System.Windows.Forms.CheckBox();
+			this.tbCustomPrefix = new System.Windows.Forms.TextBox();
 			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.cbIHKCheckMatchingStartDates = new System.Windows.Forms.CheckBox();
-			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
+			this.cbIHKAutoGetComment = new System.Windows.Forms.CheckBox();
 			this.gbIHK.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).BeginInit();
 			this.gbManagerOptions.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			this.gbConfig.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			this.gbWebUntis.SuspendLayout();
 			this.gbPrefix.SuspendLayout();
 			this.SuspendLayout();
@@ -97,14 +98,100 @@ namespace BerichtManager.Forms
 			this.toolTip1.ReshowDelay = 100;
 			this.toolTip1.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this.toolTip1_Draw);
 			// 
+			// gbIHK
+			// 
+			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbIHK.Controls.Add(this.cbIHKAutoGetComment);
+			this.gbIHK.Controls.Add(this.cbIHKCheckMatchingStartDates);
+			this.gbIHK.Controls.Add(this.laIHKBaseUrl);
+			this.gbIHK.Controls.Add(this.tbIHKBaseUrl);
+			this.gbIHK.Controls.Add(this.cbAutoSyncStatusesWithIHK);
+			this.gbIHK.Controls.Add(this.laSupervisorMail);
+			this.gbIHK.Controls.Add(this.tbSupervisorMail);
+			this.gbIHK.Controls.Add(this.laJobField);
+			this.gbIHK.Controls.Add(this.tbJobField);
+			this.gbIHK.Controls.Add(this.btIHKLogin);
+			this.gbIHK.Controls.Add(this.nudUploadDelay);
+			this.gbIHK.Controls.Add(this.laUploadDelay);
+			this.gbIHK.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbIHK.Location = new System.Drawing.Point(0, 405);
+			this.gbIHK.Name = "gbIHK";
+			this.gbIHK.Size = new System.Drawing.Size(800, 141);
+			this.gbIHK.TabIndex = 46;
+			this.gbIHK.TabStop = false;
+			this.gbIHK.Text = "IHK";
+			// 
+			// cbIHKCheckMatchingStartDates
+			// 
+			this.cbIHKCheckMatchingStartDates.AutoSize = true;
+			this.cbIHKCheckMatchingStartDates.Location = new System.Drawing.Point(276, 118);
+			this.cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
+			this.cbIHKCheckMatchingStartDates.Size = new System.Drawing.Size(205, 17);
+			this.cbIHKCheckMatchingStartDates.TabIndex = 55;
+			this.cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
+			this.toolTip1.SetToolTip(this.cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is" +
+        " the same as the report");
+			this.cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
+			this.cbIHKCheckMatchingStartDates.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laIHKBaseUrl
+			// 
+			this.laIHKBaseUrl.AutoSize = true;
+			this.laIHKBaseUrl.Location = new System.Drawing.Point(51, 95);
+			this.laIHKBaseUrl.Name = "laIHKBaseUrl";
+			this.laIHKBaseUrl.Size = new System.Drawing.Size(41, 13);
+			this.laIHKBaseUrl.TabIndex = 54;
+			this.laIHKBaseUrl.Text = "IHK Url";
+			// 
+			// tbIHKBaseUrl
+			// 
+			this.tbIHKBaseUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
+			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
+			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
+			this.tbIHKBaseUrl.TabIndex = 53;
+			this.tbIHKBaseUrl.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// cbAutoSyncStatusesWithIHK
+			// 
+			this.cbAutoSyncStatusesWithIHK.AutoSize = true;
+			this.cbAutoSyncStatusesWithIHK.Location = new System.Drawing.Point(98, 118);
+			this.cbAutoSyncStatusesWithIHK.Name = "cbAutoSyncStatusesWithIHK";
+			this.cbAutoSyncStatusesWithIHK.Size = new System.Drawing.Size(172, 17);
+			this.cbAutoSyncStatusesWithIHK.TabIndex = 52;
+			this.cbAutoSyncStatusesWithIHK.Text = "Sync report statuses on startup";
+			this.cbAutoSyncStatusesWithIHK.UseVisualStyleBackColor = true;
+			this.cbAutoSyncStatusesWithIHK.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laSupervisorMail
+			// 
+			this.laSupervisorMail.AutoSize = true;
+			this.laSupervisorMail.Location = new System.Drawing.Point(5, 69);
+			this.laSupervisorMail.Name = "laSupervisorMail";
+			this.laSupervisorMail.Size = new System.Drawing.Size(87, 13);
+			this.laSupervisorMail.TabIndex = 51;
+			this.laSupervisorMail.Text = "Supervisor e-mail";
+			// 
 			// tbSupervisorMail
 			// 
+			this.tbSupervisorMail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbSupervisorMail.Location = new System.Drawing.Point(98, 66);
 			this.tbSupervisorMail.Name = "tbSupervisorMail";
 			this.tbSupervisorMail.Size = new System.Drawing.Size(696, 20);
 			this.tbSupervisorMail.TabIndex = 50;
 			this.toolTip1.SetToolTip(this.tbSupervisorMail, "E-mail of supervisor");
 			this.tbSupervisorMail.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laJobField
+			// 
+			this.laJobField.AutoSize = true;
+			this.laJobField.Location = new System.Drawing.Point(46, 43);
+			this.laJobField.Name = "laJobField";
+			this.laJobField.Size = new System.Drawing.Size(46, 13);
+			this.laJobField.TabIndex = 49;
+			this.laJobField.Text = "Job field";
 			// 
 			// tbJobField
 			// 
@@ -146,289 +233,6 @@ namespace BerichtManager.Forms
 			this.nudUploadDelay.TabIndex = 1;
 			this.toolTip1.SetToolTip(this.nudUploadDelay, "Time in ms between report uploads");
 			this.nudUploadDelay.ValueChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// nudTabStops
-			// 
-			this.nudTabStops.Location = new System.Drawing.Point(98, 12);
-			this.nudTabStops.Name = "nudTabStops";
-			this.nudTabStops.Size = new System.Drawing.Size(120, 20);
-			this.nudTabStops.TabIndex = 31;
-			this.toolTip1.SetToolTip(this.nudTabStops, "Number of units in each tab");
-			this.nudTabStops.ValueChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// cbLegacyEdit
-			// 
-			this.cbLegacyEdit.AutoSize = true;
-			this.cbLegacyEdit.Location = new System.Drawing.Point(257, 14);
-			this.cbLegacyEdit.Name = "cbLegacyEdit";
-			this.cbLegacyEdit.Size = new System.Drawing.Size(99, 17);
-			this.cbLegacyEdit.TabIndex = 10;
-			this.cbLegacyEdit.Text = "Use legacy edit";
-			this.toolTip1.SetToolTip(this.cbLegacyEdit, "Should seperate forms be used to edit?");
-			this.cbLegacyEdit.UseVisualStyleBackColor = true;
-			this.cbLegacyEdit.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// coTheme
-			// 
-			this.coTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
-			this.coTheme.DisabledColor = System.Drawing.SystemColors.Control;
-			this.coTheme.DisabledTextColor = System.Drawing.SystemColors.GrayText;
-			this.coTheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
-			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.coTheme.FormattingEnabled = true;
-			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
-			this.coTheme.Location = new System.Drawing.Point(98, 38);
-			this.coTheme.Name = "coTheme";
-			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.Size = new System.Drawing.Size(529, 21);
-			this.coTheme.TabIndex = 23;
-			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
-			this.toolTip1.SetToolTip(this.coTheme, "Selected theme");
-			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// btCreateTheme
-			// 
-			this.btCreateTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btCreateTheme.Location = new System.Drawing.Point(714, 38);
-			this.btCreateTheme.Name = "btCreateTheme";
-			this.btCreateTheme.Size = new System.Drawing.Size(80, 21);
-			this.btCreateTheme.TabIndex = 24;
-			this.btCreateTheme.Text = "Create theme";
-			this.toolTip1.SetToolTip(this.btCreateTheme, "Create a new theme");
-			this.btCreateTheme.UseVisualStyleBackColor = true;
-			this.btCreateTheme.Click += new System.EventHandler(this.btCreateTheme_Click);
-			// 
-			// tbUpdate
-			// 
-			this.tbUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbUpdate.Location = new System.Drawing.Point(98, 91);
-			this.tbUpdate.Name = "tbUpdate";
-			this.tbUpdate.ReadOnly = true;
-			this.tbUpdate.Size = new System.Drawing.Size(696, 20);
-			this.tbUpdate.TabIndex = 29;
-			this.toolTip1.SetToolTip(this.tbUpdate, "Path to check if an update is available");
-			this.tbUpdate.Click += new System.EventHandler(this.tbUpdate_Click);
-			// 
-			// btEditTheme
-			// 
-			this.btEditTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btEditTheme.Location = new System.Drawing.Point(633, 38);
-			this.btEditTheme.Name = "btEditTheme";
-			this.btEditTheme.Size = new System.Drawing.Size(75, 21);
-			this.btEditTheme.TabIndex = 25;
-			this.btEditTheme.Text = "Edit theme";
-			this.toolTip1.SetToolTip(this.btEditTheme, "Choose a theme to edit");
-			this.btEditTheme.UseVisualStyleBackColor = true;
-			this.btEditTheme.Click += new System.EventHandler(this.btEditTheme_Click);
-			// 
-			// tbFolder
-			// 
-			this.tbFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbFolder.Location = new System.Drawing.Point(98, 65);
-			this.tbFolder.Name = "tbFolder";
-			this.tbFolder.ReadOnly = true;
-			this.tbFolder.Size = new System.Drawing.Size(696, 20);
-			this.tbFolder.TabIndex = 27;
-			this.toolTip1.SetToolTip(this.tbFolder, "Path to folder containing reports");
-			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
-			// 
-			// cbEndOfWeek
-			// 
-			this.cbEndOfWeek.AutoSize = true;
-			this.cbEndOfWeek.Location = new System.Drawing.Point(257, 73);
-			this.cbEndOfWeek.Name = "cbEndOfWeek";
-			this.cbEndOfWeek.Size = new System.Drawing.Size(117, 17);
-			this.cbEndOfWeek.TabIndex = 9;
-			this.cbEndOfWeek.Text = "End week on friday";
-			this.toolTip1.SetToolTip(this.cbEndOfWeek, "Should week end date be set to fridays?");
-			this.cbEndOfWeek.UseVisualStyleBackColor = true;
-			this.cbEndOfWeek.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// tbNamingPattern
-			// 
-			this.tbNamingPattern.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbNamingPattern.Location = new System.Drawing.Point(98, 96);
-			this.tbNamingPattern.Name = "tbNamingPattern";
-			this.tbNamingPattern.Size = new System.Drawing.Size(696, 20);
-			this.tbNamingPattern.TabIndex = 32;
-			this.toolTip1.SetToolTip(this.tbNamingPattern, "~+CW+~ = Calendar week\r\n~+RN+~ = Report number");
-			this.tbNamingPattern.TextChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// tbName
-			// 
-			this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbName.Location = new System.Drawing.Point(98, 19);
-			this.tbName.Name = "tbName";
-			this.tbName.Size = new System.Drawing.Size(696, 20);
-			this.tbName.TabIndex = 19;
-			this.toolTip1.SetToolTip(this.tbName, "Your name (Last name, First name)");
-			this.tbName.TextChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// nudNumber
-			// 
-			this.nudNumber.Location = new System.Drawing.Point(98, 70);
-			this.nudNumber.Name = "nudNumber";
-			this.nudNumber.Size = new System.Drawing.Size(120, 20);
-			this.nudNumber.TabIndex = 21;
-			this.toolTip1.SetToolTip(this.nudNumber, "Number of the next report that will be created");
-			this.nudNumber.ValueChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// tbTemplate
-			// 
-			this.tbTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbTemplate.Location = new System.Drawing.Point(98, 44);
-			this.tbTemplate.Name = "tbTemplate";
-			this.tbTemplate.ReadOnly = true;
-			this.tbTemplate.Size = new System.Drawing.Size(696, 20);
-			this.tbTemplate.TabIndex = 17;
-			this.toolTip1.SetToolTip(this.tbTemplate, "Path to word template");
-			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
-			// 
-			// cbShouldUseUntis
-			// 
-			this.cbShouldUseUntis.AutoSize = true;
-			this.cbShouldUseUntis.Location = new System.Drawing.Point(98, 19);
-			this.cbShouldUseUntis.Name = "cbShouldUseUntis";
-			this.cbShouldUseUntis.Size = new System.Drawing.Size(95, 17);
-			this.cbShouldUseUntis.TabIndex = 8;
-			this.cbShouldUseUntis.Text = "Use WebUntis";
-			this.toolTip1.SetToolTip(this.cbShouldUseUntis, "Should classes be fetched from WebUntis?");
-			this.cbShouldUseUntis.UseVisualStyleBackColor = true;
-			this.cbShouldUseUntis.CheckedChanged += new System.EventHandler(this.cbShouldUseUntis_CheckedChanged);
-			// 
-			// tbSchool
-			// 
-			this.tbSchool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSchool.Location = new System.Drawing.Point(98, 68);
-			this.tbSchool.Name = "tbSchool";
-			this.tbSchool.Size = new System.Drawing.Size(696, 20);
-			this.tbSchool.TabIndex = 6;
-			this.toolTip1.SetToolTip(this.tbSchool, "WebUntis name of your school");
-			this.tbSchool.TextChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// btLogin
-			// 
-			this.btLogin.Location = new System.Drawing.Point(199, 16);
-			this.btLogin.Name = "btLogin";
-			this.btLogin.Size = new System.Drawing.Size(75, 21);
-			this.btLogin.TabIndex = 15;
-			this.btLogin.Text = "Login";
-			this.toolTip1.SetToolTip(this.btLogin, "Log in to WebUntis");
-			this.btLogin.UseVisualStyleBackColor = true;
-			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
-			// 
-			// tbServer
-			// 
-			this.tbServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbServer.Location = new System.Drawing.Point(98, 42);
-			this.tbServer.Name = "tbServer";
-			this.tbServer.Size = new System.Drawing.Size(696, 20);
-			this.tbServer.TabIndex = 5;
-			this.toolTip1.SetToolTip(this.tbServer, "Name of the WebUntis server of your school");
-			this.tbServer.TextChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// cbUseCustomPrefix
-			// 
-			this.cbUseCustomPrefix.AutoSize = true;
-			this.cbUseCustomPrefix.Location = new System.Drawing.Point(6, 23);
-			this.cbUseCustomPrefix.Name = "cbUseCustomPrefix";
-			this.cbUseCustomPrefix.Size = new System.Drawing.Size(183, 17);
-			this.cbUseCustomPrefix.TabIndex = 2;
-			this.cbUseCustomPrefix.Text = "Use custom prefix in school field?";
-			this.toolTip1.SetToolTip(this.cbUseCustomPrefix, "Should custom prefix be used?");
-			this.cbUseCustomPrefix.UseVisualStyleBackColor = true;
-			this.cbUseCustomPrefix.CheckedChanged += new System.EventHandler(this.cbUseCustomPrefix_CheckedChanged);
-			// 
-			// tbCustomPrefix
-			// 
-			this.tbCustomPrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbCustomPrefix.Enabled = false;
-			this.tbCustomPrefix.Location = new System.Drawing.Point(6, 46);
-			this.tbCustomPrefix.Name = "tbCustomPrefix";
-			this.tbCustomPrefix.Size = new System.Drawing.Size(788, 20);
-			this.tbCustomPrefix.TabIndex = 3;
-			this.toolTip1.SetToolTip(this.tbCustomPrefix, "Prefix to be used in school field");
-			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// gbIHK
-			// 
-			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbIHK.Controls.Add(this.cbIHKCheckMatchingStartDates);
-			this.gbIHK.Controls.Add(this.laIHKBaseUrl);
-			this.gbIHK.Controls.Add(this.tbIHKBaseUrl);
-			this.gbIHK.Controls.Add(this.cbAutoSyncStatusesWithIHK);
-			this.gbIHK.Controls.Add(this.laSupervisorMail);
-			this.gbIHK.Controls.Add(this.tbSupervisorMail);
-			this.gbIHK.Controls.Add(this.laJobField);
-			this.gbIHK.Controls.Add(this.tbJobField);
-			this.gbIHK.Controls.Add(this.btIHKLogin);
-			this.gbIHK.Controls.Add(this.nudUploadDelay);
-			this.gbIHK.Controls.Add(this.laUploadDelay);
-			this.gbIHK.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbIHK.Location = new System.Drawing.Point(0, 405);
-			this.gbIHK.Name = "gbIHK";
-			this.gbIHK.Size = new System.Drawing.Size(800, 141);
-			this.gbIHK.TabIndex = 46;
-			this.gbIHK.TabStop = false;
-			this.gbIHK.Text = "IHK";
-			// 
-			// laIHKBaseUrl
-			// 
-			this.laIHKBaseUrl.AutoSize = true;
-			this.laIHKBaseUrl.Location = new System.Drawing.Point(51, 95);
-			this.laIHKBaseUrl.Name = "laIHKBaseUrl";
-			this.laIHKBaseUrl.Size = new System.Drawing.Size(41, 13);
-			this.laIHKBaseUrl.TabIndex = 54;
-			this.laIHKBaseUrl.Text = "IHK Url";
-			// 
-			// tbIHKBaseUrl
-			// 
-			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
-			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
-			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
-			this.tbIHKBaseUrl.TabIndex = 53;
-			this.tbIHKBaseUrl.TextChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// cbAutoSyncStatusesWithIHK
-			// 
-			this.cbAutoSyncStatusesWithIHK.AutoSize = true;
-			this.cbAutoSyncStatusesWithIHK.Location = new System.Drawing.Point(98, 118);
-			this.cbAutoSyncStatusesWithIHK.Name = "cbAutoSyncStatusesWithIHK";
-			this.cbAutoSyncStatusesWithIHK.Size = new System.Drawing.Size(172, 17);
-			this.cbAutoSyncStatusesWithIHK.TabIndex = 52;
-			this.cbAutoSyncStatusesWithIHK.Text = "Sync report statuses on startup";
-			this.cbAutoSyncStatusesWithIHK.UseVisualStyleBackColor = true;
-			this.cbAutoSyncStatusesWithIHK.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// laSupervisorMail
-			// 
-			this.laSupervisorMail.AutoSize = true;
-			this.laSupervisorMail.Location = new System.Drawing.Point(5, 69);
-			this.laSupervisorMail.Name = "laSupervisorMail";
-			this.laSupervisorMail.Size = new System.Drawing.Size(87, 13);
-			this.laSupervisorMail.TabIndex = 51;
-			this.laSupervisorMail.Text = "Supervisor e-mail";
-			// 
-			// laJobField
-			// 
-			this.laJobField.AutoSize = true;
-			this.laJobField.Location = new System.Drawing.Point(46, 43);
-			this.laJobField.Name = "laJobField";
-			this.laJobField.Size = new System.Drawing.Size(46, 13);
-			this.laJobField.TabIndex = 49;
-			this.laJobField.Text = "Job field";
 			// 
 			// laUploadDelay
 			// 
@@ -491,6 +295,15 @@ namespace BerichtManager.Forms
 			this.laTabStop.TabIndex = 30;
 			this.laTabStop.Text = "Tab stops";
 			// 
+			// nudTabStops
+			// 
+			this.nudTabStops.Location = new System.Drawing.Point(98, 12);
+			this.nudTabStops.Name = "nudTabStops";
+			this.nudTabStops.Size = new System.Drawing.Size(120, 20);
+			this.nudTabStops.TabIndex = 31;
+			this.toolTip1.SetToolTip(this.nudTabStops, "Number of units in each tab");
+			this.nudTabStops.ValueChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// laFolder
 			// 
 			this.laFolder.AutoSize = true;
@@ -499,6 +312,64 @@ namespace BerichtManager.Forms
 			this.laFolder.Size = new System.Drawing.Size(36, 13);
 			this.laFolder.TabIndex = 26;
 			this.laFolder.Text = "Folder";
+			// 
+			// cbLegacyEdit
+			// 
+			this.cbLegacyEdit.AutoSize = true;
+			this.cbLegacyEdit.Location = new System.Drawing.Point(257, 14);
+			this.cbLegacyEdit.Name = "cbLegacyEdit";
+			this.cbLegacyEdit.Size = new System.Drawing.Size(99, 17);
+			this.cbLegacyEdit.TabIndex = 10;
+			this.cbLegacyEdit.Text = "Use legacy edit";
+			this.toolTip1.SetToolTip(this.cbLegacyEdit, "Should seperate forms be used to edit?");
+			this.cbLegacyEdit.UseVisualStyleBackColor = true;
+			this.cbLegacyEdit.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// coTheme
+			// 
+			this.coTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
+			this.coTheme.DisabledColor = System.Drawing.SystemColors.Control;
+			this.coTheme.DisabledTextColor = System.Drawing.SystemColors.GrayText;
+			this.coTheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
+			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.coTheme.FormattingEnabled = true;
+			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
+			this.coTheme.Location = new System.Drawing.Point(98, 38);
+			this.coTheme.Name = "coTheme";
+			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+			this.coTheme.Size = new System.Drawing.Size(529, 21);
+			this.coTheme.TabIndex = 23;
+			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
+			this.toolTip1.SetToolTip(this.coTheme, "Selected theme");
+			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// btCreateTheme
+			// 
+			this.btCreateTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btCreateTheme.Location = new System.Drawing.Point(714, 38);
+			this.btCreateTheme.Name = "btCreateTheme";
+			this.btCreateTheme.Size = new System.Drawing.Size(80, 21);
+			this.btCreateTheme.TabIndex = 24;
+			this.btCreateTheme.Text = "Create theme";
+			this.toolTip1.SetToolTip(this.btCreateTheme, "Create a new theme");
+			this.btCreateTheme.UseVisualStyleBackColor = true;
+			this.btCreateTheme.Click += new System.EventHandler(this.btCreateTheme_Click);
+			// 
+			// tbUpdate
+			// 
+			this.tbUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbUpdate.Location = new System.Drawing.Point(98, 91);
+			this.tbUpdate.Name = "tbUpdate";
+			this.tbUpdate.ReadOnly = true;
+			this.tbUpdate.Size = new System.Drawing.Size(696, 20);
+			this.tbUpdate.TabIndex = 29;
+			this.toolTip1.SetToolTip(this.tbUpdate, "Path to check if an update is available");
+			this.tbUpdate.Click += new System.EventHandler(this.tbUpdate_Click);
 			// 
 			// laTheme
 			// 
@@ -517,6 +388,30 @@ namespace BerichtManager.Forms
 			this.laUpdate.Size = new System.Drawing.Size(66, 13);
 			this.laUpdate.TabIndex = 28;
 			this.laUpdate.Text = "Update path";
+			// 
+			// btEditTheme
+			// 
+			this.btEditTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btEditTheme.Location = new System.Drawing.Point(633, 38);
+			this.btEditTheme.Name = "btEditTheme";
+			this.btEditTheme.Size = new System.Drawing.Size(75, 21);
+			this.btEditTheme.TabIndex = 25;
+			this.btEditTheme.Text = "Edit theme";
+			this.toolTip1.SetToolTip(this.btEditTheme, "Choose a theme to edit");
+			this.btEditTheme.UseVisualStyleBackColor = true;
+			this.btEditTheme.Click += new System.EventHandler(this.btEditTheme_Click);
+			// 
+			// tbFolder
+			// 
+			this.tbFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbFolder.Location = new System.Drawing.Point(98, 65);
+			this.tbFolder.Name = "tbFolder";
+			this.tbFolder.ReadOnly = true;
+			this.tbFolder.Size = new System.Drawing.Size(696, 20);
+			this.tbFolder.TabIndex = 27;
+			this.toolTip1.SetToolTip(this.tbFolder, "Path to folder containing reports");
+			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
 			// 
 			// gbConfig
 			// 
@@ -539,6 +434,40 @@ namespace BerichtManager.Forms
 			this.gbConfig.TabStop = false;
 			this.gbConfig.Text = "Report";
 			// 
+			// cbEndOfWeek
+			// 
+			this.cbEndOfWeek.AutoSize = true;
+			this.cbEndOfWeek.Location = new System.Drawing.Point(257, 73);
+			this.cbEndOfWeek.Name = "cbEndOfWeek";
+			this.cbEndOfWeek.Size = new System.Drawing.Size(117, 17);
+			this.cbEndOfWeek.TabIndex = 9;
+			this.cbEndOfWeek.Text = "End week on friday";
+			this.toolTip1.SetToolTip(this.cbEndOfWeek, "Should week end date be set to fridays?");
+			this.cbEndOfWeek.UseVisualStyleBackColor = true;
+			this.cbEndOfWeek.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// tbNamingPattern
+			// 
+			this.tbNamingPattern.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbNamingPattern.Location = new System.Drawing.Point(98, 96);
+			this.tbNamingPattern.Name = "tbNamingPattern";
+			this.tbNamingPattern.Size = new System.Drawing.Size(696, 20);
+			this.tbNamingPattern.TabIndex = 32;
+			this.toolTip1.SetToolTip(this.tbNamingPattern, "~+CW+~ = Calendar week\r\n~+RN+~ = Report number");
+			this.tbNamingPattern.TextChanged += new System.EventHandler(this.NamingPatternChanged);
+			// 
+			// tbName
+			// 
+			this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbName.Location = new System.Drawing.Point(98, 19);
+			this.tbName.Name = "tbName";
+			this.tbName.Size = new System.Drawing.Size(696, 20);
+			this.tbName.TabIndex = 19;
+			this.toolTip1.SetToolTip(this.tbName, "Your name (Last name, First name)");
+			this.tbName.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// laNumber
 			// 
 			this.laNumber.AutoSize = true;
@@ -557,6 +486,20 @@ namespace BerichtManager.Forms
 			this.laName.TabIndex = 18;
 			this.laName.Text = "Name";
 			// 
+			// nudNumber
+			// 
+			this.nudNumber.Location = new System.Drawing.Point(98, 70);
+			this.nudNumber.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+			this.nudNumber.Name = "nudNumber";
+			this.nudNumber.Size = new System.Drawing.Size(120, 20);
+			this.nudNumber.TabIndex = 21;
+			this.toolTip1.SetToolTip(this.nudNumber, "Number of the next report that will be created");
+			this.nudNumber.ValueChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// laNamingPattern
 			// 
 			this.laNamingPattern.AutoSize = true;
@@ -565,6 +508,18 @@ namespace BerichtManager.Forms
 			this.laNamingPattern.Size = new System.Drawing.Size(79, 13);
 			this.laNamingPattern.TabIndex = 33;
 			this.laNamingPattern.Text = "Naming pattern";
+			// 
+			// tbTemplate
+			// 
+			this.tbTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbTemplate.Location = new System.Drawing.Point(98, 44);
+			this.tbTemplate.Name = "tbTemplate";
+			this.tbTemplate.ReadOnly = true;
+			this.tbTemplate.Size = new System.Drawing.Size(696, 20);
+			this.tbTemplate.TabIndex = 17;
+			this.toolTip1.SetToolTip(this.tbTemplate, "Path to word template");
+			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
 			// 
 			// laTemplate
 			// 
@@ -593,6 +548,40 @@ namespace BerichtManager.Forms
 			this.gbWebUntis.TabStop = false;
 			this.gbWebUntis.Text = "WebUntis";
 			// 
+			// cbShouldUseUntis
+			// 
+			this.cbShouldUseUntis.AutoSize = true;
+			this.cbShouldUseUntis.Location = new System.Drawing.Point(98, 19);
+			this.cbShouldUseUntis.Name = "cbShouldUseUntis";
+			this.cbShouldUseUntis.Size = new System.Drawing.Size(95, 17);
+			this.cbShouldUseUntis.TabIndex = 8;
+			this.cbShouldUseUntis.Text = "Use WebUntis";
+			this.toolTip1.SetToolTip(this.cbShouldUseUntis, "Should classes be fetched from WebUntis?");
+			this.cbShouldUseUntis.UseVisualStyleBackColor = true;
+			this.cbShouldUseUntis.CheckedChanged += new System.EventHandler(this.cbShouldUseUntis_CheckedChanged);
+			// 
+			// tbSchool
+			// 
+			this.tbSchool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbSchool.Location = new System.Drawing.Point(98, 68);
+			this.tbSchool.Name = "tbSchool";
+			this.tbSchool.Size = new System.Drawing.Size(696, 20);
+			this.tbSchool.TabIndex = 6;
+			this.toolTip1.SetToolTip(this.tbSchool, "WebUntis name of your school");
+			this.tbSchool.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// btLogin
+			// 
+			this.btLogin.Location = new System.Drawing.Point(199, 16);
+			this.btLogin.Name = "btLogin";
+			this.btLogin.Size = new System.Drawing.Size(75, 21);
+			this.btLogin.TabIndex = 15;
+			this.btLogin.Text = "Login";
+			this.toolTip1.SetToolTip(this.btLogin, "Log in to WebUntis");
+			this.btLogin.UseVisualStyleBackColor = true;
+			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
+			// 
 			// laSchool
 			// 
 			this.laSchool.AutoSize = true;
@@ -601,6 +590,17 @@ namespace BerichtManager.Forms
 			this.laSchool.Size = new System.Drawing.Size(69, 13);
 			this.laSchool.TabIndex = 7;
 			this.laSchool.Text = "School name";
+			// 
+			// tbServer
+			// 
+			this.tbServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbServer.Location = new System.Drawing.Point(98, 42);
+			this.tbServer.Name = "tbServer";
+			this.tbServer.Size = new System.Drawing.Size(696, 20);
+			this.tbServer.TabIndex = 5;
+			this.toolTip1.SetToolTip(this.tbServer, "Name of the WebUntis server of your school");
+			this.tbServer.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// laServer
 			// 
@@ -625,6 +625,30 @@ namespace BerichtManager.Forms
 			this.gbPrefix.TabStop = false;
 			this.gbPrefix.Text = "Prefix";
 			// 
+			// cbUseCustomPrefix
+			// 
+			this.cbUseCustomPrefix.AutoSize = true;
+			this.cbUseCustomPrefix.Location = new System.Drawing.Point(6, 23);
+			this.cbUseCustomPrefix.Name = "cbUseCustomPrefix";
+			this.cbUseCustomPrefix.Size = new System.Drawing.Size(183, 17);
+			this.cbUseCustomPrefix.TabIndex = 2;
+			this.cbUseCustomPrefix.Text = "Use custom prefix in school field?";
+			this.toolTip1.SetToolTip(this.cbUseCustomPrefix, "Should custom prefix be used?");
+			this.cbUseCustomPrefix.UseVisualStyleBackColor = true;
+			this.cbUseCustomPrefix.CheckedChanged += new System.EventHandler(this.cbUseCustomPrefix_CheckedChanged);
+			// 
+			// tbCustomPrefix
+			// 
+			this.tbCustomPrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbCustomPrefix.Enabled = false;
+			this.tbCustomPrefix.Location = new System.Drawing.Point(6, 46);
+			this.tbCustomPrefix.Name = "tbCustomPrefix";
+			this.tbCustomPrefix.Size = new System.Drawing.Size(788, 20);
+			this.tbCustomPrefix.TabIndex = 3;
+			this.toolTip1.SetToolTip(this.tbCustomPrefix, "Prefix to be used in school field");
+			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -647,18 +671,16 @@ namespace BerichtManager.Forms
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// cbIHKCheckMatchingStartDates
+			// cbIHKAutoGetComment
 			// 
-			this.cbIHKCheckMatchingStartDates.AutoSize = true;
-			this.cbIHKCheckMatchingStartDates.Location = new System.Drawing.Point(276, 118);
-			this.cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
-			this.cbIHKCheckMatchingStartDates.Size = new System.Drawing.Size(205, 17);
-			this.cbIHKCheckMatchingStartDates.TabIndex = 55;
-			this.cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
-			this.toolTip1.SetToolTip(this.cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is" +
-        " the same as the report");
-			this.cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
-			this.cbIHKCheckMatchingStartDates.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			this.cbIHKAutoGetComment.AutoSize = true;
+			this.cbIHKAutoGetComment.Location = new System.Drawing.Point(487, 118);
+			this.cbIHKAutoGetComment.Name = "cbIHKAutoGetComment";
+			this.cbIHKAutoGetComment.Size = new System.Drawing.Size(194, 17);
+			this.cbIHKAutoGetComment.TabIndex = 56;
+			this.cbIHKAutoGetComment.Text = "Get comment on edit when possible";
+			this.cbIHKAutoGetComment.UseVisualStyleBackColor = true;
+			this.cbIHKAutoGetComment.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// OptionMenu
 			// 
@@ -672,20 +694,20 @@ namespace BerichtManager.Forms
 			this.Controls.Add(this.gbPrefix);
 			this.Controls.Add(this.btSave);
 			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(816, 577);
+			this.MinimumSize = new System.Drawing.Size(816, 626);
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionMenu_FormClosing);
-			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
 			this.gbIHK.ResumeLayout(false);
 			this.gbIHK.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).EndInit();
 			this.gbManagerOptions.ResumeLayout(false);
 			this.gbManagerOptions.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).EndInit();
 			this.gbConfig.ResumeLayout(false);
 			this.gbConfig.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
 			this.gbWebUntis.ResumeLayout(false);
 			this.gbWebUntis.PerformLayout();
 			this.gbPrefix.ResumeLayout(false);
@@ -744,5 +766,6 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.Label laIHKBaseUrl;
 		private System.Windows.Forms.TextBox tbIHKBaseUrl;
 		private System.Windows.Forms.CheckBox cbIHKCheckMatchingStartDates;
+		private System.Windows.Forms.CheckBox cbIHKAutoGetComment;
 	}
 }

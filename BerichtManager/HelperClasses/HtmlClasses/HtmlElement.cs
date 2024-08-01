@@ -1,9 +1,8 @@
-﻿using BerichtManager.IHKClient;
+﻿using BerichtManager.HelperClasses.HtmlClasses.CSSSelectors;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace BerichtManager.HelperClasses.HtmlClasses
 {
@@ -163,39 +162,9 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// <param name="root">Root <see cref="HtmlElement"/> to search</param>
 		/// <param name="cssSelector">Selector to use</param>
 		/// <returns><see cref="List{T}"/> of matching <see cref="HtmlElement"/>s</returns>
-		public List<HtmlElement> CSSSelect(HtmlElement root, string cssSelector)
+		public List<HtmlElement> CSSSelect(string cssSelector)
 		{
-			List<HtmlElement> selected = new List<HtmlElement>();
-			List<Selector> selectors = new List<Selector>();
-			//(?<Tag>.+?[^\.](?=\.))(?<Classes>(?=\.).+?[^\.])*?(?> +|$|#)
-			Regex select = new Regex("((?<Tag>.+?(?=\\.|>|\\ |$))(?<Classes>\\..+?)*?)(( *> *)|\\ |$)", RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-			foreach (Match match in select.Matches(cssSelector))
-			{
-				List<string> classes = new List<string>();
-				for (int i = 0; i < match.Groups["Classes"].Captures.Count; i++)
-				{
-					classes.Add(match.Groups["Classes"].Captures[i].Value.Substring(1));
-				}
-				selectors.Add(new Selector(match.Groups["Tag"].Value, classes));
-			}
-
-			selectors.ForEach(selector =>
-			{
-				foreach (HtmlElement element in root.GetElementsByTag(selector.TagName, ignoreCase: true))
-				{
-					bool hasAllClasses = true;
-					List<string> classes = element.Classes;
-					hasAllClasses &= classes.Count == selector.Classes.Count;
-					classes.ForEach(cssClass =>
-					{
-						hasAllClasses &= selector.Classes.Contains(cssClass);
-					});
-					if (hasAllClasses)
-						selected.Add(element);
-				}
-			});
-
-			return selected;
+			return new CSSSelectorChain(cssSelector, this).StartSearch();
 		}
 	}
 }

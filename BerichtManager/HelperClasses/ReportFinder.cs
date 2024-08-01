@@ -9,16 +9,6 @@ namespace BerichtManager.HelperClasses
 	public class ReportFinder
 	{
 		/// <summary>
-		/// Checks if report name is valid and not a temp
-		/// </summary>
-		/// <param name="name">Name of report to check</param>
-		/// <returns><see langword="true"/> if report is valid and <see langword="false"/> otherise</returns>
-		public static bool IsReportNameValid(string name)
-		{
-			return name.EndsWith(".docx") && !name.StartsWith("~$");
-		}
-
-		/// <summary>
 		/// Finds reports in <paramref name="node"/> and its cildren
 		/// </summary>
 		/// <param name="node">Directory to search</param>
@@ -31,7 +21,7 @@ namespace BerichtManager.HelperClasses
 				return;
 			foreach (TreeNode child in node.Nodes)
 			{
-				if (IsReportNameValid(child.Text))
+				if (ReportUtils.IsNameValid(child.Text))
 					reports.Add(child);
 				else
 				{
