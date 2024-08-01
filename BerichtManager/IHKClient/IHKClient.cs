@@ -14,6 +14,7 @@ using BerichtManager.UploadChecking;
 using System.Globalization;
 using System.Threading;
 using BerichtManager.HelperClasses.HtmlClasses;
+using BerichtManager.IHKClient.ReportContents;
 
 namespace BerichtManager.IHKClient
 {

@@ -1,4 +1,6 @@
-﻿namespace BerichtManager.IHKClient
+﻿using BerichtManager.IHKClient.ReportContents;
+
+namespace BerichtManager.IHKClient
 {
 	internal class Report
 	{

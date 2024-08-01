@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace BerichtManager.IHKClient
+namespace BerichtManager.IHKClient.ReportContents
 {
 	internal class ReportContent
 	{
