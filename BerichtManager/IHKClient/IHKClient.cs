@@ -503,7 +503,7 @@ namespace BerichtManager.IHKClient
 		/// <inheritdoc cref="FillReportContent(Report, HtmlDocument)" path="/exception"/>
 		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document, Report, bool)" path="/exception"/>
 		/// <exception cref="HttpRequestException"></exception>
-		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int lfdNR = -1, bool checkMatchingStartDates = false)
+		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int? lfdNR = null, bool checkMatchingStartDates = false)
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
@@ -512,7 +512,7 @@ namespace BerichtManager.IHKClient
 			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
 				return new UploadResult(CreateResults.Unauthorized);
 			HttpResponseMessage response;
-			if (lfdNR >= 0)
+			if (lfdNR.HasValue && lfdNR >= 0)
 				response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdNR}");
 			else
 				response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
@@ -539,7 +539,7 @@ namespace BerichtManager.IHKClient
 				response = await GetAndRefer(response.Headers.Location);
 			int? lfdnr = lfdNR;
 			//Get lfdnr from last report in list as shown in html on IHK site
-			if (lfdnr < 0)
+			if (!lfdnr.HasValue || lfdnr < 0)
 			{
 				doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
 				List<UploadedReport> uploadedReports = TransformHtmlToReports(doc.Body.CSSSelect(doc.Body, "div.reihe"));
