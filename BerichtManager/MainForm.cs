@@ -1831,7 +1831,7 @@ namespace BerichtManager
 			{
 				case CreateResults.Success:
 					ThemedMessageBox.Show(text: "Report uploaded successfully", title: "Upload successful");
-					UploadedReports.Instance.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
+					UploadedReports.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 					break;
 				case CreateResults.Unauthorized:
 					ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
@@ -1857,9 +1857,12 @@ namespace BerichtManager
 				bool shouldStop = false;
 				progressForm.Stop += () => shouldStop = true;
 
-				List<string> files = new List<string>();
-				if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
-					files = uploadedPaths.Keys.ToList();
+				if (!UploadedReports.GetUploadedPaths(out List<string> files))
+				{
+					//Should never happen as menu item should be diabled
+					ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
+					return;
+				}
 
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
@@ -1912,7 +1915,7 @@ namespace BerichtManager
 					switch (result.Result)
 					{
 						case CreateResults.Success:
-							UploadedReports.Instance.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
+							UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 							break;
 						case CreateResults.Unauthorized:
 							ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
@@ -2058,13 +2061,13 @@ namespace BerichtManager
 
 		private async void miHandInSingle_Click(object sender, EventArgs e)
 		{
-			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> reports))
+			if (!UploadedReports.GetUploadedPaths(out List<string> paths))
 			{
 				//Should never happen as menu item should be diabled
 				ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
 				return;
 			}
-			if (!reports.TryGetValue(tvReports.SelectedNode.FullPath, out UploadedReport report))
+			if (!UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report))
 			{
 				//Should never happen as menu item should be diabled
 				ThemedMessageBox.Show(text: $"Report {FullSelectedPath} was not uploaded yet", title: "Hand in failed");
@@ -2166,9 +2169,12 @@ namespace BerichtManager
 				bool shouldStop = false;
 				progressForm.Stop += () => shouldStop = true;
 
-				List<string> files = new List<string>();
-				if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
-					files = uploadedPaths.Keys.ToList();
+				if (!UploadedReports.GetUploadedPaths(out List<string> files))
+				{
+					//Should never happen as menu item should be diabled
+					ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
+					return;
+				}
 
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
@@ -2199,7 +2205,7 @@ namespace BerichtManager
 					string fullPath = Path.GetFullPath(Path.Combine(ActivePath, "..", nodePath));
 					progressForm.Status = $"Handing in {fullPath}:";
 					//Final fail save
-					if (!uploadedPaths.TryGetValue(nodePath, out UploadedReport report))
+					if (!UploadedReports.GetUploadedReport(nodePath, out UploadedReport report))
 					{
 						ThemedMessageBox.Show(text: $"Report {fullPath} was not uploaded and could not be handed in as a result", title: "Hand in failed");
 						progressForm.Status = "\t- skipped: Not uploaded";
