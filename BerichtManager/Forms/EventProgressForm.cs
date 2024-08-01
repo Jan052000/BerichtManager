@@ -75,7 +75,14 @@ namespace BerichtManager.Forms
 		/// </summary>
 		private bool ShouldClose { get; set; } = false;
 
+		/// <summary>
+		/// Delegate for <see cref="Stop"/> event
+		/// </summary>
 		public delegate void StopHandler();
+
+		/// <summary>
+		/// Event which is invoked if stop button was clicked
+		/// </summary>
 		public event StopHandler Stop;
 
 		public EventProgressForm(string title)
@@ -114,7 +121,7 @@ namespace BerichtManager.Forms
 			btStop.Click -= btStop_Click;
 			btStop.Click += (s, ev) => Close();
 			DialogResult = DialogResult.Cancel;
-			Stop();
+			Stop?.Invoke();
 		}
 
 		private void UploadProgressForm_FormClosing(object sender, FormClosingEventArgs e)

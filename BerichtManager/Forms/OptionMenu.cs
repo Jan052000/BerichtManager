@@ -194,13 +194,13 @@ namespace BerichtManager.Forms
 			if (ConfigHandler.TabStops != (int)nudTabStops.Value)
 			{
 				ConfigHandler.TabStops = (int)nudTabStops.Value;
-				TabStopsChanged(this, (int)nudTabStops.Value);
+				TabStopsChanged?.Invoke(this, (int)nudTabStops.Value);
 			}
 			ConfigHandler.UseLegacyEdit = cbLegacyEdit.Checked;
 			if (nudFontSize.Value != (decimal)ConfigHandler.EditorFontSize)
 			{
 				ConfigHandler.EditorFontSize = (float)nudFontSize.Value;
-				FontSizeChanged((float)nudFontSize.Value);
+				FontSizeChanged?.Invoke((float)nudFontSize.Value);
 
 			}
 			if (ThemeName != coTheme.Text)
@@ -208,12 +208,12 @@ namespace BerichtManager.Forms
 				ConfigHandler.ActiveTheme = coTheme.Text;
 				ITheme activeTheme = ThemeManager.Instance.GetTheme(ThemeName);
 				ThemeSetter.SetThemes(this);
-				ActiveThemeChanged(this, activeTheme);
+				ActiveThemeChanged?.Invoke(this, activeTheme);
 			}
 			if (ConfigHandler.ReportPath != tbFolder.Text)
 			{
 				if (ThemedMessageBox.Show(text: "Do you want to switch over imediately?", title: "Change directory?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
-					ReportFolderChanged(this, tbFolder.Text);
+					ReportFolderChanged?.Invoke(this, tbFolder.Text);
 				ConfigHandler.ReportPath = tbFolder.Text;
 			}
 			if (ConfigHandler.PublishPath != tbUpdate.Text)
@@ -224,7 +224,7 @@ namespace BerichtManager.Forms
 			ConfigHandler.IHKSupervisorEMail = tbSupervisorMail.Text;
 			ConfigHandler.AutoSyncStatusesWithIHK = cbAutoSyncStatusesWithIHK.Checked;
 			if (ConfigHandler.IHKBaseUrl != tbIHKBaseUrl.Text)
-				IHKBaseAddressChanged();
+				IHKBaseAddressChanged?.Invoke();
 			ConfigHandler.IHKBaseUrl = tbIHKBaseUrl.Text;
 			ConfigHandler.IHKCheckMatchingStartDates = cbIHKCheckMatchingStartDates.Checked;
 

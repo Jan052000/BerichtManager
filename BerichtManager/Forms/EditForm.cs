@@ -95,7 +95,7 @@ namespace BerichtManager.Forms
 					{
 						ConfigHandler.EditorFontSize = size;
 						ConfigHandler.SaveConfig();
-						RefreshConfigs();
+						RefreshConfigs?.Invoke();
 					}
 				}
 			}
@@ -111,7 +111,7 @@ namespace BerichtManager.Forms
 			{
 				ConfigHandler.EditorFont = rtInput.Font.FontFamily.Name;
 				ConfigHandler.SaveConfig();
-				RefreshConfigs();
+				RefreshConfigs?.Invoke();
 			}
 			SaveSize();
 		}

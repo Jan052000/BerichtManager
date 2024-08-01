@@ -104,7 +104,7 @@ namespace BerichtManager.ThemeManagement
 			ThemeNames = new List<string>() { "Dark Mode", "Light Mode" };
 			AvailableThemes = new List<ITheme>() { new DarkMode(), new LightMode() };
 			AvailableThemes.AddRange(GetThemes());
-			UpdatedThemesList();
+			UpdatedThemesList?.Invoke();
 		}
 
 		/// <summary>
