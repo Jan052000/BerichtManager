@@ -215,7 +215,7 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <returns><see cref="List{T}"/> with found <see cref="UploadedReport"/>s</returns>
 		/// <exception cref="HttpRequestException"></exception>
-		public async Task<List<UploadedReport>> GetReportStatuses()
+		public async Task<List<UploadedReport>> GetIHKReports()
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())

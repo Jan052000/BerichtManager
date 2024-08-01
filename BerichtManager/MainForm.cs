@@ -2012,7 +2012,7 @@ namespace BerichtManager
 			bool result = false;
 			try
 			{
-				List<UploadedReport> reportList = await IHKClient.GetReportStatuses();
+				List<UploadedReport> reportList = await IHKClient.GetIHKReports();
 				reportList.ForEach(report => result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status, lfdnr: report.LfdNR));
 				if (result)
 				{
