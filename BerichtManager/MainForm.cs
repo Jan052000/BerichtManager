@@ -2818,5 +2818,206 @@ namespace BerichtManager
 					break;
 			}
 		}
+
+		private async void DownloadIHKReports(object sender, EventArgs e)
+		{
+			EventProgressForm progressForm = new EventProgressForm("Download of reports from IHK");
+			bool stop = false;
+			progressForm.Stop += () => stop = true;
+			progressForm.Show();
+			progressForm.Status = "Fetching report numbers and statuses from IHK";
+
+			//Handles stopping the execution
+			void DoStop(string message = "Stopped")
+			{
+				progressForm.Status = message;
+				progressForm.Done();
+			}
+
+			FolderSelect select = new FolderSelect(tvReports.Nodes[0], (node) =>
+			{
+				return !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
+			}, "Select reports to keep");
+			if (select.ShowDialog() != DialogResult.OK)
+			{
+				if (ThemedMessageBox.Show(text: "You are about to replace all local reports with IHK reports, are you sure?", title: "Overwrite all reports?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				{
+					DoStop("Not all reports should be overwritten, please start process again.");
+					return;
+				}
+			}
+			ReportFinder.FindReports(select.FilteredNode, out List<TreeNode> reportNodes);
+
+			//Index local reports
+			string activePath = Doc?.FullName ?? "";
+			List<string> openReports = CloseAllReports();
+
+			List<string> skipped = new List<string>();
+			progressForm.Status = $"Indexing {reportNodes.Count} report{(reportNodes.Count == 1 ? "" : "s")}";
+
+			Dictionary<string, UploadedReport> indexedReports = new Dictionary<string, UploadedReport>();
+			foreach (TreeNode node in reportNodes)
+			{
+				if (stop)
+				{
+					DoStop();
+					OpenAllDocuments(openReports, activePath);
+					return;
+				}
+
+				string fullNodePath = GetFullPath(node);
+				Word.Document doc = WordApp.Documents.Open(fullNodePath, ReadOnly: true);
+
+				progressForm.Status = $"\t- {doc.FullName}:";
+
+				if (doc.FormFields.Count < 10)
+				{
+					progressForm.Status = "\t\t- Skipped, invalid form field count";
+					skipped.Add(doc.FullName);
+					continue;
+				}
+
+				if (UploadedReports.GetUploadedReport(fullNodePath, out UploadedReport report))
+					indexedReports.Add(report.StartDate.ToString("dd.MM.yyyy"), report);
+				else
+					indexedReports.Add(doc.FormFields[2].Result, null);
+				doc.Close(SaveChanges: false);
+
+				progressForm.Status = "\t\t- Success";
+			}
+			progressForm.Status = "Finished indexing";
+
+			//Ask for overwirte permission
+			if (skipped.Count > 0)
+			{
+				string skippedMessage = $"Skipped indexing of {skipped.Count} report{(skipped.Count == 1 ? "" : "s")}, they could be overwritten when continuing, do you want to continue?\nSkipped:";
+				skipped.ForEach(path => skippedMessage += path + "\n");
+				if (ThemedMessageBox.Show(text: skippedMessage, title: "Continue with possible overwrites", buttons: MessageBoxButtons.YesNo, allowMessageHighlight: true) != DialogResult.Yes)
+				{
+					DoStop("Aborted");
+					CloseAllReports();
+					OpenAllDocuments(openReports, activePath);
+					return;
+				}
+			}
+
+			if (stop)
+			{
+				DoStop();
+				OpenAllDocuments(openReports, activePath);
+				return;
+			}
+
+			//Get report infos from IHK
+			List<UploadedReport> uploadedReports;
+			try
+			{
+				uploadedReports = await IHKClient.GetIHKReports();
+			}
+			catch (Exception ex)
+			{
+				ThemedMessageBox.Show(text: $"A(n) {ex.GetType().Name} occurred, report info could not be fetched");
+				DoStop(ex.GetType().Name);
+				OpenAllDocuments(openReports, activePath);
+				return;
+			}
+			//Stop if desired
+			if (stop)
+			{
+				DoStop();
+				OpenAllDocuments(openReports, activePath);
+				return;
+			}
+
+			//Reverse report list as reports are listed descending
+			uploadedReports.Reverse();
+			//Fetch report contents
+			int reportNumber = 0;
+			List<UploadedReport> skippedDownloads = new List<UploadedReport>();
+			Dictionary<UploadedReport, (int Number, ReportContent Content)> downloadedContents = new Dictionary<UploadedReport, (int Number, ReportContent Content)>();
+			foreach (UploadedReport report in uploadedReports)
+			{
+				reportNumber++;
+				if (stop)
+				{
+					DoStop();
+					OpenAllDocuments(openReports, activePath);
+					return;
+				}
+				progressForm.Status = $"Downloading report from {report.StartDate:dd.MM.yyyy} to {report.StartDate.AddDays(5):dd.MM.yyyy}:";
+
+				if (indexedReports.ContainsKey(report.StartDate.ToString("dd.MM.yyyy")))
+				{
+					progressForm.Status = "\t- Skipped, local will be kept";
+					continue;
+				}
+
+				ReportContent content;
+				try
+				{
+					GetReportResult result = await IHKClient.GetReportContent(report.LfdNR);
+					switch (result.Result)
+					{
+						case GetReportResult.ResultStatuses.Success:
+							content = result.ReportContent;
+							break;
+						default:
+							progressForm.Status = $"\t- Skipped: {result.Result}";
+							skippedDownloads.Add(report);
+							continue;
+					}
+				}
+				catch (Exception ex)
+				{
+					progressForm.Status = $"\t- Download aborted: {ex.GetType().Name}";
+					break;
+				}
+
+				progressForm.Status = "\t- Success";
+
+				downloadedContents.Add(report, (reportNumber, content));
+			}
+
+			//Writing word documents
+			progressForm.Status = "Writing reports";
+			foreach (KeyValuePair<UploadedReport, (int Number, ReportContent Content)> kvp in downloadedContents)
+			{
+				if (stop)
+				{
+					DoStop();
+					OpenAllDocuments(openReports, activePath);
+					break;
+				}
+
+				Word.Document doc = WordApp.Documents.Add(Template: ConfigHandler.TemplatePath);
+				if (doc.FormFields.Count < 10)
+				{
+					DoStop("Aborted, template has an invalid field cound");
+					OpenAllDocuments(openReports, activePath);
+					break;
+				}
+
+				ReportTransformer.IHKToWord(WordApp, doc, new Report(kvp.Value.Content) { ReportNr = reportNumber});
+
+				string newReportName = NamingPatternResolver.ResolveNameWithExtension(kvp.Key.StartDate, kvp.Value.Number);
+				string folder = Path.Combine(ActivePath, kvp.Key.StartDate.Year.ToString());
+				string newPath = Path.Combine(folder, newReportName);
+				FitToPage(doc);
+				if (!Directory.Exists(folder))
+					Directory.CreateDirectory(folder);
+				doc.SaveAs2(FileName: newPath);
+				doc.Close();
+				UploadedReports.AddReport(newPath, kvp.Key);
+				progressForm.Status = $"Saved {newPath}";
+			}
+
+			progressForm.Status = "Opening closed reports";
+			OpenAllDocuments(openReports, activePath);
+
+			UpdateTree();
+
+			progressForm.Status = "Finished";
+			progressForm.Done();
+		}
 	}
 }
