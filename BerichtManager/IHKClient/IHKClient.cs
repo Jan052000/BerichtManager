@@ -241,6 +241,8 @@ namespace BerichtManager.IHKClient
 			List<UploadedReport> uploadedReports = new List<UploadedReport>();
 			reportElements.ForEach(reportElement =>
 			{
+				if (reportElement.Children.Count < Enum.GetNames(typeof(ReportElementFields)).Length)
+					return;
 				List<HtmlElement> rows = reportElement.CSSSelect("div.col-md-8");
 				Regex datesRegex = new Regex("(\\d+?\\.\\d+?\\.\\d+)");
 				if (!DateTime.TryParseExact(datesRegex.Match(rows[(int)ReportElementFields.TimeSpan].InnerText).Value, "dd.MM.yyyy", null, DateTimeStyles.None, out DateTime startDate))
