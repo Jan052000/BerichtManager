@@ -43,6 +43,15 @@ namespace BerichtManager.UploadChecking
 			Load();
 		}
 
+		private static string ExtractRelativePath(string path)
+		{
+			string toSplit = path.Replace('/', '\\');
+			List<string> splitPath = toSplit.Split('\\').ToList();
+			string reportRoot = ConfigHandler.Instance.ReportPath.Replace('/', '\\').Split('\\').Last();
+			splitPath.RemoveRange(0, splitPath.IndexOf(reportRoot));
+			return String.Join('\\'.ToString(), splitPath);
+		}
+
 		/// <summary>
 		/// Adds <paramref name="value"/> to the <see cref="List{T}"/> at <paramref name="key"/>
 		/// </summary>
@@ -51,6 +60,8 @@ namespace BerichtManager.UploadChecking
 		/// <inheritdoc cref="Dictionary{TKey, TValue}.Add(TKey, TValue)" path="/exception"/>
 		public static void AddReport(string path, UploadedReport report)
 		{
+			if (Path.IsPathRooted(path))
+				path = ExtractRelativePath(path);
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 			{
 				paths = new Dictionary<string, UploadedReport>();
@@ -155,11 +166,7 @@ namespace BerichtManager.UploadChecking
 			{
 				if (!path.StartsWith(ConfigHandler.Instance.ReportPath))
 					return false;
-				string toSplit = path.Replace('/', '\\');
-				List<string> splitPath = toSplit.Split('\\').ToList();
-				string reportRoot = ConfigHandler.Instance.ReportPath.Replace('/', '\\').Split('\\').Last();
-				splitPath.RemoveRange(0, splitPath.IndexOf(reportRoot));
-				path = String.Join('\\'.ToString(), splitPath);
+				path = ExtractRelativePath(path);
 			}
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 				return false;
