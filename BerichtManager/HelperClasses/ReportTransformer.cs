@@ -42,19 +42,9 @@ namespace BerichtManager.HelperClasses
 			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField;
 			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail;
 			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail;
-			report.ReportContent.JobFieldContent = TransformTextToIHK(doc.FormFields[6].Result);
-			report.ReportContent.SeminarsField = TransformTextToIHK(doc.FormFields[7].Result);
-			report.ReportContent.SchoolField = TransformTextToIHK(doc.FormFields[8].Result);
-		}
-
-		/// <summary>
-		/// Replaces all new line characters with \n
-		/// </summary>
-		/// <param name="text">Text to replace new lines in</param>
-		/// <returns>String with all new line characters replaced with \n</returns>
-		private static string TransformTextToIHK(string text)
-		{
-			return text.Replace("\v", "\n").Replace("\r\n", "\n").Replace("\r", "\n");
+			report.ReportContent.JobFieldContent = ReportUtils.TransformTextToIHK(doc.FormFields[6].Result);
+			report.ReportContent.SeminarsField = ReportUtils.TransformTextToIHK(doc.FormFields[7].Result);
+			report.ReportContent.SchoolField = ReportUtils.TransformTextToIHK(doc.FormFields[8].Result);
 		}
 	}
 

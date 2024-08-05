@@ -27,6 +27,16 @@ namespace BerichtManager.HelperClasses
 			return ReplaceAllNewLine(text, "\v");
 		}
 
+		/// <summary>
+		/// Replaces all new line characters with \n
+		/// </summary>
+		/// <param name="text">Text to replace new lines in</param>
+		/// <returns>String with all new line characters replaced with \n</returns>
+		public static string TransformTextToIHK(string text)
+		{
+			return ReplaceAllNewLine(text, "\n");
+		}
+
 		private static string ReplaceAllNewLine(string text, string newNewLine)
 		{
 			string result = text;
