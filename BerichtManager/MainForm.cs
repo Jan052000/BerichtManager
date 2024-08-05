@@ -2978,6 +2978,7 @@ namespace BerichtManager
 				downloadedContents.Add(report, (reportNumber, content));
 			}
 
+			string newLatestPath = "";
 			//Writing word documents
 			progressForm.Status = "Writing reports";
 			foreach (KeyValuePair<UploadedReport, (int Number, ReportContent Content)> kvp in downloadedContents)
@@ -3002,6 +3003,7 @@ namespace BerichtManager
 				string newReportName = NamingPatternResolver.ResolveNameWithExtension(kvp.Key.StartDate, kvp.Value.Number);
 				string folder = Path.Combine(ActivePath, kvp.Key.StartDate.Year.ToString());
 				string newPath = Path.Combine(folder, newReportName);
+				newLatestPath = newPath;
 				FitToPage(doc);
 				if (!Directory.Exists(folder))
 					Directory.CreateDirectory(folder);
@@ -3013,6 +3015,16 @@ namespace BerichtManager
 
 			progressForm.Status = "Opening closed reports";
 			OpenAllDocuments(openReports, activePath);
+
+			progressForm.Status = "Updating config";
+			var last = downloadedContents.LastOrDefault();
+			if (downloadedContents.Count > 0 && ConfigHandler.ReportNumber < last.Value.Number)
+			{
+				ConfigHandler.LastReportWeekOfYear = Culture.Calendar.GetWeekOfYear(last.Key.StartDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				ConfigHandler.ReportNumber = last.Value.Number;
+				ConfigHandler.LastCreated = newLatestPath;
+			}
+
 
 			UpdateTree();
 
