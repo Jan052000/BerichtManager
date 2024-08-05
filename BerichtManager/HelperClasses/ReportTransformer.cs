@@ -3,6 +3,7 @@ using Word = Microsoft.Office.Interop.Word;
 using System;
 using BerichtManager.Config;
 using BerichtManager.IHKClient.Exceptions;
+using System.Globalization;
 
 namespace BerichtManager.HelperClasses
 {
@@ -45,6 +46,63 @@ namespace BerichtManager.HelperClasses
 			report.ReportContent.JobFieldContent = ReportUtils.TransformTextToIHK(doc.FormFields[6].Result);
 			report.ReportContent.SeminarsField = ReportUtils.TransformTextToIHK(doc.FormFields[7].Result);
 			report.ReportContent.SchoolField = ReportUtils.TransformTextToIHK(doc.FormFields[8].Result);
+		}
+
+		/// <summary>
+		/// Fills <paramref name="doc"/> with values from <paramref name="report"/> using <paramref name="wordApp"/>
+		/// </summary>
+		/// <param name="wordApp"><see cref="Word.Application"/> report is opened in</param>
+		/// <param name="doc"><see cref="Word.Document"/> to fill</param>
+		/// <param name="report"><see cref="Report"/> object containing values for report file</param>
+		public static void IHKToWord(Word.Application wordApp, Word.Document doc, Report report)
+		{
+			FillFormField(wordApp, doc.FormFields[1], ReportUtils.TransformTextToWord(ConfigHandler.Instance.ReportUserName));
+			FillFormField(wordApp, doc.FormFields[2], ReportUtils.TransformTextToWord(report.ReportNr.ToString()));
+			FillFormField(wordApp, doc.FormFields[3], ReportUtils.TransformTextToWord(report.ReportContent.StartDate));
+			FillFormField(wordApp, doc.FormFields[4], ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
+			FillFormField(wordApp, doc.FormFields[5], ReportUtils.TransformTextToWord(DateTime.ParseExact(report.ReportContent.StartDate, "dd.MM.yyyy", CultureInfo.CurrentCulture).Year.ToString()));
+			FillFormField(wordApp, doc.FormFields[6], ReportUtils.TransformTextToWord(report.ReportContent.JobFieldContent));
+			FillFormField(wordApp, doc.FormFields[7], ReportUtils.TransformTextToWord(report.ReportContent.SeminarsField));
+			FillFormField(wordApp, doc.FormFields[8], ReportUtils.TransformTextToWord(report.ReportContent.SchoolField));
+			FillFormField(wordApp, doc.FormFields[9], ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
+			FillFormField(wordApp, doc.FormFields[10], ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
+		}
+
+		/// <summary>
+		/// Fills a WordInterop TextField with text
+		/// </summary>
+		/// <param name="app">The Word Application containing the documents with FormFields to fill</param>
+		/// <param name="field">The FormField to fill with Text</param>
+		/// <param name="text">The Text to Fill</param>
+		public static void FillFormField(Word.Application app, Word.FormField field, string text)
+		{
+			if (text == null)
+				return;
+			text = ReportUtils.TransformTextToWord(text);
+			field.Select();
+			for (int i = 1; i < 6; i++)
+			{
+				field.Range.Paragraphs.TabStops.Add(i * 14);
+			}
+			app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
+			app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
+			if (text.Length > 254)
+			{
+				field.Result = " ";
+				app.Selection.Text = text.Substring(0, 200);
+				field.Result = field.Result.TrimEnd() + " ";
+				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
+				app.Selection.TypeText(text.Substring(200));
+				//Remove first space before text
+				field.Select();
+				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
+				app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
+				app.Selection.TypeBackspace();
+			}
+			else
+			{
+				field.Result = text;
+			}
 		}
 	}
 
