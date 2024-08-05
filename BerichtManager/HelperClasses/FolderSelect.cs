@@ -1,4 +1,4 @@
-﻿using BerichtManager.ThemeManagement;
+using BerichtManager.ThemeManagement;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -30,9 +30,11 @@ namespace BerichtManager.HelperClasses
 		/// Creates a new <see cref="Form"/> of <see cref="FolderSelect"/>
 		/// </summary>
 		/// <param name="node">Initial <see cref="TreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
-		public FolderSelect(TreeNode node)
+		/// <param name="title">Title of <see cref="FolderSelect"/></param>
+		public FolderSelect(TreeNode node, string title = "")
 		{
 			InitializeComponent();
+			Text = title;
 			ThemeSetter.SetThemes(this);
 			AddNode(node);
 		}
@@ -42,9 +44,11 @@ namespace BerichtManager.HelperClasses
 		/// </summary>
 		/// <param name="node">Initial <see cref="TreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
 		/// <param name="filter"><see cref="NodeFilter"/> used to filter <paramref name="node"/> removes nodes if <see langword="true"/> is returned</param>
-		public FolderSelect(TreeNode node, NodeFilter filter)
+		/// <param name="title">Title of <see cref="FolderSelect"/></param>
+		public FolderSelect(TreeNode node, NodeFilter filter, string title = "")
 		{
 			InitializeComponent();
+			Text = title;
 			ThemeSetter.SetThemes(this);
 			FilterNode(AddNode(node), filter);
 		}
