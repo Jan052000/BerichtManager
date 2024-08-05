@@ -2674,7 +2674,7 @@ namespace BerichtManager
 		/// <returns>Full file path to file represented by <paramref name="node"/></returns>
 		private string GetFullPath(TreeNode node)
 		{
-			return Path.GetFullPath(Path.Combine("..", "..", GetFullNodePath(node)));
+			return Path.GetFullPath(Path.Combine(ActivePath, "..", GetFullNodePath(node)));
 		}
 
 		/// <summary>
@@ -2997,7 +2997,7 @@ namespace BerichtManager
 					break;
 				}
 
-				ReportTransformer.IHKToWord(WordApp, doc, new Report(kvp.Value.Content) { ReportNr = reportNumber});
+				ReportTransformer.IHKToWord(WordApp, doc, new Report(kvp.Value.Content) { ReportNr = reportNumber });
 
 				string newReportName = NamingPatternResolver.ResolveNameWithExtension(kvp.Key.StartDate, kvp.Value.Number);
 				string folder = Path.Combine(ActivePath, kvp.Key.StartDate.Year.ToString());
