@@ -2637,7 +2637,7 @@ namespace BerichtManager
 		/// <returns>Full file path to file represented by <paramref name="node"/></returns>
 		private string GetFullPath(TreeNode node)
 		{
-			return Path.GetFullPath(Path.Combine("..", "..", GetFullNodePath(node)));
+			return Path.GetFullPath(Path.Combine(ActivePath, "..", GetFullNodePath(node)));
 		}
 
 		/// <summary>
