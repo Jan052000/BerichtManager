@@ -1416,6 +1416,7 @@ namespace BerichtManager
 			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected && wasEdited);
 			miUpdateReport.Enabled = isNameValid && isUploaded && wasEdited && (uploaded || rejected);
 			miRcShowComment.Enabled = isNameValid && isUploaded && report.LfdNR.HasValue;
+			miDownloadReports.Enabled = miRcDownloadReports.Enabled = !string.IsNullOrEmpty(ConfigHandler.IHKUserName) && !string.IsNullOrEmpty(ConfigHandler.IHKPassword);
 		}
 
 		private void btOptions_Click(object sender, EventArgs e)
