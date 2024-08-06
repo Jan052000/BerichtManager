@@ -14,6 +14,7 @@ using BerichtManager.UploadChecking;
 using System.Globalization;
 using System.Threading;
 using BerichtManager.HelperClasses.HtmlClasses;
+using BerichtManager.IHKClient.ReportContents;
 
 namespace BerichtManager.IHKClient
 {
@@ -215,7 +216,7 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <returns><see cref="List{T}"/> with found <see cref="UploadedReport"/>s</returns>
 		/// <exception cref="HttpRequestException"></exception>
-		public async Task<List<UploadedReport>> GetReportStatuses()
+		public async Task<List<UploadedReport>> GetIHKReports()
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
@@ -224,7 +225,7 @@ namespace BerichtManager.IHKClient
 			if (!response.IsSuccessStatusCode)
 				return new List<UploadedReport>();
 			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-			List<HtmlElement> reportElements = doc.Body.CSSSelect(doc.Body, "div.reihe");
+			List<HtmlElement> reportElements = doc.Body.CSSSelect("div.reihe");
 			ResetTimer();
 			return TransformHtmlToReports(reportElements);
 		}
@@ -240,7 +241,9 @@ namespace BerichtManager.IHKClient
 			List<UploadedReport> uploadedReports = new List<UploadedReport>();
 			reportElements.ForEach(reportElement =>
 			{
-				List<HtmlElement> rows = reportElement.CSSSelect(reportElement, "div.col-md-8");
+				if (reportElement.Children.Count < Enum.GetNames(typeof(ReportElementFields)).Length)
+					return;
+				List<HtmlElement> rows = reportElement.CSSSelect("div.col-md-8");
 				Regex datesRegex = new Regex("(\\d+?\\.\\d+?\\.\\d+)");
 				if (!DateTime.TryParseExact(datesRegex.Match(rows[(int)ReportElementFields.TimeSpan].InnerText).Value, "dd.MM.yyyy", null, DateTimeStyles.None, out DateTime startDate))
 					return;
@@ -503,7 +506,7 @@ namespace BerichtManager.IHKClient
 		/// <inheritdoc cref="FillReportContent(Report, HtmlDocument)" path="/exception"/>
 		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document, Report, bool)" path="/exception"/>
 		/// <exception cref="HttpRequestException"></exception>
-		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int lfdNR = -1, bool checkMatchingStartDates = false)
+		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int? lfdNR = null, bool checkMatchingStartDates = false)
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
@@ -512,7 +515,7 @@ namespace BerichtManager.IHKClient
 			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
 				return new UploadResult(CreateResults.Unauthorized);
 			HttpResponseMessage response;
-			if (lfdNR >= 0)
+			if (lfdNR.HasValue && lfdNR >= 0)
 				response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdNR}");
 			else
 				response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
@@ -539,15 +542,174 @@ namespace BerichtManager.IHKClient
 				response = await GetAndRefer(response.Headers.Location);
 			int? lfdnr = lfdNR;
 			//Get lfdnr from last report in list as shown in html on IHK site
-			if (lfdnr < 0)
+			if (!lfdnr.HasValue || lfdnr < 0)
 			{
 				doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-				List<UploadedReport> uploadedReports = TransformHtmlToReports(doc.Body.CSSSelect(doc.Body, "div.reihe"));
+				List<UploadedReport> uploadedReports = TransformHtmlToReports(doc.Body.CSSSelect("div.reihe"));
 				if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
 					lfdnr = currentReport.LfdNR;
 			}
 			ResetTimer();
 			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate), lfdnr: lfdnr);
+		}
+
+		/// <summary>
+		/// Gets the contents of the report with number <paramref name="lfdnr"/>
+		/// </summary>
+		/// <param name="lfdnr">Number of report on IHK servers</param>
+		/// <returns><see cref="GetReportResult"/> of fetching report content</returns>
+		public async Task<GetReportResult> GetReportContent(int? lfdnr)
+		{
+			if (!lfdnr.HasValue || lfdnr < 0)
+				return new GetReportResult(GetReportResult.ResultStatuses.InvalidLfdnr);
+			if (!LoggedIn && !await DoLogin())
+				return new GetReportResult(GetReportResult.ResultStatuses.LoginFailed);
+			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
+				return new GetReportResult(GetReportResult.ResultStatuses.Unauthorized);
+			HttpResponseMessage response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdnr}");
+			if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.Found)
+				return new GetReportResult(GetReportResult.ResultStatuses.UnableToOpenReport);
+
+			HtmlDocument doc = new HtmlDocument(await response.Content.ReadAsStringAsync());
+			Report report = new Report();
+			TryFillReportContent(report, doc);
+
+			//IHK report has different fields when report was accepted
+			/*
+			MultipartFormDataContent content = GetMultipartFormDataContent(report.ReportContent);
+			StringContent cancel = new StringContent("");
+			cancel.Headers.Remove("Content-Type");
+			content.Add(cancel, "\"cancel\"");
+			await PostAndRefer("tibrosBB/azubiHeftAdd.jsp", content);
+
+			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
+				await GetAndRefer("tibrosBB/azubiHeft.jsp");
+			else
+			*/
+			await GetAndRefer(response.Headers.Location);
+
+			ResetTimer();
+			return new GetReportResult(GetReportResult.ResultStatuses.Success, report.ReportContent);
+		}
+
+		/// <summary>
+		/// Fills a <see cref="Report"/>s content where its properties match inputs in <paramref name="doc"/> and does not handle missing or mismatched properties
+		/// </summary>
+		/// <param name="report"><see cref="Report"/> to fill</param>
+		/// <param name="doc"><see cref="HtmlDocument"/> to get inputs from</param>
+		private bool TryFillReportContent(Report report, HtmlDocument doc)
+		{
+			List<HtmlElement> inputs = doc.Forms[0]?.AllInputs;
+			if (inputs == null || (inputs != null && inputs.Count == 0))
+				return false;
+			List<string> filledProps = new List<string>();
+			foreach (HtmlElement input in inputs)
+			{
+				//Find list of properties which have the same IHKForm name as input
+				List<PropertyInfo> matchingProps = report.ReportContent.GetType().GetProperties().ToList().FindAll(prop =>
+				{
+					if (!(prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() is IHKFormDataNameAttribute attr))
+					{
+#if DEBUG
+						Console.WriteLine($"Property {prop.Name} of report has no IHKFormDataNameAttribute");
+#endif
+						return false;
+					}
+					if (!attr.IsActuallySent)
+						return false;
+
+					return attr.Name == input.Name || prop.Name == input.Name;
+				});
+				//Fill props with values from input
+				matchingProps.ForEach(prop =>
+				{
+					switch (input.Type.ToLower())
+					{
+						case "file":
+							//Uploading files is not implemented
+							prop.SetValue(report.ReportContent, new byte[0]);
+							break;
+						default:
+							prop.SetValue(report.ReportContent, Convert.ChangeType(input.Value, prop.PropertyType));
+							break;
+					}
+				});
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Gets the supervisors' comment for the report with number <paramref name="lfdNR"/>
+		/// </summary>
+		/// <param name="lfdNR">Number of report on IHK servers</param>
+		/// <returns>The <see cref="CommentResult"/> of fetching the comment</returns>
+		public async Task<CommentResult> GetCommentFromReport(int? lfdNR)
+		{
+			if (!lfdNR.HasValue || lfdNR < 0)
+				return new CommentResult(CommentResult.ResultStatus.NoLfdnr);
+			if (!LoggedIn && !await DoLogin())
+				return new CommentResult(CommentResult.ResultStatus.LoginFailed);
+			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
+				return new CommentResult(CommentResult.ResultStatus.Unauthorized);
+			HttpResponseMessage response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdNR}");
+			if (!response.IsSuccessStatusCode)
+				return new CommentResult(CommentResult.ResultStatus.OpenReportFailed);
+
+			HtmlDocument doc = new HtmlDocument(await response.Content.ReadAsStringAsync());
+			await GetAndRefer("tibrosBB/azubiHeft.jsp");
+			ResetTimer();
+
+			return GetComment(doc);
+		}
+
+		/// <summary>
+		/// Searches <paramref name="doc"/> for the supervisors' comment
+		/// </summary>
+		/// <param name="doc"><see cref="HtmlDocument"/> to search for a comment</param>
+		/// <returns><see cref="CommentResult"/> of finding the comment</returns>
+		private CommentResult GetComment(HtmlDocument doc)
+		{
+			List<HtmlElement> list = doc.Body.CSSSelect("div.noc_table > div.row > div");
+			int commentIndex = 2 * (int)EditFormInfoFields.Comment + 1;
+			if (list.Count < commentIndex)
+				return new CommentResult(CommentResult.ResultStatus.CommentFieldNotFound);
+			return new CommentResult(CommentResult.ResultStatus.Success, comment: list[commentIndex].InnerText);
+		}
+
+		/// <summary>
+		/// Indexes of edit form info fields
+		/// (are in pairs of 2)
+		/// </summary>
+		public enum EditFormInfoFields
+		{
+			/// <summary>
+			/// Index of azubi name
+			/// </summary>
+			Name,
+			/// <summary>
+			/// Index of azubi number
+			/// </summary>
+			AzubiNumber,
+			/// <summary>
+			/// Index of job title
+			/// </summary>
+			JobTitle,
+			/// <summary>
+			/// Index of span where the contract is binding
+			/// </summary>
+			ContractSpan,
+			/// <summary>
+			/// Index of report status
+			/// </summary>
+			Status,
+			/// <summary>
+			/// Index of date the report was accepted
+			/// </summary>
+			AcceptDate,
+			/// <summary>
+			/// Index of comment
+			/// </summary>
+			Comment
 		}
 
 		/// <summary>

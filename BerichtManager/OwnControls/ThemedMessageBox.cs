@@ -16,7 +16,7 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		private MessageBoxButtons Buttons { get; set; }
 
-		private ThemedMessageBox(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+		private ThemedMessageBox(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, bool allowMessageHighlight = false)
 		{
 			InitializeComponent();
 			InitializeButtons(buttons);
@@ -27,7 +27,8 @@ namespace BerichtManager.OwnControls
 			Message = text;
 			Buttons = buttons;
 			rtbText.Size = TextRenderer.MeasureText(Message, rtbText.Font);
-			rtbText.Enter += UnfocusOnEnter;
+			if (!allowMessageHighlight)
+				rtbText.Enter += UnfocusOnEnter;
 		}
 
 		/// <summary>
@@ -37,10 +38,23 @@ namespace BerichtManager.OwnControls
 		/// <param name="text">Text to be displayed on the message box</param>
 		/// <param name="title">Title of the message box</param>
 		/// <param name="buttons">Configuration of the buttons on message box</param>
-		/// <returns></returns>
-		public static DialogResult Show(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+		/// <returns><see cref="DialogResult"/> of clicked button</returns>
+		public static DialogResult Show(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, bool allowMessageHighlight = false)
 		{
-			return new ThemedMessageBox(text: text, title: title, buttons: buttons).ShowDialog();
+			return new ThemedMessageBox(text: text, title: title, buttons: buttons, allowMessageHighlight: allowMessageHighlight).ShowDialog();
+		}
+
+		/// <summary>
+		/// Shows a themed message box and does not block execution
+		/// </summary>
+		/// <param name="theme">Theme to style the message box after</param>
+		/// <param name="text">Text to be displayed on the message box</param>
+		/// <param name="title">Title of the message box</param>
+		/// <param name="buttons">Configuration of the buttons on message box</param>
+		public static void Info(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, bool allowMessageHighlight = false)
+		{
+			((Control)new ThemedMessageBox(text: text, title: title, buttons: buttons, allowMessageHighlight: allowMessageHighlight)).Show();
+
 		}
 
 		/// <summary>

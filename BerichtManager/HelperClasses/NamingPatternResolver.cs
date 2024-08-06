@@ -18,6 +18,11 @@ namespace BerichtManager.HelperClasses
 		public const string ReportNumber = "~+RN+~";
 
 		/// <summary>
+		/// File extension for report files
+		/// </summary>
+		public const string ReportFileExtension = ".docx";
+
+		/// <summary>
 		/// <see cref="CultureInfo"/> to use for calendar
 		/// </summary>
 		public static CultureInfo Culture { get; } = CultureInfo.CurrentCulture;
@@ -42,6 +47,28 @@ namespace BerichtManager.HelperClasses
 		public static string ResolveName(DateTime baseDate, string reportNumber)
 		{
 			return ConfigHandler.Instance.NamingPattern.Replace(CalendarWeek, Culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()).Replace(ReportNumber, reportNumber);
+		}
+
+		/// <summary>
+		/// Resolves report number and caledar week into the desired name
+		/// </summary>
+		/// <param name="baseDate">Date in week of created report</param>
+		/// <param name="reportNumber">Number of created report</param>
+		/// <returns>Resolved name according to pattern in <see cref="ConfigHandler"/></returns>
+		public static string ResolveName(DateTime baseDate, int reportNumber)
+		{
+			return ConfigHandler.Instance.NamingPattern.Replace(CalendarWeek, Culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString()).Replace(ReportNumber, reportNumber.ToString());
+		}
+
+		/// <summary>
+		/// Resolves report number and caledar week into the desired name including .docx extension
+		/// </summary>
+		/// <param name="baseDate">Date in week of created report</param>
+		/// <param name="reportNumber">Number of created report</param>
+		/// <returns>Resolved name according to pattern in <see cref="ConfigHandler"/> and adding .docx as extension</returns>
+		public static string ResolveNameWithExtension(DateTime baseDate, int reportNumber)
+		{
+			return ResolveName(baseDate, reportNumber) + ReportFileExtension;
 		}
 
 		/// <summary>

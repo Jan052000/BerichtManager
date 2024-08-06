@@ -23,11 +23,11 @@ namespace BerichtManager.UploadChecking
 		private string FullPath { get; } = Path.Combine(ConfigFolderPath, FileName);
 
 		#region Singleton
-		private static UploadedReports Singleton { get; set; }
+		protected static UploadedReports Singleton { get; set; }
 		/// <summary>
 		/// Instance of <see cref="UploadedReports"/>
 		/// </summary>
-		public static UploadedReports Instance
+		protected static UploadedReports Instance
 		{
 			get
 			{
@@ -43,24 +43,35 @@ namespace BerichtManager.UploadChecking
 			Load();
 		}
 
+		private static string ExtractRelativePath(string path)
+		{
+			string toSplit = path.Replace('/', '\\');
+			List<string> splitPath = toSplit.Split('\\').ToList();
+			string reportRoot = ConfigHandler.Instance.ReportPath.Replace('/', '\\').Split('\\').Last();
+			splitPath.RemoveRange(0, splitPath.IndexOf(reportRoot));
+			return String.Join('\\'.ToString(), splitPath);
+		}
+
 		/// <summary>
 		/// Adds <paramref name="value"/> to the <see cref="List{T}"/> at <paramref name="key"/>
 		/// </summary>
 		/// <param name="path">Path of report</param>
 		/// <param name="report">Report object to save</param>
 		/// <inheritdoc cref="Dictionary{TKey, TValue}.Add(TKey, TValue)" path="/exception"/>
-		public void AddReport(string path, UploadedReport report)
+		public static void AddReport(string path, UploadedReport report)
 		{
-			if (!TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
+			if (Path.IsPathRooted(path))
+				path = ExtractRelativePath(path);
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 			{
 				paths = new Dictionary<string, UploadedReport>();
-				Add(ConfigHandler.Instance.ReportPath, paths);
+				Instance.Add(ConfigHandler.Instance.ReportPath, paths);
 			}
 			if (paths.ContainsKey(path))
 				paths[path] = report;
 			else
 				paths.Add(path, report);
-			Save();
+			Instance.Save();
 		}
 
 		/// <summary>
@@ -155,11 +166,7 @@ namespace BerichtManager.UploadChecking
 			{
 				if (!path.StartsWith(ConfigHandler.Instance.ReportPath))
 					return false;
-				string toSplit = path.Replace('/', '\\');
-				List<string> splitPath = toSplit.Split('\\').ToList();
-				string reportRoot = ConfigHandler.Instance.ReportPath.Replace('/', '\\').Split('\\').Last();
-				splitPath.RemoveRange(0, splitPath.IndexOf(reportRoot));
-				path = String.Join('\\'.ToString(), splitPath);
+				path = ExtractRelativePath(path);
 			}
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> paths))
 				return false;
@@ -248,6 +255,20 @@ namespace BerichtManager.UploadChecking
 				return;
 			toMark.WasEditedLocally = wasEdited;
 			Instance.Save();
+		}
+
+		/// <summary>
+		/// Gets a <see cref="List{T}"/> relative paths to uploaded reports
+		/// </summary>
+		/// <param name="paths"><see cref="List{T}"/> of relative paths to uploaded reports</param>
+		/// <returns><see langword="true"/> if reports were uploaded in <see cref="ConfigHandler.ReportPath"/> and <see langword="false"/> otherwise</returns>
+		public static bool GetUploadedPaths(out List<string> paths)
+		{
+			paths = new List<string>();
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> uploadedPaths))
+				return false;
+			paths = uploadedPaths.Keys.ToList();
+			return true;
 		}
 
 		/// <summary>

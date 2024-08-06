@@ -30,6 +30,7 @@ namespace BerichtManager.Forms
 		{
 			this.components = new System.ComponentModel.Container();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.cbIHKCheckMatchingStartDates = new System.Windows.Forms.CheckBox();
 			this.tbSupervisorMail = new System.Windows.Forms.TextBox();
 			this.tbJobField = new System.Windows.Forms.TextBox();
 			this.btIHKLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
@@ -52,8 +53,8 @@ namespace BerichtManager.Forms
 			this.tbServer = new System.Windows.Forms.TextBox();
 			this.cbUseCustomPrefix = new System.Windows.Forms.CheckBox();
 			this.tbCustomPrefix = new System.Windows.Forms.TextBox();
-			this.cbIHKCheckMatchingStartDates = new System.Windows.Forms.CheckBox();
 			this.gbIHK = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.cbIHKAutoGetComment = new System.Windows.Forms.CheckBox();
 			this.laIHKBaseUrl = new System.Windows.Forms.Label();
 			this.tbIHKBaseUrl = new System.Windows.Forms.TextBox();
 			this.cbAutoSyncStatusesWithIHK = new System.Windows.Forms.CheckBox();
@@ -96,6 +97,19 @@ namespace BerichtManager.Forms
 			this.toolTip1.OwnerDraw = true;
 			this.toolTip1.ReshowDelay = 100;
 			this.toolTip1.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this.toolTip1_Draw);
+			// 
+			// cbIHKCheckMatchingStartDates
+			// 
+			this.cbIHKCheckMatchingStartDates.AutoSize = true;
+			this.cbIHKCheckMatchingStartDates.Location = new System.Drawing.Point(276, 118);
+			this.cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
+			this.cbIHKCheckMatchingStartDates.Size = new System.Drawing.Size(205, 17);
+			this.cbIHKCheckMatchingStartDates.TabIndex = 55;
+			this.cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
+			this.toolTip1.SetToolTip(this.cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is" +
+        " the same as the report");
+			this.cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
+			this.cbIHKCheckMatchingStartDates.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// tbSupervisorMail
 			// 
@@ -369,22 +383,10 @@ namespace BerichtManager.Forms
 			this.toolTip1.SetToolTip(this.tbCustomPrefix, "Prefix to be used in school field");
 			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
-			// cbIHKCheckMatchingStartDates
-			// 
-			this.cbIHKCheckMatchingStartDates.AutoSize = true;
-			this.cbIHKCheckMatchingStartDates.Location = new System.Drawing.Point(276, 118);
-			this.cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
-			this.cbIHKCheckMatchingStartDates.Size = new System.Drawing.Size(205, 17);
-			this.cbIHKCheckMatchingStartDates.TabIndex = 55;
-			this.cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
-			this.toolTip1.SetToolTip(this.cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is" +
-        " the same as the report");
-			this.cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
-			this.cbIHKCheckMatchingStartDates.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
 			// gbIHK
 			// 
 			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbIHK.Controls.Add(this.cbIHKAutoGetComment);
 			this.gbIHK.Controls.Add(this.cbIHKCheckMatchingStartDates);
 			this.gbIHK.Controls.Add(this.laIHKBaseUrl);
 			this.gbIHK.Controls.Add(this.tbIHKBaseUrl);
@@ -403,6 +405,17 @@ namespace BerichtManager.Forms
 			this.gbIHK.TabIndex = 46;
 			this.gbIHK.TabStop = false;
 			this.gbIHK.Text = "IHK";
+			// 
+			// cbIHKAutoGetComment
+			// 
+			this.cbIHKAutoGetComment.AutoSize = true;
+			this.cbIHKAutoGetComment.Location = new System.Drawing.Point(487, 118);
+			this.cbIHKAutoGetComment.Name = "cbIHKAutoGetComment";
+			this.cbIHKAutoGetComment.Size = new System.Drawing.Size(194, 17);
+			this.cbIHKAutoGetComment.TabIndex = 56;
+			this.cbIHKAutoGetComment.Text = "Get comment on edit when possible";
+			this.cbIHKAutoGetComment.UseVisualStyleBackColor = true;
+			this.cbIHKAutoGetComment.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// laIHKBaseUrl
 			// 
@@ -753,5 +766,6 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.Label laIHKBaseUrl;
 		private System.Windows.Forms.TextBox tbIHKBaseUrl;
 		private System.Windows.Forms.CheckBox cbIHKCheckMatchingStartDates;
+		private System.Windows.Forms.CheckBox cbIHKAutoGetComment;
 	}
 }

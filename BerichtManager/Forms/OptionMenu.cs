@@ -83,6 +83,7 @@ namespace BerichtManager.Forms
 			cbAutoSyncStatusesWithIHK.Checked = ConfigHandler.AutoSyncStatusesWithIHK;
 			tbIHKBaseUrl.Text = ConfigHandler.IHKBaseUrl;
 			cbIHKCheckMatchingStartDates.Checked = ConfigHandler.IHKCheckMatchingStartDates;
+			cbIHKAutoGetComment.Checked = ConfigHandler.IHKAutoGetComment;
 
 			IsDirty = false;
 			btSave.Enabled = false;
@@ -227,6 +228,7 @@ namespace BerichtManager.Forms
 				IHKBaseAddressChanged?.Invoke();
 			ConfigHandler.IHKBaseUrl = tbIHKBaseUrl.Text;
 			ConfigHandler.IHKCheckMatchingStartDates = cbIHKCheckMatchingStartDates.Checked;
+			ConfigHandler.IHKAutoGetComment = cbIHKAutoGetComment.Checked;
 
 			ConfigHandler.SaveConfig();
 		}

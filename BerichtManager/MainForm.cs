@@ -22,6 +22,7 @@ using System.Linq;
 using BerichtManager.IHKClient;
 using System.Net.Http;
 using BerichtManager.IHKClient.Exceptions;
+using BerichtManager.IHKClient.ReportContents;
 
 namespace BerichtManager
 {
@@ -1035,6 +1036,24 @@ namespace BerichtManager
 					return;
 				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 					return;
+
+				if (ConfigHandler.IHKAutoGetComment && UploadedReports.GetUploadedReport(path, out UploadedReport report) && report.LfdNR.HasValue && report.LfdNR > 0)
+				{
+					Task<CommentResult> commentTask = Task.Run(async () =>
+					{
+						try
+						{
+							return await IHKClient.GetCommentFromReport(report.LfdNR);
+						}
+						catch (Exception ex)
+						{
+							return new CommentResult(CommentResult.ResultStatus.Exception, exception: ex);
+						}
+					});
+					CommentResult result = commentTask.Result;
+					HandleCommentResult(result);
+				}
+
 				Doc = WordApp.Documents.Open(path);
 				if (Doc.FormFields.Count != 10)
 				{
@@ -1077,7 +1096,7 @@ namespace BerichtManager
 						break;
 					default:
 						Logger.LogError(ex);
-						ThemedMessageBox.Show(text: ex.StackTrace);
+						ThemedMessageBox.Show(text: ex.StackTrace, title: ex.GetType().Name);
 						Console.Write(ex.StackTrace);
 						break;
 				}
@@ -1380,7 +1399,7 @@ namespace BerichtManager
 				}
 			}
 			bool isNameValid = ReportUtils.IsNameValid(tvReports.SelectedNode.Text);
-			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report);//UploadedReports.GetUploadStatus(tvReports.SelectedNode.FullPath, out ReportNode.UploadStatuses status);
+			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report);
 			bool uploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
 			bool rejected = report?.Status == ReportNode.UploadStatuses.Rejected;
 			bool wasEdited = report != null && (report?.WasEditedLocally).Value;
@@ -1394,8 +1413,10 @@ namespace BerichtManager
 			miQuickEditOptions.Enabled = !isInLogs && isNameValid;
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miUploadAsNext.Enabled = !isInLogs && isNameValid && !isUploaded;
-			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected || wasEdited);
-			miUpdateReport.Enabled = isNameValid && isUploaded && wasEdited;
+			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected && wasEdited);
+			miUpdateReport.Enabled = isNameValid && isUploaded && wasEdited && (uploaded || rejected);
+			miRcShowComment.Enabled = isNameValid && isUploaded && report.LfdNR.HasValue;
+			miDownloadReports.Enabled = miRcDownloadReports.Enabled = !string.IsNullOrEmpty(ConfigHandler.IHKUserName) && !string.IsNullOrEmpty(ConfigHandler.IHKPassword);
 		}
 
 		private void btOptions_Click(object sender, EventArgs e)
@@ -1811,7 +1832,7 @@ namespace BerichtManager
 			{
 				case CreateResults.Success:
 					ThemedMessageBox.Show(text: "Report uploaded successfully", title: "Upload successful");
-					UploadedReports.Instance.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
+					UploadedReports.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 					break;
 				case CreateResults.Unauthorized:
 					ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
@@ -1837,9 +1858,12 @@ namespace BerichtManager
 				bool shouldStop = false;
 				progressForm.Stop += () => shouldStop = true;
 
-				List<string> files = new List<string>();
-				if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
-					files = uploadedPaths.Keys.ToList();
+				if (!UploadedReports.GetUploadedPaths(out List<string> files))
+				{
+					//Should never happen as menu item should be diabled
+					ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
+					return;
+				}
 
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
@@ -1892,7 +1916,7 @@ namespace BerichtManager
 					switch (result.Result)
 					{
 						case CreateResults.Success:
-							UploadedReports.Instance.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
+							UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 							break;
 						case CreateResults.Unauthorized:
 							ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
@@ -1989,7 +2013,7 @@ namespace BerichtManager
 			bool result = false;
 			try
 			{
-				List<UploadedReport> reportList = await IHKClient.GetReportStatuses();
+				List<UploadedReport> reportList = await IHKClient.GetIHKReports();
 				reportList.ForEach(report => result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status, lfdnr: report.LfdNR));
 				if (result)
 				{
@@ -2038,13 +2062,13 @@ namespace BerichtManager
 
 		private async void miHandInSingle_Click(object sender, EventArgs e)
 		{
-			if (!UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> reports))
+			if (!UploadedReports.GetUploadedPaths(out List<string> paths))
 			{
 				//Should never happen as menu item should be diabled
 				ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
 				return;
 			}
-			if (!reports.TryGetValue(tvReports.SelectedNode.FullPath, out UploadedReport report))
+			if (!UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report))
 			{
 				//Should never happen as menu item should be diabled
 				ThemedMessageBox.Show(text: $"Report {FullSelectedPath} was not uploaded yet", title: "Hand in failed");
@@ -2055,6 +2079,12 @@ namespace BerichtManager
 				ThemedMessageBox.Show(text: $"Lfdnr of {FullSelectedPath} could not be read", title: "Hand in failed");
 				return;
 			}
+			if (report.Status != ReportNode.UploadStatuses.Uploaded && report.Status != ReportNode.UploadStatuses.Rejected)
+			{
+				ThemedMessageBox.Show(text: $"Can not update {FullSelectedPath} as it can not be changed on IHK server", title: "Can not update");
+				return;
+			}
+
 			//Prevent unsaved changes from being left locally
 			if (report.WasEditedLocally)
 			{
@@ -2140,9 +2170,12 @@ namespace BerichtManager
 				bool shouldStop = false;
 				progressForm.Stop += () => shouldStop = true;
 
-				List<string> files = new List<string>();
-				if (UploadedReports.Instance.TryGetValue(ActivePath, out Dictionary<string, UploadedReport> uploadedPaths))
-					files = uploadedPaths.Keys.ToList();
+				if (!UploadedReports.GetUploadedPaths(out List<string> files))
+				{
+					//Should never happen as menu item should be diabled
+					ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
+					return;
+				}
 
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
@@ -2173,7 +2206,7 @@ namespace BerichtManager
 					string fullPath = Path.GetFullPath(Path.Combine(ActivePath, "..", nodePath));
 					progressForm.Status = $"Handing in {fullPath}:";
 					//Final fail save
-					if (!uploadedPaths.TryGetValue(nodePath, out UploadedReport report))
+					if (!UploadedReports.GetUploadedReport(nodePath, out UploadedReport report))
 					{
 						ThemedMessageBox.Show(text: $"Report {fullPath} was not uploaded and could not be handed in as a result", title: "Hand in failed");
 						progressForm.Status = "\t- skipped: Not uploaded";
@@ -2381,6 +2414,11 @@ namespace BerichtManager
 				ThemedMessageBox.Show(text: $"Could not find report {FullSelectedPath} in uploaded list, please add {tvReports.SelectedNode.FullPath} if it is uploaded", title: "Report not found");
 				return;
 			}
+			if (report.Status != ReportNode.UploadStatuses.Uploaded && report.Status != ReportNode.UploadStatuses.Rejected)
+			{
+				ThemedMessageBox.Show(text: $"Can not update {FullSelectedPath} as it can not be changed on IHK server", title: "Can not update");
+				return;
+			}
 			if (!report.WasEditedLocally)
 				return;
 			Word.Document doc;
@@ -2473,7 +2511,7 @@ namespace BerichtManager
 				}
 				string fullPath = GetFullPath(node);
 				progressForm.Status = $"Updating {fullPath}:";
-				if(!UploadedReports.GetUploadedReport(fullPath, out UploadedReport report))
+				if (!UploadedReports.GetUploadedReport(fullPath, out UploadedReport report))
 				{
 					progressForm.Status = "Skipped, not a report";
 					skipped.Add(fullPath, "not a report");
@@ -2710,9 +2748,9 @@ namespace BerichtManager
 					}
 
 					progressForm.Status = $"Editing {report.FullName}";
-					string work = report.FormFields[6].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
-					string seminars = report.FormFields[7].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
-					string school = report.FormFields[8].Result.Replace("\r\n", "\v").Replace("\r", "\v").Replace("\n", "\v");
+					string work = ReportUtils.TransformTextToWord(report.FormFields[6].Result);
+					string seminars = ReportUtils.TransformTextToWord(report.FormFields[7].Result);
+					string school = ReportUtils.TransformTextToWord(report.FormFields[8].Result);
 
 					FillText(WordApp, report.FormFields[6], work);
 					FillText(WordApp, report.FormFields[7], seminars);
@@ -2742,6 +2780,257 @@ namespace BerichtManager
 
 			if (formatErrors.Count > 0 && shouldEdit)
 				UpdateTree();
+		}
+
+		private async void miRcShowComment_Click(object sender, EventArgs e)
+		{
+			if (!ReportUtils.IsNameValid(tvReports.SelectedNode.Text))
+				return;
+			if (!UploadedReports.GetUploadedReport(FullSelectedPath, out UploadedReport report))
+			{
+				ThemedMessageBox.Show(text: "Report not uploaded", title: "Unable to fetch comment");
+				return;
+			}
+			if (!report.LfdNR.HasValue || report.LfdNR < 0)
+			{
+				ThemedMessageBox.Show(text: "Unable to read lfdnr, check if it has been save correctly", title: "Unable to read lfdnr");
+				return;
+			}
+
+			CommentResult result = await IHKClient.GetCommentFromReport(report.LfdNR);
+			HandleCommentResult(result);
+		}
+
+		private void HandleCommentResult(CommentResult result)
+		{
+			switch (result.UploadResult)
+			{
+				case CommentResult.ResultStatus.Success:
+					if (string.IsNullOrEmpty(result.Comment))
+						ThemedMessageBox.Info(text: "No comment found", title: "Comment");
+					else
+						ThemedMessageBox.Info(text: $"Comment:\n{result.Comment}", title: "Comment");
+					break;
+				case CommentResult.ResultStatus.Exception:
+					ThemedMessageBox.Info(text: $"A(n) {result.Exception?.GetType().Name} occurred, the comment could not be fetched", title: result.Exception?.GetType().Name);
+					break;
+				default:
+					ThemedMessageBox.Info(text: $"Fetching comment failed: {result.UploadResult}", title: "Failed fetching comment");
+					break;
+			}
+		}
+
+		private async void DownloadIHKReports(object sender, EventArgs e)
+		{
+			EventProgressForm progressForm = new EventProgressForm("Download of reports from IHK");
+			bool stop = false;
+			progressForm.Stop += () => stop = true;
+			progressForm.Show();
+			progressForm.Status = "Fetching report numbers and statuses from IHK";
+
+			//Handles stopping the execution
+			void DoStop(string message = "Stopped")
+			{
+				progressForm.Status = message;
+				progressForm.Done();
+			}
+
+			FolderSelect select = new FolderSelect(tvReports.Nodes[0], (node) =>
+			{
+				return !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
+			}, "Select reports to keep");
+			if (select.ShowDialog() != DialogResult.OK)
+			{
+				if (ThemedMessageBox.Show(text: "You are about to replace all local reports with IHK reports, are you sure?", title: "Overwrite all reports?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				{
+					DoStop("Not all reports should be overwritten, please start process again.");
+					return;
+				}
+			}
+			ReportFinder.FindReports(select.FilteredNode, out List<TreeNode> reportNodes);
+
+			//Index local reports
+			string activePath = Doc?.FullName ?? "";
+			List<string> openReports = CloseAllReports();
+
+			List<string> skipped = new List<string>();
+			progressForm.Status = $"Indexing {reportNodes.Count} report{(reportNodes.Count == 1 ? "" : "s")}";
+
+			Dictionary<string, UploadedReport> indexedReports = new Dictionary<string, UploadedReport>();
+			foreach (TreeNode node in reportNodes)
+			{
+				if (stop)
+				{
+					DoStop();
+					OpenAllDocuments(openReports, activePath);
+					return;
+				}
+
+				string fullNodePath = GetFullPath(node);
+				Word.Document doc = WordApp.Documents.Open(fullNodePath, ReadOnly: true);
+
+				progressForm.Status = $"\t- {doc.FullName}:";
+
+				if (doc.FormFields.Count < 10)
+				{
+					progressForm.Status = "\t\t- Skipped, invalid form field count";
+					skipped.Add(doc.FullName);
+					continue;
+				}
+
+				if (UploadedReports.GetUploadedReport(fullNodePath, out UploadedReport report))
+					indexedReports.Add(report.StartDate.ToString("dd.MM.yyyy"), report);
+				else
+					indexedReports.Add(doc.FormFields[2].Result, null);
+				doc.Close(SaveChanges: false);
+
+				progressForm.Status = "\t\t- Success";
+			}
+			progressForm.Status = "Finished indexing";
+
+			//Ask for overwirte permission
+			if (skipped.Count > 0)
+			{
+				string skippedMessage = $"Skipped indexing of {skipped.Count} report{(skipped.Count == 1 ? "" : "s")}, they could be overwritten when continuing, do you want to continue?\nSkipped:";
+				skipped.ForEach(path => skippedMessage += path + "\n");
+				if (ThemedMessageBox.Show(text: skippedMessage, title: "Continue with possible overwrites", buttons: MessageBoxButtons.YesNo, allowMessageHighlight: true) != DialogResult.Yes)
+				{
+					DoStop("Aborted");
+					CloseAllReports();
+					OpenAllDocuments(openReports, activePath);
+					return;
+				}
+			}
+
+			if (stop)
+			{
+				DoStop();
+				OpenAllDocuments(openReports, activePath);
+				return;
+			}
+
+			//Get report infos from IHK
+			List<UploadedReport> uploadedReports;
+			try
+			{
+				uploadedReports = await IHKClient.GetIHKReports();
+			}
+			catch (Exception ex)
+			{
+				ThemedMessageBox.Show(text: $"A(n) {ex.GetType().Name} occurred, report info could not be fetched");
+				DoStop(ex.GetType().Name);
+				OpenAllDocuments(openReports, activePath);
+				return;
+			}
+			//Stop if desired
+			if (stop)
+			{
+				DoStop();
+				OpenAllDocuments(openReports, activePath);
+				return;
+			}
+
+			//Reverse report list as reports are listed descending
+			uploadedReports.Reverse();
+			//Fetch report contents
+			int reportNumber = 0;
+			List<UploadedReport> skippedDownloads = new List<UploadedReport>();
+			Dictionary<UploadedReport, (int Number, ReportContent Content)> downloadedContents = new Dictionary<UploadedReport, (int Number, ReportContent Content)>();
+			foreach (UploadedReport report in uploadedReports)
+			{
+				reportNumber++;
+				if (stop)
+				{
+					DoStop();
+					OpenAllDocuments(openReports, activePath);
+					return;
+				}
+				progressForm.Status = $"Downloading report from {report.StartDate:dd.MM.yyyy} to {report.StartDate.AddDays(5):dd.MM.yyyy}:";
+
+				if (indexedReports.ContainsKey(report.StartDate.ToString("dd.MM.yyyy")))
+				{
+					progressForm.Status = "\t- Skipped, local will be kept";
+					continue;
+				}
+
+				ReportContent content;
+				try
+				{
+					GetReportResult result = await IHKClient.GetReportContent(report.LfdNR);
+					switch (result.Result)
+					{
+						case GetReportResult.ResultStatuses.Success:
+							content = result.ReportContent;
+							break;
+						default:
+							progressForm.Status = $"\t- Skipped: {result.Result}";
+							skippedDownloads.Add(report);
+							continue;
+					}
+				}
+				catch (Exception ex)
+				{
+					progressForm.Status = $"\t- Download aborted: {ex.GetType().Name}";
+					break;
+				}
+
+				progressForm.Status = "\t- Success";
+
+				downloadedContents.Add(report, (reportNumber, content));
+			}
+
+			string newLatestPath = "";
+			//Writing word documents
+			progressForm.Status = "Writing reports";
+			foreach (KeyValuePair<UploadedReport, (int Number, ReportContent Content)> kvp in downloadedContents)
+			{
+				if (stop)
+				{
+					DoStop();
+					OpenAllDocuments(openReports, activePath);
+					break;
+				}
+
+				Word.Document doc = WordApp.Documents.Add(Template: ConfigHandler.TemplatePath);
+				if (doc.FormFields.Count < 10)
+				{
+					DoStop("Aborted, template has an invalid field cound");
+					OpenAllDocuments(openReports, activePath);
+					break;
+				}
+
+				ReportTransformer.IHKToWord(WordApp, doc, new Report(kvp.Value.Content) { ReportNr = reportNumber });
+
+				string newReportName = NamingPatternResolver.ResolveNameWithExtension(kvp.Key.StartDate, kvp.Value.Number);
+				string folder = Path.Combine(ActivePath, kvp.Key.StartDate.Year.ToString());
+				string newPath = Path.Combine(folder, newReportName);
+				newLatestPath = newPath;
+				FitToPage(doc);
+				if (!Directory.Exists(folder))
+					Directory.CreateDirectory(folder);
+				doc.SaveAs2(FileName: newPath);
+				doc.Close();
+				UploadedReports.AddReport(newPath, kvp.Key);
+				progressForm.Status = $"Saved {newPath}";
+			}
+
+			progressForm.Status = "Opening closed reports";
+			OpenAllDocuments(openReports, activePath);
+
+			progressForm.Status = "Updating config";
+			var last = downloadedContents.LastOrDefault();
+			if (downloadedContents.Count > 0 && ConfigHandler.ReportNumber < last.Value.Number)
+			{
+				ConfigHandler.LastReportWeekOfYear = Culture.Calendar.GetWeekOfYear(last.Key.StartDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				ConfigHandler.ReportNumber = last.Value.Number;
+				ConfigHandler.LastCreated = newLatestPath;
+			}
+
+
+			UpdateTree();
+
+			progressForm.Status = "Finished";
+			progressForm.Done();
 		}
 	}
 }
