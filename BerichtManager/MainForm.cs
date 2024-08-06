@@ -853,34 +853,69 @@ namespace BerichtManager
 		{
 			try
 			{
-				if (File.Exists(path))
+				if (!File.Exists(path))
 				{
-					if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
-						return;
-					if (!DocIsSamePathAsSelected())
-						Doc = WordApp.Documents.Open(path);
+					ThemedMessageBox.Show(text: path + " not found was it deleted or moved?");
+					return;
+				}
+				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
+					return;
+				if (!DocIsSamePathAsSelected())
+					Doc = WordApp.Documents.Open(path);
 
-					if (Doc.FormFields.Count != 10)
+				if (Doc.FormFields.Count != 10)
+				{
+					ThemedMessageBox.Show(text: "Invalid document (you will have to manually edit)");
+					Doc.Close(SaveChanges: false);
+					Doc = null;
+					return;
+				}
+
+				bool markAsEdited = false;
+				if (quickEditFieldNr > -1)
+				{
+					IEnumerator enumerator = Doc.FormFields.GetEnumerator();
+					for (int i = 0; i < quickEditFieldNr; i++)
 					{
-						ThemedMessageBox.Show(text: "Invalid document (you will have to manually edit)");
-						Doc.Close(SaveChanges: false);
-						Doc = null;
+						if (enumerator.MoveNext())
+						{
+
+						}
+					}
+					EditForm edit = new EditForm(title: quickEditTitle, text: ((Word.FormField)enumerator.Current).Result);
+					edit.RefreshConfigs += RefreshConfig;
+					switch (edit.DialogResult)
+					{
+						case DialogResult.OK:
+						case DialogResult.Ignore:
+							markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
+							FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
+							break;
+						default:
+							break;
+					}
+					edit.RefreshConfigs -= RefreshConfig;
+				}
+				else
+				{
+					SelectEditFrom selectEdit = new SelectEditFrom();
+					if (selectEdit.ShowDialog() != DialogResult.OK)
+						return;
+					if (selectEdit.SelectedItems.Count == 0)
+					{
+						SaveOrExit();
 						return;
 					}
-
-					bool markAsEdited = false;
-					if (quickEditFieldNr > -1)
+					IEnumerator enumerator = Doc.FormFields.GetEnumerator();
+					EditForm edit;
+					foreach (EditState si in selectEdit.SelectedItems)
 					{
-						IEnumerator enumerator = Doc.FormFields.GetEnumerator();
-						for (int i = 0; i < quickEditFieldNr; i++)
-						{
-							if (enumerator.MoveNext())
-							{
-
-							}
-						}
-						EditForm edit = new EditForm(title: quickEditTitle, text: ((Word.FormField)enumerator.Current).Result);
+						if (!enumerator.MoveNext() || !si.ShouldEdit)
+							continue;
+						edit = new EditForm(title: si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
 						edit.RefreshConfigs += RefreshConfig;
+						edit.ShowDialog();
+						edit.RefreshConfigs -= RefreshConfig;
 						switch (edit.DialogResult)
 						{
 							case DialogResult.OK:
@@ -891,59 +926,20 @@ namespace BerichtManager
 							default:
 								break;
 						}
-						edit.RefreshConfigs -= RefreshConfig;
 					}
-					else
-					{
-						SelectEditFrom selectEdit = new SelectEditFrom();
-						if (selectEdit.ShowDialog() == DialogResult.OK)
-						{
-							if (selectEdit.SelectedItems.Count == 0)
-							{
-								SaveOrExit();
-								return;
-							}
-							IEnumerator enumerator = Doc.FormFields.GetEnumerator();
-							EditForm edit;
-							foreach (EditState si in selectEdit.SelectedItems)
-							{
-								if (enumerator.MoveNext() && si.ShouldEdit)
-								{
-									edit = new EditForm(title: si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
-									edit.RefreshConfigs += RefreshConfig;
-									edit.ShowDialog();
-									edit.RefreshConfigs -= RefreshConfig;
-									switch (edit.DialogResult)
-									{
-										case DialogResult.OK:
-										case DialogResult.Ignore:
-											markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
-											FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
-											break;
-										default:
-											break;
-									}
-								}
-							}
-						}
-					}
-					FitToPage(Doc);
-					Doc.Save();
-					if (markAsEdited)
-					{
-						UploadedReports.SetEdited(path.Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First(), true);
-						UpdateTree();
-					}
-					rtbWork.Text = Doc.FormFields[6].Result;
-					rtbSchool.Text = Doc.FormFields[8].Result;
-					EditMode = true;
-					WasEdited = false;
-					ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
 				}
-				else
+				FitToPage(Doc);
+				Doc.Save();
+				if (markAsEdited)
 				{
-					ThemedMessageBox.Show(text: path + " not found was it deleted or moved?");
+					UploadedReports.SetEdited(path.Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First(), true);
+					UpdateTree();
 				}
+				rtbWork.Text = Doc.FormFields[6].Result;
+				rtbSchool.Text = Doc.FormFields[8].Result;
+				EditMode = true;
+				WasEdited = false;
+				ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
 			}
 			catch (Exception ex)
 			{
