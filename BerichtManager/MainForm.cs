@@ -229,9 +229,20 @@ namespace BerichtManager
 			void update()
 			{
 				string openedNodePath = GetFullNodePath(OpenedReportNode);
+				List<TreeNode> expanded = new List<TreeNode>();
+				if (tvReports.Nodes.Count > 0)
+					expanded = GetExpandedNodes(tvReports.Nodes[0]);
+
 				tvReports.Nodes.Clear();
 				TreeNode root = CreateDirectoryNode(Info);
 				tvReports.Nodes.Add(root);
+
+				expanded.ForEach(node =>
+				{
+					string path = GetFullNodePath(node);
+					GetNodeFromPath(path)?.Expand();
+				});
+
 				FillStatuses(root);
 				MarkEdited(root);
 				if (openedNodePath is string)
@@ -246,6 +257,27 @@ namespace BerichtManager
 				}));
 			else
 				update();
+		}
+
+		/// <summary>
+		/// Searches <paramref name="root"/> for all expanded nodes
+		/// </summary>
+		/// <param name="root">Root <see cref="TreeNode"/> to search</param>
+		/// <returns><see cref="List{TreeNode}"/> of <see cref="TreeNode"/>s which are expanded</returns>
+		private List<TreeNode> GetExpandedNodes(TreeNode root)
+		{
+			List<TreeNode> result = new List<TreeNode>();
+
+			if (root.IsExpanded)
+				result.Add(root);
+			foreach (TreeNode child in root.Nodes)
+			{
+				if (child.IsExpanded)
+					result.Add(child);
+				result.AddRange(GetExpandedNodes(child));
+			}
+
+			return result;
 		}
 
 		/// <summary>
