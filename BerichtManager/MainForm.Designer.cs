@@ -56,6 +56,7 @@ namespace BerichtManager
 			this.miRcHandInSelection = new System.Windows.Forms.ToolStripMenuItem();
 			this.miUpdateReport = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRCUpdateSelection = new System.Windows.Forms.ToolStripMenuItem();
+			this.miRcShowComment = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRcCheckFormat = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRefresh = new System.Windows.Forms.ToolStripMenuItem();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
@@ -88,7 +89,8 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRcShowComment = new System.Windows.Forms.ToolStripMenuItem();
+			this.miDownloadReports = new System.Windows.Forms.ToolStripMenuItem();
+			this.miRcDownloadReports = new System.Windows.Forms.ToolStripMenuItem();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -186,7 +188,8 @@ namespace BerichtManager
             this.miUpdateReport,
             this.miRCUpdateSelection,
             this.miRcShowComment,
-            this.miRcCheckFormat});
+            this.miRcCheckFormat,
+            this.miRcDownloadReports});
 			this.miIHKOptions.Name = "miIHKOptions";
 			this.miIHKOptions.Size = new System.Drawing.Size(180, 22);
 			this.miIHKOptions.Text = "IHK";
@@ -246,6 +249,13 @@ namespace BerichtManager
 			this.miRCUpdateSelection.Size = new System.Drawing.Size(180, 22);
 			this.miRCUpdateSelection.Text = "Update selection";
 			this.miRCUpdateSelection.Click += new System.EventHandler(this.SendSelectionToIHK);
+			// 
+			// miRcShowComment
+			// 
+			this.miRcShowComment.Name = "miRcShowComment";
+			this.miRcShowComment.Size = new System.Drawing.Size(180, 22);
+			this.miRcShowComment.Text = "Show comment";
+			this.miRcShowComment.Click += new System.EventHandler(this.miRcShowComment_Click);
 			// 
 			// miRcCheckFormat
 			// 
@@ -448,7 +458,8 @@ namespace BerichtManager
             this.miUploadSelection,
             this.miHandInSelection,
             this.miUpdateSelection,
-            this.miCheckFormat});
+            this.miCheckFormat,
+            this.miDownloadReports});
 			this.miIHK.Name = "miIHK";
 			this.miIHK.Size = new System.Drawing.Size(191, 22);
 			this.miIHK.Text = "IHK";
@@ -457,7 +468,7 @@ namespace BerichtManager
 			// miUpdateStatuses
 			// 
 			this.miUpdateStatuses.Name = "miUpdateStatuses";
-			this.miUpdateStatuses.Size = new System.Drawing.Size(166, 22);
+			this.miUpdateStatuses.Size = new System.Drawing.Size(180, 22);
 			this.miUpdateStatuses.Text = "Update statuses";
 			this.miUpdateStatuses.ToolTipText = "Update statuses of reports";
 			this.miUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
@@ -465,7 +476,7 @@ namespace BerichtManager
 			// miUploadSelection
 			// 
 			this.miUploadSelection.Name = "miUploadSelection";
-			this.miUploadSelection.Size = new System.Drawing.Size(166, 22);
+			this.miUploadSelection.Size = new System.Drawing.Size(180, 22);
 			this.miUploadSelection.Text = "Upload selection";
 			this.miUploadSelection.ToolTipText = "Upload all reports selected in following form";
 			this.miUploadSelection.Click += new System.EventHandler(this.UploadSelectionClick);
@@ -473,7 +484,7 @@ namespace BerichtManager
 			// miHandInSelection
 			// 
 			this.miHandInSelection.Name = "miHandInSelection";
-			this.miHandInSelection.Size = new System.Drawing.Size(166, 22);
+			this.miHandInSelection.Size = new System.Drawing.Size(180, 22);
 			this.miHandInSelection.Text = "Hand in selection";
 			this.miHandInSelection.ToolTipText = "Hand in all reports selected in following form";
 			this.miHandInSelection.Click += new System.EventHandler(this.HandInSelectionClick);
@@ -481,14 +492,14 @@ namespace BerichtManager
 			// miUpdateSelection
 			// 
 			this.miUpdateSelection.Name = "miUpdateSelection";
-			this.miUpdateSelection.Size = new System.Drawing.Size(166, 22);
+			this.miUpdateSelection.Size = new System.Drawing.Size(180, 22);
 			this.miUpdateSelection.Text = "Update selection";
 			this.miUpdateSelection.Click += new System.EventHandler(this.SendSelectionToIHK);
 			// 
 			// miCheckFormat
 			// 
 			this.miCheckFormat.Name = "miCheckFormat";
-			this.miCheckFormat.Size = new System.Drawing.Size(166, 22);
+			this.miCheckFormat.Size = new System.Drawing.Size(180, 22);
 			this.miCheckFormat.Text = "Check format";
 			this.miCheckFormat.Click += new System.EventHandler(this.CheckFormat);
 			// 
@@ -540,12 +551,19 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// miRcShowComment
+			// miDownloadReports
 			// 
-			this.miRcShowComment.Name = "miRcShowComment";
-			this.miRcShowComment.Size = new System.Drawing.Size(180, 22);
-			this.miRcShowComment.Text = "Show comment";
-			this.miRcShowComment.Click += new System.EventHandler(this.miRcShowComment_Click);
+			this.miDownloadReports.Name = "miDownloadReports";
+			this.miDownloadReports.Size = new System.Drawing.Size(180, 22);
+			this.miDownloadReports.Text = "Download reports";
+			this.miDownloadReports.Click += new System.EventHandler(this.DownloadIHKReports);
+			// 
+			// miRcDownloadReports
+			// 
+			this.miRcDownloadReports.Name = "miRcDownloadReports";
+			this.miRcDownloadReports.Size = new System.Drawing.Size(180, 22);
+			this.miRcDownloadReports.Text = "Download reports";
+			this.miRcDownloadReports.Click += new System.EventHandler(this.DownloadIHKReports);
 			// 
 			// MainForm
 			// 
@@ -628,6 +646,8 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miRCUpdateSelection;
 		private System.Windows.Forms.ToolStripMenuItem miUpdateSelection;
 		private System.Windows.Forms.ToolStripMenuItem miRcShowComment;
+		private System.Windows.Forms.ToolStripMenuItem miRcDownloadReports;
+		private System.Windows.Forms.ToolStripMenuItem miDownloadReports;
 	}
 }
 
