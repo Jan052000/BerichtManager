@@ -107,12 +107,16 @@ namespace BerichtManager
 			get => _OpenedReportNode;
 			set
 			{
-				if (_OpenedReportNode != value)
+				if (OpenedReportNode == value)
+					return;
+				if (OpenedReportNode != null)
 				{
-					_OpenedReportNode = value;
-					if (value != null)
-						_OpenedReportNode.IsOpened = true;
+					OpenedReportNode.IsOpened = false;
+					tvReports.Invalidate(OpenedReportNode.Bounds);
 				}
+				_OpenedReportNode = value;
+				if (OpenedReportNode != null)
+					OpenedReportNode.IsOpened = true;
 			}
 		}
 
@@ -998,22 +1002,6 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Switches <see cref="OpenedReportNode"/> to <paramref name="node"/>
-		/// </summary>
-		/// <param name="node"><see cref="ReportNode"/> to mark as open for edit</param>
-		private void SwitchOpenedNode(ReportNode node)
-		{
-			if (OpenedReportNode == node)
-				return;
-			if (OpenedReportNode != null)
-			{
-				OpenedReportNode.IsOpened = false;
-				tvReports.Invalidate(OpenedReportNode.Bounds);
-			}
-			OpenedReportNode = node;
-		}
-
-		/// <summary>
 		/// Opens the ontents for work and school form fields in textboxes
 		/// </summary>
 		/// <param name="path">document to open</param>
@@ -1062,7 +1050,7 @@ namespace BerichtManager
 				}
 
 				if (GetNodeFromPath(path) is ReportNode reportNode)
-					SwitchOpenedNode(reportNode);
+					OpenedReportNode = reportNode;
 
 				rtbWork.Text = Doc.FormFields[6].Result;
 				rtbSchool.Text = Doc.FormFields[8].Result;
@@ -1172,7 +1160,7 @@ namespace BerichtManager
 		/// </summary>
 		private void SaveOrExit()
 		{
-			SwitchOpenedNode(null);
+			OpenedReportNode = null;
 			if (Doc == null)
 				return;
 			if (!EditMode)
