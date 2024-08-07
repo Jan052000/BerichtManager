@@ -1707,12 +1707,7 @@ namespace BerichtManager
 				ThemedMessageBox.Show(text: "No file or folder was selected, check was canceled", title: "No selection was made");
 				return;
 			}
-			string activePath = "";
-			try
-			{
-				activePath = Doc?.Path;
-			}
-			catch { }
+			string activePath = Doc?.FullName ?? "";
 			List<string> openReports = CloseAllReports();
 			ReportChecker checker = new ReportChecker(WordApp);
 			Cursor = Cursors.WaitCursor;
@@ -1894,12 +1889,7 @@ namespace BerichtManager
 				ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reports);
 				progressForm.Status = $"Uploading {reports.Count} reports";
 
-				string activePath = "";
-				try
-				{
-					activePath = Path.Combine(Doc?.Path, Doc?.Name);
-				}
-				catch { }
+				string activePath = Doc?.FullName ?? "";
 				progressForm.Status = "Closing open reports";
 				List<string> openReports = CloseAllReports();
 
@@ -2653,7 +2643,7 @@ namespace BerichtManager
 						break;
 					}
 					bool errorFound = false;
-					Word.Document doc = WordApp.Documents.Open(Path.GetFullPath(Path.Combine(ConfigHandler.ReportPath, "..", GetFullNodePath(node))));
+					Word.Document doc = WordApp.Documents.Open(GetFullPath(node));
 
 					if (doc.FormFields.Count < 10)
 					{

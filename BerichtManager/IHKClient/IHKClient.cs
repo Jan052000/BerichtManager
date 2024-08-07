@@ -353,14 +353,15 @@ namespace BerichtManager.IHKClient
 				//Find list of properties which have the same IHKForm name as input
 				List<PropertyInfo> matchingProps = report.ReportContent.GetType().GetProperties().ToList().FindAll(prop =>
 				{
-					IHKFormDataNameAttribute attr = prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() as IHKFormDataNameAttribute;
-					if (attr == null || !attr.IsActuallySent)
+					if (!(prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() is IHKFormDataNameAttribute attr))
 					{
 #if DEBUG
 						Console.WriteLine($"Property {prop.Name} of report has no IHKFormDataNameAttribute");
 #endif
 						return false;
 					}
+					if (!attr.IsActuallySent)
+						return false;
 
 					return attr.Name == input.Name || prop.Name == input.Name;
 				});
@@ -599,6 +600,8 @@ namespace BerichtManager.IHKClient
 		/// <param name="doc"><see cref="HtmlDocument"/> to get inputs from</param>
 		private bool TryFillReportContent(Report report, HtmlDocument doc)
 		{
+			if (doc.Forms.Count == 0)
+				return false;
 			List<HtmlElement> inputs = doc.Forms[0]?.AllInputs;
 			if (inputs == null || (inputs != null && inputs.Count == 0))
 				return false;
