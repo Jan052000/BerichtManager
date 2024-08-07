@@ -86,42 +86,40 @@ namespace BerichtManager.ThemeManagement
 				using (Brush editHighlight = new SolidBrush(ReportOpenedColor))
 					e.Graphics.FillRectangle(editHighlight, e.Node.Bounds);
 
-			//When treeview has checkboxes enabled
-			if (e.Node.TreeView.CheckBoxes)
-			{
-				TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.TreeView.Font, new Point(e.Node.Bounds.X, e.Node.Bounds.Y), e.Node.TreeView.ForeColor);
-
-				int iconSize = 18;
-				int boxWidth = 13;
-
-				//Draw check boxes
-				Rectangle checkBoxBounds = new Rectangle(e.Node.Bounds.X - 1 - boxWidth, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - boxWidth / 2, boxWidth, boxWidth);
-				DrawCheckBox(e.Graphics, checkBoxBounds, e.Node.Checked);
-
-				//Draw folder icons
-				Rectangle iconBounds = new Rectangle(checkBoxBounds.X - iconSize - 1, e.Node.Bounds.Y, iconSize, e.Node.Bounds.Height);
-				if (e.Node.Nodes.Count > 0)
-					e.Graphics.DrawImage(e.Node.IsExpanded ? FolderOpenedIcon : FolderClosedIcon, iconBounds);
-				return;
-			}
+			bool drawCheckBoxes = e.Node.TreeView.CheckBoxes;
 
 			TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.TreeView.Font, new Point(e.Node.Bounds.X, e.Node.Bounds.Y), e.Node.TreeView.ForeColor);
-			DrawDottedLine(e);
+			int iconSize = 18;
+			int boxWidth = 13;
+
+			Rectangle iconBounds;
+			Rectangle? checkBoxBounds = null;
+
+			if (drawCheckBoxes)
+			{
+				checkBoxBounds = new Rectangle(e.Node.Bounds.X - 1 - boxWidth, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - boxWidth / 2, boxWidth, boxWidth);
+				iconBounds = new Rectangle(checkBoxBounds.Value.X - iconSize - 1, e.Node.Bounds.Y, iconSize, e.Node.Bounds.Height);
+				DrawCheckBox(e.Graphics, checkBoxBounds.Value, e.Node.Checked);
+			}
+			else
+			{
+				if (e.Node.Parent == null)
+					iconBounds = new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height);
+				else
+					iconBounds = new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height);
+			}
+
+			if (e.Node.TreeView.ShowLines)
+				DrawDottedLine(e, iconBounds, checkBoxBounds);
 			if (e.Node.Nodes.Count > 0)
 			{
 				if (e.Node.IsExpanded)
 				{
-					if (e.Node.Parent != null)
-						e.Graphics.DrawImage(FolderOpenedIcon, new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
-					else
-						e.Graphics.DrawImage(FolderOpenedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
+					e.Graphics.DrawImage(FolderOpenedIcon, iconBounds);
 				}
 				else
 				{
-					if (e.Node.Parent != null)
-						e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
-					else
-						e.Graphics.DrawImage(FolderClosedIcon, new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height));
+					e.Graphics.DrawImage(FolderClosedIcon, iconBounds);
 				}
 			}
 
@@ -167,14 +165,14 @@ namespace BerichtManager.ThemeManagement
 		/// Draws dotted lines between nodes
 		/// </summary>
 		/// <param name="e">Event that is passed down when drawing nodes</param>
-		private void DrawDottedLine(DrawTreeNodeEventArgs e)
+		private void DrawDottedLine(DrawTreeNodeEventArgs e, Rectangle? iconBounds = null, Rectangle? checkBoxBounds = null)
 		{
 			if (e.Node.Parent != null)
 			{
 				using (Pen dottedLines = new Pen(DottedLinesColor))
 				{
 					dottedLines.DashStyle = DashStyle.Dot;
-					int lineOffset = 7;
+					int lineOffset = e.Node.TreeView.CheckBoxes && iconBounds.HasValue ? -(e.Node.Parent.Bounds.X - (iconBounds.Value.X + iconBounds.Value.Width / 2)) : 7;
 					Point verticalLineStart = new Point(e.Node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y);
 					Point verticalLineEndHalf = new Point(e.Node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y + e.Node.Bounds.Height / 2);
 					Point verticalLineEndFull = new Point(e.Node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y + e.Node.Bounds.Height);
@@ -186,7 +184,10 @@ namespace BerichtManager.ThemeManagement
 						else
 							e.Graphics.DrawLine(dottedLines, verticalLineStart, verticalLineEndFull);
 						//horizontal line from line to parent
-						e.Graphics.DrawLine(dottedLines, verticalLineEndHalf, new Point(e.Node.Bounds.X, e.Node.Bounds.Y + e.Node.Bounds.Height / 2));
+						if (checkBoxBounds.HasValue)
+							e.Graphics.DrawLine(dottedLines, verticalLineEndHalf, new Point(checkBoxBounds.Value.X, e.Node.Bounds.Y + e.Node.Bounds.Height / 2));
+						else
+							e.Graphics.DrawLine(dottedLines, verticalLineEndHalf, new Point(e.Node.Bounds.X, e.Node.Bounds.Y + e.Node.Bounds.Height / 2));
 					}
 
 					//lines from root
@@ -211,11 +212,14 @@ namespace BerichtManager.ThemeManagement
 		{
 			using (Brush backColor = new SolidBrush(CheckBoxBackColor))
 				graphics.FillRectangle(backColor, bounds);
-			using (Pen outline = new Pen(CheckBoxOutlineColor, 1))
+			int checkBoxBorderWidth = 2;
+			float checkWidth = 1.5f;
+
+			using (Pen outline = new Pen(CheckBoxOutlineColor, checkBoxBorderWidth))
 				graphics.DrawRectangle(outline, bounds);
 			if (isChecked)
 			{
-				using (Pen check = new Pen(CheckColor, 1.5f))
+				using (Pen check = new Pen(CheckColor, checkWidth))
 				{
 					graphics.DrawLine(check, new Point(bounds.X + 2, bounds.Y + 7), new Point(bounds.X + 4, bounds.Y + 9));
 					graphics.DrawLine(check, new Point(bounds.X + 5, bounds.Y + 9), new Point(bounds.X + 5 + 5, bounds.Y + 9 - 5));
