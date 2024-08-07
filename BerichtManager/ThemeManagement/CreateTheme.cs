@@ -39,6 +39,7 @@ namespace BerichtManager.ThemeManagement
 			ColorDialog colorDialog = new ColorDialog();
 			if (colorDialog.ShowDialog() == DialogResult.OK)
 				((TextBox)sender).Text = ColorTranslator.ToHtml(colorDialog.Color);
+			btClose.Focus();
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
