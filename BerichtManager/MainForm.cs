@@ -2627,7 +2627,7 @@ namespace BerichtManager
 						break;
 					}
 					bool errorFound = false;
-					Word.Document doc = WordApp.Documents.Open(Path.GetFullPath(Path.Combine(ConfigHandler.ReportPath, "..", GetFullNodePath(node))));
+					Word.Document doc = WordApp.Documents.Open(GetFullPath(node));
 
 					if (doc.FormFields.Count < 10)
 					{
