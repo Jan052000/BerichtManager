@@ -599,6 +599,8 @@ namespace BerichtManager.IHKClient
 		/// <param name="doc"><see cref="HtmlDocument"/> to get inputs from</param>
 		private bool TryFillReportContent(Report report, HtmlDocument doc)
 		{
+			if (doc.Forms.Count == 0)
+				return false;
 			List<HtmlElement> inputs = doc.Forms[0]?.AllInputs;
 			if (inputs == null || (inputs != null && inputs.Count == 0))
 				return false;
