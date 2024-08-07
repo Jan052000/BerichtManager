@@ -136,7 +136,6 @@
     <Compile Include="IHKClient\Exceptions\UnknownFieldException.cs" />
     <Compile Include="IHKClient\IHKClient.cs" />
     <Compile Include="IHKClient\IHKFormDataNameAttribute.cs" />
-    <Compile Include="IHKClient\IHKUser.cs" />
     <Compile Include="IHKClient\Exceptions\LfdnrNotANumberException.cs" />
     <Compile Include="IHKClient\Exceptions\LoginException.cs" />
     <Compile Include="IHKClient\Report.cs" />
