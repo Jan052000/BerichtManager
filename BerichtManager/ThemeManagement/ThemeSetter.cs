@@ -94,6 +94,26 @@ namespace BerichtManager.ThemeManagement
 				SetThemes(control1);
 			}
 		}
+
+		/// <summary>
+		/// Sets the theme of <paramref name="toolTip"/>
+		/// </summary>
+		/// <param name="toolTip"><see cref="ToolTip"/> to set theme of</param>
+		public static void SetThemes(ToolTip toolTip)
+		{
+			toolTip.Draw -= ToolTip_Draw;
+			toolTip.BackColor = Theme.BackColor;
+			toolTip.ForeColor = Theme.ForeColor;
+			toolTip.OwnerDraw = true;
+			toolTip.Draw += ToolTip_Draw;
+		}
+
+		private static void ToolTip_Draw(object sender, DrawToolTipEventArgs e)
+		{
+			e.DrawBackground();
+			e.DrawBorder();
+			e.DrawText();
+		}
 	}
 
 	/// <summary>

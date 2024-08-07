@@ -53,6 +53,7 @@ namespace BerichtManager.Forms
 		{
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
+			ThemeSetter.SetThemes(toolTip1);
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = ConfigHandler.UseCustomPrefix;
 			cbShouldUseUntis.Checked = ConfigHandler.UseWebUntis;
@@ -209,6 +210,7 @@ namespace BerichtManager.Forms
 				ConfigHandler.ActiveTheme = coTheme.Text;
 				ITheme activeTheme = ThemeManager.Instance.GetTheme(ThemeName);
 				ThemeSetter.SetThemes(this);
+				ThemeSetter.SetThemes(toolTip1);
 				ActiveThemeChanged?.Invoke(this, activeTheme);
 			}
 			if (ConfigHandler.ReportPath != tbFolder.Text)

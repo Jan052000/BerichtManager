@@ -125,6 +125,7 @@ namespace BerichtManager
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(toRightClickMenu);
+			ThemeSetter.SetThemes(ttTips);
 			NodeDrawer = new CustomNodeDrawer();
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
@@ -1484,6 +1485,7 @@ namespace BerichtManager
 		private void ActiveThemeChanged(object sender, ITheme theme)
 		{
 			ThemeSetter.SetThemes(this);
+			ThemeSetter.SetThemes(ttTips);
 			tvReports.Refresh();
 		}
 

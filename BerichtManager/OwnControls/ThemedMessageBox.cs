@@ -22,6 +22,7 @@ namespace BerichtManager.OwnControls
 			InitializeButtons(buttons);
 			SizeToButtons();
 			ThemeSetter.SetThemes(this);
+			ThemeSetter.SetThemes(toolTip1);
 			this.Text = title;
 			rtbText.Text = text;
 			Message = text;
@@ -234,8 +235,7 @@ namespace BerichtManager.OwnControls
 		private void CopyToClipboard(object sender, EventArgs e)
 		{
 			Clipboard.SetText(Message);
-			ToolTip tt = new ToolTip();
-			tt.Show("Conent copied to clipboard", this, btCopyToClipboard.Location, 1500);
+			toolTip1.Show("Conent copied to clipboard", this, btCopyToClipboard.Location, 1500);
 		}
 	}
 }

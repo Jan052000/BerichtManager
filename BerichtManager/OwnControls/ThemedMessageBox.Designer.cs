@@ -28,12 +28,14 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.paText = new System.Windows.Forms.Panel();
 			this.rtbText = new System.Windows.Forms.RichTextBox();
 			this.btYes = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btNo = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btCancel = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btCopyToClipboard = new System.Windows.Forms.Button();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.paText.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -112,7 +114,7 @@
 			this.Controls.Add(this.paText);
 			this.Controls.Add(this.btNo);
 			this.Controls.Add(this.btCancel);
-			this.MinimumSize = new System.Drawing.Size(99, 0);
+			this.MinimumSize = new System.Drawing.Size(99, 39);
 			this.Name = "ThemedMessageBox";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "ColoredMessageBox";
@@ -129,5 +131,6 @@
 		private FocusColoredFlatButton btNo;
 		private FocusColoredFlatButton btYes;
 		private System.Windows.Forms.Button btCopyToClipboard;
+		private System.Windows.Forms.ToolTip toolTip1;
 	}
 }
