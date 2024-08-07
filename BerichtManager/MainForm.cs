@@ -1029,7 +1029,8 @@ namespace BerichtManager
 					}
 				}
 			}
-
+			if (path != tvReports.Nodes[0].Text && result == tvReports.Nodes[0])
+				return null;
 			return result;
 		}
 
