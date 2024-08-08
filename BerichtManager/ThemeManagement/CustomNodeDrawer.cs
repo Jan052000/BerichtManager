@@ -1,4 +1,4 @@
-﻿using BerichtManager.UploadChecking;
+using BerichtManager.UploadChecking;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -126,7 +126,7 @@ namespace BerichtManager.ThemeManagement
 			if (drawUploadStatus && e.Node is ReportNode report && report.UploadStatus != ReportNode.UploadStatuses.None)
 			{
 				//Offset of node left + right
-				int nodeOffset = 6;
+				int nodeOffset = 3;
 				//Default color is invisible white
 				Color? statusColor = Color.FromArgb(0, Color.White);
 				switch (report.UploadStatus)
@@ -144,7 +144,7 @@ namespace BerichtManager.ThemeManagement
 						statusColor = Theme.ReportRejectedColor;
 						break;
 				}
-				Rectangle ellipseRect = new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - nodeOffset - 1, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);//new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 4 + nodeOffset / 2, e.Node.Bounds.Y - e.Node.Bounds.Height - 2 + nodeOffset / 2, e.Node.Bounds.Height - nodeOffset, e.Node.Bounds.Height - nodeOffset);
+				Rectangle ellipseRect = new Rectangle(iconBounds.X + 3, iconBounds.Y + 3, iconBounds.Width - 2 * nodeOffset, iconBounds.Height - 2 * nodeOffset);
 				using (Pen outline = new Pen((Color)statusColor))
 					e.Graphics.DrawEllipse(outline, ellipseRect);
 				using (SolidBrush upload = new SolidBrush((Color)statusColor))
