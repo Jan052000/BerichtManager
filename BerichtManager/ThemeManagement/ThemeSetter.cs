@@ -122,7 +122,7 @@ namespace BerichtManager.ThemeManagement
 	internal class ThemeColorTable : ProfessionalColorTable
 	{
 		private ITheme Theme { get; }
-		public ThemeColorTable(ITheme theme)
+		public ThemeColorTable(ITheme theme) : base()
 		{
 			this.Theme = theme;
 		}
