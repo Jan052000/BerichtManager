@@ -112,7 +112,7 @@ namespace BerichtManager.ThemeManagement
 		{
 			e.DrawBackground();
 			e.DrawBorder();
-			e.DrawText();
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, e.AssociatedControl.ForeColor);
 		}
 	}
 
