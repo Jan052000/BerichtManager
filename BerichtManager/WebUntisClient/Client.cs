@@ -420,7 +420,7 @@ namespace BerichtManager.WebUntisClient
 			if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
 
 			Holidays holidays = GetHolidays();
-			if (holidays.result == null)
+			if (holidays == null || holidays.result == null)
 				return "";
 
 			holidays.result.ForEach((holiday) =>
