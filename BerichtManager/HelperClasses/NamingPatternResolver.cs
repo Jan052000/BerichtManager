@@ -96,6 +96,11 @@ namespace BerichtManager.HelperClasses
 			return new ResolvedValues(reportNumber, calendarWeek);
 		}
 
+		/// <summary>
+		/// Checks wether or not <paramref name="pattern"/> contains a replacable value
+		/// </summary>
+		/// <param name="pattern">Pattern to check</param>
+		/// <returns><see langword="true"/> if <paramref name="pattern"/> contains a replacable value and <see langword="false"/> otherwise</returns>
 		public static bool PatternContainsValues(string pattern)
 		{
 			return pattern.IndexOf(CalendarWeek) > 0 || pattern.IndexOf(ReportNumber) > 0;
