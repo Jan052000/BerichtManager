@@ -648,21 +648,21 @@ namespace BerichtManager
 						}
 						CreateDocument(templatePath, baseDate, WordApp, vacation: vacation, reportDifference: reportDifference, isSingle: isSingle);
 						break;
-					case -2146822750:
-						//Document already fit on page
-						try
-						{
-							ldoc.Close(SaveChanges: true);
-						}
-						catch
-						{
+					//case -2146822750:
+					//	//Document already fit on page
+					//	try
+					//	{
+					//		ldoc.Close(SaveChanges: true);
+					//	}
+					//	catch
+					//	{
 
-						}
-						break;
+					//	}
+					//	break;
 					case -2146233088:
 						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
-						//Default file format in word is not compatible with .docx
+					//Default file format in word is not compatible with .docx
 					case -2146821994:
 						ThemedMessageBox.Show(text: "Please change default document format in your Word app under File>Options>Save>DefaultFileFormat, then try again.", title: "Please change Word settingd");
 						break;
@@ -994,12 +994,12 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
-					case -2146822750:
-						//Document is only one page long
-						/*doc.Save();
-						doc.Close();
-						doc = null;*/
-						break;
+					//case -2146822750:
+					//Document is only one page long
+					/*doc.Save();
+					doc.Close();
+					doc = null;*/
+					//	break;
 					case -2146233088:
 						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
@@ -1107,12 +1107,12 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
-					case -2146822750:
-						//Document is only one page long
-						/*doc.Save();
-						doc.Close();
-						doc = null;*/
-						break;
+					//case -2146822750:
+					//	//Document is only one page long
+					//	/*doc.Save();
+					//	doc.Close();
+					//	doc = null;*/
+					//	break;
 					case -2146233088:
 						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
@@ -1178,9 +1178,9 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
 						RestartWord();
 						break;
-					case -2146822750:
-						//Document is one page already
-						break;
+					//case -2146822750:
+					//	//Document is one page already
+					//	break;
 					case -2146233088:
 						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
