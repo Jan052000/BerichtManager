@@ -662,6 +662,10 @@ namespace BerichtManager
 					case -2146233088:
 						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
+						//Default file format in word is not compatible with .docx
+					case -2146821994:
+						ThemedMessageBox.Show(text: "Please change default document format in your Word app under File>Options>Save>DefaultFileFormat, then try again.", title: "Please change Word settingd");
+						break;
 					default:
 						Logger.LogError(ex);
 						ThemedMessageBox.Show(text: ex.StackTrace);
