@@ -614,7 +614,7 @@ namespace BerichtManager
 				UpdateTree();
 
 				ConfigHandler.ReportNumber++;
-				ConfigHandler.LastReportWeekOfYear = Culture.Calendar.GetWeekOfYear(today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				ConfigHandler.LastReportWeekOfYear = weekOfYear;
 				ConfigHandler.LastCreated = path;
 				ConfigHandler.SaveConfig();
 				miEditLatest.Enabled = true;
