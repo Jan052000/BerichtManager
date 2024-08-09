@@ -671,6 +671,7 @@ namespace BerichtManager
 					//Default file format in word is not compatible with .docx
 					case -2146821994:
 						ThemedMessageBox.Show(text: "Please change default document format in your Word app under File>Options>Save>DefaultFileFormat, then try again.", title: "Please change Word settingd");
+						ldoc.Close(SaveChanges: false);
 						break;
 					default:
 						Logger.LogError(ex);
