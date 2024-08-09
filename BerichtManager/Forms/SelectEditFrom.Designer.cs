@@ -209,7 +209,7 @@
 		private System.Windows.Forms.CheckBox cbEditSchool;
 		private System.Windows.Forms.CheckBox cbEditSignY;
 		private System.Windows.Forms.CheckBox cbEditSign;
-		private System.Windows.Forms.Button btConfirm;
+		private OwnControls.FocusColoredFlatButton btConfirm;
 		private System.Windows.Forms.Label laInstructions;
 	}
 }

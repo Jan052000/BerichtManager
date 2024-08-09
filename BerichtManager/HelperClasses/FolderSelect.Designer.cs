@@ -28,8 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.btClose = new System.Windows.Forms.Button();
-			this.btConfirm = new System.Windows.Forms.Button();
+			this.btClose = new OwnControls.FocusColoredFlatButton();
+			this.btConfirm = new OwnControls.FocusColoredFlatButton();
 			this.tvFolders = new System.Windows.Forms.TreeView();
 			this.SuspendLayout();
 			// 
@@ -85,8 +85,8 @@
 
 		#endregion
 
-		private System.Windows.Forms.Button btClose;
-		private System.Windows.Forms.Button btConfirm;
+		private OwnControls.FocusColoredFlatButton btClose;
+		private OwnControls.FocusColoredFlatButton btConfirm;
 		private System.Windows.Forms.TreeView tvFolders;
 	}
 }

@@ -34,7 +34,7 @@
 			this.btYes = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btNo = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btCancel = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.btCopyToClipboard = new System.Windows.Forms.Button();
+			this.btCopyToClipboard = new OwnControls.FocusColoredFlatButton();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.paText.SuspendLayout();
 			this.SuspendLayout();
@@ -130,7 +130,7 @@
 		private FocusColoredFlatButton btCancel;
 		private FocusColoredFlatButton btNo;
 		private FocusColoredFlatButton btYes;
-		private System.Windows.Forms.Button btCopyToClipboard;
+		private OwnControls.FocusColoredFlatButton btCopyToClipboard;
 		private System.Windows.Forms.ToolTip toolTip1;
 	}
 }

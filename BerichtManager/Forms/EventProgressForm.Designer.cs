@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.btStop = new System.Windows.Forms.Button();
+			this.btStop = new OwnControls.FocusColoredFlatButton();
 			this.paEvents = new System.Windows.Forms.Panel();
 			this.rtbEvents = new System.Windows.Forms.RichTextBox();
 			this.rtbStatus = new System.Windows.Forms.RichTextBox();
@@ -96,7 +96,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.Button btStop;
+		private OwnControls.FocusColoredFlatButton btStop;
 		private System.Windows.Forms.Panel paEvents;
 		private System.Windows.Forms.RichTextBox rtbEvents;
 		private System.Windows.Forms.RichTextBox rtbStatus;

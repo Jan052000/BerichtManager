@@ -171,14 +171,14 @@
 
 		#endregion
 
-		private System.Windows.Forms.Button btClose;
-		private System.Windows.Forms.Button btConfirm;
+		private OwnControls.FocusColoredFlatButton btClose;
+		private OwnControls.FocusColoredFlatButton btConfirm;
 		private System.Windows.Forms.RichTextBox rtInput;
-		private System.Windows.Forms.Button btQuit;
+		private OwnControls.FocusColoredFlatButton btQuit;
 		private System.Windows.Forms.NumericUpDown nudFontSize;
 		private OwnControls.ColoredComboBox cbFontFamily;
 		private System.Windows.Forms.CheckBox cbEditorFont;
-		private System.Windows.Forms.Button btSaveAndQuit;
+		private OwnControls.FocusColoredFlatButton btSaveAndQuit;
 		private System.Windows.Forms.ToolTip ttTips;
 	}
 }
