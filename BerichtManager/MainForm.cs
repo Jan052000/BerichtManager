@@ -1505,12 +1505,28 @@ namespace BerichtManager
 			{
 				SaveFromTb();
 			}
+			if (e.Control && e.Shift && e.KeyCode == Keys.V)
+				PasteOnlyText(sender, e);
+		}
+
+		/// <summary>
+		/// Strips the formatting from text in <see cref="Clipboard"/> and pastes it into <paramref name="sender"/>
+		/// </summary>
+		/// <param name="sender"><see cref="RichTextBox"/> to paste <see cref="Clipboard"/> content to</param>
+		/// <param name="e"><see cref="KeyEventArgs"/> of KeyDown event</param>
+		private void PasteOnlyText(object sender, KeyEventArgs e)
+		{
+			if (!(sender is RichTextBox rtb))
+				return;
+			e.SuppressKeyPress = true;
+			rtb.Paste(DataFormats.GetFormat(DataFormats.Text));
 		}
 
 		private void EditRichTextBox(object sender, EventArgs e)
 		{
 			WasEdited = true;
 		}
+
 
 		private void miWordVisible_Click(object sender, EventArgs e)
 		{
