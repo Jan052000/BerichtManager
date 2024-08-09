@@ -158,12 +158,15 @@ namespace BerichtManager
 			{
 				for (int i = 0; i < splitv1.Length; i++)
 				{
-					if (splitv1[i] != splitv2[i])
+					if (splitv1[i] == splitv2[i])
+						continue;
+					if (int.TryParse(splitv1[i], out int v1) && int.TryParse(splitv2[i], out int v2))
 					{
-						if (int.TryParse(splitv1[i], out int v1) && int.TryParse(splitv2[i], out int v2))
-						{
-							return v2 - v1;
-						}
+						return v2 - v1;
+					}
+					else
+					{
+						return splitv2[i].CompareTo(splitv1[i]);
 					}
 				}
 			}
@@ -171,12 +174,15 @@ namespace BerichtManager
 			{
 				for (int i = 0; i < Math.Min(splitv1.Length, splitv2.Length); i++)
 				{
-					if (splitv1[i] != splitv2[i])
+					if (splitv1[i] == splitv2[i])
+						continue;
+					if (int.TryParse(splitv1[i], out int v1) && int.TryParse(splitv2[i], out int v2))
 					{
-						if (int.TryParse(splitv1[i], out int v1) && int.TryParse(splitv2[i], out int v2))
-						{
-							return v2 - v1;
-						}
+						return v2 - v1;
+					}
+					else
+					{
+						return splitv2[i].CompareTo(splitv1[i]);
 					}
 				}
 				return splitv2.Length - splitv1.Length;
