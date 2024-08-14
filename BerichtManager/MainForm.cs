@@ -1326,7 +1326,7 @@ namespace BerichtManager
 				ThemedMessageBox.Show(text: "You may only delete Word documents (*.docx) or their temporary files");
 				return;
 			}
-			if (ThemedMessageBox.Show(text: "Are you sure you want to delete the selected file?", title: "Delete?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+			if (ThemedMessageBox.Show(text: $"Are you sure you want to {path}?", title: "Delete?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 			if (path == Doc?.Path + "\\" + Doc?.Name)
 			{
