@@ -509,22 +509,15 @@ namespace BerichtManager
 					form.RefreshConfigs += RefreshConfig;
 					form.ShowDialog();
 					form.RefreshConfigs -= RefreshConfig;
-					if (form.DialogResult == DialogResult.OK)
+					switch (form.DialogResult)
 					{
-						FillText(app, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
+						case DialogResult.Abort:
 							ldoc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 							ldoc = null;
 							return;
-						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = "-Keine-";
-						}
+						default:
+							FillText(app, (Word.FormField)enumerator.Current, form.Result);
+							break;
 					}
 				}
 
@@ -539,26 +532,20 @@ namespace BerichtManager
 				}
 				else
 				{
-					form = new EditForm(title: "Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: "-Keine-", isCreate: true);
+					string text = "Keine";
+					form = new EditForm(title: "Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: $"{(ConfigHandler.UseCustomPrefix ? ConfigHandler.CustomPrefix : "-")}{text}", isCreate: true);
 					form.RefreshConfigs += RefreshConfig;
 					form.ShowDialog();
 					form.RefreshConfigs -= RefreshConfig;
-					if (form.DialogResult == DialogResult.OK)
+					switch (form.DialogResult)
 					{
-						FillText(app, (Word.FormField)enumerator.Current, form.Result);
-					}
-					else
-					{
-						if (form.DialogResult == DialogResult.Abort)
-						{
+						case DialogResult.Abort:
 							ldoc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 							ldoc = null;
 							return;
-						}
-						else
-						{
-							((Word.FormField)enumerator.Current).Result = "-Keine-";
-						}
+						default:
+							FillText(app, (Word.FormField)enumerator.Current, form.Result);
+							break;
 					}
 				}
 
@@ -585,22 +572,15 @@ namespace BerichtManager
 				form.RefreshConfigs += RefreshConfig;
 				form.ShowDialog();
 				form.RefreshConfigs -= RefreshConfig;
-				if (form.DialogResult == DialogResult.OK)
+				switch (form.DialogResult)
 				{
-					FillText(app, (Word.FormField)enumerator.Current, form.Result);
-				}
-				else
-				{
-					if (form.DialogResult == DialogResult.Abort)
-					{
+					case DialogResult.Abort:
 						ldoc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 						ldoc = null;
 						return;
-					}
-					else
-					{
-						((Word.FormField)enumerator.Current).Result = "-Keine-";
-					}
+					default:
+						FillText(app, (Word.FormField)enumerator.Current, form.Result);
+						break;
 				}
 
 				//Fridy of week

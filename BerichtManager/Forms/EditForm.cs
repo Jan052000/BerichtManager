@@ -20,6 +20,10 @@ namespace BerichtManager.Forms
 		/// </summary>
 		private ConfigHandler ConfigHandler { get; }
 		/// <summary>
+		/// The default value if string is left empty
+		/// </summary>
+		private string DefaultValue { get; set; }
+		/// <summary>
 		/// Event that is called when config should be reloaded
 		/// </summary>
 		public event TriggerUpdate RefreshConfigs;
@@ -30,11 +34,13 @@ namespace BerichtManager.Forms
 		/// <param name="title">Title displayed in title bar</param>
 		/// <param name="text">Text to b set in input</param>
 		/// <param name="isCreate"><see cref="bool"/> If form is in creation mode which changes button texts, enabled status and tool tips</param>
-		public EditForm(string title = "", string text = "", bool isCreate = false)
+		/// <param name="defaultValue">The default value <see cref="Result"/> should have if Input is left empty</param>
+		public EditForm(string title = "", string text = "", bool isCreate = false, string defaultValue = "")
 		{
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
 			this.Text = title;
+			DefaultValue = defaultValue;
 			List<int> tabstops = new List<int>();
 			if (ConfigHandler.IsInitializing)
 			{
@@ -118,7 +124,7 @@ namespace BerichtManager.Forms
 		{
 			if (string.IsNullOrEmpty(rtInput.Text))
 			{
-				Result = "-Keine-";
+				Result = DefaultValue;
 			}
 			else
 			{
@@ -171,7 +177,7 @@ namespace BerichtManager.Forms
 		{
 			if (string.IsNullOrEmpty(rtInput.Text))
 			{
-				Result = "-Keine-";
+				Result = DefaultValue;
 			}
 			else
 			{
