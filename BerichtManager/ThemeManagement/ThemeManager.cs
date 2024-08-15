@@ -19,15 +19,15 @@ namespace BerichtManager.ThemeManagement
 		/// <summary>
 		/// List of available theme objects
 		/// </summary>
-		public List<ITheme> AvailableThemes = new List<ITheme>() { new DarkMode(), new LightMode() };
+		public List<ITheme> AvailableThemes { get; private set; } = new List<ITheme>() { new DarkMode(), new LightMode() };
 		/// <summary>
 		/// List of available theme names
 		/// </summary>
-		public List<string> ThemeNames = new List<string>() { "Dark Mode", "Light Mode" };
+		public List<string> ThemeNames { get; private set; } = new List<string>() { "Dark Mode", "Light Mode" };
 		/// <summary>
 		/// Path to themes folder
 		/// </summary>
-		private readonly string themesFolderPath = Path.GetFullPath(".\\Config\\Themes");
+		private string ThemesFolderPath { get => Path.GetFullPath(".\\Config\\Themes"); }
 		/// <summary>
 		/// Event that is called when the themes list has been updated
 		/// </summary>
@@ -69,8 +69,8 @@ namespace BerichtManager.ThemeManagement
 
 		private ThemeManager()
 		{
-			if (!Directory.Exists(themesFolderPath))
-				Directory.CreateDirectory(themesFolderPath);
+			if (!Directory.Exists(ThemesFolderPath))
+				Directory.CreateDirectory(ThemesFolderPath);
 			AvailableThemes.AddRange(GetThemes());
 		}
 
@@ -81,7 +81,7 @@ namespace BerichtManager.ThemeManagement
 		private List<ITheme> GetThemes()
 		{
 			List<ITheme> themes = new List<ITheme>();
-			Directory.GetFiles(themesFolderPath).ToList().ForEach(file =>
+			Directory.GetFiles(ThemesFolderPath).ToList().ForEach(file =>
 			{
 				try
 				{
@@ -128,13 +128,13 @@ namespace BerichtManager.ThemeManagement
 		public SaveStatusCodes SaveTheme(ITheme theme)
 		{
 			SaveStatusCodes returnCode = SaveStatusCodes.Success;
-			if (File.Exists(themesFolderPath + theme.Name + ".bmtheme") || ThemeNames.Contains(theme.Name))
+			if (File.Exists(ThemesFolderPath + theme.Name + ".bmtheme") || ThemeNames.Contains(theme.Name))
 			{
-				if (ThemedMessageBox.Show(text: "Overwrite existing file: " + themesFolderPath + theme.Name + ".bmtheme ?", title: "Overwrite file?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+				if (ThemedMessageBox.Show(text: "Overwrite existing file: " + ThemesFolderPath + theme.Name + ".bmtheme ?", title: "Overwrite file?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 					return SaveStatusCodes.OverwriteDeclined;
 			}
 			else returnCode = SaveStatusCodes.NewThemeCreated;
-			File.WriteAllText(themesFolderPath + "\\" + theme.Name + ".bmtheme", JsonConvert.SerializeObject(theme, Formatting.Indented));
+			File.WriteAllText(ThemesFolderPath + "\\" + theme.Name + ".bmtheme", JsonConvert.SerializeObject(theme, Formatting.Indented));
 			UpdateThemesList();
 			return returnCode;
 		}
