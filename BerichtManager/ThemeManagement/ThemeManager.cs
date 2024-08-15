@@ -115,13 +115,14 @@ namespace BerichtManager.ThemeManagement
 		public SaveStatusCodes SaveTheme(ITheme theme)
 		{
 			SaveStatusCodes returnCode = SaveStatusCodes.Success;
-			if (File.Exists(ThemesFolderPath + theme.Name + ".bmtheme") || Themes.ContainsKey(theme.Name))
+			string themePath = Path.Combine(ThemesFolderPath, theme.Name + ".bmtheme");
+			if (File.Exists(themePath) || Themes.ContainsKey(theme.Name))
 			{
 				if (ThemedMessageBox.Show(text: "Overwrite existing file: " + ThemesFolderPath + theme.Name + ".bmtheme ?", title: "Overwrite file?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 					return SaveStatusCodes.OverwriteDeclined;
 			}
 			else returnCode = SaveStatusCodes.NewThemeCreated;
-			File.WriteAllText(ThemesFolderPath + "\\" + theme.Name + ".bmtheme", JsonConvert.SerializeObject(theme, Formatting.Indented));
+			File.WriteAllText(themePath, JsonConvert.SerializeObject(theme, Formatting.Indented));
 
 			if (Themes.ContainsKey(theme.Name))
 			{
