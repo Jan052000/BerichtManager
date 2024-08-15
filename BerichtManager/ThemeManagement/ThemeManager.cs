@@ -7,6 +7,7 @@ using System.Linq;
 using System.Drawing;
 using BerichtManager.OwnControls;
 using System.ComponentModel;
+using BerichtManager.Config;
 
 namespace BerichtManager.ThemeManagement
 {
@@ -42,7 +43,9 @@ namespace BerichtManager.ThemeManagement
 		{
 			get
 			{
-				ITheme activeTheme = Singleton.GetTheme(Config.ConfigHandler.Instance.ActiveTheme);
+				if (ConfigHandler.IsInitializing)
+					return new DarkMode();
+				ITheme activeTheme = Singleton.GetTheme(ConfigHandler.Instance.ActiveTheme);
 				if (activeTheme == null) activeTheme = new DarkMode();
 				return activeTheme;
 			}

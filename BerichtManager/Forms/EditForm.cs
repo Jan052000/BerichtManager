@@ -20,10 +20,6 @@ namespace BerichtManager.Forms
 		/// </summary>
 		private ConfigHandler ConfigHandler { get; }
 		/// <summary>
-		/// Stops calls to ConfigHandler being made
-		/// </summary>
-		private bool StopConfigCalls { get; set; }
-		/// <summary>
 		/// Event that is called when config should be reloaded
 		/// </summary>
 		public event TriggerUpdate RefreshConfigs;
@@ -34,15 +30,13 @@ namespace BerichtManager.Forms
 		/// <param name="title">Title displayed in title bar</param>
 		/// <param name="text">Text to b set in input</param>
 		/// <param name="isCreate"><see cref="bool"/> If form is in creation mode which changes button texts, enabled status and tool tips</param>
-		/// <param name="stopConfigCalls">If <see cref="EditForm"/> is called while completing config no calls to <see cref="ConfigHandler"/> are made</param>
-		public EditForm(string title = "", string text = "", bool isCreate = false, bool stopConfigCalls = false)
+		public EditForm(string title = "", string text = "", bool isCreate = false)
 		{
 			InitializeComponent();
-			if (!stopConfigCalls) ConfigHandler = ConfigHandler.Instance;
 			ThemeSetter.SetThemes(this);
 			this.Text = title;
 			List<int> tabstops = new List<int>();
-			if (stopConfigCalls)
+			if (ConfigHandler.IsInitializing)
 			{
 				nudFontSize.Value = (decimal)8.25f;
 				cbFontFamily.Text = "Arial";
@@ -53,6 +47,7 @@ namespace BerichtManager.Forms
 			}
 			else
 			{
+				ConfigHandler = ConfigHandler.Instance;
 				nudFontSize.Value = (decimal)ConfigHandler.EditorFontSize;
 				cbFontFamily.Text = ConfigHandler.EditorFont;
 				rtInput.Font = new Font(ConfigHandler.EditorFont, (float)nudFontSize.Value);
@@ -85,8 +80,6 @@ namespace BerichtManager.Forms
 		{
 			if (ConfigHandler == null)
 				return;
-			if (StopConfigCalls)
-				return;
 			if (((float)nudFontSize.Value) != ConfigHandler.EditorFontSize)
 			{
 				if (ThemedMessageBox.Show(text: "Do you want to save the font size of the editor?", title: "Save font size", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -104,8 +97,6 @@ namespace BerichtManager.Forms
 		private void ChangeFont()
 		{
 			if (ConfigHandler == null)
-				return;
-			if (StopConfigCalls)
 				return;
 			if (rtInput.Font.FontFamily.Name != ConfigHandler.EditorFont)
 			{

@@ -31,6 +31,11 @@ namespace BerichtManager.Config
 		/// Internal object to reduce number of IO calls
 		/// </summary>
 		private JObject ConfigObject { get; set; }
+		/// <summary>
+		/// Dlag to show that <see cref="Instance"/> is still being created.<br/>
+		/// Use to prevent <see cref="StackOverflowException"/>s
+		/// </summary>
+		public static bool IsInitializing { get; private set; } = true;
 
 		#region Singleton
 		private static ConfigHandler Singleton;
@@ -433,7 +438,7 @@ namespace BerichtManager.Config
 							ConfigObject.Add("TemplatePath", dialog.FileName);
 							break;
 						case "ReportNR":
-							EditForm reportNumberForm = new EditForm(title: "Edit Number of Report", text: "1", stopConfigCalls: true);
+							EditForm reportNumberForm = new EditForm(title: "Edit Number of Report", text: "1");
 							if (reportNumberForm.ShowDialog() == DialogResult.OK)
 							{
 								if (int.TryParse(reportNumberForm.Result, out int value))
@@ -448,7 +453,7 @@ namespace BerichtManager.Config
 								ConfigObject.Add(new JProperty("ReportNR", 1));
 							break;
 						case "Name":
-							EditForm nameForm = new EditForm(title: "Enter your name", text: "Name Vorname", stopConfigCalls: true);
+							EditForm nameForm = new EditForm(title: "Enter your name", text: "Name Vorname");
 							if (nameForm.ShowDialog() == DialogResult.OK)
 								ConfigObject.Add(new JProperty("Name", nameForm.Result));
 							else
@@ -474,6 +479,7 @@ namespace BerichtManager.Config
 
 				File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
 			}
+			IsInitializing = false;
 		}
 
 		/// <summary>
