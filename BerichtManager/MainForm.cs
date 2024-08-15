@@ -1549,8 +1549,13 @@ namespace BerichtManager
 					Doc.Close(SaveChanges: false);
 					Doc = null;
 				}
-				if (CheckIfWordRunning())
-					WordApp.Quit();
+				try
+				{
+					WordApp?.Quit(SaveChanges: false);
+				}
+				catch { }
+				if (WordApp != null)
+					System.Runtime.InteropServices.Marshal.FinalReleaseComObject(WordApp);
 			}
 			catch (Exception ex)
 			{
