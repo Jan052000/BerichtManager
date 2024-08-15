@@ -63,7 +63,7 @@ namespace BerichtManager.Forms
 			tbSchool.Text = ConfigHandler.SchoolName;
 			cbLegacyEdit.Checked = ConfigHandler.UseLegacyEdit;
 
-			ThemeManager.Instance.ThemeNames.ForEach(name => coTheme.Items.Add(name));
+			UpdateThemesList();
 			int selectedIndex = coTheme.Items.IndexOf(ConfigHandler.ActiveTheme);
 			coTheme.SelectedIndex = selectedIndex;
 			ThemeManager.Instance.UpdatedThemesList += UpdateThemesList;
@@ -300,9 +300,10 @@ namespace BerichtManager.Forms
 
 		private void btCreateTheme_Click(object sender, EventArgs e)
 		{
-			if (new CreateTheme().ShowDialog() != DialogResult.OK) return;
-			coTheme.Items.Clear();
-			ThemeManager.Instance.ThemeNames.ForEach(name => coTheme.Items.Add(name));
+			CreateTheme create = new CreateTheme();
+			if (create.ShowDialog() != DialogResult.OK)
+				return;
+			UpdateThemesList();
 		}
 
 		private void btEditTheme_Click(object sender, EventArgs e)
@@ -343,7 +344,7 @@ namespace BerichtManager.Forms
 		private void UpdateThemesList()
 		{
 			coTheme.Items.Clear();
-			coTheme.Items.AddRange(ThemeManager.Instance.ThemeNames.ToArray());
+			coTheme.Items.AddRange(ThemeManager.GetThemeNames().ToArray());
 		}
 
 		private void OptionMenu_FormClosing(object sender, FormClosingEventArgs e)

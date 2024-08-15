@@ -17,13 +17,13 @@ namespace BerichtManager.ThemeManagement
 	public class ThemeManager
 	{
 		/// <summary>
-		/// List of available theme objects
+		/// <see cref="Dictionary{TKey, TValue}"/> containing a collection of <see cref="ITheme"/>s as values and their names as keys
 		/// </summary>
-		public List<ITheme> AvailableThemes { get; private set; } = new List<ITheme>() { new DarkMode(), new LightMode() };
-		/// <summary>
-		/// List of available theme names
-		/// </summary>
-		public List<string> ThemeNames { get; private set; } = new List<string>() { "Dark Mode", "Light Mode" };
+		private Dictionary<string, ITheme> Themes { get; set; } = new Dictionary<string, ITheme>()
+		{
+			{"Dark Mode", new DarkMode()},
+			{"Light Mode", new LightMode()}
+		};
 		/// <summary>
 		/// Path to themes folder
 		/// </summary>
@@ -71,43 +71,28 @@ namespace BerichtManager.ThemeManagement
 		{
 			if (!Directory.Exists(ThemesFolderPath))
 				Directory.CreateDirectory(ThemesFolderPath);
-			AvailableThemes.AddRange(GetThemes());
+			Load();
 		}
 
 		/// <summary>
 		/// Loads themes from file
 		/// </summary>
 		/// <returns>List of themes</returns>
-		private List<ITheme> GetThemes()
+		private void Load()
 		{
-			List<ITheme> themes = new List<ITheme>();
 			Directory.GetFiles(ThemesFolderPath).ToList().ForEach(file =>
 			{
 				try
 				{
 					ITheme theme = JsonConvert.DeserializeObject<ThemeSerialization>(File.ReadAllText(file));
-					if (ThemeNames.Contains(theme.Name))
-						return;
-					AvailableThemes.Add(theme);
-					ThemeNames.Add(theme.Name);
+					if (!Themes.ContainsKey(theme.Name))
+						Themes.Add(theme.Name, theme);
 				}
 				catch
 				{
 					ThemedMessageBox.Show(text: "Unable to load " + file + "!", title: "Errow while loading theme");
 				}
 			});
-			return themes;
-		}
-
-		/// <summary>
-		/// Updates themes list from folder
-		/// </summary>
-		private void UpdateThemesList()
-		{
-			ThemeNames = new List<string>() { "Dark Mode", "Light Mode" };
-			AvailableThemes = new List<ITheme>() { new DarkMode(), new LightMode() };
-			AvailableThemes.AddRange(GetThemes());
-			UpdatedThemesList?.Invoke();
 		}
 
 		/// <summary>
@@ -117,7 +102,9 @@ namespace BerichtManager.ThemeManagement
 		/// <returns>Theme or <see langword="null"/> if not found</returns>
 		public ITheme GetTheme(string name)
 		{
-			return AvailableThemes.Find(theme => theme.Name == name);
+			if (!Themes.ContainsKey(name))
+				return null;
+			return Themes[name];
 		}
 
 		/// <summary>
@@ -128,15 +115,34 @@ namespace BerichtManager.ThemeManagement
 		public SaveStatusCodes SaveTheme(ITheme theme)
 		{
 			SaveStatusCodes returnCode = SaveStatusCodes.Success;
-			if (File.Exists(ThemesFolderPath + theme.Name + ".bmtheme") || ThemeNames.Contains(theme.Name))
+			if (File.Exists(ThemesFolderPath + theme.Name + ".bmtheme") || Themes.ContainsKey(theme.Name))
 			{
 				if (ThemedMessageBox.Show(text: "Overwrite existing file: " + ThemesFolderPath + theme.Name + ".bmtheme ?", title: "Overwrite file?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 					return SaveStatusCodes.OverwriteDeclined;
 			}
 			else returnCode = SaveStatusCodes.NewThemeCreated;
 			File.WriteAllText(ThemesFolderPath + "\\" + theme.Name + ".bmtheme", JsonConvert.SerializeObject(theme, Formatting.Indented));
-			UpdateThemesList();
+
+			if (Themes.ContainsKey(theme.Name))
+			{
+				Themes[theme.Name] = theme;
+			}
+			else
+			{
+				Themes.Add(theme.Name, theme);
+			}
+			UpdatedThemesList?.Invoke();
+
 			return returnCode;
+		}
+
+		/// <summary>
+		/// Gets the names of available <see cref="ITheme"/>s
+		/// </summary>
+		/// <returns><see cref="List{T}"/> of <see cref="ITheme"/> names</returns>
+		public static List<string> GetThemeNames()
+		{
+			return Instance.Themes.Keys.ToList();
 		}
 	}
 
