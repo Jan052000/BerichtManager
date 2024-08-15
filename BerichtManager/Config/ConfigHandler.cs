@@ -49,7 +49,7 @@ namespace BerichtManager.Config
 		/// <summary>
 		/// Holds all values for config with the keys as key and the type and default value as values
 		/// </summary>
-		Dictionary<string, (Type Type, object DefaultValue)> Config { get; } = new Dictionary<string, (Type, object)>()
+		private Dictionary<string, (Type Type, object DefaultValue)> Config { get; } = new Dictionary<string, (Type, object)>()
 		{
 			{"TemplatePath", (Type.GetType("System.String"), "")},
 			{"ReportNR", (Type.GetType("System.Int32"), 1)},
@@ -419,45 +419,44 @@ namespace BerichtManager.Config
 				}
 				foreach (KeyValuePair<string, (Type Type, object DefaultValue)> kvp in Config)
 				{
-					if (!ConfigObject.ContainsKey(kvp.Key))
+					if (ConfigObject.ContainsKey(kvp.Key))
+						continue;
+					isComplete = false;
+					switch (kvp.Key)
 					{
-						isComplete = false;
-						switch (kvp.Key)
-						{
-							case "TemplatePath":
-								OpenFileDialog dialog = new OpenFileDialog();
-								dialog.Filter = "Word Templates (*.dotx)|*.dotx";
-								ThemedMessageBox.Show(text: "Please select a word template to use", title: "Select a template");
-								if (dialog.ShowDialog() == DialogResult.OK)
-									ThemedMessageBox.Show(text: "Template selected: " + dialog.FileName, title: "Info");
-								ConfigObject.Add("TemplatePath", dialog.FileName);
-								break;
-							case "ReportNR":
-								EditForm reportNumberForm = new EditForm(title: "Edit Number of Report", text: "1", stopConfigCalls: true);
-								if (reportNumberForm.ShowDialog() == DialogResult.OK)
+						case "TemplatePath":
+							OpenFileDialog dialog = new OpenFileDialog();
+							dialog.Filter = "Word Templates (*.dotx)|*.dotx";
+							ThemedMessageBox.Show(text: "Please select a word template to use", title: "Select a template");
+							if (dialog.ShowDialog() == DialogResult.OK)
+								ThemedMessageBox.Show(text: "Template selected: " + dialog.FileName, title: "Info");
+							ConfigObject.Add("TemplatePath", dialog.FileName);
+							break;
+						case "ReportNR":
+							EditForm reportNumberForm = new EditForm(title: "Edit Number of Report", text: "1", stopConfigCalls: true);
+							if (reportNumberForm.ShowDialog() == DialogResult.OK)
+							{
+								if (int.TryParse(reportNumberForm.Result, out int value))
+									ConfigObject.Add(new JProperty("ReportNR", value));
+								else
 								{
-									if (int.TryParse(reportNumberForm.Result, out int value))
-										ConfigObject.Add(new JProperty("ReportNR", value));
-									else
-									{
-										ThemedMessageBox.Show(text: "Invalid number, defaulting to 1! (This can be changed later in options menu)", title: "Invalid number!");
-										ConfigObject.Add(new JProperty("ReportNR", 1));
-									}
-								}
-								else
+									ThemedMessageBox.Show(text: "Invalid number, defaulting to 1! (This can be changed later in options menu)", title: "Invalid number!");
 									ConfigObject.Add(new JProperty("ReportNR", 1));
-								break;
-							case "Name":
-								EditForm nameForm = new EditForm(title: "Enter your name", text: "Name Vorname", stopConfigCalls: true);
-								if (nameForm.ShowDialog() == DialogResult.OK)
-									ConfigObject.Add(new JProperty("Name", nameForm.Result));
-								else
-									ConfigObject.Add(new JProperty("Name", ""));
-								break;
-							default:
-								ConfigObject.Add(new JProperty(kvp.Key, Convert.ChangeType(kvp.Value.DefaultValue, kvp.Value.Type)));
-								break;
-						}
+								}
+							}
+							else
+								ConfigObject.Add(new JProperty("ReportNR", 1));
+							break;
+						case "Name":
+							EditForm nameForm = new EditForm(title: "Enter your name", text: "Name Vorname", stopConfigCalls: true);
+							if (nameForm.ShowDialog() == DialogResult.OK)
+								ConfigObject.Add(new JProperty("Name", nameForm.Result));
+							else
+								ConfigObject.Add(new JProperty("Name", ""));
+							break;
+						default:
+							ConfigObject.Add(new JProperty(kvp.Key, Convert.ChangeType(kvp.Value.DefaultValue, kvp.Value.Type)));
+							break;
 					}
 				}
 			}
