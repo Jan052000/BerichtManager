@@ -50,42 +50,5 @@ namespace BerichtManager.HelperClasses
 			}
 			return result;
 		}
-
-		/// <summary>
-		/// Fills a WordInterop TextField with text
-		/// </summary>
-		/// <param name="app">The Word Application containing the documents with FormFields to fill</param>
-		/// <param name="field">The FormField to fill with Text</param>
-		/// <param name="text">The Text to Fill</param>
-		public static void FillFormField(Word.Application app, Word.FormField field, string text)
-		{
-			if (text == null)
-				return;
-			text = TransformTextToWord(text);
-			field.Select();
-			for (int i = 1; i < 6; i++)
-			{
-				field.Range.Paragraphs.TabStops.Add(i * 14);
-			}
-			app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
-			app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
-			if (text.Length > 254)
-			{
-				field.Result = " ";
-				app.Selection.Text = text.Substring(0, 200);
-				field.Result = field.Result.TrimEnd() + " ";
-				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
-				app.Selection.TypeText(text.Substring(200));
-				//Remove first space before text
-				field.Select();
-				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
-				app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
-				app.Selection.TypeBackspace();
-			}
-			else
-			{
-				field.Result = text;
-			}
-		}
 	}
 }

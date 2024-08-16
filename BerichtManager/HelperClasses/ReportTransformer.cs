@@ -4,6 +4,7 @@ using System;
 using BerichtManager.Config;
 using BerichtManager.IHKClient.Exceptions;
 using System.Globalization;
+using BerichtManager.WordTemplate;
 
 namespace BerichtManager.HelperClasses
 {
@@ -32,40 +33,39 @@ namespace BerichtManager.HelperClasses
 		/// <exception cref="StartDateMismatchException">Thrown if the start dates of report and newly created report do not match</exception>
 		public static void WordToIHK(Word.Document doc, Report report, bool throwMismatchStartDate = false)
 		{
-			if (doc.FormFields.Count < 10)
+			if (!FormFieldHandler.ValidFormFieldCount(doc))
 				throw new InvalidDocumentException();
-			if (throwMismatchStartDate && report.ReportContent.StartDate != doc.FormFields[3].Result)
-				throw new StartDateMismatchException(doc.FormFields[3].Result, report.ReportContent.StartDate);
+			if (throwMismatchStartDate && report.ReportContent.StartDate != doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.StartDate)].Result)
+				throw new StartDateMismatchException(doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.StartDate)].Result, report.ReportContent.StartDate);
 
 			//Dates are auto filled by IHK
-			//report.ReportContent.StartDate = doc.FormFields[3].Result;
-			//report.ReportContent.EndDate = doc.FormFields[4].Result;
+			//report.ReportContent.StartDate = doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.StartDate)].Result;
+			//report.ReportContent.EndDate = doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.EndDate)].Result;
 			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField;
 			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail;
 			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail;
-			report.ReportContent.JobFieldContent = ReportUtils.TransformTextToIHK(doc.FormFields[6].Result);
-			report.ReportContent.SeminarsField = ReportUtils.TransformTextToIHK(doc.FormFields[7].Result);
-			report.ReportContent.SchoolField = ReportUtils.TransformTextToIHK(doc.FormFields[8].Result);
+			report.ReportContent.JobFieldContent = ReportUtils.TransformTextToIHK(doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.Work)].Result);
+			report.ReportContent.SeminarsField = ReportUtils.TransformTextToIHK(doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.Seminars)].Result);
+			report.ReportContent.SchoolField = ReportUtils.TransformTextToIHK(doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.School)].Result);
 		}
 
 		/// <summary>
 		/// Fills <paramref name="doc"/> with values from <paramref name="report"/> using <paramref name="wordApp"/>
 		/// </summary>
-		/// <param name="wordApp"><see cref="Word.Application"/> report is opened in</param>
 		/// <param name="doc"><see cref="Word.Document"/> to fill</param>
 		/// <param name="report"><see cref="Report"/> object containing values for report file</param>
-		public static void IHKToWord(Word.Application wordApp, Word.Document doc, Report report)
+		public static void IHKToWord(Word.Document doc, Report report)
 		{
-			ReportUtils.FillFormField(wordApp, doc.FormFields[1], ReportUtils.TransformTextToWord(ConfigHandler.Instance.ReportUserName));
-			ReportUtils.FillFormField(wordApp, doc.FormFields[2], ReportUtils.TransformTextToWord(report.ReportNr.ToString()));
-			ReportUtils.FillFormField(wordApp, doc.FormFields[3], ReportUtils.TransformTextToWord(report.ReportContent.StartDate));
-			ReportUtils.FillFormField(wordApp, doc.FormFields[4], ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
-			ReportUtils.FillFormField(wordApp, doc.FormFields[5], ReportUtils.TransformTextToWord(DateTime.ParseExact(report.ReportContent.StartDate, "dd.MM.yyyy", CultureInfo.CurrentCulture).Year.ToString()));
-			ReportUtils.FillFormField(wordApp, doc.FormFields[6], ReportUtils.TransformTextToWord(report.ReportContent.JobFieldContent));
-			ReportUtils.FillFormField(wordApp, doc.FormFields[7], ReportUtils.TransformTextToWord(report.ReportContent.SeminarsField));
-			ReportUtils.FillFormField(wordApp, doc.FormFields[8], ReportUtils.TransformTextToWord(report.ReportContent.SchoolField));
-			ReportUtils.FillFormField(wordApp, doc.FormFields[9], ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
-			ReportUtils.FillFormField(wordApp, doc.FormFields[10], ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
+			FormFieldHandler.SetValueInDoc(Fields.Name, doc, ReportUtils.TransformTextToWord(ConfigHandler.Instance.ReportUserName));
+			FormFieldHandler.SetValueInDoc(Fields.Number, doc, ReportUtils.TransformTextToWord(report.ReportNr.ToString()));
+			FormFieldHandler.SetValueInDoc(Fields.StartDate, doc, ReportUtils.TransformTextToWord(report.ReportContent.StartDate));
+			FormFieldHandler.SetValueInDoc(Fields.EndDate, doc, ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
+			FormFieldHandler.SetValueInDoc(Fields.Year, doc, ReportUtils.TransformTextToWord(DateTime.ParseExact(report.ReportContent.StartDate, "dd.MM.yyyy", CultureInfo.CurrentCulture).Year.ToString()));
+			FormFieldHandler.SetValueInDoc(Fields.Work, doc, ReportUtils.TransformTextToWord(report.ReportContent.JobFieldContent));
+			FormFieldHandler.SetValueInDoc(Fields.Seminars, doc, ReportUtils.TransformTextToWord(report.ReportContent.SeminarsField));
+			FormFieldHandler.SetValueInDoc(Fields.School, doc, ReportUtils.TransformTextToWord(report.ReportContent.SchoolField));
+			FormFieldHandler.SetValueInDoc(Fields.SignDateYou, doc, ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
+			FormFieldHandler.SetValueInDoc(Fields.SignDateSupervisor, doc, ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
 		}
 	}
 

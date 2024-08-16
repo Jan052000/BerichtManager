@@ -23,6 +23,7 @@ using BerichtManager.IHKClient;
 using System.Net.Http;
 using BerichtManager.IHKClient.Exceptions;
 using BerichtManager.IHKClient.ReportContents;
+using BerichtManager.WordTemplate;
 
 namespace BerichtManager
 {
@@ -401,7 +402,7 @@ namespace BerichtManager
 				int weekOfYear = Culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 				ldoc = app.Documents.Add(Template: templatePath);
 
-				if (ldoc.FormFields.Count != 10)
+				if (!FormFieldHandler.ValidFormFieldCount(ldoc))
 				{
 					ThemedMessageBox.Show(text: "Invalid template");
 					ldoc.Close(SaveChanges: false);
@@ -411,11 +412,9 @@ namespace BerichtManager
 
 				EditForm form;
 				//Fill name
-				IEnumerator enumerator = ldoc.FormFields.GetEnumerator();
-				enumerator.MoveNext();
 				if (!string.IsNullOrEmpty(ConfigHandler.ReportUserName))
 				{
-					((Word.FormField)enumerator.Current).Result = ConfigHandler.ReportUserName;
+					FormFieldHandler.SetValueInDoc(Fields.Name, ldoc, ConfigHandler.ReportUserName);
 				}
 				else
 				{
@@ -425,7 +424,7 @@ namespace BerichtManager
 					{
 						ConfigHandler.ReportUserName = form.Result;
 						ConfigHandler.SaveConfig();
-						((Word.FormField)enumerator.Current).Result = ConfigHandler.ReportUserName;
+						FormFieldHandler.SetValueInDoc(Fields.Name, ldoc, ConfigHandler.ReportUserName);
 					}
 					else
 					{
@@ -434,39 +433,29 @@ namespace BerichtManager
 					}
 					form.RefreshConfigs -= RefreshConfig;
 				}
-				enumerator.MoveNext();
 
 				//Enter report nr.
-				ReportUtils.FillFormField(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber - reportDifference).ToString());
+				FormFieldHandler.SetValueInDoc(Fields.Number, ldoc, (ConfigHandler.ReportNumber - reportDifference).ToString());
 
 				//Enter week start and end
 				DateTime today = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day);
 				DateTime thisWeekStart = today.AddDays(-(int)baseDate.DayOfWeek + 1);
 				DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-				enumerator.MoveNext();
-				((Word.FormField)enumerator.Current).Result = thisWeekStart.ToString("dd.MM.yyyy");
-				enumerator.MoveNext();
 				if (ConfigHandler.EndWeekOnFriday)
-				{
-					((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
-				}
-				else
-				{
-					((Word.FormField)enumerator.Current).Result = thisWeekEnd.ToString("dd.MM.yyyy");
-				}
+					thisWeekEnd = thisWeekEnd.AddDays(-2);
+				FormFieldHandler.SetValueInDoc(Fields.StartDate, ldoc, thisWeekStart.ToString("dd.MM.yyyy"));
+				FormFieldHandler.SetValueInDoc(Fields.EndDate, ldoc, thisWeekEnd.ToString("dd.MM.yyyy"));
 
 				//Enter Year
-				enumerator.MoveNext();
-				((Word.FormField)enumerator.Current).Result = today.Year.ToString();
+				FormFieldHandler.SetValueInDoc(Fields.Year, ldoc, today.Year.ToString());
 
 				//Enter work field
-				enumerator.MoveNext();
 				if (vacation)
 				{
 					if (ConfigHandler.UseCustomPrefix)
-						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix + "Urlaub");
+						FormFieldHandler.SetValueInDoc(Fields.Work, ldoc, ConfigHandler.CustomPrefix + "Urlaub");
 					else
-						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, "-Urlaub");
+						FormFieldHandler.SetValueInDoc(Fields.Work, ldoc, "-Urlaub");
 				}
 				else
 				{
@@ -481,19 +470,18 @@ namespace BerichtManager
 							ldoc = null;
 							return;
 						default:
-							ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, form.Result);
+							FormFieldHandler.SetValueInDoc(Fields.Work, ldoc, form.Result);
 							break;
 					}
 				}
 
 				//Enter work seminars
-				enumerator.MoveNext();
 				if (vacation)
 				{
 					if (ConfigHandler.UseCustomPrefix)
-						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix + "Urlaub");
+						FormFieldHandler.SetValueInDoc(Fields.Seminars, ldoc, ConfigHandler.CustomPrefix + "Urlaub");
 					else
-						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, "-Urlaub");
+						FormFieldHandler.SetValueInDoc(Fields.Seminars, ldoc, "-Urlaub");
 				}
 				else
 				{
@@ -509,13 +497,12 @@ namespace BerichtManager
 							ldoc = null;
 							return;
 						default:
-							ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, form.Result);
+							FormFieldHandler.SetValueInDoc(Fields.Seminars, ldoc, form.Result);
 							break;
 					}
 				}
 
 				//Shool stuff
-				enumerator.MoveNext();
 				if (isSingle)
 				{
 					string classes = "";
@@ -544,17 +531,15 @@ namespace BerichtManager
 						ldoc = null;
 						return;
 					default:
-						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, form.Result);
+						FormFieldHandler.SetValueInDoc(Fields.School, ldoc, form.Result);
 						break;
 				}
 
 				//Fridy of week
-				enumerator.MoveNext();
-				((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
+				FormFieldHandler.SetValueInDoc(Fields.SignDateYou, ldoc, thisWeekEnd.ToString("dd.MM.yyyy"));
 
 				//Sign date 2
-				enumerator.MoveNext();
-				((Word.FormField)enumerator.Current).Result = thisWeekEnd.AddDays(-2).ToString("dd.MM.yyyy");
+				FormFieldHandler.SetValueInDoc(Fields.SignDateSupervisor, ldoc, thisWeekEnd.ToString("dd.MM.yyyy"));
 
 
 				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
@@ -840,9 +825,9 @@ namespace BerichtManager
 		/// Method for editing a Word document at a path relative to the working directory
 		/// </summary>
 		/// <param name="path">The path relative to the working directory</param>
-		/// <param name="quickEditFieldNr">The number of the field to quick edit</param>
+		/// <param name="field"><see cref="Fields"/> of report to jump edit to</param>
 		/// <param name="quickEditTitle">Title of the editor window</param>
-		public void Edit(string path, int quickEditFieldNr = -1, string quickEditTitle = "")
+		public void Edit(string path, Fields? field = null, string quickEditTitle = "")
 		{
 			try
 			{
@@ -864,7 +849,7 @@ namespace BerichtManager
 					return;
 				}
 
-				if (Doc.FormFields.Count != 10)
+				if (!FormFieldHandler.ValidFormFieldCount(Doc))
 				{
 					ThemedMessageBox.Show(text: "Invalid document (you will have to manually edit)");
 					Doc.Close(SaveChanges: false);
@@ -873,24 +858,19 @@ namespace BerichtManager
 				}
 
 				bool markAsEdited = false;
-				if (quickEditFieldNr > -1)
+				if (field.HasValue)
 				{
-					IEnumerator enumerator = Doc.FormFields.GetEnumerator();
-					for (int i = 0; i < quickEditFieldNr; i++)
-					{
-						if (enumerator.MoveNext())
-						{
-
-						}
-					}
-					EditForm edit = new EditForm(title: quickEditTitle, text: ((Word.FormField)enumerator.Current).Result);
+					string value = FormFieldHandler.GetValueFromDoc<string>(field.Value, Doc);
+					EditForm edit = new EditForm(title: quickEditTitle, text: value);
 					edit.RefreshConfigs += RefreshConfig;
 					switch (edit.ShowDialog())
 					{
 						case DialogResult.OK:
 						case DialogResult.Ignore:
-							markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
-							ReportUtils.FillFormField(WordApp, (Word.FormField)enumerator.Current, edit.Result);
+							if (edit.Result == value)
+								break;
+							markAsEdited = true;
+							FormFieldHandler.SetValueInDoc(field.Value, Doc, edit.Result);
 							break;
 						default:
 							break;
@@ -902,25 +882,25 @@ namespace BerichtManager
 					SelectEditFrom selectEdit = new SelectEditFrom();
 					if (selectEdit.ShowDialog() != DialogResult.OK)
 						return;
-					if (selectEdit.SelectedItems.Count == 0)
+					if (selectEdit.SelectedFields.Count == 0)
 					{
 						SaveOrExit();
 						return;
 					}
-					IEnumerator enumerator = Doc.FormFields.GetEnumerator();
-					EditForm edit;
-					foreach (EditState si in selectEdit.SelectedItems)
+
+					foreach (SelectedField selected in selectEdit.SelectedFields)
 					{
-						if (!enumerator.MoveNext() || !si.ShouldEdit)
-							continue;
-						edit = new EditForm(title: si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
+						string value = FormFieldHandler.GetValueFromDoc<string>(selected.Field, Doc);
+						EditForm edit = new EditForm(title: selected.DisplayText, text: value);
 						edit.RefreshConfigs += RefreshConfig;
 						switch (edit.ShowDialog())
 						{
 							case DialogResult.OK:
 							case DialogResult.Ignore:
-								markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
-								ReportUtils.FillFormField(WordApp, (Word.FormField)enumerator.Current, edit.Result);
+								if (edit.Result == value)
+									break;
+								markAsEdited = true;
+								FormFieldHandler.SetValueInDoc(selected.Field, Doc, edit.Result);
 								break;
 							default:
 								break;
@@ -1036,7 +1016,7 @@ namespace BerichtManager
 				}
 
 				Doc = WordApp.Documents.Open(path);
-				if (Doc.FormFields.Count != 10)
+				if (!FormFieldHandler.ValidFormFieldCount(Doc))
 				{
 					ThemedMessageBox.Show(text: "Invalid document (you will have to manually edit)");
 					Doc.Close(SaveChanges: false);
@@ -1113,8 +1093,9 @@ namespace BerichtManager
 					}
 				}
 
-				ReportUtils.FillFormField(WordApp, Doc.FormFields[6], rtbWork.Text);
-				ReportUtils.FillFormField(WordApp, Doc.FormFields[8], rtbSchool.Text);
+				FormFieldHandler.SetValueInDoc(Fields.Work, Doc, rtbWork.Text);
+				FormFieldHandler.SetValueInDoc(Fields.School, Doc, rtbSchool.Text);
+
 				FitToPage(Doc);
 				Doc.Save();
 				if (WasEdited)
@@ -1358,7 +1339,7 @@ namespace BerichtManager
 			if (!HasWordStarted()) return;
 
 			SaveOrExit();
-			Edit(FullSelectedPath, quickEditFieldNr: 6, quickEditTitle: "Edit work");
+			Edit(FullSelectedPath, field: Fields.Work, quickEditTitle: "Edit work");
 		}
 
 		private void miQuickEditSchool_Click(object sender, EventArgs e)
@@ -1366,7 +1347,7 @@ namespace BerichtManager
 			if (!HasWordStarted()) return;
 
 			SaveOrExit();
-			Edit(FullSelectedPath, quickEditFieldNr: 8, quickEditTitle: "Edit school");
+			Edit(FullSelectedPath, field: Fields.School, quickEditTitle: "Edit school");
 		}
 
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1817,7 +1798,7 @@ namespace BerichtManager
 			}
 			else
 				doc = WordApp.Documents.Open(FullSelectedPath);
-			if (doc.FormFields.Count < 10)
+			if (!FormFieldHandler.ValidFormFieldCount(doc))
 			{
 				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
 				doc.Close(SaveChanges: false);
@@ -1887,7 +1868,7 @@ namespace BerichtManager
 					progressForm.Status = $"Uploading {nodePath}";
 
 					Word.Document doc = WordApp.Documents.Open(path);
-					if (doc.FormFields.Count < 10)
+					if (!FormFieldHandler.ValidFormFieldCount(doc))
 					{
 						progressForm.Status = $"Uploading aborted: Invalid dcument";
 						ThemedMessageBox.Show(text: $"Invalid document, please add missing form fields to {path}.\nUploading is stopped", title: "Invalid document");
@@ -2424,7 +2405,7 @@ namespace BerichtManager
 			}
 			else
 				doc = WordApp.Documents.Open(FullSelectedPath);
-			if (doc.FormFields.Count < 10)
+			if (!FormFieldHandler.ValidFormFieldCount(doc))
 			{
 				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
 				doc.Close(SaveChanges: false);
@@ -2518,7 +2499,7 @@ namespace BerichtManager
 				}
 
 				Word.Document doc = WordApp.Documents.Open(fullPath);
-				if (doc.FormFields.Count < 10)
+				if (!FormFieldHandler.ValidFormFieldCount(doc))
 				{
 					progressForm.Status = "Skipped, invalid form field count";
 					skipped.Add(fullPath, "invalid form field count");
@@ -2631,7 +2612,7 @@ namespace BerichtManager
 					bool errorFound = false;
 					Word.Document doc = WordApp.Documents.Open(GetFullPath(node));
 
-					if (doc.FormFields.Count < 10)
+					if (!FormFieldHandler.ValidFormFieldCount(doc))
 					{
 						progressForm.Status = $"-{doc.FullName}: Skipped, invalid number of form fields";
 						continue;
@@ -2733,7 +2714,7 @@ namespace BerichtManager
 				{
 					Word.Document report = WordApp.Documents.Open(GetFullPath(node));
 
-					if (report.FormFields.Count < 10)
+					if (!FormFieldHandler.ValidFormFieldCount(report))
 					{
 						progressForm.Status = $"Skipped {report.FullName} as it has an invalid number of form fields";
 						skipped.Add(report.FullName, "invalid number of form fields");
@@ -2745,9 +2726,9 @@ namespace BerichtManager
 					string seminars = ReportUtils.TransformTextToWord(report.FormFields[7].Result);
 					string school = ReportUtils.TransformTextToWord(report.FormFields[8].Result);
 
-					ReportUtils.FillFormField(WordApp, report.FormFields[6], work);
-					ReportUtils.FillFormField(WordApp, report.FormFields[7], seminars);
-					ReportUtils.FillFormField(WordApp, report.FormFields[8], school);
+					FormFieldHandler.SetValueInDoc(Fields.Work, report, work);
+					FormFieldHandler.SetValueInDoc(Fields.Seminars, report, seminars);
+					FormFieldHandler.SetValueInDoc(Fields.School, report, school);
 
 					report.Close(SaveChanges: true);
 
@@ -2864,7 +2845,7 @@ namespace BerichtManager
 
 				progressForm.Status = $"\t- {doc.FullName}:";
 
-				if (doc.FormFields.Count < 10)
+				if (!FormFieldHandler.ValidFormFieldCount(doc))
 				{
 					progressForm.Status = "\t\t- Skipped, invalid form field count";
 					skipped.Add(doc.FullName);
@@ -2985,14 +2966,14 @@ namespace BerichtManager
 				}
 
 				Word.Document doc = WordApp.Documents.Add(Template: ConfigHandler.TemplatePath);
-				if (doc.FormFields.Count < 10)
+				if (!FormFieldHandler.ValidFormFieldCount(doc))
 				{
 					DoStop("Aborted, template has an invalid field cound");
 					OpenAllDocuments(openReports, activePath);
 					break;
 				}
 
-				ReportTransformer.IHKToWord(WordApp, doc, new Report(kvp.Value.Content) { ReportNr = reportNumber });
+				ReportTransformer.IHKToWord(doc, new Report(kvp.Value.Content) { ReportNr = reportNumber });
 
 				string newReportName = NamingPatternResolver.ResolveNameWithExtension(kvp.Key.StartDate, kvp.Value.Number);
 				string folder = Path.Combine(ActivePath, kvp.Key.StartDate.Year.ToString());

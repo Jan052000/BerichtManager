@@ -2,6 +2,7 @@ using BerichtManager.Config;
 using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ReportChecking.Discrepancies;
+using BerichtManager.WordTemplate;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,22 +18,6 @@ namespace BerichtManager.ReportChecking
 	/// </summary>
 	internal class ReportChecker
 	{
-		/// <summary>
-		/// Contents of <see cref="Word.FormField"/> in <see cref="Word.Document"/>
-		/// </summary>
-		internal enum ReportFields
-		{
-			Name = 1,
-			ReportNumber,
-			StartDate,
-			EndDate,
-			Year,
-			WorkField,
-			SeminarsField,
-			SchoolField,
-			SignDateY,
-			SignDateS
-		}
 		/// <summary>
 		/// <see cref="Word.Application"/> to open reports with
 		/// </summary>
@@ -64,7 +49,7 @@ namespace BerichtManager.ReportChecking
 			{
 				string path = GenerateTreePath(report);
 				Word.Document doc = WordApp.Documents.Open(FileName: Path.Combine(ConfigHandler.Instance.ReportPath, path), ReadOnly: true);
-				if (doc.FormFields.Count < 10)
+				if (!FormFieldHandler.ValidFormFieldCount(doc))
 				{
 					ThemedMessageBox.Show(text: $"The report {path} does not contain the necessary form fields, checking was canceled", title: "Invalid report");
 					doc.Close(SaveChanges: false);
@@ -211,7 +196,7 @@ namespace BerichtManager.ReportChecking
 		/// <returns><see langword="true"/> if number was found and <see langword="false"/> otherwise</returns>
 		private bool GetReportNumber(Word.Document document, out int number)
 		{
-			if (!int.TryParse(document.FormFields[ReportFields.ReportNumber].Result, out int reportNumber))
+			if (!int.TryParse(document.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.Number)].Result, out int reportNumber))
 			{
 				number = -1;
 				return false;
@@ -227,7 +212,7 @@ namespace BerichtManager.ReportChecking
 		/// <returns>Start date of report</returns>
 		private bool GetStartDate(Word.Document document, out DateTime startDate)
 		{
-			if (!DateTime.TryParseExact(document.FormFields[ReportFields.StartDate].Result, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime rstartDate))
+			if (!DateTime.TryParseExact(document.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.StartDate)].Result, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime rstartDate))
 			{
 				startDate = new DateTime();
 				return false;
