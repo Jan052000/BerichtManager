@@ -113,7 +113,7 @@ namespace BerichtManager.Forms
 			SaveSize();
 		}
 
-		private void btClose_Click(object sender, EventArgs e)
+		private void btSkip_Click(object sender, EventArgs e)
 		{
 			Result = rtInput.Text;
 			DialogResult = DialogResult.Cancel;

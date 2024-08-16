@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btSkip = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btConfirm = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.rtInput = new System.Windows.Forms.RichTextBox();
 			this.btQuit = new BerichtManager.OwnControls.FocusColoredFlatButton();
@@ -43,15 +43,15 @@
 			// 
 			// btClose
 			// 
-			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(713, 415);
-			this.btClose.Name = "btClose";
-			this.btClose.Size = new System.Drawing.Size(75, 23);
-			this.btClose.TabIndex = 0;
-			this.btClose.Text = "Close";
-			this.ttTips.SetToolTip(this.btClose, "Saves input and closes this window");
-			this.btClose.UseVisualStyleBackColor = true;
-			this.btClose.Click += new System.EventHandler(this.btClose_Click);
+			this.btSkip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btSkip.Location = new System.Drawing.Point(713, 415);
+			this.btSkip.Name = "btClose";
+			this.btSkip.Size = new System.Drawing.Size(75, 23);
+			this.btSkip.TabIndex = 0;
+			this.btSkip.Text = "Skip";
+			this.ttTips.SetToolTip(this.btSkip, "Saves input and closes this window");
+			this.btSkip.UseVisualStyleBackColor = true;
+			this.btSkip.Click += new System.EventHandler(this.btSkip_Click);
 			// 
 			// btConfirm
 			// 
@@ -159,7 +159,7 @@
 			this.Controls.Add(this.btQuit);
 			this.Controls.Add(this.rtInput);
 			this.Controls.Add(this.btConfirm);
-			this.Controls.Add(this.btClose);
+			this.Controls.Add(this.btSkip);
 			this.MinimumSize = new System.Drawing.Size(698, 39);
 			this.Name = "EditForm";
 			this.Text = "EditForm";
@@ -171,7 +171,7 @@
 
 		#endregion
 
-		private OwnControls.FocusColoredFlatButton btClose;
+		private OwnControls.FocusColoredFlatButton btSkip;
 		private OwnControls.FocusColoredFlatButton btConfirm;
 		private System.Windows.Forms.RichTextBox rtInput;
 		private OwnControls.FocusColoredFlatButton btQuit;
