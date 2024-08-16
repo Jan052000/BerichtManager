@@ -946,8 +946,6 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						ThemedMessageBox.Show(text: "an unexpected problem occured this progam will now close!");
-						break;
 					case -2147467262:
 					case -2146823679:
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
@@ -1059,8 +1057,6 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						ThemedMessageBox.Show(text: "an unexpected problem occured this progam will now close!");
-						break;
 					case -2147467262:
 					case -2146823679:
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
@@ -1130,8 +1126,6 @@ namespace BerichtManager
 				switch (ex.HResult)
 				{
 					case -2147023174:
-						ThemedMessageBox.Show(text: "an unexpected problem occured this progam will now close!");
-						break;
 					case -2147467262:
 					case -2146823679:
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
