@@ -338,41 +338,6 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Fills a WordInterop TextField with text
-		/// </summary>
-		/// <param name="app">The Word Application containing the documents with FormFields to fill</param>
-		/// <param name="field">The FormField to fill with Text</param>
-		/// <param name="text">The Text to Fill</param>
-		private void FillText(Word.Application app, Word.FormField field, string text)
-		{
-			text = ReportUtils.TransformTextToWord(text);
-			field.Select();
-			for (int i = 1; i < 6; i++)
-			{
-				field.Range.Paragraphs.TabStops.Add(i * 14);
-			}
-			app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
-			app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
-			if (text.Length > 254)
-			{
-				field.Result = " ";
-				app.Selection.Text = text.Substring(0, 200);
-				field.Result = field.Result.TrimEnd() + " ";
-				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
-				app.Selection.TypeText(text.Substring(200));
-				//Remove first space before text
-				field.Select();
-				app.Selection.MoveLeft(Word.WdUnits.wdCharacter, 1);
-				app.Selection.MoveRight(Word.WdUnits.wdCharacter, 1);
-				app.Selection.TypeBackspace();
-			}
-			else
-			{
-				field.Result = text;
-			}
-		}
-
-		/// <summary>
 		/// Sets the global font in a document and fits document to pages
 		/// </summary>
 		/// <param name="doc">The Document which needs a font change</param>
@@ -472,7 +437,7 @@ namespace BerichtManager
 				enumerator.MoveNext();
 
 				//Enter report nr.
-				FillText(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber - reportDifference).ToString());
+				ReportUtils.FillFormField(app, ((Word.FormField)enumerator.Current), (ConfigHandler.ReportNumber - reportDifference).ToString());
 
 				//Enter week start and end
 				DateTime today = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day);
@@ -499,9 +464,9 @@ namespace BerichtManager
 				if (vacation)
 				{
 					if (ConfigHandler.UseCustomPrefix)
-						FillText(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix + "Urlaub");
+						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix + "Urlaub");
 					else
-						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
+						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, "-Urlaub");
 				}
 				else
 				{
@@ -516,7 +481,7 @@ namespace BerichtManager
 							ldoc = null;
 							return;
 						default:
-							FillText(app, (Word.FormField)enumerator.Current, form.Result);
+							ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, form.Result);
 							break;
 					}
 				}
@@ -526,9 +491,9 @@ namespace BerichtManager
 				if (vacation)
 				{
 					if (ConfigHandler.UseCustomPrefix)
-						FillText(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix + "Urlaub");
+						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, ConfigHandler.CustomPrefix + "Urlaub");
 					else
-						FillText(app, (Word.FormField)enumerator.Current, "-Urlaub");
+						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, "-Urlaub");
 				}
 				else
 				{
@@ -544,7 +509,7 @@ namespace BerichtManager
 							ldoc = null;
 							return;
 						default:
-							FillText(app, (Word.FormField)enumerator.Current, form.Result);
+							ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, form.Result);
 							break;
 					}
 				}
@@ -579,7 +544,7 @@ namespace BerichtManager
 						ldoc = null;
 						return;
 					default:
-						FillText(app, (Word.FormField)enumerator.Current, form.Result);
+						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, form.Result);
 						break;
 				}
 
@@ -925,7 +890,7 @@ namespace BerichtManager
 						case DialogResult.OK:
 						case DialogResult.Ignore:
 							markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
-							FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
+							ReportUtils.FillFormField(WordApp, (Word.FormField)enumerator.Current, edit.Result);
 							break;
 						default:
 							break;
@@ -955,7 +920,7 @@ namespace BerichtManager
 							case DialogResult.OK:
 							case DialogResult.Ignore:
 								markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
-								FillText(WordApp, (Word.FormField)enumerator.Current, edit.Result);
+								ReportUtils.FillFormField(WordApp, (Word.FormField)enumerator.Current, edit.Result);
 								break;
 							default:
 								break;
@@ -1148,8 +1113,8 @@ namespace BerichtManager
 					}
 				}
 
-				FillText(WordApp, Doc.FormFields[6], rtbWork.Text);
-				FillText(WordApp, Doc.FormFields[8], rtbSchool.Text);
+				ReportUtils.FillFormField(WordApp, Doc.FormFields[6], rtbWork.Text);
+				ReportUtils.FillFormField(WordApp, Doc.FormFields[8], rtbSchool.Text);
 				FitToPage(Doc);
 				Doc.Save();
 				if (WasEdited)
@@ -2780,9 +2745,9 @@ namespace BerichtManager
 					string seminars = ReportUtils.TransformTextToWord(report.FormFields[7].Result);
 					string school = ReportUtils.TransformTextToWord(report.FormFields[8].Result);
 
-					FillText(WordApp, report.FormFields[6], work);
-					FillText(WordApp, report.FormFields[7], seminars);
-					FillText(WordApp, report.FormFields[8], school);
+					ReportUtils.FillFormField(WordApp, report.FormFields[6], work);
+					ReportUtils.FillFormField(WordApp, report.FormFields[7], seminars);
+					ReportUtils.FillFormField(WordApp, report.FormFields[8], school);
 
 					report.Close(SaveChanges: true);
 
