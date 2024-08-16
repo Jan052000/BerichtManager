@@ -480,6 +480,9 @@ namespace BerichtManager
 							ldoc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 							ldoc = null;
 							return;
+						//Skip
+						case DialogResult.Cancel:
+							break;
 						default:
 							ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, form.Result);
 							break;
@@ -508,6 +511,9 @@ namespace BerichtManager
 							ldoc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 							ldoc = null;
 							return;
+						//Skip
+						case DialogResult.Cancel:
+							break;
 						default:
 							ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, form.Result);
 							break;
@@ -543,6 +549,9 @@ namespace BerichtManager
 						ldoc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
 						ldoc = null;
 						return;
+					//Skip
+					case DialogResult.Cancel:
+						break;
 					default:
 						ReportUtils.FillFormField(app, (Word.FormField)enumerator.Current, form.Result);
 						break;
