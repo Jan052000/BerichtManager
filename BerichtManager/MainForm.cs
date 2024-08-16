@@ -872,7 +872,7 @@ namespace BerichtManager
 					return;
 				}
 
-				bool markAsEdited = false;
+				bool wasEdited = false;
 				if (quickEditFieldNr > -1)
 				{
 					IEnumerator enumerator = Doc.FormFields.GetEnumerator();
@@ -889,10 +889,11 @@ namespace BerichtManager
 					{
 						case DialogResult.OK:
 						case DialogResult.Ignore:
-							markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
+							wasEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
 							ReportUtils.FillFormField(WordApp, (Word.FormField)enumerator.Current, edit.Result);
 							break;
 						default:
+							ThemedMessageBox.Info(text: $"Quit edit of {path}", title: "Edit aborted");
 							break;
 					}
 					edit.RefreshConfigs -= RefreshConfig;
@@ -911,35 +912,52 @@ namespace BerichtManager
 					EditForm edit;
 					foreach (EditState si in selectEdit.SelectedItems)
 					{
-						if (!enumerator.MoveNext() || !si.ShouldEdit)
+						if (!enumerator.MoveNext())
+							break;
+						if (!si.ShouldEdit)
 							continue;
 						edit = new EditForm(title: si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
 						edit.RefreshConfigs += RefreshConfig;
+						bool exitLoop = false;
 						switch (edit.ShowDialog())
 						{
+							//Save
 							case DialogResult.OK:
-							case DialogResult.Ignore:
-								markAsEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
+								wasEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
 								ReportUtils.FillFormField(WordApp, (Word.FormField)enumerator.Current, edit.Result);
 								break;
+							//Save and quit
+							case DialogResult.Ignore:
+								wasEdited |= edit.Result != (enumerator.Current as Word.FormField)?.Result;
+								ReportUtils.FillFormField(WordApp, (Word.FormField)enumerator.Current, edit.Result);
+								exitLoop = true;
+								break;
+							//Close
+							case DialogResult.Cancel:
+								break;
+							//Others like abort
 							default:
+								ThemedMessageBox.Info(text: $"Quit edit of {path}", title: "Edit aborted");
+								exitLoop = true;
 								break;
 						}
 						edit.RefreshConfigs -= RefreshConfig;
+						if (exitLoop)
+							break;
 					}
 				}
-				FitToPage(Doc);
-				Doc.Save();
-				if (markAsEdited)
+				if (wasEdited)
 				{
-					UploadedReports.SetEdited(path.Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First(), true);
+					FitToPage(Doc);
+					Doc.Save();
+					ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
+					UploadedReports.SetEdited(path, true);
 					UpdateTree();
 				}
 				rtbWork.Text = Doc.FormFields[6].Result;
 				rtbSchool.Text = Doc.FormFields[8].Result;
 				EditMode = true;
 				WasEdited = false;
-				ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
 			}
 			catch (Exception ex)
 			{
