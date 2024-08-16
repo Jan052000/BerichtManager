@@ -920,7 +920,7 @@ namespace BerichtManager
 					}
 					EditForm edit = new EditForm(title: quickEditTitle, text: ((Word.FormField)enumerator.Current).Result);
 					edit.RefreshConfigs += RefreshConfig;
-					switch (edit.DialogResult)
+					switch (edit.ShowDialog())
 					{
 						case DialogResult.OK:
 						case DialogResult.Ignore:
@@ -950,9 +950,7 @@ namespace BerichtManager
 							continue;
 						edit = new EditForm(title: si.EditorTitle, text: ((Word.FormField)enumerator.Current).Result);
 						edit.RefreshConfigs += RefreshConfig;
-						edit.ShowDialog();
-						edit.RefreshConfigs -= RefreshConfig;
-						switch (edit.DialogResult)
+						switch (edit.ShowDialog())
 						{
 							case DialogResult.OK:
 							case DialogResult.Ignore:
@@ -962,6 +960,7 @@ namespace BerichtManager
 							default:
 								break;
 						}
+						edit.RefreshConfigs -= RefreshConfig;
 					}
 				}
 				FitToPage(Doc);
