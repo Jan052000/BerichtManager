@@ -604,7 +604,7 @@ namespace BerichtManager
 				ConfigHandler.LastCreated = path;
 				ConfigHandler.SaveConfig();
 				miEditLatest.Enabled = true;
-				ThemedMessageBox.Show(text: "Created Document at: " + path);
+				ThemedMessageBox.Show(text: "Created Document at: " + path, title: "Document saved", allowMessageHighlight: true);
 				ldocWasSaved = true;
 
 				ldoc.Close();
