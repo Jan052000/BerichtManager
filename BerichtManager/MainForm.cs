@@ -889,7 +889,10 @@ namespace BerichtManager
 				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 					return;
 				if (!DocIsSamePathAsSelected())
+				{
+					SaveOrExit();
 					Doc = WordApp.Documents.Open(path);
+				}
 
 				if (Doc.FormFields.Count != 10)
 				{
