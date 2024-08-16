@@ -893,6 +893,11 @@ namespace BerichtManager
 					SaveOrExit();
 					Doc = WordApp.Documents.Open(path);
 				}
+				if (UploadedReports.GetUploadStatus(path, out ReportNode.UploadStatuses status) && (status == ReportNode.UploadStatuses.HandedIn || status == ReportNode.UploadStatuses.Accepted))
+				{
+					ThemedMessageBox.Show(text: "Cannot edit report that was handed in or accepted", title: "Unable to edit");
+					return;
+				}
 
 				if (Doc.FormFields.Count != 10)
 				{
