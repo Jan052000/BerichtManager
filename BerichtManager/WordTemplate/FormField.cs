@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace BerichtManager.WordTemplate
 {
+	[DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
 	public class FormField : IEquatable<FormField>
 	{
 		/// <summary>
@@ -28,6 +30,15 @@ namespace BerichtManager.WordTemplate
 		public bool Equals(FormField other)
 		{
 			return Index == other.Index && FieldType == other.FieldType;
+		}
+
+		/// <summary>
+		/// Generates string shown for object in debugger
+		/// </summary>
+		/// <returns>String representation of <see cref="FormField"/></returns>
+		private string GetDebuggerDisplay()
+		{
+			return $"Index: {Index}, Type: {FieldType.Name}";
 		}
 	}
 }
