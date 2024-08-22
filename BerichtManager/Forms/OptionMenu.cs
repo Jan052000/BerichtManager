@@ -2,6 +2,7 @@
 using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
+using BerichtManager.WordTemplate;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -355,6 +356,11 @@ namespace BerichtManager.Forms
 		private void btIHKLogin_Click(object sender, EventArgs e)
 		{
 			ConfigHandler.DoIHKLogin();
+		}
+
+		private void btFieldsConfig_Click(object sender, EventArgs e)
+		{
+			new WordTemplateForm().ShowDialog();
 		}
 	}
 }
