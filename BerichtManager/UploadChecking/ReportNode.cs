@@ -56,6 +56,9 @@ namespace BerichtManager.UploadChecking
 		{
 			ReportNode _this = (ReportNode)base.Clone();
 			_this.UploadStatus = UploadStatus;
+			_this.WasEditedLocally = WasEditedLocally;
+			_this.IsOpened = IsOpened;
+			_this.LfdNr = LfdNr;
 			return _this;
 		}
 	}
