@@ -213,6 +213,12 @@
     <Compile Include="WordTemplate\Fields.cs" />
     <Compile Include="WordTemplate\FormField.cs" />
     <Compile Include="WordTemplate\FormFieldHandler.cs" />
+    <Compile Include="WordTemplate\WordTemplateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WordTemplate\WordTemplateForm.Designer.cs">
+      <DependentUpon>WordTemplateForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Forms\EditForm.resx">
       <DependentUpon>EditForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -249,6 +255,9 @@
     </Compile>
     <EmbeddedResource Include="ThemeManagement\CreateTheme.resx">
       <DependentUpon>CreateTheme.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WordTemplate\WordTemplateForm.resx">
+      <DependentUpon>WordTemplateForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
