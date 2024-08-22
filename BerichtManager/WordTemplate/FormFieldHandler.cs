@@ -168,7 +168,7 @@ namespace BerichtManager.WordTemplate
 		}
 
 		/// <summary>
-		/// Updates form fields config to <paramref name="formFields"/>
+		/// Updates index of <paramref name="field"/> to <paramref name="newIndex"/>
 		/// </summary>
 		/// <param name="field"><see cref="Fields"/> field to update index of</param>
 		/// <param name="newIndex">New index of <see cref="Fields"/> field in Word template</param>
