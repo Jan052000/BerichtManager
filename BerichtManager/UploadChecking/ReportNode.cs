@@ -51,5 +51,12 @@ namespace BerichtManager.UploadChecking
 		public ReportNode() : base() { }
 
 		public ReportNode(string text) : base(text) { }
+
+		public override object Clone()
+		{
+			ReportNode _this = (ReportNode)base.Clone();
+			_this.UploadStatus = UploadStatus;
+			return _this;
+		}
 	}
 }
