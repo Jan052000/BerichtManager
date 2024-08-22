@@ -76,16 +76,21 @@ namespace BerichtManager.ThemeManagement
 					break;
 				case MenuStrip menuStrip:
 					menuStrip.BackColor = Theme.MenuStripBackColor;
+					menuStrip.ForeColor = Theme.ForeColor;
 					menuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(Theme), Theme);
 					break;
 				case ContextMenuStrip contextMenuStrip:
 					contextMenuStrip.BackColor = Theme.MenuStripBackColor;
 					contextMenuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(Theme), Theme);
+					contextMenuStrip.ForeColor = Theme.ForeColor;
 					break;
 				case ColoredGroupBox coloredGroupBox:
 					coloredGroupBox.BackColor = Theme.BackColor;
 					coloredGroupBox.TitleColor = Theme.ForeColor;
 					coloredGroupBox.BorderColor = Theme.SplitterColor;
+					break;
+				default:
+					control.BackColor = Theme.BackColor;
 					break;
 			}
 			control.ForeColor = Theme.ForeColor;
