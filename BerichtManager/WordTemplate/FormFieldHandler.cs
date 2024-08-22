@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Globalization;
 using BerichtManager.HelperClasses;
 using BerichtManager.Extensions;
+using System.Linq;
 
 namespace BerichtManager.WordTemplate
 {
@@ -49,21 +50,20 @@ namespace BerichtManager.WordTemplate
 		{
 			{Fields.Name, new FormField(1, Int32Type) },
 			{Fields.Number, new FormField(2, Int32Type) },
-			//{Fields.StartDate, new FormField(3, StringType) },
-			//{Fields.EndDate, new FormField(4, StringType) },
 			{Fields.StartDate, new FormField(3, DateTimeType) },
 			{Fields.EndDate, new FormField(4, DateTimeType) },
 			{Fields.Year, new FormField(5, Int32Type) },
 			{Fields.Work, new FormField(6, StringType) },
 			{Fields.Seminars, new FormField(7, StringType) },
 			{Fields.School, new FormField(8, StringType) },
-			//{Fields.SignDateYou, new FormField(9, StringType) },
-			//{Fields.SignDateSupervisor, new FormField(10, StringType) }
 			{Fields.SignDateYou, new FormField(9, DateTimeType) },
 			{Fields.SignDateSupervisor, new FormField(10, DateTimeType) }
 		};
 
-		private Dictionary<Type, Func<string, object>> TypeSwitchDict = new Dictionary<Type, Func<string, object>>()
+		/// <summary>
+		/// <see cref="Dictionary{TKey, TValue}"/> to switch an <see cref="object"/> to a respective <see cref="Type"/>
+		/// </summary>
+		private Dictionary<Type, Func<string, object>> TypeSwitchDict { get; } = new Dictionary<Type, Func<string, object>>()
 		{
 			{typeof(int), (o) => int.Parse(o)},
 			{typeof(string), (o) => o},
@@ -170,15 +170,37 @@ namespace BerichtManager.WordTemplate
 		/// <summary>
 		/// Updates form fields config to <paramref name="formFields"/>
 		/// </summary>
-		/// <param name="formFields">Configuration of <see cref="Word.FormField"/>s in Word template</param>
-		public static void UpdateFormFieldConfig(Dictionary<Fields, FormField> formFields)
+		/// <param name="field"><see cref="Fields"/> field to update index of</param>
+		/// <param name="newIndex">New index of <see cref="Fields"/> field in Word template</param>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="newIndex"/> < 1</exception>
+		public static void UpdateFormFieldIndex(Fields field, int newIndex)
 		{
-			if (Instance.FormFields.KeyValuePairsEqualNoSequence(formFields))
+			if (newIndex < 1)
+				throw new ArgumentException($"{newIndex} is an invalid index, Word form fields start at index 1", "newIndex");
+			if (Instance.FormFields[field].Index == newIndex)
 				return;
+			Instance.FormFields[field].Index = newIndex;
+			SortFormFields();
 			if (!Directory.Exists(ConfigFolderPath))
 				Directory.CreateDirectory(ConfigFolderPath);
-			File.WriteAllText(FormFieldConfigPath, JsonConvert.SerializeObject(formFields));
-			Instance.FormFields = formFields;
+			File.WriteAllText(FormFieldConfigPath, JsonConvert.SerializeObject(Instance.FormFields));
+		}
+
+		/// <summary>
+		/// Sorts <see cref="FormFields"/> by field index
+		/// </summary>
+		private static void SortFormFields()
+		{
+			Instance.FormFields = Instance.FormFields.OrderBy(kvp => kvp.Value.Index).ToDictionary(x => x.Key, x => x.Value);
+		}
+
+		/// <summary>
+		/// Deletes <paramref name="field"/> from config
+		/// </summary>
+		/// <param name="field"><see cref="Fields"/> field to delete</param>
+		public static void DeleteFieldFromConfig(Fields field)
+		{
+			Instance.FormFields.Remove(field);
 		}
 
 		/// <summary>
