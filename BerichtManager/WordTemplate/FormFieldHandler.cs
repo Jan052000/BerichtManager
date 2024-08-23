@@ -185,8 +185,8 @@ namespace BerichtManager.WordTemplate
 			if (!File.Exists(FormFieldConfigPath))
 				return;
 			Dictionary<Fields, FormField> _FormFields = JsonConvert.DeserializeObject<Dictionary<Fields, FormField>>(File.ReadAllText(FormFieldConfigPath));
-			if (!_FormFields.KeyValuePairsEqualNoSequence(Instance.FormFields))
-				Instance.FormFields = _FormFields;
+			if (!_FormFields.KeyValuePairsEqualNoSequence(FormFields))
+				FormFields = _FormFields;
 		}
 
 		/// <summary>
