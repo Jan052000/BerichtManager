@@ -48,17 +48,37 @@ namespace BerichtManager.WordTemplate
 		/// </summary>
 		private Dictionary<Fields, FormField> FormFields { get; set; } = new Dictionary<Fields, FormField>()
 		{
-			{Fields.Name, new FormField(1, Int32Type) },
-			{Fields.Number, new FormField(2, Int32Type) },
-			{Fields.StartDate, new FormField(3, DateTimeType) },
-			{Fields.EndDate, new FormField(4, DateTimeType) },
-			{Fields.Year, new FormField(5, Int32Type) },
-			{Fields.Work, new FormField(6, StringType) },
-			{Fields.Seminars, new FormField(7, StringType) },
-			{Fields.School, new FormField(8, StringType) },
-			{Fields.SignDateYou, new FormField(9, DateTimeType) },
-			{Fields.SignDateSupervisor, new FormField(10, DateTimeType) }
+			{Fields.Name, new FormField(1, FieldTypes[Fields.Name]) },
+			{Fields.Number, new FormField(2, FieldTypes[Fields.Number]) },
+			{Fields.StartDate, new FormField(3, FieldTypes[Fields.StartDate]) },
+			{Fields.EndDate, new FormField(4, FieldTypes[Fields.EndDate]) },
+			{Fields.Year, new FormField(5, FieldTypes[Fields.Year]) },
+			{Fields.Work, new FormField(6, FieldTypes[Fields.Work]) },
+			{Fields.Seminars, new FormField(7, FieldTypes[Fields.Seminars]) },
+			{Fields.School, new FormField(8, FieldTypes[Fields.School]) },
+			{Fields.SignDateYou, new FormField(9, FieldTypes[Fields.SignDateYou]) },
+			{Fields.SignDateSupervisor, new FormField(10, FieldTypes[Fields.SignDateSupervisor]) }
 		};
+
+		/// <summary>
+		/// Holds all known <see cref="Fields"/> and their respective <see cref="Type"/>s
+		/// </summary>
+		private static Dictionary<Fields, Type> FieldTypes
+		{
+			get => new Dictionary<Fields, Type>()
+			{
+				{Fields.Name, Int32Type },
+				{Fields.Number, Int32Type },
+				{Fields.StartDate, DateTimeType },
+{               Fields.EndDate, DateTimeType },
+				{Fields.Year, Int32Type },
+				{Fields.Work, StringType },
+				{Fields.Seminars, StringType },
+				{Fields.School, StringType },
+				{Fields.SignDateYou, DateTimeType },
+				{Fields.SignDateSupervisor, DateTimeType }
+			};
+		}
 
 		/// <summary>
 		/// <see cref="Dictionary{TKey, TValue}"/> to switch an <see cref="object"/> to a respective <see cref="Type"/>
@@ -177,9 +197,23 @@ namespace BerichtManager.WordTemplate
 		{
 			if (newIndex < 1)
 				throw new ArgumentException($"{newIndex} is an invalid index, Word form fields start at index 1", "newIndex");
-			if (Instance.FormFields[field].Index == newIndex)
+			if (!Instance.FormFields.TryGetValue(field, out FormField form))
+			{
+				FormField newForm = new FormField(index: newIndex, type: FieldTypes[field]);
+				Instance.FormFields.Add(field, newForm);
+			}
+			if (form?.Index == newIndex)
 				return;
-			Instance.FormFields[field].Index = newIndex;
+			if (form != null)
+				form.Index = newIndex;
+			SaveConfig();
+		}
+
+		/// <summary>
+		/// Sorts <see cref="FormFields"/> and saves it at to <see cref="FormFieldConfigPath"/>
+		/// </summary>
+		private static void SaveConfig()
+		{
 			SortFormFields();
 			if (!Directory.Exists(ConfigFolderPath))
 				Directory.CreateDirectory(ConfigFolderPath);
@@ -201,6 +235,7 @@ namespace BerichtManager.WordTemplate
 		public static void DeleteFieldFromConfig(Fields field)
 		{
 			Instance.FormFields.Remove(field);
+			SaveConfig();
 		}
 
 		/// <summary>
