@@ -734,6 +734,28 @@ namespace BerichtManager.OwnControls
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets the <see cref="Icon"/> for the <see cref="BorderlessForm"/> scaled to <see cref="IconBounds"/>
+		/// </summary>
+		public new Icon Icon
+		{
+			get
+			{
+				if (base.Icon.Size != IconBounds.Size)
+					Icon = base.Icon;
+				return base.Icon;
+			}
+			set
+			{
+				if (value.Size != IconBounds.Size)
+					value = new Icon(value, IconBounds.Size);
+				if (value == base.Icon)
+					return;
+				base.Icon = new Icon(value, IconBounds.Size);
+				Invalidate();
+			}
+		}
 		#endregion
 
 		#region Structs and dll imports for Win32 API
