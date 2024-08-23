@@ -71,7 +71,7 @@ namespace BerichtManager.WordTemplate
 				{Fields.Name, Int32Type },
 				{Fields.Number, Int32Type },
 				{Fields.StartDate, DateTimeType },
-{               Fields.EndDate, DateTimeType },
+				{Fields.EndDate, DateTimeType },
 				{Fields.Year, Int32Type },
 				{Fields.Work, StringType },
 				{Fields.Seminars, StringType },
