@@ -7,6 +7,7 @@ using System.Globalization;
 using BerichtManager.HelperClasses;
 using BerichtManager.Extensions;
 using System.Linq;
+using BerichtManager.OwnControls;
 
 namespace BerichtManager.WordTemplate
 {
@@ -108,6 +109,7 @@ namespace BerichtManager.WordTemplate
 		{
 			//Load from config
 			Load();
+			AlertForDoubleIndex();
 		}
 
 		/// <summary>
@@ -185,6 +187,16 @@ namespace BerichtManager.WordTemplate
 			Dictionary<Fields, FormField> _FormFields = JsonConvert.DeserializeObject<Dictionary<Fields, FormField>>(File.ReadAllText(FormFieldConfigPath));
 			if (!_FormFields.KeyValuePairsEqualNoSequence(Instance.FormFields))
 				Instance.FormFields = _FormFields;
+		}
+
+		/// <summary>
+		/// Checks <see cref="FormFields"/> for multiple of same index causing possible problems with overwriting
+		/// </summary>
+		private void AlertForDoubleIndex()
+		{
+			bool multipleSameIndex = FormFields.GroupBy(x => x.Value.Index).Where(x => x.Count() > 1).Count() > 0;
+			if (multipleSameIndex)
+				ThemedMessageBox.Show(text: "You have multiple form fields at the same index, they may overwrite eachother, please fix the form field config", title: "Multiple of same index detected");
 		}
 
 		/// <summary>
