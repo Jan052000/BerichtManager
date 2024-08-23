@@ -652,7 +652,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Valid states for the window
 		/// </summary>
-		private enum FormWindowState
+		public enum FormWindowState
 		{
 			/// <summary>
 			/// Window is normal
@@ -684,7 +684,9 @@ namespace BerichtManager.OwnControls
 		/// Is overwritten to reset hovered title bar button as no nca update is done when switching window states
 		/// and to stop reduce from cutting off a <see cref="TitleBarHeight"/> sized rectangle from the bottom of the window
 		/// </summary>
-		private new FormWindowState WindowState
+		[Category("Style")]
+		[DefaultValue(typeof(FormWindowState), "Normal")]
+		public new FormWindowState WindowState
 		{
 			get => windowState;
 			set
