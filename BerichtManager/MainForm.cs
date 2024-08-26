@@ -866,7 +866,7 @@ namespace BerichtManager
 					return;
 				}
 
-				bool markAsEdited = false;
+				bool save = false;
 				if (field.HasValue)
 				{
 					string value = FormFieldHandler.GetValueFromDoc<string>(field.Value, Doc);
@@ -874,15 +874,23 @@ namespace BerichtManager
 					edit.RefreshConfigs += RefreshConfig;
 					switch (edit.ShowDialog())
 					{
+						//Confirm
 						case DialogResult.OK:
+						//Save and quit
 						case DialogResult.Ignore:
 							if (edit.Result == value)
+							{
+								//No need to save if value has not changed
 								break;
-							markAsEdited = true;
+							}
+							save = true;
 							FormFieldHandler.SetValueInDoc(field.Value, Doc, edit.Result);
 							break;
+						//Skip
+						case DialogResult.Cancel:
+						//Quit
+						case DialogResult.Abort:
 						default:
-							ThemedMessageBox.Info(text: $"Quit edit of {path}", title: "Edit aborted");
 							break;
 					}
 					edit.RefreshConfigs -= RefreshConfig;
@@ -898,53 +906,58 @@ namespace BerichtManager
 						return;
 					}
 
+					bool stopLoop = false;
 					foreach (SelectedField selected in selectEdit.SelectedFields)
 					{
+						if (stopLoop)
+							break;
 						string value = FormFieldHandler.GetValueFromDoc<string>(selected.Field, Doc);
 						EditForm edit = new EditForm(title: selected.DisplayText, text: value);
 						edit.RefreshConfigs += RefreshConfig;
-						bool exitLoop = false;
 						switch (edit.ShowDialog())
 						{
-							//Save
+							//Confirm
 							case DialogResult.OK:
-								markAsEdited = true;
-								FormFieldHandler.SetValueInDoc(selected.Field, Doc, edit.Result);
+								if (edit.Result == value)
+									break;
+								save = true;
+								FormFieldHandler.SetValueInDoc(field.Value, Doc, edit.Result);
 								break;
 							//Save and quit
 							case DialogResult.Ignore:
+								stopLoop = true;
 								if (edit.Result == value)
 									break;
-								markAsEdited = true;
-								FormFieldHandler.SetValueInDoc(selected.Field, Doc, edit.Result);
+								save = true;
+								FormFieldHandler.SetValueInDoc(field.Value, Doc, edit.Result);
 								break;
-							//Close
-							case DialogResult.Cancel:
+							//Quit
+							case DialogResult.Abort:
+								stopLoop = true;
+								save = false;
 								break;
-							//Others like abort
 							default:
-								ThemedMessageBox.Info(text: $"Quit edit of {path}", title: "Edit aborted");
-								exitLoop = true;
 								break;
 						}
 						edit.RefreshConfigs -= RefreshConfig;
-						if (exitLoop)
-							break;
 					}
+
 				}
-				if (markAsEdited)
+
+				if (save)
 				{
 					FitToPage(Doc);
 					Doc.Save();
-					ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
 					UploadedReports.SetEdited(path, true);
 					UpdateTree();
+					ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
 				}
 
 				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
 				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
 				EditMode = true;
 				WasEdited = false;
+				OpenedReportNode = GetNodeFromPath(path) as ReportNode;
 			}
 			catch (Exception ex)
 			{
