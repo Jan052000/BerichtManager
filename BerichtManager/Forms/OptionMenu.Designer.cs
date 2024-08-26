@@ -69,6 +69,7 @@ namespace BerichtManager.Forms
 			this.laTheme = new System.Windows.Forms.Label();
 			this.laUpdate = new System.Windows.Forms.Label();
 			this.gbConfig = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.btFieldsConfig = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.laNumber = new System.Windows.Forms.Label();
 			this.laName = new System.Windows.Forms.Label();
 			this.laNamingPattern = new System.Windows.Forms.Label();
@@ -309,7 +310,7 @@ namespace BerichtManager.Forms
 			this.tbTemplate.Location = new System.Drawing.Point(98, 44);
 			this.tbTemplate.Name = "tbTemplate";
 			this.tbTemplate.ReadOnly = true;
-			this.tbTemplate.Size = new System.Drawing.Size(696, 20);
+			this.tbTemplate.Size = new System.Drawing.Size(609, 20);
 			this.tbTemplate.TabIndex = 17;
 			this.toolTip1.SetToolTip(this.tbTemplate, "Path to word template");
 			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
@@ -557,6 +558,7 @@ namespace BerichtManager.Forms
 			// 
 			this.gbConfig.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.gbConfig.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbConfig.Controls.Add(this.btFieldsConfig);
 			this.gbConfig.Controls.Add(this.cbEndOfWeek);
 			this.gbConfig.Controls.Add(this.tbNamingPattern);
 			this.gbConfig.Controls.Add(this.tbName);
@@ -573,6 +575,17 @@ namespace BerichtManager.Forms
 			this.gbConfig.TabIndex = 44;
 			this.gbConfig.TabStop = false;
 			this.gbConfig.Text = "Report";
+			// 
+			// btFieldsConfig
+			// 
+			this.btFieldsConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btFieldsConfig.Location = new System.Drawing.Point(713, 41);
+			this.btFieldsConfig.Name = "btFieldsConfig";
+			this.btFieldsConfig.Size = new System.Drawing.Size(75, 23);
+			this.btFieldsConfig.TabIndex = 34;
+			this.btFieldsConfig.Text = "Fields config";
+			this.btFieldsConfig.UseVisualStyleBackColor = true;
+			this.btFieldsConfig.Click += new System.EventHandler(this.btFieldsConfig_Click);
 			// 
 			// laNumber
 			// 
@@ -767,5 +780,6 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.TextBox tbIHKBaseUrl;
 		private System.Windows.Forms.CheckBox cbIHKCheckMatchingStartDates;
 		private System.Windows.Forms.CheckBox cbIHKAutoGetComment;
+		private OwnControls.FocusColoredFlatButton btFieldsConfig;
 	}
 }
