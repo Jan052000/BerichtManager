@@ -35,18 +35,18 @@ namespace BerichtManager.HelperClasses
 		{
 			if (!FormFieldHandler.ValidFormFieldCount(doc))
 				throw new InvalidDocumentException();
-			if (throwMismatchStartDate && report.ReportContent.StartDate != doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.StartDate)].Result)
-				throw new StartDateMismatchException(doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.StartDate)].Result, report.ReportContent.StartDate);
+			if (throwMismatchStartDate && report.ReportContent.StartDate != FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc))
+				throw new StartDateMismatchException(FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc), report.ReportContent.StartDate);
 
 			//Dates are auto filled by IHK
-			//report.ReportContent.StartDate = doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.StartDate)].Result;
-			//report.ReportContent.EndDate = doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.EndDate)].Result;
+			//report.ReportContent.StartDate = FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc);
+			//report.ReportContent.EndDate = FormFieldHandler.GetValueFromDoc<string>(Fields.EndDate, doc);
 			report.ReportContent.JobField = ConfigHandler.Instance.IHKJobField;
 			report.ReportContent.SupervisorEMail1 = ConfigHandler.Instance.IHKSupervisorEMail;
 			report.ReportContent.SupervisorEMail2 = ConfigHandler.Instance.IHKSupervisorEMail;
-			report.ReportContent.JobFieldContent = ReportUtils.TransformTextToIHK(doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.Work)].Result);
-			report.ReportContent.SeminarsField = ReportUtils.TransformTextToIHK(doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.Seminars)].Result);
-			report.ReportContent.SchoolField = ReportUtils.TransformTextToIHK(doc.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.School)].Result);
+			report.ReportContent.JobFieldContent = ReportUtils.TransformTextToIHK(FormFieldHandler.GetValueFromDoc<string>(Fields.Work, doc));
+			report.ReportContent.SeminarsField = ReportUtils.TransformTextToIHK(FormFieldHandler.GetValueFromDoc<string>(Fields.Seminars, doc));
+			report.ReportContent.SchoolField = ReportUtils.TransformTextToIHK(FormFieldHandler.GetValueFromDoc<string>(Fields.School, doc));
 		}
 
 		/// <summary>

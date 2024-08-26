@@ -560,8 +560,8 @@ namespace BerichtManager
 				ldoc.Close();
 				SaveOrExit();
 				Doc = WordApp.Documents.Open(path);
-				rtbWork.Text = Doc.FormFields[6].Result;
-				rtbSchool.Text = Doc.FormFields[8].Result;
+				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
+				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
 				EditMode = true;
 				WasEdited = false;
 			}
@@ -915,8 +915,9 @@ namespace BerichtManager
 					UploadedReports.SetEdited(path.Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First(), true);
 					UpdateTree();
 				}
-				rtbWork.Text = Doc.FormFields[6].Result;
-				rtbSchool.Text = Doc.FormFields[8].Result;
+
+				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
+				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
 				EditMode = true;
 				WasEdited = false;
 				ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
@@ -1029,8 +1030,8 @@ namespace BerichtManager
 				if (GetNodeFromPath(path) is ReportNode reportNode)
 					OpenedReportNode = reportNode;
 
-				rtbWork.Text = Doc.FormFields[6].Result;
-				rtbSchool.Text = Doc.FormFields[8].Result;
+				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
+				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
 				EditMode = true;
 				WasEdited = false;
 			}
@@ -1079,14 +1080,14 @@ namespace BerichtManager
 					switch (report.Status)
 					{
 						case ReportNode.UploadStatuses.Accepted:
-							rtbWork.Text = Doc.FormFields[6].Result;
-							rtbSchool.Text = Doc.FormFields[8].Result;
+							rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
+							rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
 							WasEdited = false;
 							ThemedMessageBox.Show(text: "Can not change accepted report", title: "Save not possible");
 							return;
 						case ReportNode.UploadStatuses.HandedIn:
-							rtbWork.Text = Doc.FormFields[6].Result;
-							rtbSchool.Text = Doc.FormFields[8].Result;
+							rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
+							rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
 							WasEdited = false;
 							ThemedMessageBox.Show(text: "Can not change handed in report", title: "Save not possible");
 							return;
@@ -2620,9 +2621,9 @@ namespace BerichtManager
 
 					checkFor.ForEach(newLine =>
 					{
-						errorFound |= doc.FormFields[6].Result.Contains(newLine);
-						errorFound |= doc.FormFields[7].Result.Contains(newLine);
-						errorFound |= doc.FormFields[8].Result.Contains(newLine);
+						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc).Contains(newLine);
+						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Seminars, Doc).Contains(newLine);
+						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc).Contains(newLine);
 					});
 
 					bool canBeUpdated = node is ReportNode report && UploadedReports.GetUploadStatus(GetFullNodePath(node), out var status) && (status == ReportNode.UploadStatuses.Uploaded || status == ReportNode.UploadStatuses.Rejected);
@@ -2722,9 +2723,9 @@ namespace BerichtManager
 					}
 
 					progressForm.Status = $"Editing {report.FullName}";
-					string work = ReportUtils.TransformTextToWord(report.FormFields[6].Result);
-					string seminars = ReportUtils.TransformTextToWord(report.FormFields[7].Result);
-					string school = ReportUtils.TransformTextToWord(report.FormFields[8].Result);
+					string work = ReportUtils.TransformTextToWord(FormFieldHandler.GetValueFromDoc<string>(Fields.Work, report));
+					string seminars = ReportUtils.TransformTextToWord(FormFieldHandler.GetValueFromDoc<string>(Fields.Seminars, report));
+					string school = ReportUtils.TransformTextToWord(FormFieldHandler.GetValueFromDoc<string>(Fields.School, report));
 
 					FormFieldHandler.SetValueInDoc(Fields.Work, report, work);
 					FormFieldHandler.SetValueInDoc(Fields.Seminars, report, seminars);
@@ -2855,7 +2856,7 @@ namespace BerichtManager
 				if (UploadedReports.GetUploadedReport(fullNodePath, out UploadedReport report))
 					indexedReports.Add(report.StartDate.ToString("dd.MM.yyyy"), report);
 				else
-					indexedReports.Add(doc.FormFields[2].Result, null);
+					indexedReports.Add(FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc), null);
 				doc.Close(SaveChanges: false);
 
 				progressForm.Status = "\t\t- Success";

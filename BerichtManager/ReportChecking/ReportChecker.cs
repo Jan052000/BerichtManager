@@ -196,7 +196,7 @@ namespace BerichtManager.ReportChecking
 		/// <returns><see langword="true"/> if number was found and <see langword="false"/> otherwise</returns>
 		private bool GetReportNumber(Word.Document document, out int number)
 		{
-			if (!int.TryParse(document.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.Number)].Result, out int reportNumber))
+			if (!int.TryParse(FormFieldHandler.GetValueFromDoc<string>(Fields.Number, document), out int reportNumber))
 			{
 				number = -1;
 				return false;
@@ -212,7 +212,7 @@ namespace BerichtManager.ReportChecking
 		/// <returns>Start date of report</returns>
 		private bool GetStartDate(Word.Document document, out DateTime startDate)
 		{
-			if (!DateTime.TryParseExact(document.FormFields[FormFieldHandler.GetFormFieldIndex(Fields.StartDate)].Result, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime rstartDate))
+			if (!DateTime.TryParseExact(FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, document), "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime rstartDate))
 			{
 				startDate = new DateTime();
 				return false;
