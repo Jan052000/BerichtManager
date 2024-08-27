@@ -1294,17 +1294,16 @@ namespace BerichtManager
 				WasEdited = false;
 				OpenedReportNode = null;
 			}
-			if (path == ConfigHandler.LastCreated)
+
+			//Roll back config if last created report is deleted
+			ResolvedValues values = NamingPatternResolver.GetValuesFromName(path);
+			if (values.CalendarWeek == ConfigHandler.LastReportWeekOfYear || values.ReportNumber == ConfigHandler.ReportNumber - 1)
 			{
-				int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-				if (ConfigHandler.LastReportWeekOfYear == weekOfYear)
-				{
-					if (ConfigHandler.ReportNumber > 1)
-						ConfigHandler.ReportNumber--;
-					ConfigHandler.LastReportWeekOfYear = weekOfYear - 1;
-					ConfigHandler.SaveConfig();
-				}
+				ConfigHandler.LastReportWeekOfYear--;
+				ConfigHandler.ReportNumber--;
+				ConfigHandler.SaveConfig();
 			}
+
 			File.Delete(path);
 			UpdateTree();
 			ThemedMessageBox.Show(text: "File deleted successfully");
