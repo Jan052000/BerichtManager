@@ -544,13 +544,14 @@ namespace BerichtManager.Config
 				{
 					WebUntisUsername = form.Username;
 					WebUntisPassword = form.Password;
+					WebUntisStayLoggedIn = form.KeepLoggedIn;
 				}
 				else
 				{
 					WebUntisUsername = "";
 					WebUntisPassword = "";
+					WebUntisStayLoggedIn = false;
 				}
-				WebUntisStayLoggedIn = form.KeepLoggedIn;
 				SaveConfig();
 				return new User(username: form.Username, password: form.Password);
 			}
@@ -571,13 +572,14 @@ namespace BerichtManager.Config
 				{
 					IHKUserName = login.Username;
 					IHKPassword = login.Password;
+					IHKStayLoggedIn = login.KeepLoggedIn;
 				}
 				else
 				{
 					IHKUserName = "";
 					IHKPassword = "";
+					IHKStayLoggedIn = false;
 				}
-				IHKStayLoggedIn = login.KeepLoggedIn;
 				SaveConfig();
 				user = new User(username: login.Username, password: login.Password);
 			}
