@@ -738,18 +738,6 @@ namespace BerichtManager
 				EditInTb(ConfigHandler.LastCreated);
 		}
 
-		private void btPrint_Click(object sender, EventArgs e)
-		{
-			if (!HasWordStarted()) return;
-
-			if (tvReports.SelectedNode == null)
-			{
-				ThemedMessageBox.Show(text: "No report selected");
-				return;
-			}
-			PrintDocument(FullSelectedPath);
-		}
-
 		private void btPrintAll_Click(object sender, EventArgs e)
 		{
 			if (!HasWordStarted()) return;
@@ -815,8 +803,10 @@ namespace BerichtManager
 						document.PrintOut(Background: false);
 						document.Close();
 						File.Move(filePath, key + "\\Gedruckt\\" + Path.GetFileName(filePath));
-						string oldRelPath = filePath.Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First();
-						string newRelPath = (key + "\\Gedruckt\\" + Path.GetFileName(filePath)).Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First();
+						string oldRelPath = filePath.Substring(ActivePath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+						List<string> splitPath = oldRelPath.Split(Path.DirectorySeparatorChar).ToList();
+						splitPath.Insert(splitPath.Count - 2, "Gedruckt");
+						var newRelPath = Path.Combine(splitPath.ToArray());
 						UploadedReports.MoveReport(oldRelPath, newRelPath);
 					}
 					catch (Exception ex)
@@ -1134,7 +1124,7 @@ namespace BerichtManager
 				Doc.Save();
 				if (WasEdited)
 				{
-					UploadedReports.SetEdited(Path.Combine(Doc.Path, Doc.Name).Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First(), true);
+					UploadedReports.SetEdited(Doc.FullName, true);
 					UpdateTree();
 				}
 				ThemedMessageBox.Show(text: "Saved changes", title: "Saved");
@@ -1239,7 +1229,7 @@ namespace BerichtManager
 			{
 				bool isSameAsOpened;
 				if (Doc != null)
-					isSameAsOpened = path == Doc.Path + "\\" + Doc.Name;
+					isSameAsOpened = path == Doc.FullName;
 				else isSameAsOpened = false;
 				if (isSameAsOpened)
 				{
@@ -1254,10 +1244,11 @@ namespace BerichtManager
 				document.Close();
 				if (printed.Name != "Gedruckt")
 				{
-					File.Move(path,
-					path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path));
-					string oldRelPath = path.Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First();
-					string newRelPath = path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt\\" + Path.GetFileName(path).Split(new string[] { Path.GetFullPath(ActivePath + "\\..") + Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).First();
+					string oldRelPath = path.Substring(ActivePath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+					List<string> splitPath = oldRelPath.Split(Path.DirectorySeparatorChar).ToList();
+					splitPath.Insert(splitPath.Count - 2, "Gedruckt");
+					var newRelPath = Path.Combine(splitPath.ToArray());
+					File.Move(path, Path.Combine(path.Substring(0, path.Length - Path.GetFileName(path).Length), "Gedruckt", Path.GetFileName(path)));
 					UploadedReports.MoveReport(oldRelPath, newRelPath);
 					UpdateTree();
 				}
@@ -1293,7 +1284,7 @@ namespace BerichtManager
 			}
 			if (ThemedMessageBox.Show(text: $"Are you sure you want to {path}?", title: "Delete?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
-			if (path == Doc?.Path + "\\" + Doc?.Name)
+			if (path == Doc?.FullName)
 			{
 				Doc.Close(SaveChanges: false);
 				Doc = null;
@@ -1301,14 +1292,16 @@ namespace BerichtManager
 				rtbWork.Text = "";
 				EditMode = false;
 				WasEdited = false;
+				OpenedReportNode = null;
 			}
 			if (path == ConfigHandler.LastCreated)
 			{
-				if (ConfigHandler.LastReportWeekOfYear == Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday))
+				int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				if (ConfigHandler.LastReportWeekOfYear == weekOfYear)
 				{
 					if (ConfigHandler.ReportNumber > 1)
 						ConfigHandler.ReportNumber--;
-					ConfigHandler.LastReportWeekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1;
+					ConfigHandler.LastReportWeekOfYear = weekOfYear - 1;
 					ConfigHandler.SaveConfig();
 				}
 			}
