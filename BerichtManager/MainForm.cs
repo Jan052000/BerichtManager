@@ -569,6 +569,7 @@ namespace BerichtManager
 				ldoc.Close();
 				SaveOrExit();
 				Doc = WordApp.Documents.Open(path);
+				OpenedReportNode = GetNodeFromPath(path) as ReportNode;
 				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
 				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
 				EditMode = true;
