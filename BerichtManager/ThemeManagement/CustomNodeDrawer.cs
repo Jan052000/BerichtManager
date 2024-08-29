@@ -52,12 +52,12 @@ namespace BerichtManager.ThemeManagement
 		/// <summary>
 		/// Icon displayed before a collapsed node
 		/// </summary>
-		private readonly Bitmap FolderClosedIcon = new Bitmap(Properties.Resources.Folder_Closed);
+		private Bitmap FolderClosedIcon { get; set; } = new Bitmap(Properties.Resources.Folder_Closed);
 
 		/// <summary>
 		/// Icon displayed before an expanded node
 		/// </summary>
-		private readonly Bitmap FolderOpenedIcon = new Bitmap(Properties.Resources.Folder_Open);
+		private Bitmap FolderOpenedIcon { get; set; } = new Bitmap(Properties.Resources.Folder_Open);
 
 		/// <summary>
 		/// Creates a CustomDrawer object
@@ -111,6 +111,12 @@ namespace BerichtManager.ThemeManagement
 
 			if (e.Node.TreeView.ShowLines)
 				DrawDottedLine(e, iconBounds, checkBoxBounds);
+
+			if (FolderOpenedIcon.Width != iconBounds.Width || FolderOpenedIcon.Height != iconBounds.Height)
+				FolderOpenedIcon = new Bitmap(FolderOpenedIcon, iconBounds.Size);
+			if (FolderClosedIcon.Width != iconBounds.Width || FolderClosedIcon.Height != iconBounds.Height)
+				FolderClosedIcon = new Bitmap(FolderClosedIcon, iconBounds.Size);
+
 			if (e.Node.Nodes.Count > 0)
 			{
 				if (e.Node.IsExpanded)
