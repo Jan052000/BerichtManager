@@ -1,4 +1,4 @@
-﻿using BerichtManager.ThemeManagement.DefaultThemes;
+using BerichtManager.ThemeManagement.DefaultThemes;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -173,6 +173,8 @@ namespace BerichtManager.ThemeManagement
 		public Color TextBoxBorderColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color TextBoxArrowColor { get; set; }
+		[DefaultValue(typeof(Color), "White")]
+		public Color TextBoxReadOnlyColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color ColoredComboBoxDropDownButtonBackColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]

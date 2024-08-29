@@ -9,6 +9,7 @@ namespace BerichtManager.ThemeManagement
 		Color TextBoxDisabledBackColor { get; }
 		Color TextBoxBorderColor { get; }
 		Color TextBoxArrowColor { get; }
+		Color TextBoxReadOnlyColor { get; }
 		Color ColoredComboBoxDropDownButtonBackColor { get; }
 		Color ColoredComboBoxTextColor { get; }
 		Color ColoredComboBoxDisabledColor { get; }

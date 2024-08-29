@@ -24,10 +24,18 @@ namespace BerichtManager.ThemeManagement
 			switch (control)
 			{
 				case RichTextBox rtb:
-					rtb.BackColor = Theme.TextBoxBackColor;
+					if (rtb.ReadOnly)
+						rtb.BackColor = Theme.TextBoxReadOnlyColor;
+					else if (rtb.Enabled)
+						rtb.BackColor = Theme.TextBoxBackColor;
+					else
+						rtb.BackColor = Theme.TextBoxDisabledBackColor;
 					rtb.BorderStyle = BorderStyle.None;
 					break;
 				case TextBox tb:
+					if (tb.ReadOnly)
+						tb.BackColor = Theme.TextBoxReadOnlyColor;
+					else
 					if (tb.Enabled)
 						tb.BackColor = Theme.TextBoxBackColor;
 					else

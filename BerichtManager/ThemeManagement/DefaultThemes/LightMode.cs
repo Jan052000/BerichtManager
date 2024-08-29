@@ -9,6 +9,7 @@ namespace BerichtManager.ThemeManagement.DefaultThemes
 		public Color TextBoxDisabledBackColor => Color.FromArgb(235, 235, 228);
 		public Color TextBoxBorderColor => Color.FromArgb(255, 255, 255);
 		public Color TextBoxArrowColor => Color.Black;
+		public Color TextBoxReadOnlyColor => Color.FromArgb(240, 240, 240);
 		public Color ColoredComboBoxDropDownButtonBackColor => Color.FromArgb(255, 255, 255);
 		public Color ColoredComboBoxTextColor => Color.Black;
 		public Color ColoredComboBoxDisabledColor => Color.FromArgb(109, 109, 109);
