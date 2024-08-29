@@ -146,6 +146,12 @@ namespace BerichtManager.OwnControls
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
+			Rectangle focusBounds = new Rectangle(0, 0, e.ClipRectangle.Width, e.ClipRectangle.Height);
+			if (ButtonFocusBoxWidth == 1)
+			{
+				focusBounds.Width -= 1;
+				focusBounds.Height -= 1;
+			}
 			if (FlatStyle != FlatStyle.Flat)
 			{
 				base.OnPaint(e);
@@ -156,21 +162,12 @@ namespace BerichtManager.OwnControls
 				g.Clear(ButtonHoverColor);
 			else
 				g.Clear(Enabled ? BackColor : ButtonDisabledColor);
-			Size textSize = TextRenderer.MeasureText(Text, Font);
-			Rectangle textRect = new Rectangle();
-			textRect.Width = Math.Min(textSize.Width, Width);
-			textRect.Height = Math.Min(textSize.Height, Height);
-			textRect.X = Math.Max(0, (Width / 2) - (textSize.Width / 2));
-			textRect.Y = Math.Max(0, (Height / 2) - (textSize.Height / 2));
-			TextRenderer.DrawText(g, Text, Font, textRect, Enabled ? ForeColor : ButtonDisabledTextColor);
+			TextRenderer.DrawText(g, Text, Font, focusBounds, Enabled ? ForeColor : ButtonDisabledTextColor);
 
 			if (Focused)
 			{
-				Rectangle bounds = new Rectangle(0, 0, Width - (int)ButtonFocusBoxWidth, Height - (int)ButtonFocusBoxWidth);
-				//Rectangle bounds = new Rectangle((int)e.Graphics.ClipBounds.X, (int)e.Graphics.ClipBounds.Y,
-				//(int)e.Graphics.ClipBounds.Width - (int)buttonFocusBoxWidth, (int)e.Graphics.ClipBounds.Height - (int)buttonFocusBoxWidth);
-				using (Pen p = new Pen(buttonFocusBoxColor, buttonFocusBoxWidth))
-					e.Graphics.DrawRectangle(p, bounds);
+				using (Pen p = new Pen(buttonFocusBoxColor, buttonFocusBoxWidth) { Alignment = System.Drawing.Drawing2D.PenAlignment.Inset})
+					e.Graphics.DrawRectangle(p, focusBounds);
 			}
 		}
 
