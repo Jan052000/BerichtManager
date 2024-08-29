@@ -38,6 +38,7 @@
 			this.paButtons = new System.Windows.Forms.Panel();
 			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btReset = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			((System.ComponentModel.ISupportInitialize)(this.scMainView)).BeginInit();
 			this.scMainView.Panel1.SuspendLayout();
 			this.scMainView.Panel2.SuspendLayout();
@@ -137,6 +138,7 @@
 			// paButtons
 			// 
 			this.paButtons.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.paButtons.Controls.Add(this.btReset);
 			this.paButtons.Controls.Add(this.btSave);
 			this.paButtons.Controls.Add(this.btClose);
 			this.paButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -166,6 +168,17 @@
 			this.btClose.Text = "Close";
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.OnCloseClicked);
+			// 
+			// btReset
+			// 
+			this.btReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btReset.Location = new System.Drawing.Point(550, 5);
+			this.btReset.Name = "btReset";
+			this.btReset.Size = new System.Drawing.Size(75, 23);
+			this.btReset.TabIndex = 2;
+			this.btReset.Text = "Reset";
+			this.btReset.UseVisualStyleBackColor = true;
+			this.btReset.Click += new System.EventHandler(this.OnResetClicked);
 			// 
 			// WordTemplateForm
 			// 
@@ -202,5 +215,6 @@
 		private System.Windows.Forms.Label laFieldOptions;
 		private System.Windows.Forms.Label laOrdered;
 		private System.Windows.Forms.Panel paTitleOptions;
+		private OwnControls.FocusColoredFlatButton btReset;
 	}
 }

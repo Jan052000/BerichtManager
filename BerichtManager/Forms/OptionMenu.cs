@@ -360,7 +360,8 @@ namespace BerichtManager.Forms
 
 		private void btFieldsConfig_Click(object sender, EventArgs e)
 		{
-			new WordTemplateForm().ShowDialog();
+			if (new WordTemplateForm().ShowDialog() == DialogResult.Retry)
+				btFieldsConfig_Click(sender, e);
 		}
 	}
 }

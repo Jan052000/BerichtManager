@@ -1,4 +1,5 @@
-﻿using BerichtManager.ThemeManagement;
+﻿using BerichtManager.OwnControls;
+using BerichtManager.ThemeManagement;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -99,6 +100,14 @@ namespace BerichtManager.WordTemplate
 					throw new Exception($"Field {label.Text} was not found in FormFieldHandler");
 				FormFieldHandler.UpdateFormFieldIndex(field, index++);
 			}
+		}
+
+		private void OnResetClicked(object sender, EventArgs e)
+		{
+			if (ThemedMessageBox.Show(text: "Continue edit after reset?", title: "Continue after reset?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+				DialogResult = DialogResult.Retry;
+			FormFieldHandler.ResetConfig();
+			Close();
 		}
 	}
 }

@@ -47,19 +47,7 @@ namespace BerichtManager.WordTemplate
 		/// <see cref="Dictionary{TKey, TValue}"/> containing form field order and <see cref="Type"/>s
 		/// Note that <see cref="Word.FormFields"/> start at index <c>1</c>
 		/// </summary>
-		private Dictionary<Fields, FormField> FormFields { get; set; } = new Dictionary<Fields, FormField>()
-		{
-			{Fields.Name, new FormField(1, FieldTypes[Fields.Name]) },
-			{Fields.Number, new FormField(2, FieldTypes[Fields.Number]) },
-			{Fields.StartDate, new FormField(3, FieldTypes[Fields.StartDate]) },
-			{Fields.EndDate, new FormField(4, FieldTypes[Fields.EndDate]) },
-			{Fields.Year, new FormField(5, FieldTypes[Fields.Year]) },
-			{Fields.Work, new FormField(6, FieldTypes[Fields.Work]) },
-			{Fields.Seminars, new FormField(7, FieldTypes[Fields.Seminars]) },
-			{Fields.School, new FormField(8, FieldTypes[Fields.School]) },
-			{Fields.SignDateYou, new FormField(9, FieldTypes[Fields.SignDateYou]) },
-			{Fields.SignDateSupervisor, new FormField(10, FieldTypes[Fields.SignDateSupervisor]) }
-		};
+		private Dictionary<Fields, FormField> FormFields { get; set; } = GetInitialConfig();
 
 		/// <summary>
 		/// Holds all known <see cref="Fields"/> and their respective <see cref="Type"/>s
@@ -110,6 +98,27 @@ namespace BerichtManager.WordTemplate
 			//Load from config
 			Load();
 			AlertForDoubleIndex();
+		}
+
+		/// <summary>
+		/// Generates the default form fields config
+		/// </summary>
+		/// <returns>Default form fields config</returns>
+		private static Dictionary<Fields, FormField> GetInitialConfig()
+		{
+			return new Dictionary<Fields, FormField>()
+			{
+				{Fields.Name, new FormField(1, FieldTypes[Fields.Name]) },
+				{Fields.Number, new FormField(2, FieldTypes[Fields.Number]) },
+				{Fields.StartDate, new FormField(3, FieldTypes[Fields.StartDate]) },
+				{Fields.EndDate, new FormField(4, FieldTypes[Fields.EndDate]) },
+				{Fields.Year, new FormField(5, FieldTypes[Fields.Year]) },
+				{Fields.Work, new FormField(6, FieldTypes[Fields.Work]) },
+				{Fields.Seminars, new FormField(7, FieldTypes[Fields.Seminars]) },
+				{Fields.School, new FormField(8, FieldTypes[Fields.School]) },
+				{Fields.SignDateYou, new FormField(9, FieldTypes[Fields.SignDateYou]) },
+				{Fields.SignDateSupervisor, new FormField(10, FieldTypes[Fields.SignDateSupervisor]) }
+			};
 		}
 
 		/// <summary>
@@ -187,6 +196,16 @@ namespace BerichtManager.WordTemplate
 			Dictionary<Fields, FormField> _FormFields = JsonConvert.DeserializeObject<Dictionary<Fields, FormField>>(File.ReadAllText(FormFieldConfigPath));
 			if (!_FormFields.KeyValuePairsEqualNoSequence(FormFields))
 				FormFields = _FormFields;
+		}
+
+		/// <summary>
+		/// Resets form field config to default and deletes config file
+		/// </summary>
+		public static void ResetConfig()
+		{
+			Instance.FormFields = GetInitialConfig();
+			if (File.Exists(FormFieldConfigPath))
+				File.Delete(FormFieldConfigPath);
 		}
 
 		/// <summary>
