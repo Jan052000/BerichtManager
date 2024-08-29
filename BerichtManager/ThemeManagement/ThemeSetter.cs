@@ -94,6 +94,8 @@ namespace BerichtManager.ThemeManagement
 					break;
 			}
 			control.ForeColor = Theme.ForeColor;
+			if (control.ContextMenuStrip != null)
+				SetThemes(control.ContextMenuStrip);
 			foreach (Control control1 in control.Controls)
 			{
 				SetThemes(control1);

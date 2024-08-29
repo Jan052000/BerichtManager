@@ -130,7 +130,6 @@ namespace BerichtManager
 		{
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
-			ThemeSetter.SetThemes(toRightClickMenu);
 			ThemeSetter.SetThemes(ttTips);
 			NodeDrawer = new CustomNodeDrawer();
 			foreach (Control control in this.Controls)
