@@ -126,6 +126,7 @@
     <Compile Include="IHKClient\CreateResults.cs" />
     <Compile Include="IHKClient\Exceptions\StartDateMismatchException.cs" />
     <Compile Include="IHKClient\UploadResult.cs" />
+    <Compile Include="ThemeManagement\DefaultThemes\SystemTheme.cs" />
     <Compile Include="UploadChecking\ReportNode.cs" />
     <Compile Include="HelperClasses\ReportTransformer.cs" />
     <Compile Include="UploadChecking\ReportStatuses.cs" />

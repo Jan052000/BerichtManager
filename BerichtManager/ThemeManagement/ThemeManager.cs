@@ -1,4 +1,4 @@
-using BerichtManager.ThemeManagement.DefaultThemes;
+﻿using BerichtManager.ThemeManagement.DefaultThemes;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -22,7 +22,8 @@ namespace BerichtManager.ThemeManagement
 		private Dictionary<string, ITheme> Themes { get; set; } = new Dictionary<string, ITheme>()
 		{
 			{"Dark Mode", new DarkMode()},
-			{"Light Mode", new LightMode()}
+			{"Light Mode", new LightMode()},
+			{"System", new SystemTheme()}
 		};
 		/// <summary>
 		/// Path to themes folder
