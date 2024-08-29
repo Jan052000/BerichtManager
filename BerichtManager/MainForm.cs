@@ -96,7 +96,12 @@ namespace BerichtManager
 		/// </summary>
 		private string FullSelectedPath
 		{
-			get => Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath);
+			get
+			{
+				if (tvReports.SelectedNode == null)
+					return "";
+				return Path.GetFullPath(ActivePath + "\\..\\" + tvReports.SelectedNode.FullPath);
+			}
 		}
 
 		private ReportNode _OpenedReportNode { get; set; } = null;
