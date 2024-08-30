@@ -27,6 +27,9 @@ namespace BerichtManager.WordTemplate
 		/// </summary>
 		private void Setup()
 		{
+			flpOrder.Controls.Clear();
+			flpFieldOptions.Controls.Clear();
+
 			List<Fields> fields = Enum.GetValues(typeof(Fields)).Cast<Fields>().ToList();
 			List<Fields> configFields = fields.Where(f => FormFieldHandler.GetFormField(f, out _)).OrderBy(f => FormFieldHandler.GetFormFieldIndex(f)).ToList();
 			List<Fields> unused = fields.Where(f => !FormFieldHandler.GetFormField(f, out _)).ToList();
@@ -113,7 +116,7 @@ namespace BerichtManager.WordTemplate
 			ThemedMessageBox.Show(text: "Saved changes.", title: "Saved");
 		}
 
-		private void OnResetClicked(object sender, EventArgs e)
+		private void OnDefaultClicked(object sender, EventArgs e)
 		{
 			if (ThemedMessageBox.Show(text: "Reset order to default?", title: "Reset order?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
@@ -132,6 +135,13 @@ namespace BerichtManager.WordTemplate
 				if (!formfieldsConfig.ContainsKey(_enum))
 					flpFieldOptions.Controls.Add(GetLabel(_enum.ToString()));
 			}
+		}
+
+		private void OnResetClicked(object sender, EventArgs e)
+		{
+			if (ThemedMessageBox.Show(text: "Do you want to discard your changes?", title: "Discard changes?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+				return;
+			Setup();
 		}
 	}
 }
