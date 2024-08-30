@@ -81,18 +81,7 @@ namespace BerichtManager.WordTemplate
 
 		private void OnSaveClicked(object sender, EventArgs e)
 		{
-
-			//Delete unused field indexes
-			foreach (Control control in flpFieldOptions.Controls)
-			{
-				if (!(control is Label label))
-					continue;
-				if (!Enum.TryParse(label.Text, true, out Fields field))
-					continue;
-				FormFieldHandler.DeleteFieldFromConfig(field);
-			}
-
-			//Update selected field indexes
+			List<(Fields Field, int Index)> fields = new List<(Fields Field, int Index)>();
 			int index = 1;
 			foreach (Control control in flpOrder.Controls)
 			{
@@ -100,8 +89,10 @@ namespace BerichtManager.WordTemplate
 					continue;
 				if (!Enum.TryParse(label.Text, true, out Fields field))
 					throw new Exception($"Field {label.Text} was not found in FormFieldHandler");
-				FormFieldHandler.UpdateFormFieldIndex(field, index++);
+				fields.Add((Field: field, Index: index++));
 			}
+			FormFieldHandler.UpdateFormFieldIndexes(fields);
+			ThemedMessageBox.Show(text: "Saved changes.", title: "Saved");
 		}
 
 		private void OnResetClicked(object sender, EventArgs e)
