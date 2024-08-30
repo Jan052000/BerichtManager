@@ -103,7 +103,7 @@ namespace BerichtManager.HelperClasses
 		/// <returns><see langword="true"/> if <paramref name="pattern"/> contains a replacable value and <see langword="false"/> otherwise</returns>
 		public static bool PatternContainsValues(string pattern)
 		{
-			return pattern.IndexOf(CalendarWeek) > 0 || pattern.IndexOf(ReportNumber) > 0;
+			return pattern.IndexOf(CalendarWeek) > -1 || pattern.IndexOf(ReportNumber) > -1;
 		}
 	}
 
