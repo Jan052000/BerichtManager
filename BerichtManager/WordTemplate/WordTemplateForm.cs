@@ -10,6 +10,11 @@ namespace BerichtManager.WordTemplate
 {
 	public partial class WordTemplateForm : Form
 	{
+		/// <summary>
+		/// Used to indicate that the form field order has been altered
+		/// </summary>
+		private bool IsDirty { get; set; } = false;
+
 		public WordTemplateForm()
 		{
 			InitializeComponent();
@@ -72,14 +77,26 @@ namespace BerichtManager.WordTemplate
 		private void PanelDragDrop(object sender, DragEventArgs e)
 		{
 			(sender as Control).Controls.Add(e.Data.GetData(DataFormats.Serializable) as Control);
+			IsDirty = true;
 		}
 
 		private void OnCloseClicked(object sender, EventArgs e)
 		{
+			if (IsDirty && ThemedMessageBox.Show(text: "Save unsaved changes?", title: "Unsaved changes!", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+				SaveConfig();
 			Close();
 		}
 
 		private void OnSaveClicked(object sender, EventArgs e)
+		{
+			SaveConfig();
+		}
+
+		/// <summary>
+		/// Saves config to <see cref="FormFieldHandler"/>
+		/// </summary>
+		/// <exception cref="Exception">Thrown if label text is not a value of <see cref="Fields"/></exception>
+		private void SaveConfig()
 		{
 			List<(Fields Field, int Index)> fields = new List<(Fields Field, int Index)>();
 			int index = 1;
@@ -92,6 +109,7 @@ namespace BerichtManager.WordTemplate
 				fields.Add((Field: field, Index: index++));
 			}
 			FormFieldHandler.UpdateFormFieldIndexes(fields);
+			IsDirty = false;
 			ThemedMessageBox.Show(text: "Saved changes.", title: "Saved");
 		}
 
