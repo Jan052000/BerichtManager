@@ -1,4 +1,4 @@
-﻿using Word = Microsoft.Office.Interop.Word;
+using Word = Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -246,6 +246,12 @@ namespace BerichtManager.WordTemplate
 		private static void SaveConfig()
 		{
 			SortFormFields();
+			if (Instance.FormFields.KeyValuePairsEqualNoSequence(GetInitialConfig()))
+			{
+				if (File.Exists(FormFieldConfigPath))
+					File.Delete(FormFieldConfigPath);
+				return;
+			}
 			if (!Directory.Exists(ConfigFolderPath))
 				Directory.CreateDirectory(ConfigFolderPath);
 			File.WriteAllText(FormFieldConfigPath, JsonConvert.SerializeObject(Instance.FormFields));
