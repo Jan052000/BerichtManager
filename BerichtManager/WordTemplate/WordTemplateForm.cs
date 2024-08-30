@@ -1,4 +1,4 @@
-using BerichtManager.OwnControls;
+﻿using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
 using System;
 using System.Collections.Generic;
@@ -115,10 +115,23 @@ namespace BerichtManager.WordTemplate
 
 		private void OnResetClicked(object sender, EventArgs e)
 		{
-			if (ThemedMessageBox.Show(text: "Continue edit after reset?", title: "Continue after reset?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
-				DialogResult = DialogResult.Retry;
-			FormFieldHandler.ResetConfig();
-			Close();
+			if (ThemedMessageBox.Show(text: "Reset order to default?", title: "Reset order?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+				return;
+			Dictionary<Fields, FormField> formfieldsConfig = FormFieldHandler.GetInitialConfig();
+
+			flpOrder.Controls.Clear();
+			flpFieldOptions.Controls.Clear();
+
+			foreach (KeyValuePair<Fields, FormField> kvp in formfieldsConfig)
+			{
+				flpOrder.Controls.Add(GetLabel(Enum.GetName(typeof(Fields), kvp.Key)));
+			}
+
+			foreach (Fields _enum in Enum.GetValues(typeof(Fields)))
+			{
+				if (!formfieldsConfig.ContainsKey(_enum))
+					flpFieldOptions.Controls.Add(GetLabel(_enum.ToString()));
+			}
 		}
 	}
 }
