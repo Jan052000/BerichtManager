@@ -104,7 +104,7 @@ namespace BerichtManager.WordTemplate
 		/// Generates the default form fields config
 		/// </summary>
 		/// <returns>Default form fields config</returns>
-		private static Dictionary<Fields, FormField> GetInitialConfig()
+		internal static Dictionary<Fields, FormField> GetInitialConfig()
 		{
 			return new Dictionary<Fields, FormField>()
 			{
