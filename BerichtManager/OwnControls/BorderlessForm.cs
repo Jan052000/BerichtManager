@@ -305,12 +305,14 @@ namespace BerichtManager.OwnControls
 			}
 		}
 
+		private const int BUTTONYFROMTOP = 2;
+
 		/// <summary>
 		/// Bounds of the close button in title bar (right)
 		/// </summary>
 		private Rectangle CloseButtonBounds
 		{
-			get => new Rectangle(Width - TitleBarButtonWidth - ResizeHitbox, 2, TitleBarButtonWidth, TitleBarHeight - 1);
+			get => new Rectangle(Width - TitleBarButtonWidth - ResizeHitbox, BUTTONYFROMTOP, TitleBarButtonWidth, TitleBarHeight - BUTTONYFROMTOP);
 		}
 
 		/// <summary>
@@ -318,7 +320,7 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		private Rectangle ZoomButtonBounds
 		{
-			get => new Rectangle(CloseButtonBounds.X - TitleBarButtonWidth - 1, CloseButtonBounds.Y, CloseButtonBounds.Width, CloseButtonBounds.Height);
+			get => new Rectangle(CloseButtonBounds.X - TitleBarButtonWidth - 1, CloseButtonBounds.Y, TitleBarButtonWidth, CloseButtonBounds.Height);
 		}
 
 		/// <summary>
@@ -326,7 +328,7 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		private Rectangle ReduceButtonBounds
 		{
-			get => new Rectangle(ZoomButtonBounds.X - TitleBarButtonWidth - 1, ZoomButtonBounds.Y, ZoomButtonBounds.Width, ZoomButtonBounds.Height);
+			get => new Rectangle(ZoomButtonBounds.X - TitleBarButtonWidth - 1, ZoomButtonBounds.Y, TitleBarButtonWidth, ZoomButtonBounds.Height);
 		}
 
 		/// <summary>
