@@ -20,6 +20,8 @@ namespace BerichtManager.HelperClasses
 		{
 			Report report = new Report();
 			WordToIHK(doc, report, throwMismatchStartDate);
+			report.ReportContent.StartDate = FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc);
+			report.ReportContent.EndDate = FormFieldHandler.GetValueFromDoc<string>(Fields.EndDate, doc);
 			return report;
 		}
 
