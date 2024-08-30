@@ -1,4 +1,4 @@
-﻿using BerichtManager.OwnControls;
+using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,9 @@ namespace BerichtManager.WordTemplate
 			Setup();
 		}
 
+		/// <summary>
+		/// Fills <see cref="flpFieldOptions"/> and <see cref="flpOrder"/> with <see cref="Label"/>s representing form field config
+		/// </summary>
 		private void Setup()
 		{
 			List<Fields> fields = Enum.GetValues(typeof(Fields)).Cast<Fields>().ToList();
@@ -32,14 +35,13 @@ namespace BerichtManager.WordTemplate
 			{
 				flpFieldOptions.Controls.Add(GetLabel(field.ToString()));
 			}
-
-
-			/*foreach (Enum field in Enum.GetValues(typeof(Fields)))
-			{
-				flpFieldOptions.Controls.Add(GetLabel(field.ToString()));
-			}*/
 		}
 
+		/// <summary>
+		/// Generates a styled <see cref="Label"/> containing <paramref name="text"/>
+		/// </summary>
+		/// <param name="text">Text in label</param>
+		/// <returns>Styled <see cref="Label"/></returns>
 		private Label GetLabel(string text)
 		{
 			Label l = new Label();
