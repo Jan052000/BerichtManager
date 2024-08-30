@@ -519,6 +519,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public void SaveConfig()
 		{
+			Directory.CreateDirectory(ConfigFolderPath);
 			File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
 		}
 
