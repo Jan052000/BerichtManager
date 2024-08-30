@@ -1,4 +1,4 @@
-using Word = Microsoft.Office.Interop.Word;
+﻿using Word = Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -237,6 +237,25 @@ namespace BerichtManager.WordTemplate
 				return;
 			if (form != null)
 				form.Index = newIndex;
+			SaveConfig();
+		}
+
+		/// <summary>
+		/// Updates config to match <paramref name="fields"/>
+		/// </summary>
+		/// <param name="fields"><see cref="List{T}"/> of values to construct new config with</param>
+		/// <exception cref="ArgumentException">Thrown if an index in <paramref name="fields"/> is invalid</exception>
+		public static void UpdateFormFieldIndexes(List<(Fields Field, int Index)> fields)
+		{
+			Dictionary<Fields, FormField> newFormFields = new Dictionary<Fields, FormField>();
+			foreach ((Fields Field, int Index) item in fields)
+			{
+				if (item.Index < 1)
+					throw new ArgumentException($"{item.Index} is an invalid index, Word form fields start at index 1", "newIndex");
+				newFormFields.Add(item.Field, new FormField(item.Index, FieldTypes[item.Field]));
+			}
+
+			Instance.FormFields = newFormFields;
 			SaveConfig();
 		}
 
