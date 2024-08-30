@@ -916,7 +916,7 @@ namespace BerichtManager
 								if (edit.Result == value)
 									break;
 								save = true;
-								FormFieldHandler.SetValueInDoc(field.Value, Doc, edit.Result);
+								FormFieldHandler.SetValueInDoc(selected.Field, Doc, edit.Result);
 								break;
 							//Save and quit
 							case DialogResult.Ignore:
@@ -924,7 +924,7 @@ namespace BerichtManager
 								if (edit.Result == value)
 									break;
 								save = true;
-								FormFieldHandler.SetValueInDoc(field.Value, Doc, edit.Result);
+								FormFieldHandler.SetValueInDoc(selected.Field, Doc, edit.Result);
 								break;
 							//Quit
 							case DialogResult.Abort:
