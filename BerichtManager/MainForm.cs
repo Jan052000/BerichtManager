@@ -2621,9 +2621,9 @@ namespace BerichtManager
 
 					checkFor.ForEach(newLine =>
 					{
-						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc).Contains(newLine);
-						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Seminars, Doc).Contains(newLine);
-						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc).Contains(newLine);
+						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Work, doc).Contains(newLine);
+						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Seminars, doc).Contains(newLine);
+						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.School, doc).Contains(newLine);
 					});
 
 					bool canBeUpdated = node is ReportNode report && UploadedReports.GetUploadStatus(GetFullNodePath(node), out var status) && (status == ReportNode.UploadStatuses.Uploaded || status == ReportNode.UploadStatuses.Rejected);
