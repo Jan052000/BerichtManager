@@ -7,7 +7,6 @@ using BerichtManager.Forms;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Collections;
 using BerichtManager.ThemeManagement;
 using System.Diagnostics;
 using BerichtManager.HelperClasses;

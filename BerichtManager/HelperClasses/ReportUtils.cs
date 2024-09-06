@@ -1,5 +1,4 @@
-﻿using Word = Microsoft.Office.Interop.Word;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BerichtManager.HelperClasses
 {
