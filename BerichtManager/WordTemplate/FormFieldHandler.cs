@@ -104,7 +104,7 @@ namespace BerichtManager.WordTemplate
 		/// Generates the default form fields config
 		/// </summary>
 		/// <returns>Default form fields config</returns>
-		private static Dictionary<Fields, FormField> GetInitialConfig()
+		internal static Dictionary<Fields, FormField> GetInitialConfig()
 		{
 			return new Dictionary<Fields, FormField>()
 			{
@@ -241,11 +241,36 @@ namespace BerichtManager.WordTemplate
 		}
 
 		/// <summary>
+		/// Updates config to match <paramref name="fields"/>
+		/// </summary>
+		/// <param name="fields"><see cref="List{T}"/> of values to construct new config with</param>
+		/// <exception cref="ArgumentException">Thrown if an index in <paramref name="fields"/> is invalid</exception>
+		public static void UpdateFormFieldIndexes(List<(Fields Field, int Index)> fields)
+		{
+			Dictionary<Fields, FormField> newFormFields = new Dictionary<Fields, FormField>();
+			foreach ((Fields Field, int Index) item in fields)
+			{
+				if (item.Index < 1)
+					throw new ArgumentException($"{item.Index} is an invalid index, Word form fields start at index 1", "newIndex");
+				newFormFields.Add(item.Field, new FormField(item.Index, FieldTypes[item.Field]));
+			}
+
+			Instance.FormFields = newFormFields;
+			SaveConfig();
+		}
+
+		/// <summary>
 		/// Sorts <see cref="FormFields"/> and saves it at to <see cref="FormFieldConfigPath"/>
 		/// </summary>
 		private static void SaveConfig()
 		{
 			SortFormFields();
+			if (Instance.FormFields.KeyValuePairsEqualNoSequence(GetInitialConfig()))
+			{
+				if (File.Exists(FormFieldConfigPath))
+					File.Delete(FormFieldConfigPath);
+				return;
+			}
 			if (!Directory.Exists(ConfigFolderPath))
 				Directory.CreateDirectory(ConfigFolderPath);
 			File.WriteAllText(FormFieldConfigPath, JsonConvert.SerializeObject(Instance.FormFields));

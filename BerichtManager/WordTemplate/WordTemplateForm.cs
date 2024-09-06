@@ -10,6 +10,11 @@ namespace BerichtManager.WordTemplate
 {
 	public partial class WordTemplateForm : Form
 	{
+		/// <summary>
+		/// Used to indicate that the form field order has been altered
+		/// </summary>
+		private bool IsDirty { get; set; } = false;
+
 		public WordTemplateForm()
 		{
 			InitializeComponent();
@@ -17,8 +22,14 @@ namespace BerichtManager.WordTemplate
 			Setup();
 		}
 
+		/// <summary>
+		/// Fills <see cref="flpFieldOptions"/> and <see cref="flpOrder"/> with <see cref="Label"/>s representing form field config
+		/// </summary>
 		private void Setup()
 		{
+			flpOrder.Controls.Clear();
+			flpFieldOptions.Controls.Clear();
+
 			List<Fields> fields = Enum.GetValues(typeof(Fields)).Cast<Fields>().ToList();
 			List<Fields> configFields = fields.Where(f => FormFieldHandler.GetFormField(f, out _)).OrderBy(f => FormFieldHandler.GetFormFieldIndex(f)).ToList();
 			List<Fields> unused = fields.Where(f => !FormFieldHandler.GetFormField(f, out _)).ToList();
@@ -32,14 +43,13 @@ namespace BerichtManager.WordTemplate
 			{
 				flpFieldOptions.Controls.Add(GetLabel(field.ToString()));
 			}
-
-
-			/*foreach (Enum field in Enum.GetValues(typeof(Fields)))
-			{
-				flpFieldOptions.Controls.Add(GetLabel(field.ToString()));
-			}*/
 		}
 
+		/// <summary>
+		/// Generates a styled <see cref="Label"/> containing <paramref name="text"/>
+		/// </summary>
+		/// <param name="text">Text in label</param>
+		/// <returns>Styled <see cref="Label"/></returns>
 		private Label GetLabel(string text)
 		{
 			Label l = new Label();
@@ -70,27 +80,28 @@ namespace BerichtManager.WordTemplate
 		private void PanelDragDrop(object sender, DragEventArgs e)
 		{
 			(sender as Control).Controls.Add(e.Data.GetData(DataFormats.Serializable) as Control);
+			IsDirty = true;
 		}
 
 		private void OnCloseClicked(object sender, EventArgs e)
 		{
+			if (IsDirty && ThemedMessageBox.Show(text: "Save unsaved changes?", title: "Unsaved changes!", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+				SaveConfig();
 			Close();
 		}
 
 		private void OnSaveClicked(object sender, EventArgs e)
 		{
+			SaveConfig();
+		}
 
-			//Delete unused field indexes
-			foreach (Control control in flpFieldOptions.Controls)
-			{
-				if (!(control is Label label))
-					continue;
-				if (!Enum.TryParse(label.Text, true, out Fields field))
-					continue;
-				FormFieldHandler.DeleteFieldFromConfig(field);
-			}
-
-			//Update selected field indexes
+		/// <summary>
+		/// Saves config to <see cref="FormFieldHandler"/>
+		/// </summary>
+		/// <exception cref="Exception">Thrown if label text is not a value of <see cref="Fields"/></exception>
+		private void SaveConfig()
+		{
+			List<(Fields Field, int Index)> fields = new List<(Fields Field, int Index)>();
 			int index = 1;
 			foreach (Control control in flpOrder.Controls)
 			{
@@ -98,16 +109,39 @@ namespace BerichtManager.WordTemplate
 					continue;
 				if (!Enum.TryParse(label.Text, true, out Fields field))
 					throw new Exception($"Field {label.Text} was not found in FormFieldHandler");
-				FormFieldHandler.UpdateFormFieldIndex(field, index++);
+				fields.Add((Field: field, Index: index++));
+			}
+			FormFieldHandler.UpdateFormFieldIndexes(fields);
+			IsDirty = false;
+			ThemedMessageBox.Show(text: "Saved changes.", title: "Saved");
+		}
+
+		private void OnDefaultClicked(object sender, EventArgs e)
+		{
+			if (ThemedMessageBox.Show(text: "Reset order to default?", title: "Reset order?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+				return;
+			Dictionary<Fields, FormField> formfieldsConfig = FormFieldHandler.GetInitialConfig();
+
+			flpOrder.Controls.Clear();
+			flpFieldOptions.Controls.Clear();
+
+			foreach (KeyValuePair<Fields, FormField> kvp in formfieldsConfig)
+			{
+				flpOrder.Controls.Add(GetLabel(Enum.GetName(typeof(Fields), kvp.Key)));
+			}
+
+			foreach (Fields _enum in Enum.GetValues(typeof(Fields)))
+			{
+				if (!formfieldsConfig.ContainsKey(_enum))
+					flpFieldOptions.Controls.Add(GetLabel(_enum.ToString()));
 			}
 		}
 
 		private void OnResetClicked(object sender, EventArgs e)
 		{
-			if (ThemedMessageBox.Show(text: "Continue edit after reset?", title: "Continue after reset?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
-				DialogResult = DialogResult.Retry;
-			FormFieldHandler.ResetConfig();
-			Close();
+			if (ThemedMessageBox.Show(text: "Do you want to discard your changes?", title: "Discard changes?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
+				return;
+			Setup();
 		}
 	}
 }

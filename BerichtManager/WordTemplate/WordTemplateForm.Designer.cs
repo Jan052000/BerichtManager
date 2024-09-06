@@ -36,9 +36,10 @@
 			this.paTitleOptions = new System.Windows.Forms.Panel();
 			this.laFieldOptions = new System.Windows.Forms.Label();
 			this.paButtons = new System.Windows.Forms.Panel();
+			this.btReset = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.btReset = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btDefault = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.scMainView)).BeginInit();
 			this.scMainView.Panel1.SuspendLayout();
 			this.scMainView.Panel2.SuspendLayout();
@@ -138,6 +139,7 @@
 			// paButtons
 			// 
 			this.paButtons.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.paButtons.Controls.Add(this.btDefault);
 			this.paButtons.Controls.Add(this.btReset);
 			this.paButtons.Controls.Add(this.btSave);
 			this.paButtons.Controls.Add(this.btClose);
@@ -146,6 +148,17 @@
 			this.paButtons.Name = "paButtons";
 			this.paButtons.Size = new System.Drawing.Size(800, 41);
 			this.paButtons.TabIndex = 3;
+			// 
+			// btReset
+			// 
+			this.btReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btReset.Location = new System.Drawing.Point(550, 5);
+			this.btReset.Name = "btReset";
+			this.btReset.Size = new System.Drawing.Size(75, 23);
+			this.btReset.TabIndex = 2;
+			this.btReset.Text = "Reset";
+			this.btReset.UseVisualStyleBackColor = true;
+			this.btReset.Click += new System.EventHandler(this.OnResetClicked);
 			// 
 			// btSave
 			// 
@@ -169,16 +182,16 @@
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.OnCloseClicked);
 			// 
-			// btReset
+			// btDefault
 			// 
-			this.btReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btReset.Location = new System.Drawing.Point(550, 5);
-			this.btReset.Name = "btReset";
-			this.btReset.Size = new System.Drawing.Size(75, 23);
-			this.btReset.TabIndex = 2;
-			this.btReset.Text = "Reset";
-			this.btReset.UseVisualStyleBackColor = true;
-			this.btReset.Click += new System.EventHandler(this.OnResetClicked);
+			this.btDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btDefault.Location = new System.Drawing.Point(469, 5);
+			this.btDefault.Name = "btDefault";
+			this.btDefault.Size = new System.Drawing.Size(75, 23);
+			this.btDefault.TabIndex = 3;
+			this.btDefault.Text = "Default";
+			this.btDefault.UseVisualStyleBackColor = true;
+			this.btDefault.Click += new System.EventHandler(this.OnDefaultClicked);
 			// 
 			// WordTemplateForm
 			// 
@@ -216,5 +229,6 @@
 		private System.Windows.Forms.Label laOrdered;
 		private System.Windows.Forms.Panel paTitleOptions;
 		private OwnControls.FocusColoredFlatButton btReset;
+		private System.Windows.Forms.Button btDefault;
 	}
 }

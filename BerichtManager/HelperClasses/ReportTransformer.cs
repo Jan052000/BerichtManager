@@ -58,16 +58,16 @@ namespace BerichtManager.HelperClasses
 		/// <param name="report"><see cref="Report"/> object containing values for report file</param>
 		public static void IHKToWord(Word.Document doc, Report report)
 		{
-			FormFieldHandler.SetValueInDoc(Fields.Name, doc, ReportUtils.TransformTextToWord(ConfigHandler.Instance.ReportUserName));
-			FormFieldHandler.SetValueInDoc(Fields.Number, doc, ReportUtils.TransformTextToWord(report.ReportNr.ToString()));
-			FormFieldHandler.SetValueInDoc(Fields.StartDate, doc, ReportUtils.TransformTextToWord(report.ReportContent.StartDate));
-			FormFieldHandler.SetValueInDoc(Fields.EndDate, doc, ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
-			FormFieldHandler.SetValueInDoc(Fields.Year, doc, ReportUtils.TransformTextToWord(DateTime.ParseExact(report.ReportContent.StartDate, "dd.MM.yyyy", CultureInfo.CurrentCulture).Year.ToString()));
-			FormFieldHandler.SetValueInDoc(Fields.Work, doc, ReportUtils.TransformTextToWord(report.ReportContent.JobFieldContent));
-			FormFieldHandler.SetValueInDoc(Fields.Seminars, doc, ReportUtils.TransformTextToWord(report.ReportContent.SeminarsField));
-			FormFieldHandler.SetValueInDoc(Fields.School, doc, ReportUtils.TransformTextToWord(report.ReportContent.SchoolField));
-			FormFieldHandler.SetValueInDoc(Fields.SignDateYou, doc, ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
-			FormFieldHandler.SetValueInDoc(Fields.SignDateSupervisor, doc, ReportUtils.TransformTextToWord(report.ReportContent.EndDate));
+			FormFieldHandler.SetValueInDoc(Fields.Name, doc, ConfigHandler.Instance.ReportUserName);
+			FormFieldHandler.SetValueInDoc(Fields.Number, doc, report.ReportNr.ToString());
+			FormFieldHandler.SetValueInDoc(Fields.StartDate, doc, report.ReportContent.StartDate);
+			FormFieldHandler.SetValueInDoc(Fields.EndDate, doc, report.ReportContent.EndDate);
+			FormFieldHandler.SetValueInDoc(Fields.Year, doc, DateTime.ParseExact(report.ReportContent.StartDate, "dd.MM.yyyy", CultureInfo.CurrentCulture).Year.ToString());
+			FormFieldHandler.SetValueInDoc(Fields.Work, doc, report.ReportContent.JobFieldContent);
+			FormFieldHandler.SetValueInDoc(Fields.Seminars, doc, report.ReportContent.SeminarsField);
+			FormFieldHandler.SetValueInDoc(Fields.School, doc, report.ReportContent.SchoolField);
+			FormFieldHandler.SetValueInDoc(Fields.SignDateYou, doc, report.ReportContent.EndDate);
+			FormFieldHandler.SetValueInDoc(Fields.SignDateSupervisor, doc, report.ReportContent.EndDate);
 		}
 	}
 
