@@ -30,7 +30,7 @@
 		{
 			this.btClose = new OwnControls.FocusColoredFlatButton();
 			this.btConfirm = new OwnControls.FocusColoredFlatButton();
-			this.tvFolders = new System.Windows.Forms.TreeView();
+			this.tvFolders = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
 			this.SuspendLayout();
 			// 
 			// btClose

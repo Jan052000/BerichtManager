@@ -135,6 +135,7 @@ namespace BerichtManager
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
+			tvReports.CustomNodeDrawer = NodeDrawer;
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
 			ActivePath = ConfigHandler.ReportPath;
 			UpdateTree();
@@ -146,35 +147,7 @@ namespace BerichtManager
 			UpdateTabStops(this, ConfigHandler.TabStops);
 			if (File.Exists(ConfigHandler.PublishPath) && CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(ConfigHandler.PublishPath).FileVersion) > 0)
 				VersionString += "*";
-			Form f = new Form();
-			CustomTreeView ctv = new CustomTreeView();
-			ctv.Dock = DockStyle.Fill;
-			ctv.CheckBoxes = true;
-			ctv.CustomNodeDrawer = NodeDrawer;
-			ctv.DrawMode = TreeViewDrawMode.OwnerDrawAll;
-			//ctv.CascadeCheckedChanges = false;
-			f.Controls.Add(ctv);
-			ThemeSetter.SetThemes(f);
-			CustomTreeNode root = new CustomTreeNode("r");
-			root.Nodes.AddRange(new List<CustomTreeNode>()
-			{
-				new CustomTreeNode("r1"),
-				new CustomTreeNode("r2")
-			});
-			root.Nodes[0].Nodes.AddRange(new List<CustomTreeNode>() { new CustomTreeNode("r11"), new CustomTreeNode("r12") });
-			root.Nodes[1].Nodes.AddRange(new List<CustomTreeNode>() { new CustomTreeNode("r21"), new CustomTreeNode("r22") });
-			ctv.Nodes.Add(root);
-			for (int i = 0; i < 10; i++)
-			{
-				var s = new CustomTreeNode(i.ToString());
-				s.Nodes.Add(new CustomTreeNode("c"));
-				s.ToolTipText = i.ToString();
-				root.Nodes.Add(s);
-			}
-			ctv.Nodes.Add(new CustomTreeNode("Test"));
-			f.ShowDialog();
-			//root.Nodes[1].CheckStatus = CustomTreeNode.CheckStatuses.Checked;
-			//root.Nodes[1].Nodes[1].CheckStatus = CustomTreeNode.CheckStatuses.Unchecked;
+			WordTaskFactory.StartNew(RestartWord);
 		}
 
 		/// <summary>
@@ -274,7 +247,7 @@ namespace BerichtManager
 					expanded = GetExpandedNodes(tvReports.Nodes[0]);
 
 				tvReports.Nodes.Clear();
-				TreeNode root = CreateDirectoryNode(Info);
+				CustomTreeNode root = CreateDirectoryNode(Info);
 				tvReports.Nodes.Add(root);
 
 				expanded.ForEach(node =>
@@ -326,16 +299,16 @@ namespace BerichtManager
 		/// <param name="directoryInfo">The target directory</param>
 		/// <returns>A Treenode representing the contents of <paramref name="directoryInfo"/></returns>
 		//https://stackoverflow.com/questions/6239544/populate-treeview-with-file-system-directory-structure
-		private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
+		private CustomTreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
 		{
-			TreeNode directoryNode = new TreeNode(directoryInfo.Name);
+			CustomTreeNode directoryNode = new CustomTreeNode(directoryInfo.Name);
 			foreach (var directory in directoryInfo.GetDirectories())
 				directoryNode.Nodes.Add(CreateDirectoryNode(directory));
 			foreach (var file in directoryInfo.GetFiles())
 				if (ReportUtils.IsNameValid(file.Name))
 					directoryNode.Nodes.Add(new ReportNode(file.Name));
 				else
-					directoryNode.Nodes.Add(new TreeNode(file.Name));
+					directoryNode.Nodes.Add(new CustomTreeNode(file.Name));
 			return directoryNode;
 		}
 
