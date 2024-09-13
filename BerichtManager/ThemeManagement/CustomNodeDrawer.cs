@@ -222,7 +222,7 @@ namespace BerichtManager.ThemeManagement
 				graphics.FillRectangle(backColor, bounds);
 			int checkBoxBorderWidth = 2;
 			float checkWidth = 1.5f;
-			float barWidth = 3f;
+			float barWidth = 1.5f;
 
 			using (Pen outline = new Pen(CheckBoxOutlineColor, checkBoxBorderWidth))
 				graphics.DrawRectangle(outline, bounds);
