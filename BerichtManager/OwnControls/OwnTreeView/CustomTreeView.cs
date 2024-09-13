@@ -10,7 +10,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		#region Theme
 
 		/// <inheritdoc cref="HightlightColor" path=""/>
-		private Color _HightlightColor { get; set; } = SystemColors.MenuHighlight;
+		private Color hightlightColor { get; set; } = SystemColors.MenuHighlight;
 		/// <summary>
 		/// Color of highlighted node
 		/// </summary>
@@ -18,19 +18,19 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		[Category("Advanced")]
 		public Color HightlightColor
 		{
-			get => _HightlightColor;
+			get => hightlightColor;
 			set
 			{
-				if (value != _HightlightColor)
+				if (value != hightlightColor)
 				{
-					_HightlightColor = value;
+					hightlightColor = value;
 					Invalidate();
 				}
 			}
 		}
 
 		/// <inheritdoc cref="RootPathColor" path=""/>
-		private Color _RootPathColor { get; set; } = SystemColors.ControlText;
+		private Color rootPathColor { get; set; } = SystemColors.ControlText;
 		/// <summary>
 		/// Color of the path drawn between nodes
 		/// </summary>
@@ -38,19 +38,21 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		[Category("Advanced")]
 		public Color RootPathColor
 		{
-			get => _RootPathColor;
+			get => rootPathColor;
 			set
 			{
-				if (value != _RootPathColor)
+				if (value != rootPathColor)
 				{
-					_RootPathColor = value;
+					rootPathColor = value;
 					Invalidate();
 				}
 			}
 		}
 
+		#endregion
+
 		/// <inheritdoc cref="CascadeCheckedChanges" path=""/>
-		private bool _CascadeCheckedChanges { get; set; } = true;
+		private bool cascadeCheckedChanges { get; set; } = true;
 		/// <summary>
 		/// Wether or not changes in checked state should propagate outward
 		/// </summary>
@@ -58,17 +60,15 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		[Category("Advanced")]
 		public bool CascadeCheckedChanges
 		{
-			get => _CascadeCheckedChanges;
+			get => cascadeCheckedChanges;
 			set
 			{
-				if (_CascadeCheckedChanges != value)
+				if (cascadeCheckedChanges != value)
 				{
-					_CascadeCheckedChanges = value;
+					cascadeCheckedChanges = value;
 				}
 			}
 		}
-
-		#endregion
 
 		/// <inheritdoc cref="TreeView.HotTracking" path=""/>
 		[Category("Style")]
@@ -76,17 +76,17 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		public new bool HotTracking { get => base.HotTracking; set => base.HotTracking = value; }
 
 		/// <inheritdoc cref="CustomNodeDrawer" path=""/>
-		private ICustomNodeDrawer _CustomNodeDrawer { get; set; } = new CustomNodeDrawer();
+		private ICustomNodeDrawer customNodeDrawer { get; set; } = new CustomNodeDrawer();
 		/// <summary>
 		/// <see cref="ICustomNodeDrawer"/> to use if <see cref="TreeView.DrawMode"/> is not <see cref="TreeViewDrawMode.Normal"/>
 		/// </summary>
 		public ICustomNodeDrawer CustomNodeDrawer
 		{
-			get => _CustomNodeDrawer;
+			get => customNodeDrawer;
 			set
 			{
-				if (value != _CustomNodeDrawer)
-					_CustomNodeDrawer = value;
+				if (value != customNodeDrawer)
+					customNodeDrawer = value;
 			}
 		}
 

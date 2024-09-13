@@ -25,16 +25,16 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		}
 
 		/// <inheritdoc cref="CheckStatus" path=""/>
-		private CheckStatuses _CheckStatus { get; set; } = CheckStatuses.Unchecked;
+		private CheckStatuses checkStatus { get; set; } = CheckStatuses.Unchecked;
 		/// <summary>
 		/// <see cref="CheckStatuses"/> check status of node
 		/// </summary>
 		public CheckStatuses CheckStatus
 		{
-			get => _CheckStatus;
+			get => checkStatus;
 			set
 			{
-				if (_CheckStatus != value)
+				if (checkStatus != value)
 				{
 					bool propagate = TreeView is CustomTreeView ctv && ctv.CascadeCheckedChanges;
 					ChainChangeCheckStatus(value, propagate, propagate);
@@ -74,7 +74,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			if (CheckStatus == childStatus)
 				return;
 			if (!propagateUp && !propagateDown)
-				_CheckStatus = childStatus;
+				checkStatus = childStatus;
 			switch (childStatus)
 			{
 				case CheckStatuses.Unchecked:
@@ -86,18 +86,18 @@ namespace BerichtManager.OwnControls.OwnTreeView
 					{
 						if (CountChecked() == 0 && CountCheckAndPartial() == 0)
 						{
-							_CheckStatus = childStatus;
+							checkStatus = childStatus;
 							parent?.ChainChangeCheckStatus(childStatus, true, false);
 						}
 						else
 						{
-							_CheckStatus = CheckStatuses.Partial;
+							checkStatus = CheckStatuses.Partial;
 							parent?.ChainChangeCheckStatus(CheckStatuses.Partial, true, false);
 						}
 					}
 					break;
 				case CheckStatuses.Partial:
-					_CheckStatus = childStatus;
+					checkStatus = childStatus;
 					parent?.ChainChangeCheckStatus(childStatus, true, false);
 					break;
 				case CheckStatuses.Checked:
@@ -109,12 +109,12 @@ namespace BerichtManager.OwnControls.OwnTreeView
 					{
 						if (Nodes.Count == CountChecked())
 						{
-							_CheckStatus = CheckStatuses.Checked;
+							checkStatus = CheckStatuses.Checked;
 							parent?.ChainChangeCheckStatus(childStatus, true, false);
 						}
 						else
 						{
-							_CheckStatus = CheckStatuses.Partial;
+							checkStatus = CheckStatuses.Partial;
 							parent?.ChainChangeCheckStatus(CheckStatuses.Partial, true, false);
 						}
 					}
@@ -131,7 +131,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		{
 			foreach (CustomTreeNode child in node.Nodes)
 			{
-				child._CheckStatus = newStatus;
+				child.checkStatus = newStatus;
 				CheckAllNodes(child, newStatus);
 			}
 		}
