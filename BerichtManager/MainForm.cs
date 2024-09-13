@@ -58,7 +58,6 @@ namespace BerichtManager
 		/// If <see cref="rtbSchool"/> or <see cref="rtbWork"/> have been edited
 		/// </summary>
 		private bool WasEdited { get; set; } = false;
-		private CustomNodeDrawer NodeDrawer { get; set; }
 
 		/// <summary>
 		/// Value if word has a visible window or not
@@ -131,11 +130,10 @@ namespace BerichtManager
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(ttTips);
-			NodeDrawer = new CustomNodeDrawer();
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
-			tvReports.CustomNodeDrawer = NodeDrawer;
+			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
 			ActivePath = ConfigHandler.ReportPath;
 			UpdateTree();
@@ -1524,11 +1522,6 @@ namespace BerichtManager
 			{
 				Console.Write(ex.StackTrace);
 			}
-		}
-
-		private void tvReports_DrawNode(object sender, DrawTreeNodeEventArgs e)
-		{
-			NodeDrawer.DrawNode(e);
 		}
 
 		private void menuStrip1_Paint(object sender, PaintEventArgs e)
