@@ -23,6 +23,7 @@ using System.Net.Http;
 using BerichtManager.IHKClient.Exceptions;
 using BerichtManager.IHKClient.ReportContents;
 using BerichtManager.WordTemplate;
+using BerichtManager.OwnControls.OwnTreeView;
 
 namespace BerichtManager
 {
@@ -145,7 +146,35 @@ namespace BerichtManager
 			UpdateTabStops(this, ConfigHandler.TabStops);
 			if (File.Exists(ConfigHandler.PublishPath) && CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(ConfigHandler.PublishPath).FileVersion) > 0)
 				VersionString += "*";
-			WordTaskFactory.StartNew(RestartWord);
+			Form f = new Form();
+			CustomTreeView ctv = new CustomTreeView();
+			ctv.Dock = DockStyle.Fill;
+			ctv.CheckBoxes = true;
+			ctv.CustomNodeDrawer = NodeDrawer;
+			ctv.DrawMode = TreeViewDrawMode.OwnerDrawAll;
+			//ctv.CascadeCheckedChanges = false;
+			f.Controls.Add(ctv);
+			ThemeSetter.SetThemes(f);
+			CustomTreeNode root = new CustomTreeNode("r");
+			root.Nodes.AddRange(new List<CustomTreeNode>()
+			{
+				new CustomTreeNode("r1"),
+				new CustomTreeNode("r2")
+			});
+			root.Nodes[0].Nodes.AddRange(new List<CustomTreeNode>() { new CustomTreeNode("r11"), new CustomTreeNode("r12") });
+			root.Nodes[1].Nodes.AddRange(new List<CustomTreeNode>() { new CustomTreeNode("r21"), new CustomTreeNode("r22") });
+			ctv.Nodes.Add(root);
+			for (int i = 0; i < 10; i++)
+			{
+				var s = new CustomTreeNode(i.ToString());
+				s.Nodes.Add(new CustomTreeNode("c"));
+				s.ToolTipText = i.ToString();
+				root.Nodes.Add(s);
+			}
+			ctv.Nodes.Add(new CustomTreeNode("Test"));
+			f.ShowDialog();
+			//root.Nodes[1].CheckStatus = CustomTreeNode.CheckStatuses.Checked;
+			//root.Nodes[1].Nodes[1].CheckStatus = CustomTreeNode.CheckStatuses.Unchecked;
 		}
 
 		/// <summary>

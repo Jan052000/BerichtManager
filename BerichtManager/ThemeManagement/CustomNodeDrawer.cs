@@ -1,3 +1,4 @@
+using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.UploadChecking;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -8,8 +9,9 @@ namespace BerichtManager.ThemeManagement
 	/// <summary>
 	/// Class for custom rendering of nodes
 	/// </summary>
-	internal class CustomNodeDrawer
+	internal class CustomNodeDrawer : ICustomNodeDrawer
 	{
+		private bool DrawUploadStatus { get; set; }
 		/// <summary>
 		/// Short reference to active theme set in <see cref="ThemeManager"/>
 		/// </summary>
@@ -61,17 +63,18 @@ namespace BerichtManager.ThemeManagement
 
 		/// <summary>
 		/// Creates a CustomDrawer object
+		/// <param name="drawUploadStatus">Wether or not the upload status or reports should be drawn</param>
 		/// </summary>
-		public CustomNodeDrawer()
+		public CustomNodeDrawer(bool drawUploadStatus = true)
 		{
-
+			DrawUploadStatus = drawUploadStatus;
 		}
 
 		/// <summary>
 		/// Draws nodes to treeview
 		/// </summary>
 		/// <param name="e">Event that is passed down when drawing nodes</param>
-		public void DrawNode(DrawTreeNodeEventArgs e, bool drawUploadStatus = true)
+		public void DrawNode(DrawTreeNodeEventArgs e)
 		{
 			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
 				return;
@@ -99,7 +102,10 @@ namespace BerichtManager.ThemeManagement
 			{
 				checkBoxBounds = new Rectangle(e.Node.Bounds.X - 1 - boxWidth, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - boxWidth / 2, boxWidth, boxWidth);
 				iconBounds = new Rectangle(checkBoxBounds.Value.X - iconSize - 1, e.Node.Bounds.Y, iconSize, e.Node.Bounds.Height);
-				DrawCheckBox(e.Graphics, checkBoxBounds.Value, e.Node.Checked);
+				if (e.Node is CustomTreeNode custom)
+					DrawCheckBox(e.Graphics, checkBoxBounds.Value, custom);
+				else
+					DrawCheckBox(e.Graphics, checkBoxBounds.Value, e.Node.Checked);
 			}
 			else
 			{
@@ -129,7 +135,7 @@ namespace BerichtManager.ThemeManagement
 				}
 			}
 
-			if (drawUploadStatus && e.Node is ReportNode report && report.UploadStatus != ReportNode.UploadStatuses.None)
+			if (DrawUploadStatus && e.Node is ReportNode report && report.UploadStatus != ReportNode.UploadStatuses.None)
 			{
 				//Offset of node left + right
 				int nodeOffset = 3;
@@ -208,6 +214,36 @@ namespace BerichtManager.ThemeManagement
 			}
 		}
 
+		private void DrawCheckBox(Graphics graphics, Rectangle bounds, CustomTreeNode node)
+		{
+			if (node == null)
+				return;
+			using (Brush backColor = new SolidBrush(CheckBoxBackColor))
+				graphics.FillRectangle(backColor, bounds);
+			int checkBoxBorderWidth = 2;
+			float checkWidth = 1.5f;
+			float barWidth = 3f;
+
+			using (Pen outline = new Pen(CheckBoxOutlineColor, checkBoxBorderWidth))
+				graphics.DrawRectangle(outline, bounds);
+			switch (node.CheckStatus)
+			{
+				case CustomTreeNode.CheckStatuses.Checked:
+					using (Pen check = new Pen(CheckColor, checkWidth))
+					{
+						graphics.DrawLine(check, new Point(bounds.X + 2, bounds.Y + 7), new Point(bounds.X + 4, bounds.Y + 9));
+						graphics.DrawLine(check, new Point(bounds.X + 5, bounds.Y + 9), new Point(bounds.X + 5 + 5, bounds.Y + 9 - 5));
+					}
+					break;
+				case CustomTreeNode.CheckStatuses.Partial:
+					using (Pen partial = new Pen(CheckColor, barWidth))
+					{
+						graphics.DrawLine(partial, new Point(bounds.X + 2, bounds.Y + bounds.Height / 2 + (int)barWidth / 2), new Point(bounds.X + 5 + 5, bounds.Y + bounds.Height / 2 + (int)barWidth / 2));
+					}
+					break;
+			}
+		}
+
 		/// <summary>
 		/// Draws a check box on a <see cref="Graphics"/> object
 		/// </summary>
@@ -231,6 +267,13 @@ namespace BerichtManager.ThemeManagement
 					graphics.DrawLine(check, new Point(bounds.X + 5, bounds.Y + 9), new Point(bounds.X + 5 + 5, bounds.Y + 9 - 5));
 				}
 			}
+		}
+
+		public void DrawNodeText(DrawTreeNodeEventArgs e)
+		{
+			if (e.Bounds.X == -1)
+				return;
+			TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.TreeView.Font, new Point(e.Node.Bounds.X, e.Node.Bounds.Y), e.Node.TreeView.ForeColor);
 		}
 	}
 }
