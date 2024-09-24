@@ -45,13 +45,6 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		/// <inheritdoc cref="TreeNode.Nodes" path=""/>
 		public new NodeCollectionWrapper Nodes { get; }
 
-#pragma warning disable IDE0051 // Nicht verwendete private Member entfernen
-		private new bool Checked
-		{
-			get => throw new Exception("Property blended out, please do not use");
-		}
-#pragma warning restore IDE0051 // Nicht verwendete private Member entfernen
-
 		public CustomTreeNode() : base()
 		{
 			Nodes = new NodeCollectionWrapper(base.Nodes, this);
@@ -110,6 +103,8 @@ namespace BerichtManager.OwnControls.OwnTreeView
 						if (Nodes.Count == CountChecked())
 						{
 							checkStatus = CheckStatuses.Checked;
+							if (!Checked)
+								Checked = true;
 							parent?.ChainChangeCheckStatus(childStatus, true, false);
 						}
 						else
@@ -132,6 +127,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			foreach (CustomTreeNode child in node.Nodes)
 			{
 				child.checkStatus = newStatus;
+				child.Checked = Checked;
 				CheckAllNodes(child, newStatus);
 			}
 		}
@@ -193,6 +189,13 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		private bool IsNodeChecked(CustomTreeNode node)
 		{
 			return node.CheckStatus == CheckStatuses.Checked || node.CheckStatus == CheckStatuses.Partial;
+		}
+
+		public override object Clone()
+		{
+			CustomTreeNode newNode = (CustomTreeNode)base.Clone();
+			newNode.checkStatus = CheckStatus;
+			return newNode;
 		}
 	}
 }

@@ -124,8 +124,12 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			}
 		}
 
+		private bool IsAlreadyUpdating { get; set; } = false;
+
 		protected override void OnAfterCheck(TreeViewEventArgs e)
 		{
+			if (IsAlreadyUpdating)
+				return;
 			if (e.Action == TreeViewAction.Collapse || e.Action == TreeViewAction.Expand)
 			{
 				base.OnAfterCheck(e);
@@ -136,6 +140,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 				base.OnAfterCheck(e);
 				return;
 			}
+			IsAlreadyUpdating = true;
 			BeginUpdate();
 			switch (customNode.CheckStatus)
 			{
@@ -148,6 +153,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 					break;
 			}
 			EndUpdate();
+			IsAlreadyUpdating = false;
 		}
 	}
 }
