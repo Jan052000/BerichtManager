@@ -39,16 +39,18 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			Collection.RemoveAt(index);
 		}
 
-		public void Add(CustomTreeNode item)
+		public int Add(CustomTreeNode item)
 		{
 			if (item.Parent != null)
 				throw new System.Exception("Can not add node that already has a parent");
-			Collection.Add(item);
+			return Collection.Add(item);
 		}
 
-		public void Add(string text)
+		public CustomTreeNode Add(string text)
 		{
-			Collection.Add(new CustomTreeNode(text));
+			CustomTreeNode node = new CustomTreeNode(text);
+			Collection.Add(node);
+			return node;
 		}
 
 		public void AddRange(List<CustomTreeNode> nodes)
@@ -92,6 +94,11 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return Collection.GetEnumerator();
+		}
+
+		void ICollection<CustomTreeNode>.Add(CustomTreeNode item)
+		{
+			Add(item);
 		}
 	}
 }

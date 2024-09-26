@@ -40,7 +40,6 @@ namespace BerichtManager
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.tvReports = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
 			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.miEdit = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,6 +90,7 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
+			this.tvReports = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -102,24 +102,6 @@ namespace BerichtManager
 			this.paFileTree.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// tvReports
-			// 
-			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
-			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-			this.tvReports.HightlightColor = System.Drawing.SystemColors.MenuHighlight;
-			this.tvReports.Location = new System.Drawing.Point(0, 0);
-			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
-			this.tvReports.Name = "tvReports";
-			this.tvReports.RootPathColor = System.Drawing.SystemColors.ControlText;
-			this.tvReports.Size = new System.Drawing.Size(235, 426);
-			this.tvReports.TabIndex = 6;
-			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
-			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
-			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
-			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
 			// 
 			// toRightClickMenu
 			// 
@@ -565,6 +547,24 @@ namespace BerichtManager
 			this.miClose.Text = "Close";
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
+			// 
+			// tvReports
+			// 
+			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
+			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
+			this.tvReports.HightlightColor = System.Drawing.SystemColors.MenuHighlight;
+			this.tvReports.Location = new System.Drawing.Point(0, 0);
+			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
+			this.tvReports.Name = "tvReports";
+			this.tvReports.RootPathColor = System.Drawing.SystemColors.ControlText;
+			this.tvReports.Size = new System.Drawing.Size(235, 426);
+			this.tvReports.TabIndex = 6;
+			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
+			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
+			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
+			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
 			// 
 			// MainForm
 			// 

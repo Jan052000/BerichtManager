@@ -28,8 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.btClose = new OwnControls.FocusColoredFlatButton();
-			this.btConfirm = new OwnControls.FocusColoredFlatButton();
+			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.btConfirm = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.tvFolders = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
 			this.SuspendLayout();
 			// 
@@ -62,12 +62,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tvFolders.CheckBoxes = true;
 			this.tvFolders.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
+			this.tvFolders.HightlightColor = System.Drawing.SystemColors.MenuHighlight;
 			this.tvFolders.Location = new System.Drawing.Point(12, 12);
 			this.tvFolders.Name = "tvFolders";
+			this.tvFolders.RootPathColor = System.Drawing.SystemColors.ControlText;
 			this.tvFolders.Size = new System.Drawing.Size(776, 397);
 			this.tvFolders.TabIndex = 2;
-			this.tvFolders.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tvFolders_AfterCheck);
-			this.tvFolders.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tvFolders_DrawNode);
 			// 
 			// FolderSelect
 			// 
@@ -87,6 +87,6 @@
 
 		private OwnControls.FocusColoredFlatButton btClose;
 		private OwnControls.FocusColoredFlatButton btConfirm;
-		private System.Windows.Forms.TreeView tvFolders;
+		private OwnControls.OwnTreeView.CustomTreeView tvFolders;
 	}
 }
