@@ -103,7 +103,7 @@ namespace BerichtManager.ThemeManagement
 				checkBoxBounds = new Rectangle(e.Node.Bounds.X - 1 - boxWidth, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - boxWidth / 2, boxWidth, boxWidth);
 				iconBounds = new Rectangle(checkBoxBounds.Value.X - iconSize - 1, e.Node.Bounds.Y, iconSize, e.Node.Bounds.Height);
 				if (e.Node is CustomTreeNode custom && e.Node.TreeView is CustomTreeView)
-					DrawCheckBox(e.Graphics, checkBoxBounds.Value, custom);
+					DrawCheckBox(e.Graphics, checkBoxBounds.Value, custom.CheckStatus);
 				else
 					DrawCheckBox(e.Graphics, checkBoxBounds.Value, e.Node.Checked);
 			}
@@ -214,10 +214,8 @@ namespace BerichtManager.ThemeManagement
 			}
 		}
 
-		private void DrawCheckBox(Graphics graphics, Rectangle bounds, CustomTreeNode node)
+		private void DrawCheckBox(Graphics graphics, Rectangle bounds, CustomTreeNode.CheckStatuses status)
 		{
-			if (node == null)
-				return;
 			using (Brush backColor = new SolidBrush(CheckBoxBackColor))
 				graphics.FillRectangle(backColor, bounds);
 			int checkBoxBorderWidth = 2;
@@ -226,7 +224,7 @@ namespace BerichtManager.ThemeManagement
 
 			using (Pen outline = new Pen(CheckBoxOutlineColor, checkBoxBorderWidth))
 				graphics.DrawRectangle(outline, bounds);
-			switch (node.CheckStatus)
+			switch (status)
 			{
 				case CustomTreeNode.CheckStatuses.Checked:
 					using (Pen check = new Pen(CheckColor, checkWidth))
