@@ -102,7 +102,7 @@ namespace BerichtManager.ThemeManagement
 			{
 				checkBoxBounds = new Rectangle(e.Node.Bounds.X - 1 - boxWidth, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - boxWidth / 2, boxWidth, boxWidth);
 				iconBounds = new Rectangle(checkBoxBounds.Value.X - iconSize - 1, e.Node.Bounds.Y, iconSize, e.Node.Bounds.Height);
-				if (e.Node is CustomTreeNode custom)
+				if (e.Node is CustomTreeNode custom && e.Node.TreeView is CustomTreeView)
 					DrawCheckBox(e.Graphics, checkBoxBounds.Value, custom);
 				else
 					DrawCheckBox(e.Graphics, checkBoxBounds.Value, e.Node.Checked);
