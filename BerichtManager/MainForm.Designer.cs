@@ -106,12 +106,12 @@ namespace BerichtManager
 			// toRightClickMenu
 			// 
 			this.toRightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miDelete,
-            this.miEdit,
-            this.miQuickEditOptions,
-            this.miPrint,
-            this.miIHKOptions,
-            this.miRefresh});
+			this.miDelete,
+			this.miEdit,
+			this.miQuickEditOptions,
+			this.miPrint,
+			this.miIHKOptions,
+			this.miRefresh});
 			this.toRightClickMenu.Name = "contextMenuStrip1";
 			this.toRightClickMenu.Size = new System.Drawing.Size(147, 136);
 			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
@@ -133,8 +133,8 @@ namespace BerichtManager
 			// miQuickEditOptions
 			// 
 			this.miQuickEditOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tiQuickEditWork,
-            this.miQuickEditSchool});
+			this.tiQuickEditWork,
+			this.miQuickEditSchool});
 			this.miQuickEditOptions.Name = "miQuickEditOptions";
 			this.miQuickEditOptions.Size = new System.Drawing.Size(146, 22);
 			this.miQuickEditOptions.Text = "Quick actions";
@@ -163,16 +163,16 @@ namespace BerichtManager
 			// miIHKOptions
 			// 
 			this.miIHKOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miRcUpdateStatuses,
-            this.miUploadAsNext,
-            this.miUploadAllSelected,
-            this.miHandInSingle,
-            this.miRcHandInSelection,
-            this.miUpdateReport,
-            this.miRCUpdateSelection,
-            this.miRcShowComment,
-            this.miRcCheckFormat,
-            this.miRcDownloadReports});
+			this.miRcUpdateStatuses,
+			this.miUploadAsNext,
+			this.miUploadAllSelected,
+			this.miHandInSingle,
+			this.miRcHandInSelection,
+			this.miUpdateReport,
+			this.miRCUpdateSelection,
+			this.miRcShowComment,
+			this.miRcCheckFormat,
+			this.miRcDownloadReports});
 			this.miIHKOptions.Name = "miIHKOptions";
 			this.miIHKOptions.Size = new System.Drawing.Size(146, 22);
 			this.miIHKOptions.Text = "IHK";
@@ -293,9 +293,9 @@ namespace BerichtManager
 			// 
 			// paMainView
 			// 
-			this.paMainView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.paMainView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.paMainView.Controls.Add(this.scTextBoxes);
 			this.paMainView.Controls.Add(this.splitterTreeBoxes);
 			this.paMainView.Controls.Add(this.paFileTree);
@@ -364,9 +364,9 @@ namespace BerichtManager
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miFile,
-            this.miOptions,
-            this.miClose});
+			this.miFile,
+			this.miOptions,
+			this.miClose});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -377,13 +377,13 @@ namespace BerichtManager
 			// miFile
 			// 
 			this.miFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miCreate,
-            this.miEditLatest,
-            this.miPrintAll,
-            this.miCheckDiscrepancy,
-            this.miIHK,
-            this.miCloseReport,
-            this.miRevealInExplorer});
+			this.miCreate,
+			this.miEditLatest,
+			this.miPrintAll,
+			this.miCheckDiscrepancy,
+			this.miIHK,
+			this.miCloseReport,
+			this.miRevealInExplorer});
 			this.miFile.Name = "miFile";
 			this.miFile.Size = new System.Drawing.Size(37, 20);
 			this.miFile.Text = "File";
@@ -412,9 +412,9 @@ namespace BerichtManager
 			// miCheckDiscrepancy
 			// 
 			this.miCheckDiscrepancy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miNumbers,
-            this.miDates,
-            this.miFullCheck});
+			this.miNumbers,
+			this.miDates,
+			this.miFullCheck});
 			this.miCheckDiscrepancy.Name = "miCheckDiscrepancy";
 			this.miCheckDiscrepancy.Size = new System.Drawing.Size(191, 22);
 			this.miCheckDiscrepancy.Text = "Check for discrepancy";
@@ -444,12 +444,12 @@ namespace BerichtManager
 			// miIHK
 			// 
 			this.miIHK.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miUpdateStatuses,
-            this.miUploadSelection,
-            this.miHandInSelection,
-            this.miUpdateSelection,
-            this.miCheckFormat,
-            this.miDownloadReports});
+			this.miUpdateStatuses,
+			this.miUploadSelection,
+			this.miHandInSelection,
+			this.miUpdateSelection,
+			this.miCheckFormat,
+			this.miDownloadReports});
 			this.miIHK.Name = "miIHK";
 			this.miIHK.Size = new System.Drawing.Size(191, 22);
 			this.miIHK.Text = "IHK";
@@ -517,8 +517,8 @@ namespace BerichtManager
 			// miOptions
 			// 
 			this.miOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miOptionsMenu,
-            this.miWordVisible});
+			this.miOptionsMenu,
+			this.miWordVisible});
 			this.miOptions.Name = "miOptions";
 			this.miOptions.Size = new System.Drawing.Size(61, 20);
 			this.miOptions.Text = "Options";
@@ -554,11 +554,9 @@ namespace BerichtManager
 			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
 			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-			this.tvReports.HightlightColor = System.Drawing.SystemColors.MenuHighlight;
 			this.tvReports.Location = new System.Drawing.Point(0, 0);
 			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
 			this.tvReports.Name = "tvReports";
-			this.tvReports.RootPathColor = System.Drawing.SystemColors.ControlText;
 			this.tvReports.Size = new System.Drawing.Size(235, 426);
 			this.tvReports.TabIndex = 6;
 			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);

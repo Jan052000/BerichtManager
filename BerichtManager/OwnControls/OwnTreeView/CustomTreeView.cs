@@ -7,50 +7,6 @@ namespace BerichtManager.OwnControls.OwnTreeView
 {
 	public class CustomTreeView : TreeView
 	{
-		#region Theme
-
-		/// <inheritdoc cref="HightlightColor" path=""/>
-		private Color hightlightColor { get; set; } = SystemColors.MenuHighlight;
-		/// <summary>
-		/// Color of highlighted node
-		/// </summary>
-		[DefaultValue(typeof(SystemColors), "MenuHighlight")]
-		[Category("Advanced")]
-		public Color HightlightColor
-		{
-			get => hightlightColor;
-			set
-			{
-				if (value != hightlightColor)
-				{
-					hightlightColor = value;
-					Invalidate();
-				}
-			}
-		}
-
-		/// <inheritdoc cref="RootPathColor" path=""/>
-		private Color rootPathColor { get; set; } = SystemColors.ControlText;
-		/// <summary>
-		/// Color of the path drawn between nodes
-		/// </summary>
-		[DefaultValue(typeof(SystemColors), "ControlText")]
-		[Category("Advanced")]
-		public Color RootPathColor
-		{
-			get => rootPathColor;
-			set
-			{
-				if (value != rootPathColor)
-				{
-					rootPathColor = value;
-					Invalidate();
-				}
-			}
-		}
-
-		#endregion
-
 		/// <inheritdoc cref="CascadeCheckedChanges" path=""/>
 		private bool cascadeCheckedChanges { get; set; } = true;
 		/// <summary>

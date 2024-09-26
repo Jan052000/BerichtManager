@@ -62,10 +62,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tvFolders.CheckBoxes = true;
 			this.tvFolders.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-			this.tvFolders.HightlightColor = System.Drawing.SystemColors.MenuHighlight;
 			this.tvFolders.Location = new System.Drawing.Point(12, 12);
 			this.tvFolders.Name = "tvFolders";
-			this.tvFolders.RootPathColor = System.Drawing.SystemColors.ControlText;
 			this.tvFolders.Size = new System.Drawing.Size(776, 397);
 			this.tvFolders.TabIndex = 2;
 			// 
