@@ -1,19 +1,99 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace BerichtManager.OwnControls.OwnTreeView
 {
-	public class NodeCollectionWrapper : IList<CustomTreeNode>
+	public class NodeCollectionWrapper : IList, ICollection, IEnumerable
 	{
+		#region IEnumerable
+		public IEnumerator GetEnumerator()
+		{
+			return Collection.GetEnumerator();
+		}
+		#endregion
+
+		#region ICollection
+		public int Count => Collection.Count;
+
+		object ICollection.SyncRoot => this;
+
+		bool ICollection.IsSynchronized => false;
+
+		public void CopyTo(Array array, int index)
+		{
+			Collection.CopyTo(array, index);
+		}
+		#endregion
+
+		#region IList
+		object IList.this[int index]
+		{
+			get => this[index];
+			set
+			{
+				if (value is CustomTreeNode ctn)
+				{
+					this[index] = ctn;
+					return;
+				}
+
+				throw new ArgumentException("Invalid node", "value");
+			}
+		}
+
+		public bool IsReadOnly => Collection.IsReadOnly;
+
+		bool IList.IsFixedSize => false;
+
+		int IList.Add(object value)
+		{
+			if (value is CustomTreeNode ctn)
+				return Add(ctn);
+			return Add(value.ToString()).Index;
+		}
+
+		public void Clear()
+		{
+			Collection.Clear();
+		}
+
+		bool IList.Contains(object value)
+		{
+			if (value is CustomTreeNode ctn)
+				return Contains(ctn);
+			return false;
+		}
+
+		int IList.IndexOf(object value)
+		{
+			if (value is CustomTreeNode ctn)
+				return IndexOf(ctn);
+			return -1;
+		}
+
+		void IList.Insert(int index, object value)
+		{
+			if (value is CustomTreeNode ctn)
+				Insert(index, ctn);
+		}
+
+		void IList.Remove(object value)
+		{
+			if (value is CustomTreeNode ctn)
+				Remove(ctn);
+		}
+
+		public void RemoveAt(int index)
+		{
+			Collection.RemoveAt(index);
+		}
+		#endregion
+
 		private TreeNodeCollection Collection { get; set; }
 
 		private CustomTreeNode Owner { get; }
-
-		public int Count => Collection.Count;
-
-		public bool IsReadOnly => Collection.IsReadOnly;
 
 		public CustomTreeNode this[int index] { get => (CustomTreeNode)Collection[index]; set => Collection[index] = value; }
 		public CustomTreeNode this[string key] { get => (CustomTreeNode)Collection[key]; }
@@ -32,11 +112,6 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		public void Insert(int index, CustomTreeNode item)
 		{
 			Collection.Insert(index, item);
-		}
-
-		public void RemoveAt(int index)
-		{
-			Collection.RemoveAt(index);
 		}
 
 		public int Add(CustomTreeNode item)
@@ -63,11 +138,6 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			Collection.AddRange(nodes);
 		}
 
-		public void Clear()
-		{
-			Collection.Clear();
-		}
-
 		public bool Contains(CustomTreeNode item)
 		{
 			return Collection.Contains(item);
@@ -78,27 +148,10 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			Collection.CopyTo(array, arrayIndex);
 		}
 
-		public bool Remove(CustomTreeNode item)
+		public void Remove(CustomTreeNode item)
 		{
-			if (!Collection.Contains(item))
-				return false;
-			Collection.Remove(item);
-			return !Collection.Contains(item);
-		}
-
-		public IEnumerator<CustomTreeNode> GetEnumerator()
-		{
-			return Collection.Cast<CustomTreeNode>().GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return Collection.GetEnumerator();
-		}
-
-		void ICollection<CustomTreeNode>.Add(CustomTreeNode item)
-		{
-			Add(item);
+			if (Collection.Contains(item))
+				Collection.Remove(item);
 		}
 	}
 }
