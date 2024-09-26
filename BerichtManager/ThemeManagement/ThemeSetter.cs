@@ -55,6 +55,7 @@ namespace BerichtManager.ThemeManagement
 				case TreeView treeView:
 					treeView.BackColor = Theme.BackColor;
 					treeView.ForeColor = Theme.ForeColor;
+					treeView.LineColor = Theme.TreeViewDottedLineColor;
 					break;
 				case Form form:
 					form.BackColor = Theme.BackColor;
