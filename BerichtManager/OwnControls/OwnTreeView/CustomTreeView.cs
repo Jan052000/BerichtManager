@@ -26,11 +26,6 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			}
 		}
 
-		/// <inheritdoc cref="TreeView.HotTracking" path=""/>
-		[Category("Style")]
-		[DefaultValue(false)]
-		public new bool HotTracking { get => base.HotTracking; set => base.HotTracking = value; }
-
 		/// <inheritdoc cref="CustomNodeDrawer" path=""/>
 		private ICustomNodeDrawer customNodeDrawer { get; set; } = new CustomNodeDrawer();
 		/// <summary>
