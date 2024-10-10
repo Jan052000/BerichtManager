@@ -112,6 +112,12 @@
     <Compile Include="HelperClasses\ReportUtils.cs" />
     <Compile Include="IHKClient\CommentResult.cs" />
     <Compile Include="IHKClient\GetReportResult.cs" />
+    <Compile Include="OwnControls\OwnTreeView\CustomTreeNode.cs" />
+    <Compile Include="OwnControls\OwnTreeView\NodeCollectionWrapper.cs" />
+    <Compile Include="OwnControls\OwnTreeView\CustomTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OwnControls\OwnTreeView\ICustomNodeDrawer.cs" />
     <Compile Include="ReportChecking\Discrepancies\DateDiscrepancy.cs" />
     <Compile Include="ReportChecking\Discrepancies\DuplicateDiscrepancy.cs" />
     <Compile Include="ReportChecking\Discrepancies\DuplicateNumbersDiscrepancy.cs" />

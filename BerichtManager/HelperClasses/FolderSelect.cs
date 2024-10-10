@@ -1,3 +1,4 @@
+using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.ThemeManagement;
 using System;
 using System.Collections.Generic;
@@ -8,30 +9,30 @@ namespace BerichtManager.HelperClasses
 	public partial class FolderSelect : Form
 	{
 		/// <summary>
-		/// <see cref="TreeNode"/> containing only selected nodes and the nodes leading to them
+		/// <see cref="CustomTreeNode"/> containing only selected nodes and the nodes leading to them
 		/// </summary>
-		public TreeNode FilteredNode { get; private set; }
+		public CustomTreeNode FilteredNode { get; private set; }
 		/// <summary>
 		/// Instance of <see cref="ThemeManagement.CustomNodeDrawer"/>
 		/// </summary>
 		private CustomNodeDrawer CustomNodeDrawer { get; } = new CustomNodeDrawer();
 		/// <summary>
-		/// Flag to stop <see cref="CheckChildNodes(TreeNode)"/> from cascading endlessly
+		/// Flag to stop <see cref="CheckChildNodes(CustomTreeNode)"/> from cascading endlessly
 		/// </summary>
 		private bool UpdatingChecks { get; set; } = false;
 		/// <summary>
 		/// Delegate for a node filter
 		/// </summary>
-		/// <param name="node"><see cref="TreeNode"/> node to filter</param>
+		/// <param name="node"><see cref="CustomTreeNode"/> node to filter</param>
 		/// <returns><see langword="true"/> if node should be filtered and <see langword="false"/> if not</returns>
-		public delegate bool NodeFilter(TreeNode node);
+		public delegate bool NodeFilter(CustomTreeNode node);
 
 		/// <summary>
 		/// Creates a new <see cref="Form"/> of <see cref="FolderSelect"/>
 		/// </summary>
-		/// <param name="node">Initial <see cref="TreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
+		/// <param name="node">Initial <see cref="CustomTreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
 		/// <param name="title">Title of <see cref="FolderSelect"/></param>
-		public FolderSelect(TreeNode node, string title = "")
+		public FolderSelect(CustomTreeNode node, string title = "")
 		{
 			InitializeComponent();
 			Text = title;
@@ -42,10 +43,10 @@ namespace BerichtManager.HelperClasses
 		/// <summary>
 		/// Creates a new <see cref="Form"/> of <see cref="FolderSelect"/>
 		/// </summary>
-		/// <param name="node">Initial <see cref="TreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
+		/// <param name="node">Initial <see cref="CustomTreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
 		/// <param name="filter"><see cref="NodeFilter"/> used to filter <paramref name="node"/> removes nodes if <see langword="true"/> is returned</param>
 		/// <param name="title">Title of <see cref="FolderSelect"/></param>
-		public FolderSelect(TreeNode node, NodeFilter filter, string title = "")
+		public FolderSelect(CustomTreeNode node, NodeFilter filter, string title = "")
 		{
 			InitializeComponent();
 			Text = title;
@@ -56,33 +57,33 @@ namespace BerichtManager.HelperClasses
 		/// <summary>
 		/// Adds <paramref name="node"/> to <see cref="tvFolders"/>
 		/// </summary>
-		/// <param name="node">Root <see cref="TreeNode"/> to add</param>
-		private TreeNode AddNode(TreeNode node)
+		/// <param name="node">Root <see cref="CustomTreeNode"/> to add</param>
+		private CustomTreeNode AddNode(CustomTreeNode node)
 		{
 			int index;
 			tvFolders.Nodes.Clear();
 			if (node.TreeView == null)
 				index = tvFolders.Nodes.Add(node);
 			else
-				index = tvFolders.Nodes.Add((TreeNode)node?.Clone());
+				index = tvFolders.Nodes.Add((CustomTreeNode)node?.Clone());
 			return tvFolders.Nodes[index];
 		}
 
 		/// <summary>
 		/// Mutates and filters <paramref name="node"/> and its children
 		/// </summary>
-		/// <param name="node"><see cref="TreeNode"/> to check</param>
+		/// <param name="node"><see cref="CustomTreeNode"/> to check</param>
 		/// <param name="filter">Filter function</param>
-		/// <returns>Filtered <see cref="TreeNode"/> or <see langword="null"/> if <paramref name="node"/> was filtered</returns>
-		private TreeNode FilterNode(TreeNode node, NodeFilter filter)
+		/// <returns>Filtered <see cref="CustomTreeNode"/> or <see langword="null"/> if <paramref name="node"/> was filtered</returns>
+		private CustomTreeNode FilterNode(CustomTreeNode node, NodeFilter filter)
 		{
 			if (filter(node))
 				return null;
 
 			bool hadChildren = node.Nodes.Count > 0;
 
-			List<TreeNode> children = new List<TreeNode>();
-			foreach (TreeNode child in node.Nodes)
+			List<CustomTreeNode> children = new List<CustomTreeNode>();
+			foreach (CustomTreeNode child in node.Nodes)
 			{
 				if (!filter(child) && FilterNode(child, filter) != null)
 					children.Add(child);
@@ -111,45 +112,15 @@ namespace BerichtManager.HelperClasses
 			Close();
 		}
 
-		private void tvFolders_DrawNode(object sender, DrawTreeNodeEventArgs e)
-		{
-			CustomNodeDrawer.DrawNode(e);
-		}
-
-		private void tvFolders_AfterCheck(object sender, TreeViewEventArgs e)
-		{
-			if (UpdatingChecks)
-				return;
-
-			if (e.Node.Nodes.Count > 0)
-				CheckChildNodes(e.Node);
-
-			UpdatingChecks = false;
-		}
-
 		/// <summary>
-		/// Checks all child nodes of <paramref name="node"/>
+		/// Check if <paramref name="node"/> contains a child <see cref="CustomTreeNode"/> which is checked
 		/// </summary>
-		/// <param name="node"><see cref="TreeNode"/> to check all children for</param>
-		private void CheckChildNodes(TreeNode node)
-		{
-			foreach (TreeNode childNode in node.Nodes)
-			{
-				childNode.Checked = node.Checked;
-				if (childNode.Nodes.Count > 0)
-					CheckChildNodes(childNode);
-			}
-		}
-
-		/// <summary>
-		/// Check if <paramref name="node"/> contains a child <see cref="TreeNode"/> which is checked
-		/// </summary>
-		/// <param name="node"><see cref="TreeNode"/> to check children of</param>
+		/// <param name="node"><see cref="CustomTreeNode"/> to check children of</param>
 		/// <returns><see langword="true"/> if checked child was found and <see langword="false"/> otherwise</returns>
-		private bool NodeHasCheckedChild(TreeNode node)
+		private bool NodeHasCheckedChild(CustomTreeNode node)
 		{
 			bool hasPassed = false;
-			foreach (TreeNode childNode in node.Nodes)
+			foreach (CustomTreeNode childNode in node.Nodes)
 			{
 				if (childNode.Checked)
 					return true;
@@ -159,24 +130,24 @@ namespace BerichtManager.HelperClasses
 		}
 
 		/// <summary>
-		/// Filters all unchecked <see cref="TreeNode"/>s from <paramref name="node"/>, does not mutate <paramref name="node"/>
+		/// Filters all unchecked <see cref="CustomTreeNode"/>s from <paramref name="node"/>, does not mutate <paramref name="node"/>
 		/// </summary>
-		/// <param name="node"><see cref="TreeNode"/> to filter</param>
-		/// <returns>A new <see cref="TreeNode"/> object, which is a filtered clone of <paramref name="node"/> or <see langword="null"/> if no nodes remain</returns>
-		private TreeNode FilterUncheckedNodes(TreeNode node)
+		/// <param name="node"><see cref="CustomTreeNode"/> to filter</param>
+		/// <returns>A new <see cref="CustomTreeNode"/> object, which is a filtered clone of <paramref name="node"/> or <see langword="null"/> if no nodes remain</returns>
+		private CustomTreeNode FilterUncheckedNodes(CustomTreeNode node)
 		{
 			if (!node.Checked && !NodeHasCheckedChild(node))
 				return null;
-			TreeNode result = (TreeNode)node.Clone();
+			CustomTreeNode result = (CustomTreeNode)node.Clone();
 
-			List<TreeNode> passed = new List<TreeNode>();
-			foreach (TreeNode childNode in result.Nodes)
+			List<CustomTreeNode> passed = new List<CustomTreeNode>();
+			foreach (CustomTreeNode childNode in result.Nodes)
 			{
 				if (childNode.Checked || NodeHasCheckedChild(childNode))
 					passed.Add(childNode);
 			}
 			result.Nodes.Clear();
-			foreach (TreeNode add in passed)
+			foreach (CustomTreeNode add in passed)
 			{
 				result.Nodes.Add(FilterUncheckedNodes(add));
 			}
@@ -185,20 +156,20 @@ namespace BerichtManager.HelperClasses
 		}
 
 		/// <summary>
-		/// Filters all unchecked <see cref="TreeNode"/>s from <paramref name="node"/><br/>
+		/// Filters all unchecked <see cref="CustomTreeNode"/>s from <paramref name="node"/><br/>
 		/// <b>! Caution:</b> will mutate <paramref name="node"/> !
 		/// </summary>
-		/// <param name="node"><see cref="TreeNode"/> to filter</param>
-		private void FilterUncheckedNodesMutate(TreeNode node)
+		/// <param name="node"><see cref="CustomTreeNode"/> to filter</param>
+		private void FilterUncheckedNodesMutate(CustomTreeNode node)
 		{
-			List<TreeNode> checkedNodes = new List<TreeNode>();
-			foreach (TreeNode childNode in node.Nodes)
+			List<CustomTreeNode> checkedNodes = new List<CustomTreeNode>();
+			foreach (CustomTreeNode childNode in node.Nodes)
 			{
 				if (childNode.Checked)
 					checkedNodes.Add(childNode);
 			}
 			node.Nodes.Clear();
-			foreach (TreeNode add in checkedNodes)
+			foreach (CustomTreeNode add in checkedNodes)
 			{
 				node.Nodes.Add(add);
 				FilterUncheckedNodesMutate(add);

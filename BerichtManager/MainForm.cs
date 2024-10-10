@@ -23,6 +23,7 @@ using System.Net.Http;
 using BerichtManager.IHKClient.Exceptions;
 using BerichtManager.IHKClient.ReportContents;
 using BerichtManager.WordTemplate;
+using BerichtManager.OwnControls.OwnTreeView;
 
 namespace BerichtManager
 {
@@ -57,7 +58,6 @@ namespace BerichtManager
 		/// If <see cref="rtbSchool"/> or <see cref="rtbWork"/> have been edited
 		/// </summary>
 		private bool WasEdited { get; set; } = false;
-		private CustomNodeDrawer NodeDrawer { get; set; }
 
 		/// <summary>
 		/// Value if word has a visible window or not
@@ -130,10 +130,10 @@ namespace BerichtManager
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(ttTips);
-			NodeDrawer = new CustomNodeDrawer();
 			foreach (Control control in this.Controls)
 				control.KeyDown += DetectKeys;
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
+			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
 			ActivePath = ConfigHandler.ReportPath;
 			UpdateTree();
@@ -245,7 +245,7 @@ namespace BerichtManager
 					expanded = GetExpandedNodes(tvReports.Nodes[0]);
 
 				tvReports.Nodes.Clear();
-				TreeNode root = CreateDirectoryNode(Info);
+				CustomTreeNode root = CreateDirectoryNode(Info);
 				tvReports.Nodes.Add(root);
 
 				expanded.ForEach(node =>
@@ -297,16 +297,16 @@ namespace BerichtManager
 		/// <param name="directoryInfo">The target directory</param>
 		/// <returns>A Treenode representing the contents of <paramref name="directoryInfo"/></returns>
 		//https://stackoverflow.com/questions/6239544/populate-treeview-with-file-system-directory-structure
-		private TreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
+		private CustomTreeNode CreateDirectoryNode(DirectoryInfo directoryInfo)
 		{
-			TreeNode directoryNode = new TreeNode(directoryInfo.Name);
+			CustomTreeNode directoryNode = new CustomTreeNode(directoryInfo.Name);
 			foreach (var directory in directoryInfo.GetDirectories())
 				directoryNode.Nodes.Add(CreateDirectoryNode(directory));
 			foreach (var file in directoryInfo.GetFiles())
 				if (ReportUtils.IsNameValid(file.Name))
 					directoryNode.Nodes.Add(new ReportNode(file.Name));
 				else
-					directoryNode.Nodes.Add(new TreeNode(file.Name));
+					directoryNode.Nodes.Add(new CustomTreeNode(file.Name));
 			return directoryNode;
 		}
 
@@ -1522,11 +1522,6 @@ namespace BerichtManager
 			{
 				Console.Write(ex.StackTrace);
 			}
-		}
-
-		private void tvReports_DrawNode(object sender, DrawTreeNodeEventArgs e)
-		{
-			NodeDrawer.DrawNode(e);
 		}
 
 		private void menuStrip1_Paint(object sender, PaintEventArgs e)

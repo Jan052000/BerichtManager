@@ -18,14 +18,14 @@ namespace BerichtManager
 				components.Dispose();
 				try
 				{
-					if (this.WordApp != null) 
+					if (this.WordApp != null)
 					{
 						this.WordApp.Quit(SaveChanges: false);
 					}
 				}
-				catch 
+				catch
 				{
-					
+
 				}
 			}
 			base.Dispose(disposing);
@@ -40,7 +40,6 @@ namespace BerichtManager
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.tvReports = new System.Windows.Forms.TreeView();
 			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.miEdit = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +57,7 @@ namespace BerichtManager
 			this.miRCUpdateSelection = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRcShowComment = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRcCheckFormat = new System.Windows.Forms.ToolStripMenuItem();
+			this.miRcDownloadReports = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRefresh = new System.Windows.Forms.ToolStripMenuItem();
 			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
 			this.rtbWork = new System.Windows.Forms.RichTextBox();
@@ -83,14 +83,14 @@ namespace BerichtManager
 			this.miHandInSelection = new System.Windows.Forms.ToolStripMenuItem();
 			this.miUpdateSelection = new System.Windows.Forms.ToolStripMenuItem();
 			this.miCheckFormat = new System.Windows.Forms.ToolStripMenuItem();
+			this.miDownloadReports = new System.Windows.Forms.ToolStripMenuItem();
 			this.miCloseReport = new System.Windows.Forms.ToolStripMenuItem();
 			this.miRevealInExplorer = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.miDownloadReports = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRcDownloadReports = new System.Windows.Forms.ToolStripMenuItem();
+			this.tvReports = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -103,57 +103,40 @@ namespace BerichtManager
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// tvReports
-			// 
-			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
-			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-			this.tvReports.Location = new System.Drawing.Point(0, 0);
-			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
-			this.tvReports.Name = "tvReports";
-			this.tvReports.Size = new System.Drawing.Size(235, 426);
-			this.tvReports.TabIndex = 6;
-			this.tvReports.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tvReports_DrawNode);
-			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
-			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
-			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
-			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
-			// 
 			// toRightClickMenu
 			// 
 			this.toRightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miDelete,
-            this.miEdit,
-            this.miQuickEditOptions,
-            this.miPrint,
-            this.miIHKOptions,
-            this.miRefresh});
+			this.miDelete,
+			this.miEdit,
+			this.miQuickEditOptions,
+			this.miPrint,
+			this.miIHKOptions,
+			this.miRefresh});
 			this.toRightClickMenu.Name = "contextMenuStrip1";
-			this.toRightClickMenu.Size = new System.Drawing.Size(181, 158);
+			this.toRightClickMenu.Size = new System.Drawing.Size(147, 136);
 			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
 			// 
 			// miDelete
 			// 
 			this.miDelete.Name = "miDelete";
-			this.miDelete.Size = new System.Drawing.Size(180, 22);
+			this.miDelete.Size = new System.Drawing.Size(146, 22);
 			this.miDelete.Text = "Delete";
 			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
 			// 
 			// miEdit
 			// 
 			this.miEdit.Name = "miEdit";
-			this.miEdit.Size = new System.Drawing.Size(180, 22);
+			this.miEdit.Size = new System.Drawing.Size(146, 22);
 			this.miEdit.Text = "Edit";
 			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
 			// 
 			// miQuickEditOptions
 			// 
 			this.miQuickEditOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tiQuickEditWork,
-            this.miQuickEditSchool});
+			this.tiQuickEditWork,
+			this.miQuickEditSchool});
 			this.miQuickEditOptions.Name = "miQuickEditOptions";
-			this.miQuickEditOptions.Size = new System.Drawing.Size(180, 22);
+			this.miQuickEditOptions.Size = new System.Drawing.Size(146, 22);
 			this.miQuickEditOptions.Text = "Quick actions";
 			// 
 			// tiQuickEditWork
@@ -173,32 +156,32 @@ namespace BerichtManager
 			// miPrint
 			// 
 			this.miPrint.Name = "miPrint";
-			this.miPrint.Size = new System.Drawing.Size(180, 22);
+			this.miPrint.Size = new System.Drawing.Size(146, 22);
 			this.miPrint.Text = "Print";
 			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
 			// 
 			// miIHKOptions
 			// 
 			this.miIHKOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miRcUpdateStatuses,
-            this.miUploadAsNext,
-            this.miUploadAllSelected,
-            this.miHandInSingle,
-            this.miRcHandInSelection,
-            this.miUpdateReport,
-            this.miRCUpdateSelection,
-            this.miRcShowComment,
-            this.miRcCheckFormat,
-            this.miRcDownloadReports});
+			this.miRcUpdateStatuses,
+			this.miUploadAsNext,
+			this.miUploadAllSelected,
+			this.miHandInSingle,
+			this.miRcHandInSelection,
+			this.miUpdateReport,
+			this.miRCUpdateSelection,
+			this.miRcShowComment,
+			this.miRcCheckFormat,
+			this.miRcDownloadReports});
 			this.miIHKOptions.Name = "miIHKOptions";
-			this.miIHKOptions.Size = new System.Drawing.Size(180, 22);
+			this.miIHKOptions.Size = new System.Drawing.Size(146, 22);
 			this.miIHKOptions.Text = "IHK";
 			this.miIHKOptions.ToolTipText = "All options for interactions with IHK";
 			// 
 			// miRcUpdateStatuses
 			// 
 			this.miRcUpdateStatuses.Name = "miRcUpdateStatuses";
-			this.miRcUpdateStatuses.Size = new System.Drawing.Size(180, 22);
+			this.miRcUpdateStatuses.Size = new System.Drawing.Size(168, 22);
 			this.miRcUpdateStatuses.Text = "Update statuses";
 			this.miRcUpdateStatuses.ToolTipText = "Update statuses of reports";
 			this.miRcUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
@@ -206,7 +189,7 @@ namespace BerichtManager
 			// miUploadAsNext
 			// 
 			this.miUploadAsNext.Name = "miUploadAsNext";
-			this.miUploadAsNext.Size = new System.Drawing.Size(180, 22);
+			this.miUploadAsNext.Size = new System.Drawing.Size(168, 22);
 			this.miUploadAsNext.Text = "Upload";
 			this.miUploadAsNext.ToolTipText = "Upload the selected report as next report";
 			this.miUploadAsNext.Click += new System.EventHandler(this.miUploadAsNext_Click);
@@ -214,7 +197,7 @@ namespace BerichtManager
 			// miUploadAllSelected
 			// 
 			this.miUploadAllSelected.Name = "miUploadAllSelected";
-			this.miUploadAllSelected.Size = new System.Drawing.Size(180, 22);
+			this.miUploadAllSelected.Size = new System.Drawing.Size(168, 22);
 			this.miUploadAllSelected.Text = "Upload selection";
 			this.miUploadAllSelected.ToolTipText = "Upload all reports selected in following form";
 			this.miUploadAllSelected.Click += new System.EventHandler(this.UploadSelectionClick);
@@ -222,7 +205,7 @@ namespace BerichtManager
 			// miHandInSingle
 			// 
 			this.miHandInSingle.Name = "miHandInSingle";
-			this.miHandInSingle.Size = new System.Drawing.Size(180, 22);
+			this.miHandInSingle.Size = new System.Drawing.Size(168, 22);
 			this.miHandInSingle.Text = "Hand in";
 			this.miHandInSingle.ToolTipText = "Hand in this report";
 			this.miHandInSingle.Click += new System.EventHandler(this.miHandInSingle_Click);
@@ -230,7 +213,7 @@ namespace BerichtManager
 			// miRcHandInSelection
 			// 
 			this.miRcHandInSelection.Name = "miRcHandInSelection";
-			this.miRcHandInSelection.Size = new System.Drawing.Size(180, 22);
+			this.miRcHandInSelection.Size = new System.Drawing.Size(168, 22);
 			this.miRcHandInSelection.Text = "Hand in selection";
 			this.miRcHandInSelection.ToolTipText = "Hand in all reports selected in following form";
 			this.miRcHandInSelection.Click += new System.EventHandler(this.HandInSelectionClick);
@@ -238,7 +221,7 @@ namespace BerichtManager
 			// miUpdateReport
 			// 
 			this.miUpdateReport.Name = "miUpdateReport";
-			this.miUpdateReport.Size = new System.Drawing.Size(180, 22);
+			this.miUpdateReport.Size = new System.Drawing.Size(168, 22);
 			this.miUpdateReport.Text = "Update report";
 			this.miUpdateReport.ToolTipText = "Upload local changes to IHK";
 			this.miUpdateReport.Click += new System.EventHandler(this.SendReportToIHK);
@@ -246,28 +229,35 @@ namespace BerichtManager
 			// miRCUpdateSelection
 			// 
 			this.miRCUpdateSelection.Name = "miRCUpdateSelection";
-			this.miRCUpdateSelection.Size = new System.Drawing.Size(180, 22);
+			this.miRCUpdateSelection.Size = new System.Drawing.Size(168, 22);
 			this.miRCUpdateSelection.Text = "Update selection";
 			this.miRCUpdateSelection.Click += new System.EventHandler(this.SendSelectionToIHK);
 			// 
 			// miRcShowComment
 			// 
 			this.miRcShowComment.Name = "miRcShowComment";
-			this.miRcShowComment.Size = new System.Drawing.Size(180, 22);
+			this.miRcShowComment.Size = new System.Drawing.Size(168, 22);
 			this.miRcShowComment.Text = "Show comment";
 			this.miRcShowComment.Click += new System.EventHandler(this.miRcShowComment_Click);
 			// 
 			// miRcCheckFormat
 			// 
 			this.miRcCheckFormat.Name = "miRcCheckFormat";
-			this.miRcCheckFormat.Size = new System.Drawing.Size(180, 22);
+			this.miRcCheckFormat.Size = new System.Drawing.Size(168, 22);
 			this.miRcCheckFormat.Text = "Check format";
 			this.miRcCheckFormat.Click += new System.EventHandler(this.CheckFormat);
+			// 
+			// miRcDownloadReports
+			// 
+			this.miRcDownloadReports.Name = "miRcDownloadReports";
+			this.miRcDownloadReports.Size = new System.Drawing.Size(168, 22);
+			this.miRcDownloadReports.Text = "Download reports";
+			this.miRcDownloadReports.Click += new System.EventHandler(this.DownloadIHKReports);
 			// 
 			// miRefresh
 			// 
 			this.miRefresh.Name = "miRefresh";
-			this.miRefresh.Size = new System.Drawing.Size(180, 22);
+			this.miRefresh.Size = new System.Drawing.Size(146, 22);
 			this.miRefresh.Text = "Refresh";
 			this.miRefresh.Click += new System.EventHandler(this.MiRefresh_Click);
 			// 
@@ -303,9 +293,9 @@ namespace BerichtManager
 			// 
 			// paMainView
 			// 
-			this.paMainView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.paMainView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.paMainView.Controls.Add(this.scTextBoxes);
 			this.paMainView.Controls.Add(this.splitterTreeBoxes);
 			this.paMainView.Controls.Add(this.paFileTree);
@@ -374,9 +364,9 @@ namespace BerichtManager
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miFile,
-            this.miOptions,
-            this.miClose});
+			this.miFile,
+			this.miOptions,
+			this.miClose});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -387,13 +377,13 @@ namespace BerichtManager
 			// miFile
 			// 
 			this.miFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miCreate,
-            this.miEditLatest,
-            this.miPrintAll,
-            this.miCheckDiscrepancy,
-            this.miIHK,
-            this.miCloseReport,
-            this.miRevealInExplorer});
+			this.miCreate,
+			this.miEditLatest,
+			this.miPrintAll,
+			this.miCheckDiscrepancy,
+			this.miIHK,
+			this.miCloseReport,
+			this.miRevealInExplorer});
 			this.miFile.Name = "miFile";
 			this.miFile.Size = new System.Drawing.Size(37, 20);
 			this.miFile.Text = "File";
@@ -422,9 +412,9 @@ namespace BerichtManager
 			// miCheckDiscrepancy
 			// 
 			this.miCheckDiscrepancy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miNumbers,
-            this.miDates,
-            this.miFullCheck});
+			this.miNumbers,
+			this.miDates,
+			this.miFullCheck});
 			this.miCheckDiscrepancy.Name = "miCheckDiscrepancy";
 			this.miCheckDiscrepancy.Size = new System.Drawing.Size(191, 22);
 			this.miCheckDiscrepancy.Text = "Check for discrepancy";
@@ -454,12 +444,12 @@ namespace BerichtManager
 			// miIHK
 			// 
 			this.miIHK.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miUpdateStatuses,
-            this.miUploadSelection,
-            this.miHandInSelection,
-            this.miUpdateSelection,
-            this.miCheckFormat,
-            this.miDownloadReports});
+			this.miUpdateStatuses,
+			this.miUploadSelection,
+			this.miHandInSelection,
+			this.miUpdateSelection,
+			this.miCheckFormat,
+			this.miDownloadReports});
 			this.miIHK.Name = "miIHK";
 			this.miIHK.Size = new System.Drawing.Size(191, 22);
 			this.miIHK.Text = "IHK";
@@ -468,7 +458,7 @@ namespace BerichtManager
 			// miUpdateStatuses
 			// 
 			this.miUpdateStatuses.Name = "miUpdateStatuses";
-			this.miUpdateStatuses.Size = new System.Drawing.Size(180, 22);
+			this.miUpdateStatuses.Size = new System.Drawing.Size(168, 22);
 			this.miUpdateStatuses.Text = "Update statuses";
 			this.miUpdateStatuses.ToolTipText = "Update statuses of reports";
 			this.miUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
@@ -476,7 +466,7 @@ namespace BerichtManager
 			// miUploadSelection
 			// 
 			this.miUploadSelection.Name = "miUploadSelection";
-			this.miUploadSelection.Size = new System.Drawing.Size(180, 22);
+			this.miUploadSelection.Size = new System.Drawing.Size(168, 22);
 			this.miUploadSelection.Text = "Upload selection";
 			this.miUploadSelection.ToolTipText = "Upload all reports selected in following form";
 			this.miUploadSelection.Click += new System.EventHandler(this.UploadSelectionClick);
@@ -484,7 +474,7 @@ namespace BerichtManager
 			// miHandInSelection
 			// 
 			this.miHandInSelection.Name = "miHandInSelection";
-			this.miHandInSelection.Size = new System.Drawing.Size(180, 22);
+			this.miHandInSelection.Size = new System.Drawing.Size(168, 22);
 			this.miHandInSelection.Text = "Hand in selection";
 			this.miHandInSelection.ToolTipText = "Hand in all reports selected in following form";
 			this.miHandInSelection.Click += new System.EventHandler(this.HandInSelectionClick);
@@ -492,16 +482,23 @@ namespace BerichtManager
 			// miUpdateSelection
 			// 
 			this.miUpdateSelection.Name = "miUpdateSelection";
-			this.miUpdateSelection.Size = new System.Drawing.Size(180, 22);
+			this.miUpdateSelection.Size = new System.Drawing.Size(168, 22);
 			this.miUpdateSelection.Text = "Update selection";
 			this.miUpdateSelection.Click += new System.EventHandler(this.SendSelectionToIHK);
 			// 
 			// miCheckFormat
 			// 
 			this.miCheckFormat.Name = "miCheckFormat";
-			this.miCheckFormat.Size = new System.Drawing.Size(180, 22);
+			this.miCheckFormat.Size = new System.Drawing.Size(168, 22);
 			this.miCheckFormat.Text = "Check format";
 			this.miCheckFormat.Click += new System.EventHandler(this.CheckFormat);
+			// 
+			// miDownloadReports
+			// 
+			this.miDownloadReports.Name = "miDownloadReports";
+			this.miDownloadReports.Size = new System.Drawing.Size(168, 22);
+			this.miDownloadReports.Text = "Download reports";
+			this.miDownloadReports.Click += new System.EventHandler(this.DownloadIHKReports);
 			// 
 			// miCloseReport
 			// 
@@ -520,8 +517,8 @@ namespace BerichtManager
 			// miOptions
 			// 
 			this.miOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miOptionsMenu,
-            this.miWordVisible});
+			this.miOptionsMenu,
+			this.miWordVisible});
 			this.miOptions.Name = "miOptions";
 			this.miOptions.Size = new System.Drawing.Size(61, 20);
 			this.miOptions.Text = "Options";
@@ -551,19 +548,21 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// miDownloadReports
+			// tvReports
 			// 
-			this.miDownloadReports.Name = "miDownloadReports";
-			this.miDownloadReports.Size = new System.Drawing.Size(180, 22);
-			this.miDownloadReports.Text = "Download reports";
-			this.miDownloadReports.Click += new System.EventHandler(this.DownloadIHKReports);
-			// 
-			// miRcDownloadReports
-			// 
-			this.miRcDownloadReports.Name = "miRcDownloadReports";
-			this.miRcDownloadReports.Size = new System.Drawing.Size(180, 22);
-			this.miRcDownloadReports.Text = "Download reports";
-			this.miRcDownloadReports.Click += new System.EventHandler(this.DownloadIHKReports);
+			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
+			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
+			this.tvReports.Location = new System.Drawing.Point(0, 0);
+			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
+			this.tvReports.Name = "tvReports";
+			this.tvReports.Size = new System.Drawing.Size(235, 426);
+			this.tvReports.TabIndex = 6;
+			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
+			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
+			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
+			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
 			// 
 			// MainForm
 			// 
@@ -597,7 +596,6 @@ namespace BerichtManager
 		}
 
 		#endregion
-		private System.Windows.Forms.TreeView tvReports;
 		private System.Windows.Forms.ContextMenuStrip toRightClickMenu;
 		private System.Windows.Forms.ToolStripMenuItem miDelete;
 		private System.Windows.Forms.ToolStripMenuItem miEdit;
@@ -648,6 +646,7 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miRcShowComment;
 		private System.Windows.Forms.ToolStripMenuItem miRcDownloadReports;
 		private System.Windows.Forms.ToolStripMenuItem miDownloadReports;
+		private OwnControls.OwnTreeView.CustomTreeView tvReports;
 	}
 }
 

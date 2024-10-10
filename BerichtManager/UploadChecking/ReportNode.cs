@@ -1,8 +1,8 @@
-﻿using System.Windows.Forms;
+﻿using BerichtManager.OwnControls.OwnTreeView;
 
 namespace BerichtManager.UploadChecking
 {
-	internal class ReportNode : TreeNode
+	internal class ReportNode : CustomTreeNode
 	{
 		/// <summary>
 		/// Status of report on IHK servers
