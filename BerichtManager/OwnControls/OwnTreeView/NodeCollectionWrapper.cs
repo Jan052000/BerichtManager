@@ -17,9 +17,9 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		#region ICollection
 		public int Count => Collection.Count;
 
-		object ICollection.SyncRoot => this;
+		object ICollection.SyncRoot => ((ICollection)Collection).SyncRoot;
 
-		bool ICollection.IsSynchronized => false;
+		bool ICollection.IsSynchronized => ((ICollection)Collection).IsSynchronized;
 
 		public void CopyTo(Array array, int index)
 		{
@@ -45,7 +45,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 
 		public bool IsReadOnly => Collection.IsReadOnly;
 
-		bool IList.IsFixedSize => false;
+		bool IList.IsFixedSize => ((IList)Collection).IsFixedSize;
 
 		int IList.Add(object value)
 		{
