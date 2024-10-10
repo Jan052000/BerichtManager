@@ -72,7 +72,7 @@
     <OutputPath>bin\x64\Build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icon3.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -310,9 +310,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\AppIcon.ico" />
     <None Include="Resources\Folder_Closed.png" />
     <None Include="Resources\Folder_Open.png" />
-    <Content Include="Icon3.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
