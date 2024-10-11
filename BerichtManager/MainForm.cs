@@ -2738,6 +2738,13 @@ namespace BerichtManager
 
 					UploadedReports.UpdateReport(GetFullNodePath(node), wasEdited: true);
 					edited++;
+
+					if (stop)
+					{
+						progressForm.Status = "Stopped";
+						progressForm.Done();
+						break;
+					}
 				}
 			}
 
