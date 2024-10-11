@@ -2754,7 +2754,7 @@ namespace BerichtManager
 
 			progressForm.Done();
 
-			string resultsMessage = $"Found {formatErrors.Count} {(formatErrors.Count == 1 ? "error" : "errors")} and fixed {formatErrors.Count - skipped.Count} / {formatErrors.Count} of them.";
+			string resultsMessage = $"Found {formatErrors.Count} {(formatErrors.Count == 1 ? "error" : "errors")} and fixed {edited + skipped.Count} / {formatErrors.Count} of them.";
 			if (skipped.Count > 0)
 				resultsMessage += "\nSkipped:";
 			foreach (KeyValuePair<string, string> kvp in skipped)
