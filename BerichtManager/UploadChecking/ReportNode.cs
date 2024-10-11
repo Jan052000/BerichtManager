@@ -11,7 +11,7 @@ namespace BerichtManager.UploadChecking
 		/// <summary>
 		/// lfdnr of report on IHK servers
 		/// </summary>
-		public int LfdNr { get; set; }
+		public int? LfdNr { get; set; }
 		/// <summary>
 		/// Marks report as edited only locally
 		/// </summary>
@@ -60,6 +60,17 @@ namespace BerichtManager.UploadChecking
 			_this.IsOpened = IsOpened;
 			_this.LfdNr = LfdNr;
 			return _this;
+		}
+
+		/// <summary>
+		/// Copies the properties from <paramref name="report"/> to <see langword="this"/>
+		/// </summary>
+		/// <param name="report"><see cref="UploadedReport"/> to copy values from</param>
+		public void SetReportProperties(UploadedReport report)
+		{
+			WasEditedLocally = report.WasEditedLocally;
+			UploadStatus = report.Status;
+			LfdNr = report.LfdNR;
 		}
 	}
 }

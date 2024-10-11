@@ -254,8 +254,8 @@ namespace BerichtManager
 					GetNodeFromPath(path)?.Expand();
 				});
 
-				FillStatuses(root);
-				MarkEdited(root);
+				FillReportNodes(root);
+
 				if (openedNodePath is string)
 					OpenedReportNode = GetNodeFromPath(openedNodePath) as ReportNode;
 				tvReports.Sort();
@@ -311,34 +311,15 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Fills the <see cref="ReportNode"/>s in <paramref name="root"/> with their <see cref="ReportNode.UploadStatuses"/>
+		/// Sets the <see cref="UploadedReport"/> properties in all <see cref="ReportNode"/>s contained in <paramref name="node"/>
 		/// </summary>
-		/// <param name="root">Root <see cref="TreeNode"/></param>
-		private void FillStatuses(TreeNode root)
+		/// <param name="node"><see cref="TreeNode"/> to set properties of child <see cref="ReportNode"/>s for</param>
+		private void FillReportNodes(TreeNode node)
 		{
-			if (root is ReportNode report)
-			{
-				if (UploadedReports.GetUploadStatus(GetFullNodePath(root), out ReportNode.UploadStatuses status))
-					report.UploadStatus = status;
-			}
-			foreach (TreeNode node in root.Nodes)
-			{
-				FillStatuses(node);
-			}
-		}
-
-		/// <summary>
-		/// Sets edit statuses of <see cref="ReportNode"/>s in <paramref name="root"/>
-		/// </summary>
-		/// <param name="root"></param>
-		private void MarkEdited(TreeNode root)
-		{
-			if (root is ReportNode reportNode && UploadedReports.GetUploadedReport(reportNode.FullPath, out UploadedReport report))
-				reportNode.WasEditedLocally = report.WasEditedLocally;
-			foreach (TreeNode node in root.Nodes)
-			{
-				MarkEdited(node);
-			}
+			if (node is ReportNode reportNode && UploadedReports.GetUploadedReport(reportNode.TreeView != null ? reportNode.FullPath : GetFullNodePath(reportNode), out UploadedReport report))
+				reportNode.SetReportProperties(report);
+			foreach (TreeNode child in node.Nodes)
+				FillReportNodes(child);
 		}
 
 		/// <summary>
