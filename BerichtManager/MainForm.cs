@@ -1959,6 +1959,9 @@ namespace BerichtManager
 			if (node == null)
 				return null;
 
+			if (node.TreeView != null)
+				return node.FullPath;
+
 			string path = node.Text;
 			while (current.Parent != null)
 			{
