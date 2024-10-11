@@ -2596,6 +2596,7 @@ namespace BerichtManager
 					return new List<ReportNode>();
 				}
 
+				progressForm.Status = "Indexing word reports:";
 				ReportFinder.FindReports(fs.FilteredNode, out List<TreeNode> reportNodes);
 				if (reportNodes.Count == 0)
 				{
@@ -2671,7 +2672,6 @@ namespace BerichtManager
 			EventProgressForm progressForm = new EventProgressForm("Checking formats");
 			progressForm.Stop += () => stop = true;
 			progressForm.Show();
-			progressForm.Status = "Indexing word reports:";
 
 
 			//Close documents
