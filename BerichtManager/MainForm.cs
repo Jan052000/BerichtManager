@@ -2473,10 +2473,14 @@ namespace BerichtManager
 			}
 
 			UploadResult result = await TryUpdateReport(doc, lfdnr);
-			if (result == null)
-				return;
 			if (close)
 				doc.Close();
+
+			if (result == null || !HandleUpdateResults(result.Result, result.StartDate))
+			{
+				ThemedMessageBox.Show(text: "Update failed", title: "Update failed");
+				return;
+			}
 
 			UploadedReports.SetEdited(tvReports.SelectedNode.FullPath, false);
 			UpdateTree();
