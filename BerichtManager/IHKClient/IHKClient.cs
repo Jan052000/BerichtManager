@@ -313,12 +313,7 @@ namespace BerichtManager.IHKClient
 		/// <inheritdoc cref="CreateOrEditReport(Word.Document, int)" path="/exception"/>
 		public async Task<UploadResult> CreateReport(Word.Document document, bool checkMatchingStartDates = false)
 		{
-			Report report = ReportTransformer.WordToIHK(document);
-			var reports = await GetIHKReports();
-			if (reports.FirstOrDefault(r => r.StartDate.ToString("dd.MM.yyyy") == report.ReportContent.StartDate) is UploadedReport uploadedReport)
-				return new UploadResult(CreateResults.ReportAlreadyUploaded, uploadedReport.StartDate, uploadedReport.LfdNR);
-
-			return await CreateOrEditReport(document, checkMatchingStartDates: checkMatchingStartDates, ensureDefaultRefer: false);
+			return await CreateOrEditReport(document, checkMatchingStartDates: checkMatchingStartDates);
 		}
 
 		/// <summary>
@@ -508,12 +503,11 @@ namespace BerichtManager.IHKClient
 		/// <param name="document"><see cref="Word.Document"/> to use for content</param>
 		/// <param name="lfdNR">Number of report on IHK servers if it should be edited</param>
 		/// <param name="checkMatchingStartDates">If IHK report creation should check for matching start dates</param>
-		/// <param name="ensureDefaultRefer">If client should ensure that default starting referer is set after create</param>
 		/// <returns><see cref="UploadResult"/></returns>
 		/// <inheritdoc cref="FillReportContent(Report, HtmlDocument)" path="/exception"/>
 		/// <inheritdoc cref="ReportTransformer.WordToIHK(Word.Document, Report, bool)" path="/exception"/>
 		/// <exception cref="HttpRequestException"></exception>
-		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int? lfdNR = null, bool checkMatchingStartDates = false, bool ensureDefaultRefer = true)
+		private async Task<UploadResult> CreateOrEditReport(Word.Document document, int? lfdNR = null, bool checkMatchingStartDates = false)
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
@@ -543,11 +537,8 @@ namespace BerichtManager.IHKClient
 			response = await PostAndRefer("tibrosBB/azubiHeftAdd.jsp", content);
 			if (response.StatusCode != HttpStatusCode.Found && !response.IsSuccessStatusCode)
 				return new UploadResult(CreateResults.UploadFailed);
-			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()) || response.Headers.Location.ToString() == "/tibrosBB/azubiHeft.jsp")
-			{
-				if (ensureDefaultRefer)
-					response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
-			}
+			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
+				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
 				response = await GetAndRefer(response.Headers.Location);
 			int? lfdnr = lfdNR;

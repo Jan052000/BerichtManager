@@ -1758,11 +1758,18 @@ namespace BerichtManager
 		/// Uploads a single report to IHK, handles exceptions
 		/// </summary>
 		/// <param name="doc">Report to upload</param>
+		/// <param name="ihkSiteReportsCache"><see cref="List{UploadedReport}"/> of <see cref="UploadedReport"/>s from IHK site to check if report was already uploaded</param>
 		/// <returns><see cref="UploadResult"/> of creation or <see langword="null"/> if an error occurred</returns>
-		private async Task<UploadResult> TryUploadReportToIHK(Word.Document doc)
+		private async Task<UploadResult> TryUploadReportToIHK(Word.Document doc, List<UploadedReport> ihkSiteReportsCache = null)
 		{
 			try
 			{
+				Report report = ReportTransformer.WordToIHK(doc);
+				if (ihkSiteReportsCache == null)
+					ihkSiteReportsCache = await IHKClient.GetIHKReports();
+				if (ihkSiteReportsCache.FirstOrDefault(r => r.StartDate.ToString("dd.MM.yyyy") == report.ReportContent.StartDate) is UploadedReport uploadedReport)
+					return new UploadResult(CreateResults.ReportAlreadyUploaded, uploadedReport.StartDate, uploadedReport.LfdNR);
+
 				return await IHKClient.CreateReport(doc, ConfigHandler.IHKCheckMatchingStartDates);
 			}
 			catch (HttpRequestException ex)
@@ -1864,6 +1871,9 @@ namespace BerichtManager
 				progressForm.Status = "Closing open reports";
 				List<string> openReports = CloseAllReports();
 
+				//Cache IHK report list
+				List<UploadedReport> ihkReports = await IHKClient.GetIHKReports();
+
 				foreach (TreeNode report in reports)
 				{
 					string nodePath = GetFullNodePath(report);
@@ -1881,7 +1891,7 @@ namespace BerichtManager
 						progressForm.Done();
 						return;
 					}
-					UploadResult result = await TryUploadReportToIHK(doc);
+					UploadResult result = await TryUploadReportToIHK(doc, ihkReports);
 					if (result == null)
 					{
 						progressForm.Status = $"Uploading aborted: upload failed";
