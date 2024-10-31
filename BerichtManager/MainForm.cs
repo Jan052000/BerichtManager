@@ -1893,6 +1893,10 @@ namespace BerichtManager
 					}
 					switch (result.Result)
 					{
+						case CreateResults.ReportAlreadyUploaded:
+							progressForm.Status = $"Report {path} was already uploaded, marking it as uploaded";
+							UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
+							break;
 						case CreateResults.Success:
 							UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 							break;

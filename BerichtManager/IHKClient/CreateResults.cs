@@ -20,6 +20,10 @@
 		/// <summary>
 		/// Creation failed while sending form to IHK
 		/// </summary>
-		UploadFailed
+		UploadFailed,
+		/// <summary>
+		/// Report was already uploaded
+		/// </summary>
+		ReportAlreadyUploaded
 	}
 }
