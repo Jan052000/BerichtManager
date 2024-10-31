@@ -1818,19 +1818,11 @@ namespace BerichtManager
 			UploadResult result = await TryUploadReportToIHK(doc);
 			if (result == null)
 				return;
-			switch (result.Result)
-			{
-				case CreateResults.Success:
-					ThemedMessageBox.Show(text: "Report uploaded successfully", title: "Upload successful");
-					UploadedReports.AddReport(tvReports.SelectedNode.FullPath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
-					break;
-				case CreateResults.Unauthorized:
-					ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
-					break;
-				default:
-					ThemedMessageBox.Show(text: "Unable to upload report, please try again in a bit", title: "Unable to upload");
-					break;
-			}
+
+			//Handle upload result
+			if (HandleUploadResult(result, doc, null, FullSelectedPath, tvReports.SelectedNode.FullPath, new List<string>(), FullSelectedPath, out bool shouldReturn, closeDoc: close) && shouldReturn)
+				return;
+
 			if (close)
 				doc.Close(SaveChanges: false);
 			UpdateTree();
@@ -1901,30 +1893,11 @@ namespace BerichtManager
 						progressForm.Done();
 						return;
 					}
-					switch (result.Result)
-					{
-						case CreateResults.ReportAlreadyUploaded:
-							progressForm.Status = $"Report {path} was already uploaded, marking it as uploaded";
-							UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
-							break;
-						case CreateResults.Success:
-							UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
-							break;
-						case CreateResults.Unauthorized:
-							ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
-							doc.Close(SaveChanges: false);
-							OpenAllDocuments(openReports, activePath);
-							progressForm.Status = $"Abort: Unauthorized";
-							progressForm.Done();
-							return;
-						default:
-							ThemedMessageBox.Show(text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
-							doc.Close(SaveChanges: false);
-							OpenAllDocuments(openReports, activePath);
-							progressForm.Status = $"Abort: Upload failed";
-							progressForm.Done();
-							return;
-					}
+
+					//Handle upload result
+					if (HandleUploadResult(result, doc, progressForm, path, nodePath, openReports, activePath, out bool shouldReturn) && shouldReturn)
+						return;
+
 					doc.Close(SaveChanges: false);
 
 					if (shouldStop)
@@ -1959,6 +1932,66 @@ namespace BerichtManager
 			EventProgressForm progressForm = new EventProgressForm("Upload progress");
 			progressForm.Show();
 			await UploadSelection(progressForm);
+		}
+
+		/// <summary>
+		/// Handles incoming <see cref="UploadResult"/>s
+		/// </summary>
+		/// <param name="doc"><see cref="Word.Document"/> that is being uploaded</param>
+		/// <param name="result"><see cref="UploadResult"/> of upload process</param>
+		/// <param name="progressForm"><see cref="EventProgressForm"/> to display data on</param>
+		/// <param name="reportFilePath">Path of report file</param>
+		/// <param name="nodePath">Path of report node</param>
+		/// <param name="openReports"><see cref="List{string}"/> of paths of previously open reports</param>
+		/// <param name="activePath">Path of last open report</param>
+		/// <param name="shouldReturn"><see langword="true"/> if further execution is advised to return and <see langword="false"/> otherwise</param>
+		/// <param name="closeDoc">Wether or not <paramref name="doc"/> should be closed if necessary</param>
+		/// <returns><see langword="true"/> if <paramref name="result"/> was handled and <see langword="false"/> otherwise</returns>
+		private bool HandleUploadResult(UploadResult result, Word.Document doc, EventProgressForm progressForm, string reportFilePath, string nodePath, List<string> openReports,
+			string activePath, out bool shouldReturn, bool closeDoc = true)
+		{
+			shouldReturn = false;
+			string progressFormNewStatus;
+			bool shouldCallDone = false;
+			switch (result.Result)
+			{
+				case CreateResults.ReportAlreadyUploaded:
+					UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
+					progressFormNewStatus = $"Report {reportFilePath} was already uploaded, marking it as uploaded";
+					break;
+				case CreateResults.Success:
+					UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
+					progressFormNewStatus = "Upload successful";
+					break;
+				case CreateResults.Unauthorized:
+					ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
+					if (closeDoc)
+						doc.Close(SaveChanges: false);
+					OpenAllDocuments(openReports, activePath);
+					progressFormNewStatus = $"Abort: Unauthorized";
+					shouldCallDone = true;
+					shouldReturn = true;
+					break;
+				case CreateResults.CreationFailed:
+				case CreateResults.UploadFailed:
+					ThemedMessageBox.Show(text: $"Upload of {reportFilePath} failed, upload was canceled!", title: "Upload failed");
+					if (closeDoc)
+						doc.Close(SaveChanges: false);
+					OpenAllDocuments(openReports, activePath);
+					progressFormNewStatus = $"Abort: Upload failed";
+					shouldCallDone = true;
+					shouldReturn = true;
+					break;
+				default:
+					return false;
+			}
+			if (progressForm != null)
+			{
+				progressForm.Status = progressFormNewStatus;
+				if (shouldCallDone)
+					progressForm.Done();
+			}
+			return true;
 		}
 
 		/// <summary>
