@@ -2216,6 +2216,7 @@ namespace BerichtManager
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
 				{
+					progressForm.Status = "File selection canceled";
 					progressForm.Done();
 					return;
 				}
