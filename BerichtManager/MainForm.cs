@@ -1374,6 +1374,7 @@ namespace BerichtManager
 			bool uploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
 			bool rejected = report?.Status == ReportNode.UploadStatuses.Rejected;
 			bool wasEdited = report != null && (report?.WasEditedLocally).Value;
+			bool wasUpdated = report != null && (report?.WasUpdated).Value;
 
 			miEdit.Enabled = !isInLogs && isNameValid;
 			//miEdit.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
@@ -1384,7 +1385,7 @@ namespace BerichtManager
 			miQuickEditOptions.Enabled = !isInLogs && isNameValid;
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miUploadAsNext.Enabled = !isInLogs && isNameValid && !isUploaded;
-			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected && wasEdited);
+			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected && (wasEdited || wasUpdated));
 			miUpdateReport.Enabled = isNameValid && isUploaded && wasEdited && (uploaded || rejected);
 			miRcShowComment.Enabled = isNameValid && isUploaded && report.LfdNR.HasValue;
 			miDownloadReports.Enabled = miRcDownloadReports.Enabled = !string.IsNullOrEmpty(ConfigHandler.IHKUserName) && !string.IsNullOrEmpty(ConfigHandler.IHKPassword);
@@ -2112,6 +2113,11 @@ namespace BerichtManager
 				ThemedMessageBox.Show(text: $"Can not update {FullSelectedPath} as it can not be changed on IHK server", title: "Can not update");
 				return;
 			}
+			if (report.Status == ReportNode.UploadStatuses.Rejected && !report.WasUpdated && !report.WasEditedLocally)
+			{
+				ThemedMessageBox.Show(text: $"Can not update {FullSelectedPath} as it was rejected and not changed", title: "Can not update");
+				return;
+			}
 
 			//Prevent unsaved changes from being left locally
 			if (report.WasEditedLocally)
@@ -2152,7 +2158,7 @@ namespace BerichtManager
 				return;
 			}
 
-			UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.HandedIn, lfdnr);
+			UploadedReports.UpdateReport(FullSelectedPath, status: ReportNode.UploadStatuses.HandedIn, wasEdited: false, wasUpdated: true);
 			UpdateTree();
 			ThemedMessageBox.Show(text: "Hand in successful", title: "Report handed in");
 		}
@@ -2212,7 +2218,8 @@ namespace BerichtManager
 					bool statusIsUploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
 					bool rejectedWasEdited = report?.Status == ReportNode.UploadStatuses.Rejected && (report?.WasEditedLocally).Value;
 					bool emptyNonReportNode = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
-					return isReport && (!isUploaded || !statusIsUploaded) && !rejectedWasEdited || emptyNonReportNode;
+					bool wasUpdated = isUploaded && report.WasUpdated;
+					return isReport && (!isUploaded || !statusIsUploaded) && !rejectedWasEdited && !wasUpdated || emptyNonReportNode;
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
 				{
@@ -2241,10 +2248,16 @@ namespace BerichtManager
 						progressForm.Status = "\t- skipped: Not uploaded";
 						continue;
 					}
-					if (report.Status != ReportNode.UploadStatuses.Uploaded)
+					if (report.Status != ReportNode.UploadStatuses.Uploaded && report.Status != ReportNode.UploadStatuses.Rejected)
 					{
 						ThemedMessageBox.Show(text: $"Report {fullPath} could not be handed in due to its upload status", title: "Hand in failed");
 						progressForm.Status = "\t- skipped: Can not be handed in";
+						continue;
+					}
+					if (report.Status == ReportNode.UploadStatuses.Rejected && !report.WasEditedLocally && !report.WasUpdated)
+					{
+						ThemedMessageBox.Show(text: $"Report {fullPath} could not be handed in because it was rejected and not changed", title: "Hand in failed");
+						progressForm.Status = "\t- skipped: Rejected and unchanged";
 						continue;
 					}
 					if (!(report.LfdNR is int lfdnr))
@@ -2253,6 +2266,7 @@ namespace BerichtManager
 						progressForm.Status = "\t- skipped: Unable to read lfdnr";
 						continue;
 					}
+
 					//Prevent unsaved changes from being left locally
 					if (report.WasEditedLocally)
 					{
@@ -2333,7 +2347,7 @@ namespace BerichtManager
 					needsUpdate = true;
 					handedIn++;
 					progressForm.Status = "\t- Updating status";
-					UploadedReports.UpdateReportStatus(report.StartDate, ReportNode.UploadStatuses.HandedIn, report.LfdNR);
+					UploadedReports.UpdateReport(nodePath, status: ReportNode.UploadStatuses.HandedIn, wasEdited: false, wasUpdated: true);
 
 					if (shouldStop)
 					{
@@ -2482,7 +2496,7 @@ namespace BerichtManager
 				return;
 			}
 
-			UploadedReports.SetEdited(tvReports.SelectedNode.FullPath, false);
+			UploadedReports.UpdateReport(tvReports.SelectedNode.FullPath, wasEdited: false, wasUpdated: true);
 			UpdateTree();
 			ThemedMessageBox.Show(text: "Report was successfully updated", title: "Update complete");
 		}
@@ -2581,7 +2595,7 @@ namespace BerichtManager
 				{
 					case CreateResults.Success:
 						progressForm.Status = "\t-Updated";
-						UploadedReports.SetEdited(fullPath, false);
+						UploadedReports.UpdateReport(fullPath, wasEdited: false, wasUpdated: true);
 						break;
 					default:
 						progressForm.Status = "Skipped, Upload failed";

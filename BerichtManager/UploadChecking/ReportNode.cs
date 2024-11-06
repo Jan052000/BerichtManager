@@ -2,7 +2,7 @@
 
 namespace BerichtManager.UploadChecking
 {
-	internal class ReportNode : CustomTreeNode
+	public class ReportNode : CustomTreeNode
 	{
 		/// <summary>
 		/// Status of report on IHK servers
@@ -20,6 +20,10 @@ namespace BerichtManager.UploadChecking
 		/// Marks the report behind this node as opened
 		/// </summary>
 		public bool IsOpened { get; set; } = false;
+		/// <summary>
+		/// Marks the report as updated
+		/// </summary>
+		public bool WasUpdated { get; set; } = false;
 
 		/// <summary>
 		/// Statuses of report on IHK servers
@@ -59,6 +63,7 @@ namespace BerichtManager.UploadChecking
 			_this.WasEditedLocally = WasEditedLocally;
 			_this.IsOpened = IsOpened;
 			_this.LfdNr = LfdNr;
+			_this.WasUpdated = WasUpdated;
 			return _this;
 		}
 
@@ -71,6 +76,7 @@ namespace BerichtManager.UploadChecking
 			WasEditedLocally = report.WasEditedLocally;
 			UploadStatus = report.Status;
 			LfdNr = report.LfdNR;
+			WasUpdated = report.WasUpdated;
 		}
 	}
 }

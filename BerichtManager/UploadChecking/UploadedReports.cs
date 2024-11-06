@@ -111,7 +111,8 @@ namespace BerichtManager.UploadChecking
 		/// <param name="status">New upload status</param>
 		/// <param name="lfdnr">New lfdnr</param>
 		/// <param name="wasEdited">New edited status</param>
-		public static void UpdateReport(string path, ReportNode.UploadStatuses? status = null, int? lfdnr = null, bool? wasEdited = null)
+		/// <param name="wasUpdated">New was updated status</param>
+		public static void UpdateReport(string path, ReportNode.UploadStatuses? status = null, int? lfdnr = null, bool? wasEdited = null, bool? wasUpdated = false)
 		{
 			bool save = false;
 			if (!GetUploadedReport(path, out UploadedReport report))
@@ -130,6 +131,11 @@ namespace BerichtManager.UploadChecking
 			{
 				save = true;
 				report.WasEditedLocally = wasEdited.Value;
+			}
+			if (report.WasUpdated != wasUpdated && wasUpdated.HasValue)
+			{
+				save = true;
+				report.WasUpdated = wasUpdated.Value;
 			}
 
 			if (save)
@@ -269,6 +275,110 @@ namespace BerichtManager.UploadChecking
 				return false;
 			paths = uploadedPaths.Keys.ToList();
 			return true;
+		}
+
+		/// <summary>
+		/// Sets flag wether or not report was updated on IHK site
+		/// </summary>
+		/// <param name="startDate">Start date of report</param>
+		/// <param name="wasUpdated">New wasUpdated status</param>
+		public static void SetWasUpdated(DateTime startDate, bool wasUpdated)
+		{
+			if (!GetUploadedReport(startDate, out UploadedReport toMark))
+				return;
+			SetWasUpdated(toMark, wasUpdated);
+		}
+
+		/// <inheritdoc cref="SetWasUpdated(DateTime, bool)" path="/summary"/>
+		/// <param name="path">Path to the report to set wasUpdated status of</param>
+		/// <inheritdoc cref="SetWasUpdated(DateTime, bool)" path="/param"/>
+		public static void SetWasUpdated(string path, bool wasUpdated)
+		{
+			if (!GetUploadedReport(path, out UploadedReport toMark))
+				return;
+			SetWasUpdated(toMark, wasUpdated);
+		}
+
+		/// <inheritdoc cref="SetWasUpdated(DateTime, bool)" path="/summary"/>
+		/// <param name="lfdnr">Lfdnr of report on IHK servers</param>
+		/// <inheritdoc cref="SetWasUpdated(DateTime, bool)" path="/param"/>
+		public static void SetWasUpdated(int? lfdnr, bool wasUpdated)
+		{
+			if (!(lfdnr is int _lfdnr))
+				return;
+			if (!GetUploadedReport(_lfdnr, out UploadedReport toMark))
+				return;
+			SetWasUpdated(toMark, wasUpdated);
+		}
+
+		/// <summary>
+		/// Sets wasUpdated of <paramref name="report"/> to <paramref name="wasUpdated"/> and saves changes
+		/// </summary>
+		/// <param name="report"><see cref="UploadedReport"/> to update</param>
+		/// <param name="wasUpdated">New WasUpdated status</param>
+		private static void SetWasUpdated(UploadedReport report, bool wasUpdated)
+		{
+			report.WasUpdated = wasUpdated;
+			Instance.Save();
+		}
+
+		/// <summary>
+		/// Gets <see cref="UploadedReport.WasUpdated"/> of <paramref name="toGet"/>
+		/// </summary>
+		/// <param name="toGet"><see cref="UploadedReport"/> to get updated status from</param>
+		/// <param name="wasUpdated"><see cref="UploadedReport.WasUpdated"/> status of <paramref name="toGet"/></param>
+		/// <returns><see langword="true"/> if wasUpdated was found and <see langword="false"/> otherwise</returns>
+		private static bool GetWasUpdated(UploadedReport toGet, out bool? wasUpdated)
+		{
+			wasUpdated = null;
+			if (toGet == null)
+				return false;
+			wasUpdated = toGet.WasUpdated;
+			return true;
+		}
+
+		/// <summary>
+		/// Gets <see cref="UploadedReport.WasUpdated"/> of report with <paramref name="startDate"/>
+		/// </summary>
+		/// <param name="startDate"><see cref="DateTime"/> start date of report</param>
+		/// <param name="wasUpdated"><see cref="UploadedReport.WasUpdated"/> status of report or <see langword="null"/> if no report was found</param>
+		/// <returns><see langword="true"/> if get was successful and <see langword="false"/> otherwise</returns>
+		public static bool GetWasUpdated(DateTime startDate, out bool? wasUpdated)
+		{
+			wasUpdated = null;
+			if (!GetUploadedReport(startDate, out UploadedReport toGet))
+				return false;
+			return GetWasUpdated(toGet, out wasUpdated);
+		}
+
+		/// <summary>
+		/// Gets <see cref="UploadedReport.WasUpdated"/> of report at <paramref name="path"/>
+		/// </summary>
+		/// <param name="path">Path of report</param>
+		/// <inheritdoc cref="GetWasUpdated(DateTime, out bool?)" path="/param"/>
+		/// <inheritdoc cref="GetWasUpdated(DateTime, out bool?)" path="/returns"/>
+		public static bool GetWasUpdated(string path, out bool? wasUpdated)
+		{
+			wasUpdated = null;
+			if (!GetUploadedReport(path, out UploadedReport toGet))
+				return false;
+			return GetWasUpdated(toGet, out wasUpdated);
+		}
+
+		/// <summary>
+		/// Gets <see cref="UploadedReport.WasUpdated"/> of report with <paramref name="lfdnr"/>
+		/// </summary>
+		/// <param name="lfdnr">Lfdnr of report on IHK servers</param>
+		/// <inheritdoc cref="GetWasUpdated(DateTime, out bool?)" path="/param"/>
+		/// <inheritdoc cref="GetWasUpdated(DateTime, out bool?)" path="/returns"/>
+		public static bool GetWasUpdated(int? lfdnr, out bool? wasUpdated)
+		{
+			wasUpdated = null;
+			if (!(lfdnr is int _lfdnr))
+				return false;
+			if (!GetUploadedReport(_lfdnr, out UploadedReport toGet))
+				return false;
+			return GetWasUpdated(toGet, out wasUpdated);
 		}
 
 		/// <summary>

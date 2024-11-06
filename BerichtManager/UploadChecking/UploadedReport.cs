@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace BerichtManager.UploadChecking
 {
-	internal class UploadedReport
+	public class UploadedReport
 	{
 		/// <summary>
 		/// Start date of report
@@ -27,6 +27,12 @@ namespace BerichtManager.UploadChecking
 		[JsonProperty]
 		[DefaultValue(false)]
 		public bool WasEditedLocally { get; set; }
+		/// <summary>
+		/// Marks report as updated
+		/// </summary>
+		[JsonProperty]
+		[DefaultValue(false)]
+		public bool WasUpdated { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="UploadedReport"/> object
@@ -34,11 +40,12 @@ namespace BerichtManager.UploadChecking
 		/// <param name="startDate">Start date of report</param>
 		/// <param name="status">Status of report, if none is provided default is <see cref="ReportNode.UploadStatuses.Uploaded"/></param>
 		/// <param name="lfdNr">Identifyer number</param>
-		public UploadedReport(DateTime startDate, ReportNode.UploadStatuses status = ReportNode.UploadStatuses.Uploaded, int? lfdNr = null)
+		public UploadedReport(DateTime startDate, ReportNode.UploadStatuses status = ReportNode.UploadStatuses.Uploaded, int? lfdNr = null, bool wasUpdated = false)
 		{
 			StartDate = startDate;
 			Status = status;
 			LfdNR = lfdNr;
+			WasUpdated = wasUpdated;
 		}
 	}
 }
