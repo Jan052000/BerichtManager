@@ -75,7 +75,7 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
-		/// Updates the upload status of the rpeort starting on <paramref name="startDate"/> and will update lfdnr if <paramref name="lfdnr"/> is set and lfdnr is not set
+		/// Updates the upload status of the rpeort starting on <paramref name="startDate"/> and will update lfdnr if <paramref name="lfdnr"/> is set and <see cref="UploadedReport.LfdNR"/> is not set
 		/// </summary>
 		/// <param name="startDate"><see cref="DateTime"/> of rpeort start date</param>
 		/// <param name="status"><see cref="ReportNode.UploadStatuses"/> to update to</param>
@@ -94,7 +94,7 @@ namespace BerichtManager.UploadChecking
 				toUpdate.Status = status;
 				save = true;
 			}
-			if (toUpdate.LfdNR != lfdnr)
+			if (!toUpdate.LfdNR.HasValue && lfdnr.HasValue && toUpdate.LfdNR != lfdnr)
 			{
 				toUpdate.LfdNR = lfdnr;
 				save = true;
