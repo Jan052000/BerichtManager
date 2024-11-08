@@ -68,6 +68,7 @@ namespace BerichtManager
 			this.paPadding2 = new System.Windows.Forms.Panel();
 			this.splitterTreeBoxes = new System.Windows.Forms.Splitter();
 			this.paFileTree = new System.Windows.Forms.Panel();
+			this.tvReports = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.miFile = new System.Windows.Forms.ToolStripMenuItem();
 			this.miCreate = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,7 +91,6 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.tvReports = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -269,7 +269,7 @@ namespace BerichtManager
 			this.rtbWork.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbWork.Name = "rtbWork";
 			this.rtbWork.Size = new System.Drawing.Size(559, 209);
-			this.rtbWork.TabIndex = 2;
+			this.rtbWork.TabIndex = 0;
 			this.rtbWork.Text = "";
 			this.ttTips.SetToolTip(this.rtbWork, "Work");
 			this.rtbWork.WordWrap = false;
@@ -284,7 +284,7 @@ namespace BerichtManager
 			this.rtbSchool.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbSchool.Name = "rtbSchool";
 			this.rtbSchool.Size = new System.Drawing.Size(559, 210);
-			this.rtbSchool.TabIndex = 3;
+			this.rtbSchool.TabIndex = 0;
 			this.rtbSchool.Text = "";
 			this.ttTips.SetToolTip(this.rtbSchool, "School");
 			this.rtbSchool.WordWrap = false;
@@ -322,7 +322,7 @@ namespace BerichtManager
 			this.scTextBoxes.Size = new System.Drawing.Size(562, 426);
 			this.scTextBoxes.SplitterDistance = 212;
 			this.scTextBoxes.SplitterWidth = 1;
-			this.scTextBoxes.TabIndex = 5;
+			this.scTextBoxes.TabIndex = 1;
 			this.scTextBoxes.TabStop = false;
 			// 
 			// paPadding1
@@ -362,6 +362,22 @@ namespace BerichtManager
 			this.paFileTree.Size = new System.Drawing.Size(235, 426);
 			this.paFileTree.TabIndex = 0;
 			// 
+			// tvReports
+			// 
+			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
+			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
+			this.tvReports.Location = new System.Drawing.Point(0, 0);
+			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
+			this.tvReports.Name = "tvReports";
+			this.tvReports.Size = new System.Drawing.Size(235, 426);
+			this.tvReports.TabIndex = 0;
+			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
+			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
+			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
+			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
+			// 
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -371,7 +387,7 @@ namespace BerichtManager
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(800, 24);
-			this.menuStrip1.TabIndex = 4;
+			this.menuStrip1.TabIndex = 1;
 			this.menuStrip1.TabStop = true;
 			this.menuStrip1.Text = "menuStrip1";
 			this.menuStrip1.Paint += new System.Windows.Forms.PaintEventHandler(this.menuStrip1_Paint);
@@ -549,22 +565,6 @@ namespace BerichtManager
 			this.miClose.Text = "Close";
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
-			// 
-			// tvReports
-			// 
-			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
-			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-			this.tvReports.Location = new System.Drawing.Point(0, 0);
-			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
-			this.tvReports.Name = "tvReports";
-			this.tvReports.Size = new System.Drawing.Size(235, 426);
-			this.tvReports.TabIndex = 1;
-			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
-			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
-			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
-			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
 			// 
 			// MainForm
 			// 
