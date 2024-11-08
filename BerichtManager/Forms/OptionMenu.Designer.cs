@@ -105,7 +105,7 @@ namespace BerichtManager.Forms
 			this.cbIHKCheckMatchingStartDates.Location = new System.Drawing.Point(276, 118);
 			this.cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
 			this.cbIHKCheckMatchingStartDates.Size = new System.Drawing.Size(205, 17);
-			this.cbIHKCheckMatchingStartDates.TabIndex = 55;
+			this.cbIHKCheckMatchingStartDates.TabIndex = 10;
 			this.cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
 			this.toolTip1.SetToolTip(this.cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is" +
         " the same as the report");
@@ -119,7 +119,7 @@ namespace BerichtManager.Forms
 			this.tbSupervisorMail.Location = new System.Drawing.Point(98, 66);
 			this.tbSupervisorMail.Name = "tbSupervisorMail";
 			this.tbSupervisorMail.Size = new System.Drawing.Size(696, 20);
-			this.tbSupervisorMail.TabIndex = 50;
+			this.tbSupervisorMail.TabIndex = 6;
 			this.toolTip1.SetToolTip(this.tbSupervisorMail, "E-mail of supervisor");
 			this.tbSupervisorMail.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
@@ -130,7 +130,7 @@ namespace BerichtManager.Forms
 			this.tbJobField.Location = new System.Drawing.Point(98, 40);
 			this.tbJobField.Name = "tbJobField";
 			this.tbJobField.Size = new System.Drawing.Size(696, 20);
-			this.tbJobField.TabIndex = 48;
+			this.tbJobField.TabIndex = 4;
 			this.toolTip1.SetToolTip(this.tbJobField, "Name of job field");
 			this.tbJobField.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
@@ -139,7 +139,7 @@ namespace BerichtManager.Forms
 			this.btIHKLogin.Location = new System.Drawing.Point(224, 14);
 			this.btIHKLogin.Name = "btIHKLogin";
 			this.btIHKLogin.Size = new System.Drawing.Size(75, 21);
-			this.btIHKLogin.TabIndex = 47;
+			this.btIHKLogin.TabIndex = 2;
 			this.btIHKLogin.Text = "Login";
 			this.toolTip1.SetToolTip(this.btIHKLogin, "Log in to IHK");
 			this.btIHKLogin.UseVisualStyleBackColor = true;
@@ -169,7 +169,7 @@ namespace BerichtManager.Forms
 			this.nudTabStops.Location = new System.Drawing.Point(98, 12);
 			this.nudTabStops.Name = "nudTabStops";
 			this.nudTabStops.Size = new System.Drawing.Size(120, 20);
-			this.nudTabStops.TabIndex = 31;
+			this.nudTabStops.TabIndex = 1;
 			this.toolTip1.SetToolTip(this.nudTabStops, "Number of units in each tab");
 			this.nudTabStops.ValueChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
@@ -179,7 +179,7 @@ namespace BerichtManager.Forms
 			this.cbLegacyEdit.Location = new System.Drawing.Point(257, 14);
 			this.cbLegacyEdit.Name = "cbLegacyEdit";
 			this.cbLegacyEdit.Size = new System.Drawing.Size(99, 17);
-			this.cbLegacyEdit.TabIndex = 10;
+			this.cbLegacyEdit.TabIndex = 2;
 			this.cbLegacyEdit.Text = "Use legacy edit";
 			this.toolTip1.SetToolTip(this.cbLegacyEdit, "Should seperate forms be used to edit?");
 			this.cbLegacyEdit.UseVisualStyleBackColor = true;
@@ -202,7 +202,7 @@ namespace BerichtManager.Forms
 			this.coTheme.Name = "coTheme";
 			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
 			this.coTheme.Size = new System.Drawing.Size(529, 21);
-			this.coTheme.TabIndex = 23;
+			this.coTheme.TabIndex = 6;
 			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
 			this.toolTip1.SetToolTip(this.coTheme, "Selected theme");
 			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
@@ -213,7 +213,7 @@ namespace BerichtManager.Forms
 			this.btCreateTheme.Location = new System.Drawing.Point(714, 38);
 			this.btCreateTheme.Name = "btCreateTheme";
 			this.btCreateTheme.Size = new System.Drawing.Size(80, 21);
-			this.btCreateTheme.TabIndex = 24;
+			this.btCreateTheme.TabIndex = 8;
 			this.btCreateTheme.Text = "Create theme";
 			this.toolTip1.SetToolTip(this.btCreateTheme, "Create a new theme");
 			this.btCreateTheme.UseVisualStyleBackColor = true;
@@ -227,7 +227,7 @@ namespace BerichtManager.Forms
 			this.tbUpdate.Name = "tbUpdate";
 			this.tbUpdate.ReadOnly = true;
 			this.tbUpdate.Size = new System.Drawing.Size(696, 20);
-			this.tbUpdate.TabIndex = 29;
+			this.tbUpdate.TabIndex = 12;
 			this.toolTip1.SetToolTip(this.tbUpdate, "Path to check if an update is available");
 			this.tbUpdate.Click += new System.EventHandler(this.tbUpdate_Click);
 			// 
@@ -237,7 +237,7 @@ namespace BerichtManager.Forms
 			this.btEditTheme.Location = new System.Drawing.Point(633, 38);
 			this.btEditTheme.Name = "btEditTheme";
 			this.btEditTheme.Size = new System.Drawing.Size(75, 21);
-			this.btEditTheme.TabIndex = 25;
+			this.btEditTheme.TabIndex = 7;
 			this.btEditTheme.Text = "Edit theme";
 			this.toolTip1.SetToolTip(this.btEditTheme, "Choose a theme to edit");
 			this.btEditTheme.UseVisualStyleBackColor = true;
@@ -251,7 +251,7 @@ namespace BerichtManager.Forms
 			this.tbFolder.Name = "tbFolder";
 			this.tbFolder.ReadOnly = true;
 			this.tbFolder.Size = new System.Drawing.Size(696, 20);
-			this.tbFolder.TabIndex = 27;
+			this.tbFolder.TabIndex = 10;
 			this.toolTip1.SetToolTip(this.tbFolder, "Path to folder containing reports");
 			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
 			// 
@@ -261,7 +261,7 @@ namespace BerichtManager.Forms
 			this.cbEndOfWeek.Location = new System.Drawing.Point(257, 73);
 			this.cbEndOfWeek.Name = "cbEndOfWeek";
 			this.cbEndOfWeek.Size = new System.Drawing.Size(117, 17);
-			this.cbEndOfWeek.TabIndex = 9;
+			this.cbEndOfWeek.TabIndex = 7;
 			this.cbEndOfWeek.Text = "End week on friday";
 			this.toolTip1.SetToolTip(this.cbEndOfWeek, "Should week end date be set to fridays?");
 			this.cbEndOfWeek.UseVisualStyleBackColor = true;
@@ -274,7 +274,7 @@ namespace BerichtManager.Forms
 			this.tbNamingPattern.Location = new System.Drawing.Point(98, 96);
 			this.tbNamingPattern.Name = "tbNamingPattern";
 			this.tbNamingPattern.Size = new System.Drawing.Size(696, 20);
-			this.tbNamingPattern.TabIndex = 32;
+			this.tbNamingPattern.TabIndex = 9;
 			this.toolTip1.SetToolTip(this.tbNamingPattern, "~+CW+~ = Calendar week\r\n~+RN+~ = Report number");
 			this.tbNamingPattern.TextChanged += new System.EventHandler(this.NamingPatternChanged);
 			// 
@@ -285,7 +285,7 @@ namespace BerichtManager.Forms
 			this.tbName.Location = new System.Drawing.Point(98, 19);
 			this.tbName.Name = "tbName";
 			this.tbName.Size = new System.Drawing.Size(696, 20);
-			this.tbName.TabIndex = 19;
+			this.tbName.TabIndex = 1;
 			this.toolTip1.SetToolTip(this.tbName, "Your name (Last name, First name)");
 			this.tbName.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
@@ -299,7 +299,7 @@ namespace BerichtManager.Forms
             0});
 			this.nudNumber.Name = "nudNumber";
 			this.nudNumber.Size = new System.Drawing.Size(120, 20);
-			this.nudNumber.TabIndex = 21;
+			this.nudNumber.TabIndex = 6;
 			this.toolTip1.SetToolTip(this.nudNumber, "Number of the next report that will be created");
 			this.nudNumber.ValueChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
@@ -311,7 +311,7 @@ namespace BerichtManager.Forms
 			this.tbTemplate.Name = "tbTemplate";
 			this.tbTemplate.ReadOnly = true;
 			this.tbTemplate.Size = new System.Drawing.Size(609, 20);
-			this.tbTemplate.TabIndex = 17;
+			this.tbTemplate.TabIndex = 3;
 			this.toolTip1.SetToolTip(this.tbTemplate, "Path to word template");
 			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
 			// 
@@ -321,7 +321,7 @@ namespace BerichtManager.Forms
 			this.cbShouldUseUntis.Location = new System.Drawing.Point(98, 19);
 			this.cbShouldUseUntis.Name = "cbShouldUseUntis";
 			this.cbShouldUseUntis.Size = new System.Drawing.Size(95, 17);
-			this.cbShouldUseUntis.TabIndex = 8;
+			this.cbShouldUseUntis.TabIndex = 0;
 			this.cbShouldUseUntis.Text = "Use WebUntis";
 			this.toolTip1.SetToolTip(this.cbShouldUseUntis, "Should classes be fetched from WebUntis?");
 			this.cbShouldUseUntis.UseVisualStyleBackColor = true;
@@ -334,7 +334,7 @@ namespace BerichtManager.Forms
 			this.tbSchool.Location = new System.Drawing.Point(98, 68);
 			this.tbSchool.Name = "tbSchool";
 			this.tbSchool.Size = new System.Drawing.Size(696, 20);
-			this.tbSchool.TabIndex = 6;
+			this.tbSchool.TabIndex = 5;
 			this.toolTip1.SetToolTip(this.tbSchool, "WebUntis name of your school");
 			this.tbSchool.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
@@ -343,7 +343,7 @@ namespace BerichtManager.Forms
 			this.btLogin.Location = new System.Drawing.Point(199, 16);
 			this.btLogin.Name = "btLogin";
 			this.btLogin.Size = new System.Drawing.Size(75, 21);
-			this.btLogin.TabIndex = 15;
+			this.btLogin.TabIndex = 1;
 			this.btLogin.Text = "Login";
 			this.toolTip1.SetToolTip(this.btLogin, "Log in to WebUntis");
 			this.btLogin.UseVisualStyleBackColor = true;
@@ -356,7 +356,7 @@ namespace BerichtManager.Forms
 			this.tbServer.Location = new System.Drawing.Point(98, 42);
 			this.tbServer.Name = "tbServer";
 			this.tbServer.Size = new System.Drawing.Size(696, 20);
-			this.tbServer.TabIndex = 5;
+			this.tbServer.TabIndex = 3;
 			this.toolTip1.SetToolTip(this.tbServer, "Name of the WebUntis server of your school");
 			this.tbServer.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
@@ -366,7 +366,7 @@ namespace BerichtManager.Forms
 			this.cbUseCustomPrefix.Location = new System.Drawing.Point(6, 23);
 			this.cbUseCustomPrefix.Name = "cbUseCustomPrefix";
 			this.cbUseCustomPrefix.Size = new System.Drawing.Size(183, 17);
-			this.cbUseCustomPrefix.TabIndex = 2;
+			this.cbUseCustomPrefix.TabIndex = 0;
 			this.cbUseCustomPrefix.Text = "Use custom prefix in school field?";
 			this.toolTip1.SetToolTip(this.cbUseCustomPrefix, "Should custom prefix be used?");
 			this.cbUseCustomPrefix.UseVisualStyleBackColor = true;
@@ -380,7 +380,7 @@ namespace BerichtManager.Forms
 			this.tbCustomPrefix.Location = new System.Drawing.Point(6, 46);
 			this.tbCustomPrefix.Name = "tbCustomPrefix";
 			this.tbCustomPrefix.Size = new System.Drawing.Size(788, 20);
-			this.tbCustomPrefix.TabIndex = 3;
+			this.tbCustomPrefix.TabIndex = 1;
 			this.toolTip1.SetToolTip(this.tbCustomPrefix, "Prefix to be used in school field");
 			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
@@ -403,7 +403,7 @@ namespace BerichtManager.Forms
 			this.gbIHK.Location = new System.Drawing.Point(0, 405);
 			this.gbIHK.Name = "gbIHK";
 			this.gbIHK.Size = new System.Drawing.Size(800, 141);
-			this.gbIHK.TabIndex = 46;
+			this.gbIHK.TabIndex = 6;
 			this.gbIHK.TabStop = false;
 			this.gbIHK.Text = "IHK";
 			// 
@@ -413,7 +413,7 @@ namespace BerichtManager.Forms
 			this.cbIHKAutoGetComment.Location = new System.Drawing.Point(487, 118);
 			this.cbIHKAutoGetComment.Name = "cbIHKAutoGetComment";
 			this.cbIHKAutoGetComment.Size = new System.Drawing.Size(194, 17);
-			this.cbIHKAutoGetComment.TabIndex = 56;
+			this.cbIHKAutoGetComment.TabIndex = 11;
 			this.cbIHKAutoGetComment.Text = "Get comment on edit when possible";
 			this.cbIHKAutoGetComment.UseVisualStyleBackColor = true;
 			this.cbIHKAutoGetComment.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
@@ -424,7 +424,7 @@ namespace BerichtManager.Forms
 			this.laIHKBaseUrl.Location = new System.Drawing.Point(51, 95);
 			this.laIHKBaseUrl.Name = "laIHKBaseUrl";
 			this.laIHKBaseUrl.Size = new System.Drawing.Size(41, 13);
-			this.laIHKBaseUrl.TabIndex = 54;
+			this.laIHKBaseUrl.TabIndex = 7;
 			this.laIHKBaseUrl.Text = "IHK Url";
 			// 
 			// tbIHKBaseUrl
@@ -434,7 +434,7 @@ namespace BerichtManager.Forms
 			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
 			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
 			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
-			this.tbIHKBaseUrl.TabIndex = 53;
+			this.tbIHKBaseUrl.TabIndex = 8;
 			this.tbIHKBaseUrl.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// cbAutoSyncStatusesWithIHK
@@ -443,7 +443,7 @@ namespace BerichtManager.Forms
 			this.cbAutoSyncStatusesWithIHK.Location = new System.Drawing.Point(98, 118);
 			this.cbAutoSyncStatusesWithIHK.Name = "cbAutoSyncStatusesWithIHK";
 			this.cbAutoSyncStatusesWithIHK.Size = new System.Drawing.Size(172, 17);
-			this.cbAutoSyncStatusesWithIHK.TabIndex = 52;
+			this.cbAutoSyncStatusesWithIHK.TabIndex = 9;
 			this.cbAutoSyncStatusesWithIHK.Text = "Sync report statuses on startup";
 			this.cbAutoSyncStatusesWithIHK.UseVisualStyleBackColor = true;
 			this.cbAutoSyncStatusesWithIHK.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
@@ -454,7 +454,7 @@ namespace BerichtManager.Forms
 			this.laSupervisorMail.Location = new System.Drawing.Point(5, 69);
 			this.laSupervisorMail.Name = "laSupervisorMail";
 			this.laSupervisorMail.Size = new System.Drawing.Size(87, 13);
-			this.laSupervisorMail.TabIndex = 51;
+			this.laSupervisorMail.TabIndex = 5;
 			this.laSupervisorMail.Text = "Supervisor e-mail";
 			// 
 			// laJobField
@@ -463,7 +463,7 @@ namespace BerichtManager.Forms
 			this.laJobField.Location = new System.Drawing.Point(46, 43);
 			this.laJobField.Name = "laJobField";
 			this.laJobField.Size = new System.Drawing.Size(46, 13);
-			this.laJobField.TabIndex = 49;
+			this.laJobField.TabIndex = 3;
 			this.laJobField.Text = "Job field";
 			// 
 			// laUploadDelay
@@ -496,7 +496,7 @@ namespace BerichtManager.Forms
 			this.gbManagerOptions.Location = new System.Drawing.Point(0, 288);
 			this.gbManagerOptions.Name = "gbManagerOptions";
 			this.gbManagerOptions.Size = new System.Drawing.Size(800, 117);
-			this.gbManagerOptions.TabIndex = 45;
+			this.gbManagerOptions.TabIndex = 5;
 			this.gbManagerOptions.TabStop = false;
 			this.gbManagerOptions.Text = "Manager";
 			// 
@@ -506,7 +506,7 @@ namespace BerichtManager.Forms
 			this.laFontSize.Location = new System.Drawing.Point(391, 15);
 			this.laFontSize.Name = "laFontSize";
 			this.laFontSize.Size = new System.Drawing.Size(49, 13);
-			this.laFontSize.TabIndex = 33;
+			this.laFontSize.TabIndex = 3;
 			this.laFontSize.Text = "Font size";
 			// 
 			// nudFontSize
@@ -515,7 +515,7 @@ namespace BerichtManager.Forms
 			this.nudFontSize.Location = new System.Drawing.Point(446, 12);
 			this.nudFontSize.Name = "nudFontSize";
 			this.nudFontSize.Size = new System.Drawing.Size(120, 20);
-			this.nudFontSize.TabIndex = 32;
+			this.nudFontSize.TabIndex = 4;
 			this.nudFontSize.ValueChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// laTabStop
@@ -524,7 +524,7 @@ namespace BerichtManager.Forms
 			this.laTabStop.Location = new System.Drawing.Point(38, 15);
 			this.laTabStop.Name = "laTabStop";
 			this.laTabStop.Size = new System.Drawing.Size(54, 13);
-			this.laTabStop.TabIndex = 30;
+			this.laTabStop.TabIndex = 0;
 			this.laTabStop.Text = "Tab stops";
 			// 
 			// laFolder
@@ -533,7 +533,7 @@ namespace BerichtManager.Forms
 			this.laFolder.Location = new System.Drawing.Point(56, 68);
 			this.laFolder.Name = "laFolder";
 			this.laFolder.Size = new System.Drawing.Size(36, 13);
-			this.laFolder.TabIndex = 26;
+			this.laFolder.TabIndex = 9;
 			this.laFolder.Text = "Folder";
 			// 
 			// laTheme
@@ -542,7 +542,7 @@ namespace BerichtManager.Forms
 			this.laTheme.Location = new System.Drawing.Point(52, 41);
 			this.laTheme.Name = "laTheme";
 			this.laTheme.Size = new System.Drawing.Size(40, 13);
-			this.laTheme.TabIndex = 22;
+			this.laTheme.TabIndex = 5;
 			this.laTheme.Text = "Theme";
 			// 
 			// laUpdate
@@ -551,7 +551,7 @@ namespace BerichtManager.Forms
 			this.laUpdate.Location = new System.Drawing.Point(26, 94);
 			this.laUpdate.Name = "laUpdate";
 			this.laUpdate.Size = new System.Drawing.Size(66, 13);
-			this.laUpdate.TabIndex = 28;
+			this.laUpdate.TabIndex = 11;
 			this.laUpdate.Text = "Update path";
 			// 
 			// gbConfig
@@ -572,7 +572,7 @@ namespace BerichtManager.Forms
 			this.gbConfig.Location = new System.Drawing.Point(0, 166);
 			this.gbConfig.Name = "gbConfig";
 			this.gbConfig.Size = new System.Drawing.Size(800, 122);
-			this.gbConfig.TabIndex = 44;
+			this.gbConfig.TabIndex = 4;
 			this.gbConfig.TabStop = false;
 			this.gbConfig.Text = "Report";
 			// 
@@ -582,7 +582,7 @@ namespace BerichtManager.Forms
 			this.btFieldsConfig.Location = new System.Drawing.Point(713, 41);
 			this.btFieldsConfig.Name = "btFieldsConfig";
 			this.btFieldsConfig.Size = new System.Drawing.Size(75, 23);
-			this.btFieldsConfig.TabIndex = 34;
+			this.btFieldsConfig.TabIndex = 4;
 			this.btFieldsConfig.Text = "Fields config";
 			this.btFieldsConfig.UseVisualStyleBackColor = true;
 			this.btFieldsConfig.Click += new System.EventHandler(this.btFieldsConfig_Click);
@@ -593,7 +593,7 @@ namespace BerichtManager.Forms
 			this.laNumber.Location = new System.Drawing.Point(13, 73);
 			this.laNumber.Name = "laNumber";
 			this.laNumber.Size = new System.Drawing.Size(79, 13);
-			this.laNumber.TabIndex = 20;
+			this.laNumber.TabIndex = 5;
 			this.laNumber.Text = "Report Number";
 			// 
 			// laName
@@ -602,7 +602,7 @@ namespace BerichtManager.Forms
 			this.laName.Location = new System.Drawing.Point(57, 19);
 			this.laName.Name = "laName";
 			this.laName.Size = new System.Drawing.Size(35, 13);
-			this.laName.TabIndex = 18;
+			this.laName.TabIndex = 0;
 			this.laName.Text = "Name";
 			// 
 			// laNamingPattern
@@ -611,7 +611,7 @@ namespace BerichtManager.Forms
 			this.laNamingPattern.Location = new System.Drawing.Point(13, 99);
 			this.laNamingPattern.Name = "laNamingPattern";
 			this.laNamingPattern.Size = new System.Drawing.Size(79, 13);
-			this.laNamingPattern.TabIndex = 33;
+			this.laNamingPattern.TabIndex = 8;
 			this.laNamingPattern.Text = "Naming pattern";
 			// 
 			// laTemplate
@@ -620,7 +620,7 @@ namespace BerichtManager.Forms
 			this.laTemplate.Location = new System.Drawing.Point(41, 47);
 			this.laTemplate.Name = "laTemplate";
 			this.laTemplate.Size = new System.Drawing.Size(51, 13);
-			this.laTemplate.TabIndex = 16;
+			this.laTemplate.TabIndex = 2;
 			this.laTemplate.Text = "Template";
 			// 
 			// gbWebUntis
@@ -637,7 +637,7 @@ namespace BerichtManager.Forms
 			this.gbWebUntis.Location = new System.Drawing.Point(0, 72);
 			this.gbWebUntis.Name = "gbWebUntis";
 			this.gbWebUntis.Size = new System.Drawing.Size(800, 94);
-			this.gbWebUntis.TabIndex = 43;
+			this.gbWebUntis.TabIndex = 3;
 			this.gbWebUntis.TabStop = false;
 			this.gbWebUntis.Text = "WebUntis";
 			// 
@@ -647,7 +647,7 @@ namespace BerichtManager.Forms
 			this.laSchool.Location = new System.Drawing.Point(23, 71);
 			this.laSchool.Name = "laSchool";
 			this.laSchool.Size = new System.Drawing.Size(69, 13);
-			this.laSchool.TabIndex = 7;
+			this.laSchool.TabIndex = 4;
 			this.laSchool.Text = "School name";
 			// 
 			// laServer
@@ -656,7 +656,7 @@ namespace BerichtManager.Forms
 			this.laServer.Location = new System.Drawing.Point(6, 45);
 			this.laServer.Name = "laServer";
 			this.laServer.Size = new System.Drawing.Size(86, 13);
-			this.laServer.TabIndex = 4;
+			this.laServer.TabIndex = 2;
 			this.laServer.Text = "Webuntis Server";
 			// 
 			// gbPrefix
@@ -669,7 +669,7 @@ namespace BerichtManager.Forms
 			this.gbPrefix.Location = new System.Drawing.Point(0, 0);
 			this.gbPrefix.Name = "gbPrefix";
 			this.gbPrefix.Size = new System.Drawing.Size(800, 72);
-			this.gbPrefix.TabIndex = 42;
+			this.gbPrefix.TabIndex = 2;
 			this.gbPrefix.TabStop = false;
 			this.gbPrefix.Text = "Prefix";
 			// 
