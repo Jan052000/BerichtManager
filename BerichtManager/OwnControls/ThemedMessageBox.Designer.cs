@@ -31,11 +31,11 @@
 			this.components = new System.ComponentModel.Container();
 			this.paText = new System.Windows.Forms.Panel();
 			this.rtbText = new System.Windows.Forms.RichTextBox();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.btCopyToClipboard = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btYes = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btNo = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btCancel = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.btCopyToClipboard = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.paText.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -63,6 +63,17 @@
 			this.rtbText.TabIndex = 0;
 			this.rtbText.TabStop = false;
 			this.rtbText.Text = "";
+			// 
+			// btCopyToClipboard
+			// 
+			this.btCopyToClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btCopyToClipboard.Location = new System.Drawing.Point(12, 191);
+			this.btCopyToClipboard.Name = "btCopyToClipboard";
+			this.btCopyToClipboard.Size = new System.Drawing.Size(75, 23);
+			this.btCopyToClipboard.TabIndex = 1;
+			this.btCopyToClipboard.Text = "Copy";
+			this.btCopyToClipboard.UseVisualStyleBackColor = true;
+			this.btCopyToClipboard.Click += new System.EventHandler(this.CopyToClipboard);
 			// 
 			// btYes
 			// 
@@ -93,17 +104,6 @@
 			this.btCancel.TabIndex = 4;
 			this.btCancel.Text = "Cancel";
 			this.btCancel.UseVisualStyleBackColor = true;
-			// 
-			// btCopyToClipboard
-			// 
-			this.btCopyToClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.btCopyToClipboard.Location = new System.Drawing.Point(12, 191);
-			this.btCopyToClipboard.Name = "btCopyToClipboard";
-			this.btCopyToClipboard.Size = new System.Drawing.Size(75, 23);
-			this.btCopyToClipboard.TabIndex = 1;
-			this.btCopyToClipboard.Text = "Copy";
-			this.btCopyToClipboard.UseVisualStyleBackColor = true;
-			this.btCopyToClipboard.Click += new System.EventHandler(this.CopyToClipboard);
 			// 
 			// ThemedMessageBox
 			// 

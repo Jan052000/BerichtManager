@@ -152,16 +152,16 @@ namespace BerichtManager.OwnControls
 			switch (Buttons)
 			{
 				case MessageBoxButtons.OK:
-					btCancel.Focus();
+					btCancel.Select();
 					break;
 				case MessageBoxButtons.OKCancel:
 				case MessageBoxButtons.AbortRetryIgnore:
 				case MessageBoxButtons.YesNo:
 				case MessageBoxButtons.RetryCancel:
-					btNo.Focus();
+					btNo.Select();
 					break;
 				case MessageBoxButtons.YesNoCancel:
-					btYes.Focus();
+					btYes.Select();
 					break;
 			}
 		}
