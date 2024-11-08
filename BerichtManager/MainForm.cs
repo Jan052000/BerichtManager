@@ -1446,11 +1446,11 @@ namespace BerichtManager
 		private void DetectKeys(object sender, KeyEventArgs e)
 		{
 			if (e.Control && e.KeyCode == Keys.S && EditMode)
-			{
 				SaveFromTb();
-			}
 			if (e.Control && e.Shift && e.KeyCode == Keys.V)
 				PasteOnlyText(sender, e);
+			if (e.KeyCode == Keys.Escape)
+				CloseOpenDocument();
 		}
 
 		/// <summary>
@@ -1540,14 +1540,6 @@ namespace BerichtManager
 					break;
 				case Keys.Delete:
 					DeleteDocument(FullSelectedPath);
-					break;
-				case Keys.Escape:
-					if (Doc == null || !EditMode)
-					{
-						ThemedMessageBox.Show(text: "No opened report to close", title: "Could not close");
-						return;
-					}
-					CloseOpenDocument();
 					break;
 			}
 		}
