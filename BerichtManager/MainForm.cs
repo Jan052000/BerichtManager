@@ -1834,16 +1834,11 @@ namespace BerichtManager
 				bool shouldStop = false;
 				progressForm.Stop += () => shouldStop = true;
 
-				if (!UploadedReports.GetUploadedPaths(out List<string> files))
-				{
-					//Should never happen as menu item should be diabled
-					ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
-					return;
-				}
+				UploadedReports.GetUploadedPaths(out List<string> files);
 
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
-					return files.Contains(GetFullNodePath(node)) || (!ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0);
+					return files.Contains(GetFullNodePath(node)) || (!ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0 && node is ReportNode);
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
 				{
