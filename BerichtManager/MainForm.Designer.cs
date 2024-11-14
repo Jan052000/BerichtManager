@@ -274,7 +274,7 @@ namespace BerichtManager
 			this.ttTips.SetToolTip(this.rtbWork, "Work");
 			this.rtbWork.WordWrap = false;
 			this.rtbWork.TextChanged += new System.EventHandler(this.EditRichTextBox);
-			this.rtbWork.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
+			this.rtbWork.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
 			// 
 			// rtbSchool
 			// 
@@ -289,7 +289,7 @@ namespace BerichtManager
 			this.ttTips.SetToolTip(this.rtbSchool, "School");
 			this.rtbSchool.WordWrap = false;
 			this.rtbSchool.TextChanged += new System.EventHandler(this.EditRichTextBox);
-			this.rtbSchool.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
+			this.rtbSchool.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
 			// 
 			// paMainView
 			// 
@@ -373,6 +373,7 @@ namespace BerichtManager
 			this.menuStrip1.TabIndex = 16;
 			this.menuStrip1.Text = "menuStrip1";
 			this.menuStrip1.Paint += new System.Windows.Forms.PaintEventHandler(this.menuStrip1_Paint);
+			this.menuStrip1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
 			// 
 			// miFile
 			// 
@@ -561,9 +562,8 @@ namespace BerichtManager
 			this.tvReports.TabIndex = 6;
 			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
 			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
-			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
+			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
 			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -578,7 +578,7 @@ namespace BerichtManager
 			this.Text = "Bericht Manager";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
 			this.Shown += new System.EventHandler(this.MainForm_Load);
-			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DetectKeys);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
 			this.toRightClickMenu.ResumeLayout(false);
 			this.paMainView.ResumeLayout(false);
 			this.scTextBoxes.Panel1.ResumeLayout(false);

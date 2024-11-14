@@ -130,8 +130,6 @@ namespace BerichtManager
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(ttTips);
-			foreach (Control control in this.Controls)
-				control.KeyDown += DetectKeys;
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
@@ -1446,7 +1444,7 @@ namespace BerichtManager
 			tvReports.Refresh();
 		}
 
-		private void DetectKeys(object sender, KeyEventArgs e)
+		private void OnKeyDownDefault(object sender, KeyEventArgs e)
 		{
 			if (e.Control && e.KeyCode == Keys.S && EditMode)
 				SaveFromTb();
