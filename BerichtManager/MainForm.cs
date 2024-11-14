@@ -1296,7 +1296,10 @@ namespace BerichtManager
 
 		private void tvReports_DoubleClick(object sender, EventArgs e)
 		{
-			if ((File.GetAttributes(FullSelectedPath) & FileAttributes.Directory) == FileAttributes.Directory) return;
+			if (!File.Exists(FullSelectedPath))
+				return;
+			if ((File.GetAttributes(FullSelectedPath) & FileAttributes.Directory) == FileAttributes.Directory)
+				return;
 			if (!ReportUtils.IsNameValid(Path.GetFileName(FullSelectedPath)))
 				return;
 			if (!HasWordStarted()) return;
