@@ -5,6 +5,7 @@ using BerichtManager.ThemeManagement;
 using BerichtManager.WordTemplate;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace BerichtManager.Forms
@@ -24,6 +25,11 @@ namespace BerichtManager.Forms
 		/// Name of the active theme
 		/// </summary>
 		private string ThemeName { get => ThemeManager.Instance.ActiveTheme.Name; }
+
+		/// <summary>
+		/// Value if the naming pattern is valid
+		/// </summary>
+		private bool IsNamingPatternValid { get; set; }
 
 		/// <summary>
 		/// Emits when the active theme changes
@@ -128,6 +134,12 @@ namespace BerichtManager.Forms
 
 		private void btClose_Click(object sender, EventArgs e)
 		{
+			if (!IsNamingPatternValid)
+			{
+				if (ThemedMessageBox.Show(text: "Invalid naming pattern detected, can not save, close menu anyways?", title: "Can not save changes", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+					Close();
+				return;
+			}
 			if (IsDirty)
 			{
 				if (ThemedMessageBox.Show(text: "Save changes?", title: "Save?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -138,7 +150,7 @@ namespace BerichtManager.Forms
 					}
 					catch (Exception ex)
 					{
-						HelperClasses.Logger.LogError(ex);
+						Logger.LogError(ex);
 						ThemedMessageBox.Show(text: ex.StackTrace);
 					}
 				}
@@ -255,8 +267,21 @@ namespace BerichtManager.Forms
 		private void NamingPatternChanged(object sender, EventArgs e)
 		{
 			MarkAsDirty(sender, e);
-			if (!NamingPatternResolver.PatternContainsValues(tbNamingPattern.Text))
+			if (!(sender is TextBox tb))
+				return;
+			if (!NamingPatternResolver.PatternContainsValues(tb.Text))
 				ThemedMessageBox.Show(text: "Caution: pattern does not contain any identifying values, new reports would overwrite each other!", title: "Warning!");
+			char[] invalidChars = Path.GetInvalidFileNameChars();
+			int indexOfFirstInvalid = tb.Text.IndexOfAny(invalidChars);
+			if (indexOfFirstInvalid > -1)
+			{
+				int durationsS = 5;
+				btSave.Enabled = false;
+				IsNamingPatternValid = false;
+				toolTip1.Show($"Invalid file name character\n({String.Join(", ", invalidChars.Where(c => !char.IsControl(c)).Select(c => c.ToString()))})\nat position {indexOfFirstInvalid}", tb, durationsS * 1000);
+				return;
+			}
+			IsNamingPatternValid = true;
 		}
 
 		private void cbShouldUseUntis_CheckedChanged(object sender, EventArgs e)
