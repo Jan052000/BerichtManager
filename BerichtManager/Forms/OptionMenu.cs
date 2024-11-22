@@ -278,7 +278,7 @@ namespace BerichtManager.Forms
 				int durationsS = 15;
 				btSave.Enabled = false;
 				IsNamingPatternValid = false;
-				string errorMessage = $"Invalid file name character\n({String.Join(", ", invalidChars.Where(c => !char.IsControl(c)).Select(c => c.ToString()))})\nat position {indexOfFirstInvalid}";
+				string errorMessage = $"Invalid file name character\n({String.Join(", ", invalidChars.Where(c => !char.IsControl(c)).Select(c => c.ToString()))})\nat position {indexOfFirstInvalid + 1} (\"{tbNamingPattern.Text[indexOfFirstInvalid]}\")";
 				toolTip1.Show(errorMessage, tb, durationsS * 1000);
 				return;
 			}
