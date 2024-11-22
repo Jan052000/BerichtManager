@@ -160,8 +160,7 @@ namespace BerichtManager.Forms
 
 		private void cbUseCustomPrefix_CheckedChanged(object sender, EventArgs e)
 		{
-			IsDirty = true;
-			btSave.Enabled = true;
+			MarkAsDirty(sender, e);
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
 		}
 
@@ -256,7 +255,8 @@ namespace BerichtManager.Forms
 		private void MarkAsDirty(object sender, EventArgs e)
 		{
 			IsDirty = true;
-			btSave.Enabled = true;
+			if (IsNamingPatternValid)
+				btSave.Enabled = true;
 		}
 
 		/// <summary>
@@ -275,10 +275,11 @@ namespace BerichtManager.Forms
 			int indexOfFirstInvalid = tb.Text.IndexOfAny(invalidChars);
 			if (indexOfFirstInvalid > -1)
 			{
-				int durationsS = 5;
+				int durationsS = 15;
 				btSave.Enabled = false;
 				IsNamingPatternValid = false;
-				toolTip1.Show($"Invalid file name character\n({String.Join(", ", invalidChars.Where(c => !char.IsControl(c)).Select(c => c.ToString()))})\nat position {indexOfFirstInvalid}", tb, durationsS * 1000);
+				string errorMessage = $"Invalid file name character\n({String.Join(", ", invalidChars.Where(c => !char.IsControl(c)).Select(c => c.ToString()))})\nat position {indexOfFirstInvalid}";
+				toolTip1.Show(errorMessage, tb, durationsS * 1000);
 				return;
 			}
 			IsNamingPatternValid = true;
@@ -286,8 +287,7 @@ namespace BerichtManager.Forms
 
 		private void cbShouldUseUntis_CheckedChanged(object sender, EventArgs e)
 		{
-			IsDirty = true;
-			btSave.Enabled = true;
+			MarkAsDirty(sender, e);
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
 			ITheme theme = ThemeManager.Instance.GetTheme(ThemeName);
