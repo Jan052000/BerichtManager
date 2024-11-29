@@ -68,6 +68,7 @@ namespace BerichtManager
 			this.paPadding2 = new System.Windows.Forms.Panel();
 			this.splitterTreeBoxes = new System.Windows.Forms.Splitter();
 			this.paFileTree = new System.Windows.Forms.Panel();
+			this.tvReports = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.miFile = new System.Windows.Forms.ToolStripMenuItem();
 			this.miCreate = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,7 +91,6 @@ namespace BerichtManager
 			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
 			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.tvReports = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
 			this.toRightClickMenu.SuspendLayout();
 			this.paMainView.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
@@ -106,12 +106,12 @@ namespace BerichtManager
 			// toRightClickMenu
 			// 
 			this.toRightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.miDelete,
-			this.miEdit,
-			this.miQuickEditOptions,
-			this.miPrint,
-			this.miIHKOptions,
-			this.miRefresh});
+            this.miDelete,
+            this.miEdit,
+            this.miQuickEditOptions,
+            this.miPrint,
+            this.miIHKOptions,
+            this.miRefresh});
 			this.toRightClickMenu.Name = "contextMenuStrip1";
 			this.toRightClickMenu.Size = new System.Drawing.Size(147, 136);
 			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
@@ -133,8 +133,8 @@ namespace BerichtManager
 			// miQuickEditOptions
 			// 
 			this.miQuickEditOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.tiQuickEditWork,
-			this.miQuickEditSchool});
+            this.tiQuickEditWork,
+            this.miQuickEditSchool});
 			this.miQuickEditOptions.Name = "miQuickEditOptions";
 			this.miQuickEditOptions.Size = new System.Drawing.Size(146, 22);
 			this.miQuickEditOptions.Text = "Quick actions";
@@ -163,16 +163,16 @@ namespace BerichtManager
 			// miIHKOptions
 			// 
 			this.miIHKOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.miRcUpdateStatuses,
-			this.miUploadAsNext,
-			this.miUploadAllSelected,
-			this.miHandInSingle,
-			this.miRcHandInSelection,
-			this.miUpdateReport,
-			this.miRCUpdateSelection,
-			this.miRcShowComment,
-			this.miRcCheckFormat,
-			this.miRcDownloadReports});
+            this.miRcUpdateStatuses,
+            this.miUploadAsNext,
+            this.miUploadAllSelected,
+            this.miHandInSingle,
+            this.miRcHandInSelection,
+            this.miUpdateReport,
+            this.miRCUpdateSelection,
+            this.miRcShowComment,
+            this.miRcCheckFormat,
+            this.miRcDownloadReports});
 			this.miIHKOptions.Name = "miIHKOptions";
 			this.miIHKOptions.Size = new System.Drawing.Size(146, 22);
 			this.miIHKOptions.Text = "IHK";
@@ -269,7 +269,7 @@ namespace BerichtManager
 			this.rtbWork.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbWork.Name = "rtbWork";
 			this.rtbWork.Size = new System.Drawing.Size(559, 209);
-			this.rtbWork.TabIndex = 4;
+			this.rtbWork.TabIndex = 0;
 			this.rtbWork.Text = "";
 			this.ttTips.SetToolTip(this.rtbWork, "Work");
 			this.rtbWork.WordWrap = false;
@@ -284,7 +284,7 @@ namespace BerichtManager
 			this.rtbSchool.Margin = new System.Windows.Forms.Padding(0);
 			this.rtbSchool.Name = "rtbSchool";
 			this.rtbSchool.Size = new System.Drawing.Size(559, 210);
-			this.rtbSchool.TabIndex = 4;
+			this.rtbSchool.TabIndex = 0;
 			this.rtbSchool.Text = "";
 			this.ttTips.SetToolTip(this.rtbSchool, "School");
 			this.rtbSchool.WordWrap = false;
@@ -293,9 +293,9 @@ namespace BerichtManager
 			// 
 			// paMainView
 			// 
-			this.paMainView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-			| System.Windows.Forms.AnchorStyles.Left)
-			| System.Windows.Forms.AnchorStyles.Right)));
+			this.paMainView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.paMainView.Controls.Add(this.scTextBoxes);
 			this.paMainView.Controls.Add(this.splitterTreeBoxes);
 			this.paMainView.Controls.Add(this.paFileTree);
@@ -303,7 +303,7 @@ namespace BerichtManager
 			this.paMainView.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
 			this.paMainView.Name = "paMainView";
 			this.paMainView.Size = new System.Drawing.Size(800, 426);
-			this.paMainView.TabIndex = 15;
+			this.paMainView.TabIndex = 0;
 			// 
 			// scTextBoxes
 			// 
@@ -322,7 +322,8 @@ namespace BerichtManager
 			this.scTextBoxes.Size = new System.Drawing.Size(562, 426);
 			this.scTextBoxes.SplitterDistance = 212;
 			this.scTextBoxes.SplitterWidth = 1;
-			this.scTextBoxes.TabIndex = 2;
+			this.scTextBoxes.TabIndex = 1;
+			this.scTextBoxes.TabStop = false;
 			// 
 			// paPadding1
 			// 
@@ -361,16 +362,33 @@ namespace BerichtManager
 			this.paFileTree.Size = new System.Drawing.Size(235, 426);
 			this.paFileTree.TabIndex = 0;
 			// 
+			// tvReports
+			// 
+			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
+			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
+			this.tvReports.Location = new System.Drawing.Point(0, 0);
+			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
+			this.tvReports.Name = "tvReports";
+			this.tvReports.Size = new System.Drawing.Size(235, 426);
+			this.tvReports.TabIndex = 0;
+			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
+			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
+			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
+			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
+			// 
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.miFile,
-			this.miOptions,
-			this.miClose});
+            this.miFile,
+            this.miOptions,
+            this.miClose});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(800, 24);
-			this.menuStrip1.TabIndex = 16;
+			this.menuStrip1.TabIndex = 1;
+			this.menuStrip1.TabStop = true;
 			this.menuStrip1.Text = "menuStrip1";
 			this.menuStrip1.Paint += new System.Windows.Forms.PaintEventHandler(this.menuStrip1_Paint);
 			this.menuStrip1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
@@ -378,13 +396,13 @@ namespace BerichtManager
 			// miFile
 			// 
 			this.miFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.miCreate,
-			this.miEditLatest,
-			this.miPrintAll,
-			this.miCheckDiscrepancy,
-			this.miIHK,
-			this.miCloseReport,
-			this.miRevealInExplorer});
+            this.miCreate,
+            this.miEditLatest,
+            this.miPrintAll,
+            this.miCheckDiscrepancy,
+            this.miIHK,
+            this.miCloseReport,
+            this.miRevealInExplorer});
 			this.miFile.Name = "miFile";
 			this.miFile.Size = new System.Drawing.Size(37, 20);
 			this.miFile.Text = "File";
@@ -413,9 +431,9 @@ namespace BerichtManager
 			// miCheckDiscrepancy
 			// 
 			this.miCheckDiscrepancy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.miNumbers,
-			this.miDates,
-			this.miFullCheck});
+            this.miNumbers,
+            this.miDates,
+            this.miFullCheck});
 			this.miCheckDiscrepancy.Name = "miCheckDiscrepancy";
 			this.miCheckDiscrepancy.Size = new System.Drawing.Size(191, 22);
 			this.miCheckDiscrepancy.Text = "Check for discrepancy";
@@ -445,12 +463,12 @@ namespace BerichtManager
 			// miIHK
 			// 
 			this.miIHK.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.miUpdateStatuses,
-			this.miUploadSelection,
-			this.miHandInSelection,
-			this.miUpdateSelection,
-			this.miCheckFormat,
-			this.miDownloadReports});
+            this.miUpdateStatuses,
+            this.miUploadSelection,
+            this.miHandInSelection,
+            this.miUpdateSelection,
+            this.miCheckFormat,
+            this.miDownloadReports});
 			this.miIHK.Name = "miIHK";
 			this.miIHK.Size = new System.Drawing.Size(191, 22);
 			this.miIHK.Text = "IHK";
@@ -518,8 +536,8 @@ namespace BerichtManager
 			// miOptions
 			// 
 			this.miOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.miOptionsMenu,
-			this.miWordVisible});
+            this.miOptionsMenu,
+            this.miWordVisible});
 			this.miOptions.Name = "miOptions";
 			this.miOptions.Size = new System.Drawing.Size(61, 20);
 			this.miOptions.Text = "Options";
@@ -549,21 +567,6 @@ namespace BerichtManager
 			this.miClose.Visible = false;
 			this.miClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
-			// tvReports
-			// 
-			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
-			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-			this.tvReports.Location = new System.Drawing.Point(0, 0);
-			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
-			this.tvReports.Name = "tvReports";
-			this.tvReports.Size = new System.Drawing.Size(235, 426);
-			this.tvReports.TabIndex = 6;
-			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
-			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
-			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
-			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

@@ -95,7 +95,7 @@
 			this.laTBBackColor.Location = new System.Drawing.Point(12, 41);
 			this.laTBBackColor.Name = "laTBBackColor";
 			this.laTBBackColor.Size = new System.Drawing.Size(99, 13);
-			this.laTBBackColor.TabIndex = 0;
+			this.laTBBackColor.TabIndex = 3;
 			this.laTBBackColor.Text = "TextBox back color";
 			// 
 			// laTBDisabledBackColor
@@ -104,7 +104,7 @@
 			this.laTBDisabledBackColor.Location = new System.Drawing.Point(12, 67);
 			this.laTBDisabledBackColor.Name = "laTBDisabledBackColor";
 			this.laTBDisabledBackColor.Size = new System.Drawing.Size(141, 13);
-			this.laTBDisabledBackColor.TabIndex = 2;
+			this.laTBDisabledBackColor.TabIndex = 5;
 			this.laTBDisabledBackColor.Text = "TextBox disabled back color";
 			// 
 			// laTBBorderColor
@@ -113,7 +113,7 @@
 			this.laTBBorderColor.Location = new System.Drawing.Point(12, 93);
 			this.laTBBorderColor.Name = "laTBBorderColor";
 			this.laTBBorderColor.Size = new System.Drawing.Size(105, 13);
-			this.laTBBorderColor.TabIndex = 4;
+			this.laTBBorderColor.TabIndex = 7;
 			this.laTBBorderColor.Text = "TextBox border color";
 			// 
 			// laTBArrowColor
@@ -122,7 +122,7 @@
 			this.laTBArrowColor.Location = new System.Drawing.Point(12, 119);
 			this.laTBArrowColor.Name = "laTBArrowColor";
 			this.laTBArrowColor.Size = new System.Drawing.Size(113, 13);
-			this.laTBArrowColor.TabIndex = 6;
+			this.laTBArrowColor.TabIndex = 9;
 			this.laTBArrowColor.Text = "ComboBox arrow color";
 			// 
 			// laCCBDropDownButton
@@ -131,7 +131,7 @@
 			this.laCCBDropDownButton.Location = new System.Drawing.Point(12, 145);
 			this.laCCBDropDownButton.Name = "laCCBDropDownButton";
 			this.laCCBDropDownButton.Size = new System.Drawing.Size(170, 13);
-			this.laCCBDropDownButton.TabIndex = 8;
+			this.laCCBDropDownButton.TabIndex = 11;
 			this.laCCBDropDownButton.Text = "ComboBox drop down button color";
 			// 
 			// laCCBText
@@ -140,7 +140,7 @@
 			this.laCCBText.Location = new System.Drawing.Point(12, 171);
 			this.laCCBText.Name = "laCCBText";
 			this.laCCBText.Size = new System.Drawing.Size(104, 13);
-			this.laCCBText.TabIndex = 10;
+			this.laCCBText.TabIndex = 13;
 			this.laCCBText.Text = "ComboBox text color";
 			// 
 			// laCCBDisabled
@@ -149,7 +149,7 @@
 			this.laCCBDisabled.Location = new System.Drawing.Point(12, 197);
 			this.laCCBDisabled.Name = "laCCBDisabled";
 			this.laCCBDisabled.Size = new System.Drawing.Size(126, 13);
-			this.laCCBDisabled.TabIndex = 12;
+			this.laCCBDisabled.TabIndex = 15;
 			this.laCCBDisabled.Text = "ComboBox disabled color";
 			// 
 			// laCCBDisabledText
@@ -158,7 +158,7 @@
 			this.laCCBDisabledText.Location = new System.Drawing.Point(12, 223);
 			this.laCCBDisabledText.Name = "laCCBDisabledText";
 			this.laCCBDisabledText.Size = new System.Drawing.Size(146, 13);
-			this.laCCBDisabledText.TabIndex = 14;
+			this.laCCBDisabledText.TabIndex = 17;
 			this.laCCBDisabledText.Text = "ComboBox disabled text color";
 			// 
 			// laHighlight
@@ -167,7 +167,7 @@
 			this.laHighlight.Location = new System.Drawing.Point(12, 249);
 			this.laHighlight.Name = "laHighlight";
 			this.laHighlight.Size = new System.Drawing.Size(74, 13);
-			this.laHighlight.TabIndex = 16;
+			this.laHighlight.TabIndex = 19;
 			this.laHighlight.Text = "Highlight color";
 			// 
 			// laMenuStripBack
@@ -176,7 +176,7 @@
 			this.laMenuStripBack.Location = new System.Drawing.Point(12, 275);
 			this.laMenuStripBack.Name = "laMenuStripBack";
 			this.laMenuStripBack.Size = new System.Drawing.Size(108, 13);
-			this.laMenuStripBack.TabIndex = 18;
+			this.laMenuStripBack.TabIndex = 21;
 			this.laMenuStripBack.Text = "MenuStrip back color";
 			// 
 			// laMenuStripDropDown
@@ -185,7 +185,7 @@
 			this.laMenuStripDropDown.Location = new System.Drawing.Point(12, 301);
 			this.laMenuStripDropDown.Name = "laMenuStripDropDown";
 			this.laMenuStripDropDown.Size = new System.Drawing.Size(134, 13);
-			this.laMenuStripDropDown.TabIndex = 20;
+			this.laMenuStripDropDown.TabIndex = 23;
 			this.laMenuStripDropDown.Text = "MenuStrip drop down color";
 			// 
 			// laMenuStripSelectedDropDown
@@ -194,7 +194,7 @@
 			this.laMenuStripSelectedDropDown.Location = new System.Drawing.Point(12, 327);
 			this.laMenuStripSelectedDropDown.Name = "laMenuStripSelectedDropDown";
 			this.laMenuStripSelectedDropDown.Size = new System.Drawing.Size(151, 13);
-			this.laMenuStripSelectedDropDown.TabIndex = 22;
+			this.laMenuStripSelectedDropDown.TabIndex = 25;
 			this.laMenuStripSelectedDropDown.Text = "MenuStrip selected drop down";
 			// 
 			// laFore
@@ -203,7 +203,7 @@
 			this.laFore.Location = new System.Drawing.Point(12, 353);
 			this.laFore.Name = "laFore";
 			this.laFore.Size = new System.Drawing.Size(54, 13);
-			this.laFore.TabIndex = 24;
+			this.laFore.TabIndex = 27;
 			this.laFore.Text = "Fore color";
 			// 
 			// laBackColor
@@ -212,7 +212,7 @@
 			this.laBackColor.Location = new System.Drawing.Point(12, 379);
 			this.laBackColor.Name = "laBackColor";
 			this.laBackColor.Size = new System.Drawing.Size(58, 13);
-			this.laBackColor.TabIndex = 26;
+			this.laBackColor.TabIndex = 29;
 			this.laBackColor.Text = "Back color";
 			// 
 			// laBt
@@ -221,7 +221,7 @@
 			this.laBt.Location = new System.Drawing.Point(12, 405);
 			this.laBt.Name = "laBt";
 			this.laBt.Size = new System.Drawing.Size(64, 13);
-			this.laBt.TabIndex = 28;
+			this.laBt.TabIndex = 31;
 			this.laBt.Text = "Button color";
 			// 
 			// laSplitter
@@ -230,7 +230,7 @@
 			this.laSplitter.Location = new System.Drawing.Point(12, 561);
 			this.laSplitter.Name = "laSplitter";
 			this.laSplitter.Size = new System.Drawing.Size(65, 13);
-			this.laSplitter.TabIndex = 30;
+			this.laSplitter.TabIndex = 43;
 			this.laSplitter.Text = "Splitter color";
 			// 
 			// laTVDottedLine
@@ -239,7 +239,7 @@
 			this.laTVDottedLine.Location = new System.Drawing.Point(12, 587);
 			this.laTVDottedLine.Name = "laTVDottedLine";
 			this.laTVDottedLine.Size = new System.Drawing.Size(130, 13);
-			this.laTVDottedLine.TabIndex = 32;
+			this.laTVDottedLine.TabIndex = 45;
 			this.laTVDottedLine.Text = "TreeView dotted line color";
 			// 
 			// btClose
@@ -248,7 +248,7 @@
 			this.btClose.Location = new System.Drawing.Point(294, 711);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
-			this.btClose.TabIndex = 34;
+			this.btClose.TabIndex = 0;
 			this.btClose.Text = "Close";
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
@@ -259,7 +259,7 @@
 			this.btSave.Location = new System.Drawing.Point(294, 681);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
-			this.btSave.TabIndex = 35;
+			this.btSave.TabIndex = 57;
 			this.btSave.Text = "Save";
 			this.btSave.UseVisualStyleBackColor = true;
 			this.btSave.Click += new System.EventHandler(this.btSave_Click);
@@ -272,7 +272,7 @@
 			this.tbTVDottedLine.Name = "tbTVDottedLine";
 			this.tbTVDottedLine.ReadOnly = true;
 			this.tbTVDottedLine.Size = new System.Drawing.Size(100, 20);
-			this.tbTVDottedLine.TabIndex = 52;
+			this.tbTVDottedLine.TabIndex = 46;
 			this.tbTVDottedLine.Text = "-1";
 			this.tbTVDottedLine.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbTVDottedLine.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -285,7 +285,7 @@
 			this.tbSplitter.Name = "tbSplitter";
 			this.tbSplitter.ReadOnly = true;
 			this.tbSplitter.Size = new System.Drawing.Size(100, 20);
-			this.tbSplitter.TabIndex = 51;
+			this.tbSplitter.TabIndex = 44;
 			this.tbSplitter.Text = "-1";
 			this.tbSplitter.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbSplitter.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -298,7 +298,7 @@
 			this.tbBt.Name = "tbBt";
 			this.tbBt.ReadOnly = true;
 			this.tbBt.Size = new System.Drawing.Size(100, 20);
-			this.tbBt.TabIndex = 50;
+			this.tbBt.TabIndex = 32;
 			this.tbBt.Text = "-1";
 			this.tbBt.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbBt.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -311,7 +311,7 @@
 			this.tbBack.Name = "tbBack";
 			this.tbBack.ReadOnly = true;
 			this.tbBack.Size = new System.Drawing.Size(100, 20);
-			this.tbBack.TabIndex = 49;
+			this.tbBack.TabIndex = 30;
 			this.tbBack.Text = "-1";
 			this.tbBack.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbBack.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -324,7 +324,7 @@
 			this.tbFore.Name = "tbFore";
 			this.tbFore.ReadOnly = true;
 			this.tbFore.Size = new System.Drawing.Size(100, 20);
-			this.tbFore.TabIndex = 48;
+			this.tbFore.TabIndex = 28;
 			this.tbFore.Text = "-1";
 			this.tbFore.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbFore.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -337,7 +337,7 @@
 			this.tbMenuStripSelectedDropDown.Name = "tbMenuStripSelectedDropDown";
 			this.tbMenuStripSelectedDropDown.ReadOnly = true;
 			this.tbMenuStripSelectedDropDown.Size = new System.Drawing.Size(100, 20);
-			this.tbMenuStripSelectedDropDown.TabIndex = 47;
+			this.tbMenuStripSelectedDropDown.TabIndex = 26;
 			this.tbMenuStripSelectedDropDown.Text = "-1";
 			this.tbMenuStripSelectedDropDown.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbMenuStripSelectedDropDown.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -350,7 +350,7 @@
 			this.tbMenuStripDropDown.Name = "tbMenuStripDropDown";
 			this.tbMenuStripDropDown.ReadOnly = true;
 			this.tbMenuStripDropDown.Size = new System.Drawing.Size(100, 20);
-			this.tbMenuStripDropDown.TabIndex = 46;
+			this.tbMenuStripDropDown.TabIndex = 24;
 			this.tbMenuStripDropDown.Text = "-1";
 			this.tbMenuStripDropDown.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbMenuStripDropDown.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -363,7 +363,7 @@
 			this.tbMenuStripBack.Name = "tbMenuStripBack";
 			this.tbMenuStripBack.ReadOnly = true;
 			this.tbMenuStripBack.Size = new System.Drawing.Size(100, 20);
-			this.tbMenuStripBack.TabIndex = 45;
+			this.tbMenuStripBack.TabIndex = 22;
 			this.tbMenuStripBack.Text = "-1";
 			this.tbMenuStripBack.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbMenuStripBack.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -376,7 +376,7 @@
 			this.tbHighlight.Name = "tbHighlight";
 			this.tbHighlight.ReadOnly = true;
 			this.tbHighlight.Size = new System.Drawing.Size(100, 20);
-			this.tbHighlight.TabIndex = 44;
+			this.tbHighlight.TabIndex = 20;
 			this.tbHighlight.Text = "-1";
 			this.tbHighlight.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbHighlight.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -389,7 +389,7 @@
 			this.tbCCBDisabledText.Name = "tbCCBDisabledText";
 			this.tbCCBDisabledText.ReadOnly = true;
 			this.tbCCBDisabledText.Size = new System.Drawing.Size(100, 20);
-			this.tbCCBDisabledText.TabIndex = 43;
+			this.tbCCBDisabledText.TabIndex = 18;
 			this.tbCCBDisabledText.Text = "-1";
 			this.tbCCBDisabledText.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbCCBDisabledText.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -402,7 +402,7 @@
 			this.tbCCBDisabled.Name = "tbCCBDisabled";
 			this.tbCCBDisabled.ReadOnly = true;
 			this.tbCCBDisabled.Size = new System.Drawing.Size(100, 20);
-			this.tbCCBDisabled.TabIndex = 42;
+			this.tbCCBDisabled.TabIndex = 16;
 			this.tbCCBDisabled.Text = "-1";
 			this.tbCCBDisabled.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbCCBDisabled.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -415,7 +415,7 @@
 			this.tbCCBText.Name = "tbCCBText";
 			this.tbCCBText.ReadOnly = true;
 			this.tbCCBText.Size = new System.Drawing.Size(100, 20);
-			this.tbCCBText.TabIndex = 41;
+			this.tbCCBText.TabIndex = 14;
 			this.tbCCBText.Text = "-1";
 			this.tbCCBText.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbCCBText.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -428,7 +428,7 @@
 			this.tbCCBDropDownButton.Name = "tbCCBDropDownButton";
 			this.tbCCBDropDownButton.ReadOnly = true;
 			this.tbCCBDropDownButton.Size = new System.Drawing.Size(100, 20);
-			this.tbCCBDropDownButton.TabIndex = 40;
+			this.tbCCBDropDownButton.TabIndex = 12;
 			this.tbCCBDropDownButton.Text = "-1";
 			this.tbCCBDropDownButton.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbCCBDropDownButton.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -441,7 +441,7 @@
 			this.tbTBArrowColor.Name = "tbTBArrowColor";
 			this.tbTBArrowColor.ReadOnly = true;
 			this.tbTBArrowColor.Size = new System.Drawing.Size(100, 20);
-			this.tbTBArrowColor.TabIndex = 39;
+			this.tbTBArrowColor.TabIndex = 10;
 			this.tbTBArrowColor.Text = "-1";
 			this.tbTBArrowColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbTBArrowColor.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -454,7 +454,7 @@
 			this.tbTBBorderColor.Name = "tbTBBorderColor";
 			this.tbTBBorderColor.ReadOnly = true;
 			this.tbTBBorderColor.Size = new System.Drawing.Size(100, 20);
-			this.tbTBBorderColor.TabIndex = 38;
+			this.tbTBBorderColor.TabIndex = 8;
 			this.tbTBBorderColor.Text = "-1";
 			this.tbTBBorderColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbTBBorderColor.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -467,7 +467,7 @@
 			this.tbTBDisabledBackColor.Name = "tbTBDisabledBackColor";
 			this.tbTBDisabledBackColor.ReadOnly = true;
 			this.tbTBDisabledBackColor.Size = new System.Drawing.Size(100, 20);
-			this.tbTBDisabledBackColor.TabIndex = 37;
+			this.tbTBDisabledBackColor.TabIndex = 6;
 			this.tbTBDisabledBackColor.Text = "-1";
 			this.tbTBDisabledBackColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbTBDisabledBackColor.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -480,7 +480,7 @@
 			this.tbTBBackColor.Name = "tbTBBackColor";
 			this.tbTBBackColor.ReadOnly = true;
 			this.tbTBBackColor.Size = new System.Drawing.Size(100, 20);
-			this.tbTBBackColor.TabIndex = 36;
+			this.tbTBBackColor.TabIndex = 4;
 			this.tbTBBackColor.Text = "-1";
 			this.tbTBBackColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbTBBackColor.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -493,7 +493,7 @@
 			this.tbBTDisabled.Name = "tbBTDisabled";
 			this.tbBTDisabled.ReadOnly = true;
 			this.tbBTDisabled.Size = new System.Drawing.Size(100, 20);
-			this.tbBTDisabled.TabIndex = 53;
+			this.tbBTDisabled.TabIndex = 34;
 			this.tbBTDisabled.Text = "-1";
 			this.tbBTDisabled.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbBTDisabled.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -504,7 +504,7 @@
 			this.laBTDisabled.Location = new System.Drawing.Point(12, 431);
 			this.laBTDisabled.Name = "laBTDisabled";
 			this.laBTDisabled.Size = new System.Drawing.Size(106, 13);
-			this.laBTDisabled.TabIndex = 54;
+			this.laBTDisabled.TabIndex = 33;
 			this.laBTDisabled.Text = "Button disabled color";
 			// 
 			// tbName
@@ -514,7 +514,7 @@
 			this.tbName.Location = new System.Drawing.Point(188, 12);
 			this.tbName.Name = "tbName";
 			this.tbName.Size = new System.Drawing.Size(100, 20);
-			this.tbName.TabIndex = 55;
+			this.tbName.TabIndex = 2;
 			// 
 			// laName
 			// 
@@ -522,7 +522,7 @@
 			this.laName.Location = new System.Drawing.Point(12, 15);
 			this.laName.Name = "laName";
 			this.laName.Size = new System.Drawing.Size(35, 13);
-			this.laName.TabIndex = 56;
+			this.laName.TabIndex = 1;
 			this.laName.Text = "Name";
 			// 
 			// laBTFocusColor
@@ -531,7 +531,7 @@
 			this.laBTFocusColor.Location = new System.Drawing.Point(12, 483);
 			this.laBTFocusColor.Name = "laBTFocusColor";
 			this.laBTFocusColor.Size = new System.Drawing.Size(126, 13);
-			this.laBTFocusColor.TabIndex = 59;
+			this.laBTFocusColor.TabIndex = 37;
 			this.laBTFocusColor.Text = "Button focus border color";
 			// 
 			// label2
@@ -540,7 +540,7 @@
 			this.label2.Location = new System.Drawing.Point(12, 509);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(131, 13);
-			this.label2.TabIndex = 60;
+			this.label2.TabIndex = 39;
 			this.label2.Text = "Button focus border Width";
 			// 
 			// nudButtonFocusBorderWidth
@@ -550,7 +550,7 @@
 			this.nudButtonFocusBorderWidth.Location = new System.Drawing.Point(188, 506);
 			this.nudButtonFocusBorderWidth.Name = "nudButtonFocusBorderWidth";
 			this.nudButtonFocusBorderWidth.Size = new System.Drawing.Size(100, 20);
-			this.nudButtonFocusBorderWidth.TabIndex = 62;
+			this.nudButtonFocusBorderWidth.TabIndex = 40;
 			this.nudButtonFocusBorderWidth.Value = new decimal(new int[] {
             1,
             0,
@@ -565,7 +565,7 @@
 			this.tbButtonFocusBorderColor.Name = "tbButtonFocusBorderColor";
 			this.tbButtonFocusBorderColor.ReadOnly = true;
 			this.tbButtonFocusBorderColor.Size = new System.Drawing.Size(100, 20);
-			this.tbButtonFocusBorderColor.TabIndex = 61;
+			this.tbButtonFocusBorderColor.TabIndex = 38;
 			this.tbButtonFocusBorderColor.Text = "-1";
 			this.tbButtonFocusBorderColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbButtonFocusBorderColor.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -578,7 +578,7 @@
 			this.tbBtDisabledTextColor.Name = "tbBtDisabledTextColor";
 			this.tbBtDisabledTextColor.ReadOnly = true;
 			this.tbBtDisabledTextColor.Size = new System.Drawing.Size(100, 20);
-			this.tbBtDisabledTextColor.TabIndex = 63;
+			this.tbBtDisabledTextColor.TabIndex = 36;
 			this.tbBtDisabledTextColor.Text = "-1";
 			this.tbBtDisabledTextColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbBtDisabledTextColor.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -589,7 +589,7 @@
 			this.laDisabledButtonTextColor.Location = new System.Drawing.Point(12, 457);
 			this.laDisabledButtonTextColor.Name = "laDisabledButtonTextColor";
 			this.laDisabledButtonTextColor.Size = new System.Drawing.Size(126, 13);
-			this.laDisabledButtonTextColor.TabIndex = 64;
+			this.laDisabledButtonTextColor.TabIndex = 35;
 			this.laDisabledButtonTextColor.Text = "Button disabled text color";
 			// 
 			// tbBtHoverColor
@@ -600,7 +600,7 @@
 			this.tbBtHoverColor.Name = "tbBtHoverColor";
 			this.tbBtHoverColor.ReadOnly = true;
 			this.tbBtHoverColor.Size = new System.Drawing.Size(100, 20);
-			this.tbBtHoverColor.TabIndex = 65;
+			this.tbBtHoverColor.TabIndex = 42;
 			this.tbBtHoverColor.Text = "-1";
 			this.tbBtHoverColor.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbBtHoverColor.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -611,7 +611,7 @@
 			this.laBtHoverColor.Location = new System.Drawing.Point(12, 535);
 			this.laBtHoverColor.Name = "laBtHoverColor";
 			this.laBtHoverColor.Size = new System.Drawing.Size(94, 13);
-			this.laBtHoverColor.TabIndex = 66;
+			this.laBtHoverColor.TabIndex = 41;
 			this.laBtHoverColor.Text = "Button hover color";
 			// 
 			// tbReportUploaded
@@ -620,7 +620,7 @@
 			this.tbReportUploaded.Name = "tbReportUploaded";
 			this.tbReportUploaded.ReadOnly = true;
 			this.tbReportUploaded.Size = new System.Drawing.Size(100, 20);
-			this.tbReportUploaded.TabIndex = 67;
+			this.tbReportUploaded.TabIndex = 50;
 			this.tbReportUploaded.Text = "-1";
 			this.tbReportUploaded.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbReportUploaded.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -631,7 +631,7 @@
 			this.tbReportHandedIn.Name = "tbReportHandedIn";
 			this.tbReportHandedIn.ReadOnly = true;
 			this.tbReportHandedIn.Size = new System.Drawing.Size(100, 20);
-			this.tbReportHandedIn.TabIndex = 68;
+			this.tbReportHandedIn.TabIndex = 52;
 			this.tbReportHandedIn.Text = "-1";
 			this.tbReportHandedIn.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbReportHandedIn.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -642,7 +642,7 @@
 			this.laReportUploaded.Location = new System.Drawing.Point(12, 639);
 			this.laReportUploaded.Name = "laReportUploaded";
 			this.laReportUploaded.Size = new System.Drawing.Size(86, 13);
-			this.laReportUploaded.TabIndex = 69;
+			this.laReportUploaded.TabIndex = 49;
 			this.laReportUploaded.Text = "Report uploaded";
 			// 
 			// laReportHandedIn
@@ -651,7 +651,7 @@
 			this.laReportHandedIn.Location = new System.Drawing.Point(12, 665);
 			this.laReportHandedIn.Name = "laReportHandedIn";
 			this.laReportHandedIn.Size = new System.Drawing.Size(89, 13);
-			this.laReportHandedIn.TabIndex = 70;
+			this.laReportHandedIn.TabIndex = 51;
 			this.laReportHandedIn.Text = "Report handed in";
 			// 
 			// tbReportAccepted
@@ -660,7 +660,7 @@
 			this.tbReportAccepted.Name = "tbReportAccepted";
 			this.tbReportAccepted.ReadOnly = true;
 			this.tbReportAccepted.Size = new System.Drawing.Size(100, 20);
-			this.tbReportAccepted.TabIndex = 71;
+			this.tbReportAccepted.TabIndex = 54;
 			this.tbReportAccepted.Text = "-1";
 			this.tbReportAccepted.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbReportAccepted.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -671,7 +671,7 @@
 			this.tbReportRejected.Name = "tbReportRejected";
 			this.tbReportRejected.ReadOnly = true;
 			this.tbReportRejected.Size = new System.Drawing.Size(100, 20);
-			this.tbReportRejected.TabIndex = 72;
+			this.tbReportRejected.TabIndex = 56;
 			this.tbReportRejected.Text = "-1";
 			this.tbReportRejected.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbReportRejected.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -682,7 +682,7 @@
 			this.laReportAccepted.Location = new System.Drawing.Point(12, 691);
 			this.laReportAccepted.Name = "laReportAccepted";
 			this.laReportAccepted.Size = new System.Drawing.Size(87, 13);
-			this.laReportAccepted.TabIndex = 73;
+			this.laReportAccepted.TabIndex = 53;
 			this.laReportAccepted.Text = "Report accepted";
 			// 
 			// laReportRejected
@@ -691,7 +691,7 @@
 			this.laReportRejected.Location = new System.Drawing.Point(12, 717);
 			this.laReportRejected.Name = "laReportRejected";
 			this.laReportRejected.Size = new System.Drawing.Size(80, 13);
-			this.laReportRejected.TabIndex = 74;
+			this.laReportRejected.TabIndex = 55;
 			this.laReportRejected.Text = "Report rejected";
 			// 
 			// tbTVEditHighlight
@@ -700,7 +700,7 @@
 			this.tbTVEditHighlight.Name = "tbTVEditHighlight";
 			this.tbTVEditHighlight.ReadOnly = true;
 			this.tbTVEditHighlight.Size = new System.Drawing.Size(100, 20);
-			this.tbTVEditHighlight.TabIndex = 75;
+			this.tbTVEditHighlight.TabIndex = 48;
 			this.tbTVEditHighlight.Text = "-1";
 			this.tbTVEditHighlight.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
 			this.tbTVEditHighlight.Enter += new System.EventHandler(this.TextBox_Entered);
@@ -711,7 +711,7 @@
 			this.laTVEditHighlight.Location = new System.Drawing.Point(12, 613);
 			this.laTVEditHighlight.Name = "laTVEditHighlight";
 			this.laTVEditHighlight.Size = new System.Drawing.Size(140, 13);
-			this.laTVEditHighlight.TabIndex = 76;
+			this.laTVEditHighlight.TabIndex = 47;
 			this.laTVEditHighlight.Text = "TreeView edit highlight color";
 			// 
 			// CreateTheme

@@ -39,7 +39,7 @@
 			this.btClose.Location = new System.Drawing.Point(713, 415);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
-			this.btClose.TabIndex = 0;
+			this.btClose.TabIndex = 2;
 			this.btClose.Text = "Close";
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
@@ -65,7 +65,7 @@
 			this.tvFolders.Location = new System.Drawing.Point(12, 12);
 			this.tvFolders.Name = "tvFolders";
 			this.tvFolders.Size = new System.Drawing.Size(776, 397);
-			this.tvFolders.TabIndex = 2;
+			this.tvFolders.TabIndex = 0;
 			// 
 			// FolderSelect
 			// 
