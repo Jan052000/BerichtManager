@@ -1827,6 +1827,9 @@ namespace BerichtManager
 				ThemedMessageBox.Show(text: "Report was already uploaded", title: "Report already uploaded");
 				return;
 			}
+
+			StartWaitCursor();
+
 			Word.Document doc;
 			bool close = true;
 			if (DocIsSamePathAsSelected())
@@ -1840,18 +1843,27 @@ namespace BerichtManager
 			{
 				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
 				doc.Close(SaveChanges: false);
+				EndWaitCursor();
 				return;
 			}
 			UploadResult result = await TryUploadReportToIHK(doc);
 			if (result == null)
+			{
+				EndWaitCursor();
 				return;
+			}
 
 			//Handle upload result
 			if (HandleUploadResult(result, doc, null, FullSelectedPath, tvReports.SelectedNode.FullPath, new List<string>(), FullSelectedPath, out bool shouldReturn, closeDoc: close) && shouldReturn)
+			{
+				EndWaitCursor();
 				return;
+			}
 
 			if (close)
 				doc.Close(SaveChanges: false);
+
+			EndWaitCursor();
 			UpdateTree();
 		}
 
@@ -2063,6 +2075,7 @@ namespace BerichtManager
 			bool result = false;
 			try
 			{
+				StartWaitCursor();
 				List<UploadedReport> reportList = await IHKClient.GetIHKReports();
 				reportList.ForEach(report => result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status, lfdnr: report.LfdNR));
 				if (result)
@@ -2078,6 +2091,7 @@ namespace BerichtManager
 				Logger.LogError(ex);
 				ThemedMessageBox.Show(text: "A network error has occurred, please check your connection", title: "Network error");
 			}
+			EndWaitCursor();
 			return result;
 		}
 
@@ -2154,6 +2168,8 @@ namespace BerichtManager
 					return;
 				}
 
+				StartWaitCursor();
+
 				Word.Document doc;
 				if (DocIsSamePathAsSelected())
 					doc = Doc;
@@ -2166,21 +2182,27 @@ namespace BerichtManager
 				if (result == null)
 				{
 					ThemedMessageBox.Show(text: "Update of report failed, hand in was canceled", title: "Hand in canceled");
+					EndWaitCursor();
 					return;
 				}
 
 				if (!HandleUpdateResults(result.Result, report.StartDate))
+				{
+					EndWaitCursor();
 					return;
+				}
 			}
 
 			if (!await TryHandIn(lfdnr))
 			{
 				ThemedMessageBox.Show(text: $"Report {FullSelectedPath} could not be handed in", title: "Hand in failed");
+				EndWaitCursor();
 				return;
 			}
 
 			UploadedReports.UpdateReport(FullSelectedPath, status: ReportNode.UploadStatuses.HandedIn, wasEdited: false, wasUpdated: true);
 			UpdateTree();
+			EndWaitCursor();
 			ThemedMessageBox.Show(text: "Hand in successful", title: "Report handed in");
 		}
 
@@ -2485,6 +2507,7 @@ namespace BerichtManager
 			}
 			if (!report.WasEditedLocally)
 				return;
+			StartWaitCursor();
 			Word.Document doc;
 			//Prevent word app from showing when opening an already open document
 			bool close = true;
@@ -2499,11 +2522,13 @@ namespace BerichtManager
 			{
 				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
 				doc.Close(SaveChanges: false);
+				EndWaitCursor();
 				return;
 			}
 			if (!(report.LfdNR is int lfdnr))
 			{
 				ThemedMessageBox.Show(text: $"Unable to load lfdnr from {FullSelectedPath}, verify that it is correct", title: "Unable to edit");
+				EndWaitCursor();
 				return;
 			}
 
@@ -2514,11 +2539,13 @@ namespace BerichtManager
 			if (result == null || !HandleUpdateResults(result.Result, result.StartDate))
 			{
 				ThemedMessageBox.Show(text: "Update failed", title: "Update failed");
+				EndWaitCursor();
 				return;
 			}
 
 			UploadedReports.UpdateReport(tvReports.SelectedNode.FullPath, wasEdited: false, wasUpdated: true);
 			UpdateTree();
+			EndWaitCursor();
 			ThemedMessageBox.Show(text: "Report was successfully updated", title: "Update complete");
 		}
 
