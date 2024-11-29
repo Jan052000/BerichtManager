@@ -1568,7 +1568,6 @@ namespace BerichtManager
 		private void StartWaitCursor()
 		{
 			UseWaitCursor = true;
-			Application.DoEvents();
 		}
 
 		/// <summary>
