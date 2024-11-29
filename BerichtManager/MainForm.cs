@@ -1514,7 +1514,7 @@ namespace BerichtManager
 			TextRenderer.DrawText(e.Graphics, VersionString, menuStrip1.Font, new Point(control.Location.X + control.Width / 2 - versionNumberWidth, control.Location.Y + control.Padding.Top + 2), control.ForeColor);
 		}
 
-		private void tvReports_KeyUp(object sender, KeyEventArgs e)
+		private async void tvReports_KeyUp(object sender, KeyEventArgs e)
 		{
 			switch (e.KeyCode)
 			{
@@ -1542,7 +1542,41 @@ namespace BerichtManager
 				case Keys.Delete:
 					DeleteDocument(FullSelectedPath);
 					break;
+				case Keys.C:
+					if (!e.Control)
+						return;
+					int? lfdnr;
+					if (OpenedReportNode != null)
+						lfdnr = OpenedReportNode.LfdNr;
+					else if (tvReports.GetNodeAt(tvReports.PointToClient(new Point(Cursor.Position.X, Cursor.Position.Y))) is ReportNode reportNode)
+						lfdnr = reportNode.LfdNr;
+					else
+					{
+						ThemedMessageBox.Info(text: "No report selected to fetch comment for.", title: "No node available");
+						return;
+					}
+					StartWaitCursor();
+					HandleCommentResult(await IHKClient.GetCommentFromReport(lfdnr));
+					EndWaitCursor();
+					break;
 			}
+		}
+
+		/// <summary>
+		/// Used to start displaying the wait cursor on the form and its children
+		/// </summary>
+		private void StartWaitCursor()
+		{
+			UseWaitCursor = true;
+			Application.DoEvents();
+		}
+
+		/// <summary>
+		/// Used to stop displaying the wait cursor on the form and its children
+		/// </summary>
+		private void EndWaitCursor()
+		{
+			UseWaitCursor = false;
 		}
 
 		private void MiRefresh_Click(object sender, EventArgs e)
