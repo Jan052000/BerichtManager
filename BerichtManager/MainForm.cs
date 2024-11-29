@@ -2873,8 +2873,10 @@ namespace BerichtManager
 				return;
 			}
 
+			StartWaitCursor();
 			CommentResult result = await IHKClient.GetCommentFromReport(report.LfdNR);
 			HandleCommentResult(result);
+			EndWaitCursor();
 		}
 
 		private void HandleCommentResult(CommentResult result)
