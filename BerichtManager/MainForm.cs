@@ -2887,7 +2887,7 @@ namespace BerichtManager
 					if (string.IsNullOrEmpty(result.Comment))
 						ThemedMessageBox.Info(text: "No comment found", title: "Comment");
 					else
-						ThemedMessageBox.Info(text: $"Comment:\n{result.Comment}", title: "Comment");
+						ThemedMessageBox.Info(text: $"Comment:\n{result.Comment}", title: "Comment", allowMessageHighlight: true);
 					break;
 				case CommentResult.ResultStatus.Exception:
 					ThemedMessageBox.Info(text: $"A(n) {result.Exception?.GetType().Name} occurred, the comment could not be fetched", title: result.Exception?.GetType().Name);
