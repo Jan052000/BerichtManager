@@ -490,6 +490,7 @@ namespace BerichtManager
 					}
 				}
 
+				StartWaitCursor();
 				//Shool stuff
 				if (isSingle)
 				{
@@ -509,6 +510,7 @@ namespace BerichtManager
 				{
 					form = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", text: Client.GetHolidaysForDate(baseDate), isCreate: true);
 				}
+				EndWaitCursor();
 				form.RefreshConfigs += RefreshConfig;
 				form.ShowDialog();
 				form.RefreshConfigs -= RefreshConfig;
