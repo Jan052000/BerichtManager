@@ -41,13 +41,13 @@
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// btClose
+			// btSkip
 			// 
 			this.btSkip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btSkip.Location = new System.Drawing.Point(713, 415);
-			this.btSkip.Name = "btClose";
+			this.btSkip.Name = "btSkip";
 			this.btSkip.Size = new System.Drawing.Size(75, 23);
-			this.btSkip.TabIndex = 0;
+			this.btSkip.TabIndex = 4;
 			this.btSkip.Text = "Skip";
 			this.ttTips.SetToolTip(this.btSkip, "Saves input and closes this window");
 			this.btSkip.UseVisualStyleBackColor = true;
@@ -74,7 +74,7 @@
 			this.rtInput.Location = new System.Drawing.Point(12, 12);
 			this.rtInput.Name = "rtInput";
 			this.rtInput.Size = new System.Drawing.Size(776, 397);
-			this.rtInput.TabIndex = 2;
+			this.rtInput.TabIndex = 0;
 			this.rtInput.Text = "";
 			// 
 			// btQuit
@@ -96,7 +96,7 @@
 			this.nudFontSize.Location = new System.Drawing.Point(390, 415);
 			this.nudFontSize.Name = "nudFontSize";
 			this.nudFontSize.Size = new System.Drawing.Size(64, 20);
-			this.nudFontSize.TabIndex = 5;
+			this.nudFontSize.TabIndex = 7;
 			this.ttTips.SetToolTip(this.nudFontSize, "Changes local font size");
 			this.nudFontSize.ValueChanged += new System.EventHandler(this.nudFontSize_ValueChanged);
 			// 
@@ -107,7 +107,7 @@
 			this.cbEditorFont.Location = new System.Drawing.Point(12, 417);
 			this.cbEditorFont.Name = "cbEditorFont";
 			this.cbEditorFont.Size = new System.Drawing.Size(77, 17);
-			this.cbEditorFont.TabIndex = 7;
+			this.cbEditorFont.TabIndex = 5;
 			this.cbEditorFont.Text = "Editor Font";
 			this.ttTips.SetToolTip(this.cbEditorFont, "Toggles if the selected font should be used");
 			this.cbEditorFont.UseVisualStyleBackColor = true;
@@ -119,7 +119,7 @@
 			this.btSaveAndQuit.Location = new System.Drawing.Point(541, 415);
 			this.btSaveAndQuit.Name = "btSaveAndQuit";
 			this.btSaveAndQuit.Size = new System.Drawing.Size(85, 23);
-			this.btSaveAndQuit.TabIndex = 8;
+			this.btSaveAndQuit.TabIndex = 2;
 			this.btSaveAndQuit.Text = "Save and Quit";
 			this.ttTips.SetToolTip(this.btSaveAndQuit, "Saves input and closes this window");
 			this.btSaveAndQuit.UseVisualStyleBackColor = true;
