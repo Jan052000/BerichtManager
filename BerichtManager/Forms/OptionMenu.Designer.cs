@@ -80,6 +80,7 @@ namespace BerichtManager.Forms
 			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.ttErrors = new System.Windows.Forms.ToolTip(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
@@ -781,5 +782,6 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.CheckBox cbIHKCheckMatchingStartDates;
 		private System.Windows.Forms.CheckBox cbIHKAutoGetComment;
 		private OwnControls.FocusColoredFlatButton btFieldsConfig;
+		private System.Windows.Forms.ToolTip ttErrors;
 	}
 }

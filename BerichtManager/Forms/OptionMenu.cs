@@ -56,6 +56,7 @@ namespace BerichtManager.Forms
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(toolTip1);
+			ThemeSetter.SetThemes(ttErrors);
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = ConfigHandler.UseCustomPrefix;
 			cbShouldUseUntis.Checked = ConfigHandler.UseWebUntis;
@@ -268,17 +269,34 @@ namespace BerichtManager.Forms
 			MarkAsDirty(sender, e);
 			if (!(sender is TextBox tb))
 				return;
-			if (!NamingPatternResolver.PatternContainsValues(tb.Text))
-				ThemedMessageBox.Show(text: "Caution: pattern does not contain any identifying values, new reports would overwrite each other!", title: "Warning!");
 			if (ValidateNamingPattern() is string message)
 			{
-				int durationsS = 15;
-				toolTip1.Show(message, tbNamingPattern, durationsS * 1000);
+				int durationS = 15;
+				int durationMS = durationS * 1000;
+				ttErrors.Show(message, tbNamingPattern, durationMS);
+				Timer timer = new Timer();
+				timer.Interval = durationMS;
+				timer.Tick += NamingPatternErrorDurationOver;
 			}
 		}
 
+		private void NamingPatternErrorDurationOver(object sender, EventArgs e)
+		{
+			Timer timer = sender as Timer;
+			timer.Stop();
+			ttErrors.SetToolTip(tbNamingPattern, null);
+		}
+
+		/// <summary>
+		/// Validates the text of <see cref="tbNamingPattern"/>
+		/// </summary>
+		/// <returns><see cref="string"/> containing error message or <see langword="null"/> if naming pattern is valid</returns>
 		private string ValidateNamingPattern()
 		{
+			if (tbNamingPattern.Text.Length == 0)
+				return "An empty naming pattern is not allowed!";
+			if (!NamingPatternResolver.PatternContainsValues(tbNamingPattern.Text))
+				return "Caution: pattern does not contain any identifying values, new reports would overwrite each other!";
 			char[] invalidChars = Path.GetInvalidFileNameChars();
 			int indexOfFirstInvalid = tbNamingPattern.Text.IndexOfAny(invalidChars);
 			if (indexOfFirstInvalid > -1)
