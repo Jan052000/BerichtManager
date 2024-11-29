@@ -27,11 +27,6 @@ namespace BerichtManager.Forms
 		private string ThemeName { get => ThemeManager.Instance.ActiveTheme.Name; }
 
 		/// <summary>
-		/// Value if the naming pattern is valid
-		/// </summary>
-		private bool IsNamingPatternValid { get; set; }
-
-		/// <summary>
 		/// Emits when the active theme changes
 		/// </summary>
 		public event activeThemeChanged ActiveThemeChanged;
@@ -134,14 +129,14 @@ namespace BerichtManager.Forms
 
 		private void btClose_Click(object sender, EventArgs e)
 		{
-			if (!IsNamingPatternValid)
-			{
-				if (ThemedMessageBox.Show(text: "Invalid naming pattern detected, can not save, close menu anyways?", title: "Can not save changes", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
-					Close();
-				return;
-			}
 			if (IsDirty)
 			{
+				if (ValidateNamingPattern() is string)
+				{
+					if (ThemedMessageBox.Show(text: "Invalid naming pattern detected, can not save, close menu anyways?", title: "Can not save changes", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+						Close();
+					return;
+				}
 				if (ThemedMessageBox.Show(text: "Save changes?", title: "Save?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					try
@@ -168,6 +163,11 @@ namespace BerichtManager.Forms
 		{
 			if (IsDirty)
 			{
+				if (ValidateNamingPattern() is string message)
+				{
+					ThemedMessageBox.Info(text: message, title: "Invalid naming pattern");
+					return;
+				}
 				try
 				{
 					SaveConfigChanges();
@@ -255,8 +255,7 @@ namespace BerichtManager.Forms
 		private void MarkAsDirty(object sender, EventArgs e)
 		{
 			IsDirty = true;
-			if (IsNamingPatternValid)
-				btSave.Enabled = true;
+			btSave.Enabled = true;
 		}
 
 		/// <summary>
@@ -271,18 +270,23 @@ namespace BerichtManager.Forms
 				return;
 			if (!NamingPatternResolver.PatternContainsValues(tb.Text))
 				ThemedMessageBox.Show(text: "Caution: pattern does not contain any identifying values, new reports would overwrite each other!", title: "Warning!");
-			char[] invalidChars = Path.GetInvalidFileNameChars();
-			int indexOfFirstInvalid = tb.Text.IndexOfAny(invalidChars);
-			if (indexOfFirstInvalid > -1)
+			if (ValidateNamingPattern() is string message)
 			{
 				int durationsS = 15;
-				btSave.Enabled = false;
-				IsNamingPatternValid = false;
-				string errorMessage = $"Invalid file name character\n({String.Join(", ", invalidChars.Where(c => !char.IsControl(c)).Select(c => c.ToString()))})\nat position {indexOfFirstInvalid + 1} (\"{tbNamingPattern.Text[indexOfFirstInvalid]}\")";
-				toolTip1.Show(errorMessage, tb, durationsS * 1000);
-				return;
+				toolTip1.Show(message, tbNamingPattern, durationsS * 1000);
 			}
-			IsNamingPatternValid = true;
+		}
+
+		private string ValidateNamingPattern()
+		{
+			char[] invalidChars = Path.GetInvalidFileNameChars();
+			int indexOfFirstInvalid = tbNamingPattern.Text.IndexOfAny(invalidChars);
+			if (indexOfFirstInvalid > -1)
+			{
+				string errorMessage = $"Invalid file name character in naming pattern\n({String.Join(", ", invalidChars.Where(c => !char.IsControl(c)).Select(c => c.ToString()))})\nat position {indexOfFirstInvalid + 1} (\"{tbNamingPattern.Text[indexOfFirstInvalid]}\")";
+				return errorMessage;
+			}
+			return null;
 		}
 
 		private void cbShouldUseUntis_CheckedChanged(object sender, EventArgs e)
