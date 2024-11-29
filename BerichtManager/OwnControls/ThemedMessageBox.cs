@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using BerichtManager.HelperClasses;
 using BerichtManager.ThemeManagement;
 
 namespace BerichtManager.OwnControls
@@ -35,10 +36,10 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Shows a themed message box
 		/// </summary>
-		/// <param name="theme">Theme to style the message box after</param>
 		/// <param name="text">Text to be displayed on the message box</param>
 		/// <param name="title">Title of the message box</param>
 		/// <param name="buttons">Configuration of the buttons on message box</param>
+		/// <param name="allowMessageHighlight">Wether or not to allow the user to highlight text in the message field</param>
 		/// <returns><see cref="DialogResult"/> of clicked button</returns>
 		public static DialogResult Show(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, bool allowMessageHighlight = false)
 		{
@@ -48,14 +49,30 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Shows a themed message box and does not block execution
 		/// </summary>
-		/// <param name="theme">Theme to style the message box after</param>
-		/// <param name="text">Text to be displayed on the message box</param>
-		/// <param name="title">Title of the message box</param>
-		/// <param name="buttons">Configuration of the buttons on message box</param>
+		/// <inheritdoc cref="Show(string, string, MessageBoxButtons, bool)" path="/param"/>
 		public static void Info(string text = "", string title = "", MessageBoxButtons buttons = MessageBoxButtons.OK, bool allowMessageHighlight = false)
 		{
 			((Control)new ThemedMessageBox(text: text, title: title, buttons: buttons, allowMessageHighlight: allowMessageHighlight)).Show();
+		}
 
+		/// <summary>
+		/// Shows a themed message box containing an <see cref="Exception"/> as its content and title
+		/// </summary>
+		/// <param name="ex"><see cref="Exception"/> to display to the user</param>
+		/// <param name="blockExecution">Wether or not execution should wait for user to close the <see cref="ThemedMessageBox"/></param>
+		/// <inheritdoc cref="Show(string, string, MessageBoxButtons, bool)" path="/param"/>
+		/// <param name="createLogFile">Wether or not a file containing the <see cref="Exception"/> should be created</param>
+		public static void Error(Exception ex, bool blockExecution = true, bool allowMessageHighlight = false, bool createLogFile = true)
+		{
+			string errorMessage = "An unexpected exception has occurred";
+			if (createLogFile)
+				errorMessage += $", a complete log has been saved to\n{Logger.LogError(ex)}:";
+			errorMessage += $"{ex.GetType().Name}, {ex.Message}: \n{ex.StackTrace}";
+			ThemedMessageBox mb = new ThemedMessageBox(text: errorMessage, title: ex.GetType().Name, allowMessageHighlight: allowMessageHighlight);
+			if (blockExecution)
+				mb.ShowDialog();
+			else
+				((Control)mb).Show();
 		}
 
 		/// <summary>
