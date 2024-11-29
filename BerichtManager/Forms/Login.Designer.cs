@@ -45,7 +45,7 @@
 			this.laUsername.Location = new System.Drawing.Point(28, 44);
 			this.laUsername.Name = "laUsername";
 			this.laUsername.Size = new System.Drawing.Size(55, 13);
-			this.laUsername.TabIndex = 0;
+			this.laUsername.TabIndex = 1;
 			this.laUsername.Text = "Username";
 			// 
 			// tbUsername
@@ -55,7 +55,7 @@
 			this.tbUsername.Location = new System.Drawing.Point(89, 41);
 			this.tbUsername.Name = "tbUsername";
 			this.tbUsername.Size = new System.Drawing.Size(411, 20);
-			this.tbUsername.TabIndex = 1;
+			this.tbUsername.TabIndex = 2;
 			// 
 			// tbPassword
 			// 
@@ -64,7 +64,7 @@
 			this.tbPassword.Location = new System.Drawing.Point(89, 67);
 			this.tbPassword.Name = "tbPassword";
 			this.tbPassword.Size = new System.Drawing.Size(411, 20);
-			this.tbPassword.TabIndex = 2;
+			this.tbPassword.TabIndex = 4;
 			this.tbPassword.UseSystemPasswordChar = true;
 			// 
 			// laPassword
@@ -82,7 +82,7 @@
 			this.btClose.Location = new System.Drawing.Point(444, 116);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
-			this.btClose.TabIndex = 4;
+			this.btClose.TabIndex = 8;
 			this.btClose.Text = "Close";
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
@@ -93,7 +93,7 @@
 			this.btLogin.Location = new System.Drawing.Point(363, 116);
 			this.btLogin.Name = "btLogin";
 			this.btLogin.Size = new System.Drawing.Size(75, 23);
-			this.btLogin.TabIndex = 5;
+			this.btLogin.TabIndex = 7;
 			this.btLogin.Text = "Login";
 			this.btLogin.UseVisualStyleBackColor = true;
 			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
@@ -106,7 +106,7 @@
 			this.laLogin.Location = new System.Drawing.Point(201, 9);
 			this.laLogin.Name = "laLogin";
 			this.laLogin.Size = new System.Drawing.Size(112, 13);
-			this.laLogin.TabIndex = 6;
+			this.laLogin.TabIndex = 0;
 			this.laLogin.Text = "Login to {Placeholder}";
 			// 
 			// cbKeepLogin
@@ -115,7 +115,7 @@
 			this.cbKeepLogin.Location = new System.Drawing.Point(89, 93);
 			this.cbKeepLogin.Name = "cbKeepLogin";
 			this.cbKeepLogin.Size = new System.Drawing.Size(93, 17);
-			this.cbKeepLogin.TabIndex = 7;
+			this.cbKeepLogin.TabIndex = 5;
 			this.cbKeepLogin.Text = "Stay logged in";
 			this.cbKeepLogin.UseVisualStyleBackColor = true;
 			// 
@@ -126,7 +126,7 @@
 			this.cbShowPassword.Location = new System.Drawing.Point(398, 93);
 			this.cbShowPassword.Name = "cbShowPassword";
 			this.cbShowPassword.Size = new System.Drawing.Size(102, 17);
-			this.cbShowPassword.TabIndex = 8;
+			this.cbShowPassword.TabIndex = 6;
 			this.cbShowPassword.Text = "Show Password";
 			this.cbShowPassword.UseVisualStyleBackColor = true;
 			this.cbShowPassword.CheckedChanged += new System.EventHandler(this.cbShowPassword_CheckedChanged);
