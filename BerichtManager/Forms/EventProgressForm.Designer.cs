@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.btStop = new OwnControls.FocusColoredFlatButton();
+			this.btStop = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.paEvents = new System.Windows.Forms.Panel();
 			this.rtbEvents = new System.Windows.Forms.RichTextBox();
 			this.rtbStatus = new System.Windows.Forms.RichTextBox();
@@ -76,9 +76,10 @@
 			this.rtbStatus.ReadOnly = true;
 			this.rtbStatus.Size = new System.Drawing.Size(695, 23);
 			this.rtbStatus.TabIndex = 2;
+			this.rtbStatus.TabStop = false;
 			this.rtbStatus.Text = "";
 			// 
-			// UploadProgressForm
+			// EventProgressForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -86,7 +87,7 @@
 			this.Controls.Add(this.rtbStatus);
 			this.Controls.Add(this.paEvents);
 			this.Controls.Add(this.btStop);
-			this.Name = "UploadProgressForm";
+			this.Name = "EventProgressForm";
 			this.Text = "UploadProgressForm";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UploadProgressForm_FormClosing);
 			this.paEvents.ResumeLayout(false);
