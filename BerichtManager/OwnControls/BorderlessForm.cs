@@ -344,7 +344,7 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		private Rectangle TitleBounds
 		{
-			get => new Rectangle(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y, TextRenderer.MeasureText(RenderedText, Font).Width, TitleBarHeight);
+			get => new Rectangle(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y, ReduceButtonBounds.X - TextToIconPadding - (IconBounds.X + IconBounds.Width + TextToIconPadding), IconBounds.Height);
 		}
 
 		/// <summary>
@@ -898,16 +898,16 @@ namespace BerichtManager.OwnControls
 			using (SolidBrush backgrnd = new SolidBrush(IsActive ? TitleBarColorActive : TitleBarColorInactive))
 			using (Pen p = new Pen(IsActive ? ActiveTitleColor : InactiveTitleColor))
 			{
-				Rectangle titleRect = new Rectangle(IconBounds.X + IconBounds.Width + TextToIconPadding, 0, ReduceButtonBounds.X - (IconBounds.X + IconBounds.Width + TextToIconPadding), TitleBarHeight);
+				Rectangle titleRect = TitleBounds;//new Rectangle(IconBounds.X + IconBounds.Width + TextToIconPadding, 0, ReduceButtonBounds.X - (IconBounds.X + IconBounds.Width + TextToIconPadding), TitleBarHeight);
 				using (Graphics graphics = Graphics.FromHdc(hdc))
 				{
 					graphics.FillRectangle(backgrnd, titleRect);
-					TextRenderer.DrawText(graphics, RenderedText, Font, new Point(TitleBounds.X, TitleBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
+					TextRenderer.DrawText(graphics, RenderedText, Font, TitleBounds, IsActive ? ActiveTitleColor : InactiveTitleColor, TextFormatFlags.Left);
 				}
 				EndPaint(m.HWnd, ref __);
 				ReleaseDC(m.HWnd, hdc);
 				BufferedGraphics.Graphics.FillRectangle(backgrnd, titleRect);
-				TextRenderer.DrawText(BufferedGraphics.Graphics, RenderedText, Font, new Point(TitleBounds.X, TitleBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
+				TextRenderer.DrawText(BufferedGraphics.Graphics, RenderedText, Font, TitleBounds, IsActive ? ActiveTitleColor : InactiveTitleColor, TextFormatFlags.Left);
 			}
 		}
 
@@ -979,7 +979,7 @@ namespace BerichtManager.OwnControls
 			graphics.Clear(IsActive ? TitleBarColorActive : TitleBarColorInactive);
 
 			//Draw Text
-			TextRenderer.DrawText(graphics, RenderedText, Font, new Point(IconBounds.X + IconBounds.Width + TextToIconPadding, IconBounds.Y), IsActive ? ActiveTitleColor : InactiveTitleColor);
+			TextRenderer.DrawText(graphics, RenderedText, Font, TitleBounds, IsActive ? ActiveTitleColor : InactiveTitleColor, TextFormatFlags.Left);
 
 			//Draw buttons
 			using (SolidBrush b = new SolidBrush(TitleBarButtonHoverColor))
