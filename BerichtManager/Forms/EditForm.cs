@@ -69,6 +69,7 @@ namespace BerichtManager.Forms
 			cbFontFamily.Enabled = false;
 			rtInput.SelectionTabs = tabstops.ToArray();
 			rtInput.Text = text;
+			rtInput.WordWrap = ConfigHandler.UseWordWrap;
 			if (isCreate)
 			{
 				btSaveAndQuit.Enabled = false;

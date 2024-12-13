@@ -51,6 +51,11 @@ namespace BerichtManager.Forms
 		/// </summary>
 		public event IHKBaseAddressChangedDelegate IHKBaseAddressChanged;
 
+		/// <summary>
+		/// Emits when use word wrap changes
+		/// </summary>
+		public event UseWordWrapDelegate UseWordWrapChanged;
+
 		public OptionMenu()
 		{
 			InitializeComponent();
@@ -79,6 +84,7 @@ namespace BerichtManager.Forms
 			tbFolder.Text = ConfigHandler.ReportPath;
 			tbUpdate.Text = ConfigHandler.PublishPath;
 			tbNamingPattern.Text = ConfigHandler.NamingPattern;
+			cbUseWordWrap.Checked = ConfigHandler.UseWordWrap;
 
 			//IHK
 			nudUploadDelay.Value = ConfigHandler.IHKUploadDelay;
@@ -127,6 +133,12 @@ namespace BerichtManager.Forms
 		/// Delegate for the <see cref="IHKBaseAddressChanged"/> event
 		/// </summary>
 		public delegate void IHKBaseAddressChangedDelegate();
+
+		/// <summary>
+		/// Delegate for the <see cref="UseWordWrapChanged"/> event
+		/// </summary>
+		/// <param name="useWordWrap">New value of use word wrap option</param>
+		public delegate void UseWordWrapDelegate(bool useWordWrap);
 
 		private void btClose_Click(object sender, EventArgs e)
 		{
@@ -234,6 +246,11 @@ namespace BerichtManager.Forms
 			}
 			if (ConfigHandler.PublishPath != tbUpdate.Text)
 				ConfigHandler.PublishPath = tbUpdate.Text;
+			if (ConfigHandler.UseWordWrap != cbUseWordWrap.Checked)
+			{
+				ConfigHandler.UseWordWrap = cbUseWordWrap.Checked;
+				UseWordWrapChanged?.Invoke(cbUseWordWrap.Checked);
+			}
 			//IHK
 			ConfigHandler.IHKUploadDelay = (int)nudUploadDelay.Value;
 			ConfigHandler.IHKJobField = tbJobField.Text;

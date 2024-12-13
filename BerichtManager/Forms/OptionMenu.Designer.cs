@@ -81,6 +81,7 @@ namespace BerichtManager.Forms
 			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.ttErrors = new System.Windows.Forms.ToolTip(this.components);
+			this.cbUseWordWrap = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
@@ -401,7 +402,7 @@ namespace BerichtManager.Forms
 			this.gbIHK.Controls.Add(this.nudUploadDelay);
 			this.gbIHK.Controls.Add(this.laUploadDelay);
 			this.gbIHK.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbIHK.Location = new System.Drawing.Point(0, 405);
+			this.gbIHK.Location = new System.Drawing.Point(0, 428);
 			this.gbIHK.Name = "gbIHK";
 			this.gbIHK.Size = new System.Drawing.Size(800, 141);
 			this.gbIHK.TabIndex = 6;
@@ -480,6 +481,7 @@ namespace BerichtManager.Forms
 			// 
 			this.gbManagerOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.gbManagerOptions.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbManagerOptions.Controls.Add(this.cbUseWordWrap);
 			this.gbManagerOptions.Controls.Add(this.laFontSize);
 			this.gbManagerOptions.Controls.Add(this.nudFontSize);
 			this.gbManagerOptions.Controls.Add(this.laTabStop);
@@ -496,7 +498,7 @@ namespace BerichtManager.Forms
 			this.gbManagerOptions.Dock = System.Windows.Forms.DockStyle.Top;
 			this.gbManagerOptions.Location = new System.Drawing.Point(0, 288);
 			this.gbManagerOptions.Name = "gbManagerOptions";
-			this.gbManagerOptions.Size = new System.Drawing.Size(800, 117);
+			this.gbManagerOptions.Size = new System.Drawing.Size(800, 140);
 			this.gbManagerOptions.TabIndex = 5;
 			this.gbManagerOptions.TabStop = false;
 			this.gbManagerOptions.Text = "Manager";
@@ -677,7 +679,7 @@ namespace BerichtManager.Forms
 			// btSave
 			// 
 			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(633, 552);
+			this.btSave.Location = new System.Drawing.Point(633, 572);
 			this.btSave.Name = "btSave";
 			this.btSave.Size = new System.Drawing.Size(75, 23);
 			this.btSave.TabIndex = 1;
@@ -688,7 +690,7 @@ namespace BerichtManager.Forms
 			// btClose
 			// 
 			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(713, 552);
+			this.btClose.Location = new System.Drawing.Point(713, 572);
 			this.btClose.Name = "btClose";
 			this.btClose.Size = new System.Drawing.Size(75, 23);
 			this.btClose.TabIndex = 0;
@@ -696,11 +698,22 @@ namespace BerichtManager.Forms
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
+			// cbUseWordWrap
+			// 
+			this.cbUseWordWrap.AutoSize = true;
+			this.cbUseWordWrap.Location = new System.Drawing.Point(98, 117);
+			this.cbUseWordWrap.Name = "cbUseWordWrap";
+			this.cbUseWordWrap.Size = new System.Drawing.Size(160, 17);
+			this.cbUseWordWrap.TabIndex = 13;
+			this.cbUseWordWrap.Text = "Use word wrap on textboxes";
+			this.cbUseWordWrap.UseVisualStyleBackColor = true;
+			this.cbUseWordWrap.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 587);
+			this.ClientSize = new System.Drawing.Size(800, 607);
 			this.Controls.Add(this.gbIHK);
 			this.Controls.Add(this.gbManagerOptions);
 			this.Controls.Add(this.gbConfig);
@@ -783,5 +796,6 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.CheckBox cbIHKAutoGetComment;
 		private OwnControls.FocusColoredFlatButton btFieldsConfig;
 		private System.Windows.Forms.ToolTip ttErrors;
+		private System.Windows.Forms.CheckBox cbUseWordWrap;
 	}
 }

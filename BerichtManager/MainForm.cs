@@ -134,6 +134,8 @@ namespace BerichtManager
 			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
 			ActivePath = ConfigHandler.ReportPath;
+			rtbSchool.WordWrap = ConfigHandler.UseWordWrap;
+			rtbWork.WordWrap = ConfigHandler.UseWordWrap;
 			UpdateTree();
 			if (ConfigHandler.LastCreated == "")
 			{
@@ -1403,12 +1405,20 @@ namespace BerichtManager
 			optionMenu.TabStopsChanged += UpdateTabStops;
 			optionMenu.FontSizeChanged += ChangeFontSize;
 			optionMenu.IHKBaseAddressChanged += IHKBaseAddressChanged;
+			optionMenu.UseWordWrapChanged += UseWordWrapChanged;
 			optionMenu.ShowDialog();
 			optionMenu.ActiveThemeChanged -= ActiveThemeChanged;
 			optionMenu.ReportFolderChanged -= ReportFolderChanged;
 			optionMenu.TabStopsChanged -= UpdateTabStops;
 			optionMenu.FontSizeChanged -= ChangeFontSize;
 			optionMenu.IHKBaseAddressChanged -= IHKBaseAddressChanged;
+			optionMenu.UseWordWrapChanged -= UseWordWrapChanged;
+		}
+
+		private void UseWordWrapChanged(bool useWordWrap)
+		{
+			rtbSchool.WordWrap = useWordWrap;
+			rtbWork.WordWrap = useWordWrap;
 		}
 
 		private void IHKBaseAddressChanged()

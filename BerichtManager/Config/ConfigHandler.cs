@@ -76,6 +76,7 @@ namespace BerichtManager.Config
 			{"ActiveTheme", (Type.GetType("System.String"), "Dark Mode")},
 			{"ReportPath", (Type.GetType("System.String"), Path.GetFullPath(".\\.."))},
 			{"PublishPath", (Type.GetType("System.String"), "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
+			{"UseWordWrap", (Type.GetType("System.Boolean"), false)},
 			{"TabStops", (Type.GetType("System.Int32"), 20)},
 			{"NamingPattern", (Type.GetType("System.String"), "WochenberichtKW~+CW+~")},
 			{"AutoSyncStatusesWithIHK", (Type.GetType("System.Boolean"), false)},
@@ -395,6 +396,15 @@ namespace BerichtManager.Config
 		{
 			get => GenericGet<bool>("IHKAutoGetComment");
 			set => GenericSet("IHKAutoGetComment", value);
+		}
+
+		/// <summary>
+		/// Wether or not <see cref="RichTextBox"/>es should use word wrap
+		/// </summary>
+		public bool UseWordWrap
+		{
+			get => GenericGet<bool>("UseWordWrap");
+			set => GenericSet("UseWordWrap", value);
 		}
 		#endregion
 
