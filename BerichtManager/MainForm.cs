@@ -1449,7 +1449,7 @@ namespace BerichtManager
 			rtbWork.Text = tempBuffer;
 		}
 
-		private void ActiveThemeChanged(object sender, ITheme theme)
+		private void ActiveThemeChanged()
 		{
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(ttTips);

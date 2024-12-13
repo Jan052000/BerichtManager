@@ -29,7 +29,7 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// Emits when the active theme changes
 		/// </summary>
-		public event activeThemeChanged ActiveThemeChanged;
+		public event ActiveThemeChangedDelegate ActiveThemeChanged;
 
 		/// <summary>
 		/// Emits when the report folder path changes
@@ -114,7 +114,7 @@ namespace BerichtManager.Forms
 		/// </summary>
 		/// <param name="sender">Event sender</param>
 		/// <param name="theme">New active theme</param>
-		public delegate void activeThemeChanged(object sender, ITheme theme);
+		public delegate void ActiveThemeChangedDelegate();
 
 		/// <summary>
 		/// Delegat for the <see cref="TabStopsChanged"/> event
@@ -200,6 +200,12 @@ namespace BerichtManager.Forms
 		/// </summary>
 		private void SaveConfigChanges()
 		{
+			int? newTabStops = null;
+			float? newFontSize = null;
+			bool activeThemeChanged = false;
+			bool wordWrapChanged = false;
+			bool ihkBaseAddressChanged = false;
+
 			//Prefix
 			ConfigHandler.UseCustomPrefix = cbUseCustomPrefix.Checked;
 			if (cbUseCustomPrefix.Checked)
@@ -221,14 +227,13 @@ namespace BerichtManager.Forms
 			if (ConfigHandler.TabStops != (int)nudTabStops.Value)
 			{
 				ConfigHandler.TabStops = (int)nudTabStops.Value;
-				TabStopsChanged?.Invoke(this, (int)nudTabStops.Value);
+				newTabStops = (int)nudTabStops.Value;
 			}
 			ConfigHandler.UseLegacyEdit = cbLegacyEdit.Checked;
 			if (nudFontSize.Value != (decimal)ConfigHandler.EditorFontSize)
 			{
 				ConfigHandler.EditorFontSize = (float)nudFontSize.Value;
-				FontSizeChanged?.Invoke((float)nudFontSize.Value);
-
+				newFontSize = (float)nudFontSize.Value;
 			}
 			if (ThemeName != coTheme.Text)
 			{
@@ -236,7 +241,7 @@ namespace BerichtManager.Forms
 				ITheme activeTheme = ThemeManager.Instance.GetTheme(ThemeName);
 				ThemeSetter.SetThemes(this);
 				ThemeSetter.SetThemes(toolTip1);
-				ActiveThemeChanged?.Invoke(this, activeTheme);
+				activeThemeChanged = true;
 			}
 			if (ConfigHandler.ReportPath != tbFolder.Text)
 			{
@@ -249,7 +254,7 @@ namespace BerichtManager.Forms
 			if (ConfigHandler.UseWordWrap != cbUseWordWrap.Checked)
 			{
 				ConfigHandler.UseWordWrap = cbUseWordWrap.Checked;
-				UseWordWrapChanged?.Invoke(cbUseWordWrap.Checked);
+				wordWrapChanged = true;
 			}
 			//IHK
 			ConfigHandler.IHKUploadDelay = (int)nudUploadDelay.Value;
@@ -257,12 +262,23 @@ namespace BerichtManager.Forms
 			ConfigHandler.IHKSupervisorEMail = tbSupervisorMail.Text;
 			ConfigHandler.AutoSyncStatusesWithIHK = cbAutoSyncStatusesWithIHK.Checked;
 			if (ConfigHandler.IHKBaseUrl != tbIHKBaseUrl.Text)
-				IHKBaseAddressChanged?.Invoke();
+				ihkBaseAddressChanged = true;
 			ConfigHandler.IHKBaseUrl = tbIHKBaseUrl.Text;
 			ConfigHandler.IHKCheckMatchingStartDates = cbIHKCheckMatchingStartDates.Checked;
 			ConfigHandler.IHKAutoGetComment = cbIHKAutoGetComment.Checked;
 
 			ConfigHandler.SaveConfig();
+
+			if (newTabStops != null)
+				TabStopsChanged?.Invoke(this, (int)nudTabStops.Value);
+			if (newFontSize != null)
+				FontSizeChanged?.Invoke((float)nudFontSize.Value);
+			if (activeThemeChanged)
+				ActiveThemeChanged?.Invoke();
+			if (wordWrapChanged)
+				UseWordWrapChanged?.Invoke(cbUseWordWrap.Checked);
+			if (ihkBaseAddressChanged)
+				IHKBaseAddressChanged?.Invoke();
 		}
 
 		/// <summary>
