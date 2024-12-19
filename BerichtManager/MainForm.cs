@@ -1941,7 +1941,7 @@ namespace BerichtManager
 					}
 
 					//Handle upload result
-					if (HandleUploadResult(result, doc, progressForm, path, nodePath, openReports, activePath, out bool shouldReturn) && shouldReturn)
+					if (!HandleUploadResult(result, doc, progressForm, path, nodePath, openReports, activePath, out bool shouldReturn) || shouldReturn)
 						return;
 
 					doc.Close(SaveChanges: false);
@@ -2029,6 +2029,8 @@ namespace BerichtManager
 					shouldReturn = true;
 					break;
 				default:
+					progressForm.Status = $"Unknown creation result: {result.Result}";
+					shouldReturn = true;
 					return false;
 			}
 			if (progressForm != null)
