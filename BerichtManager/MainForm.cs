@@ -1891,11 +1891,12 @@ namespace BerichtManager
 				bool shouldStop = false;
 				progressForm.Stop += () => shouldStop = true;
 
-				UploadedReports.GetUploadedPaths(out List<string> files);
-
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
-					return files.Contains(GetFullNodePath(node)) || (!ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0 && node is ReportNode);
+					bool isReport = node is ReportNode reportNode;
+					bool wasUploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport report);
+					bool emptyNonReportNode = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
+					return isReport && wasUploaded || emptyNonReportNode;
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
 				{
