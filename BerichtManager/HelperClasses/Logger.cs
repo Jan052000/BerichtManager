@@ -18,20 +18,13 @@ namespace BerichtManager.HelperClasses
 			string logFolder = Path.GetFullPath(".\\Logs");
 			string errorDate = DateTime.Now.ToString("dd.M.yyyy.H.m.s");
 			string filePath = logFolder + "\\" + errorDate + ".txt";
+			string message = $"{ex.Message}\n{ex.StackTrace}\n{ex.HResult}";
 			if (!Directory.Exists(logFolder))
-			{
 				Directory.CreateDirectory(logFolder);
-			}
 			if (additionalData != null)
-			{
-				File.WriteAllText(filePath, ex.Message
-				+ "\n" + ex.StackTrace.ToString() + "\n" + ex.HResult + "\n\n" + JsonConvert.SerializeObject(additionalData));
-			}
-			else
-			{
-				File.WriteAllText(filePath, ex.Message
-				+ "\n" + ex.StackTrace.ToString() + "\n" + ex.HResult);
-			}
+				message += $"\nAdditional data:\n{JsonConvert.SerializeObject(additionalData, Formatting.Indented)}";
+
+			File.WriteAllText(filePath, message);
 			return filePath;
 		}
 	}

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using BerichtManager.HelperClasses;
 using BerichtManager.ThemeManagement;
+using Newtonsoft.Json.Linq;
 
 namespace BerichtManager.OwnControls
 {
@@ -62,11 +63,11 @@ namespace BerichtManager.OwnControls
 		/// <param name="blockExecution">Wether or not execution should wait for user to close the <see cref="ThemedMessageBox"/></param>
 		/// <inheritdoc cref="Show(string, string, MessageBoxButtons, bool)" path="/param"/>
 		/// <param name="createLogFile">Wether or not a file containing the <see cref="Exception"/> should be created</param>
-		public static void Error(Exception ex, bool blockExecution = true, bool allowMessageHighlight = false, bool createLogFile = true)
+		public static void Error(Exception ex, bool blockExecution = true, bool allowMessageHighlight = false, bool createLogFile = true, JObject additionalData = null)
 		{
 			string errorMessage = "An unexpected exception has occurred";
 			if (createLogFile)
-				errorMessage += $", a complete log has been saved to\n{Logger.LogError(ex)}:";
+				errorMessage += $", a complete log has been saved to\n{Logger.LogError(ex, additionalData: additionalData)}:";
 			errorMessage += $"{ex.GetType().Name}, {ex.Message}: \n{ex.StackTrace}";
 			ThemedMessageBox mb = new ThemedMessageBox(text: errorMessage, title: ex.GetType().Name, allowMessageHighlight: allowMessageHighlight);
 			if (blockExecution)
