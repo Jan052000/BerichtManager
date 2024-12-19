@@ -22,14 +22,13 @@ namespace BerichtManager.OwnControls
 		{
 			InitializeComponent();
 			InitializeButtons(buttons);
-			SizeToButtons();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(toolTip1);
+			SetMinSize();
 			this.Text = title;
 			rtbText.Text = text;
 			Message = text;
 			Buttons = buttons;
-			rtbText.Size = TextRenderer.MeasureText(Message, rtbText.Font);
 			if (!allowMessageHighlight)
 				rtbText.Enter += UnfocusOnEnter;
 		}
@@ -89,21 +88,71 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Sets minimum size to match width of all enabled buttons
 		/// </summary>
-		private void SizeToButtons()
+		private void SetMinSize()
 		{
-			Size newSize = new Size(115, 25 + btCopyToClipboard.Height + btCopyToClipboard.Margin.Top + btCopyToClipboard.Margin.Bottom + 32);
-			foreach (Control control in Controls)
+			int minTextHeight = TextRenderer.MeasureText("T", rtbText.Font).Height;
+			int minHeight = minTextHeight + paButtons.Height + paButtons.Margin.Top + paButtons.Margin.Bottom + Size.Height - ClientSize.Height;
+			Button firstButton = FindFirstButton();
+			int designMarginClipboard = firstButton.Location.X - paButtons.Location.X - firstButton.Margin.Left;
+			Button lastButton = FindLastButton();
+			int designMarginCancel = paButtons.Location.X + paButtons.Width - (lastButton.Location.X + lastButton.Width) - lastButton.Margin.Right;
+			int minwidth = Size.Width - ClientSize.Width + Padding.Right + Padding.Left + designMarginClipboard + designMarginCancel;
+			foreach (Control control in paButtons.Controls)
 			{
 				switch (control)
 				{
 					case Button button:
-						if (button.Enabled && button != btCopyToClipboard)
-							newSize.Width += button.Width + button.Margin.Left + button.Margin.Right;
+						minwidth += button.Width + button.Margin.Left + button.Margin.Right;
 						break;
 				}
 			}
-			MinimumSize = newSize;
+			MinimumSize = new Size(minwidth, minHeight);
 		}
+
+		/// <summary>
+		/// Searches <see cref="Button"/> in <see cref="paButtons"/> with largest x location
+		/// </summary>
+		/// <returns><see cref="Button"/> in <see cref="paButtons"/> with largest x location</returns>
+		private Button FindLastButton()
+		{
+			return FindButtonFromLocation((result, bt) => result?.Location.X < bt.Location.X);
+		}
+
+		/// <summary>
+		/// Searches <see cref="Button"/> in <see cref="paButtons"/> with smallest x location
+		/// </summary>
+		/// <returns><see cref="Button"/> in <see cref="paButtons"/> with smallest x location</returns>
+		private Button FindFirstButton()
+		{
+			return FindButtonFromLocation((result, bt) => result?.Location.X > bt.Location.X);
+		}
+
+		/// <summary>
+		/// Searches <see cref="paButtons"/> controls for a <see cref="Button"/> based on its' location
+		/// </summary>
+		/// <param name="predicate"><see cref="ButtonLocationDelegate"/> to use in determining returned button</param>
+		/// <returns>Found button <see cref="Button"/> or <see langword="null"/> if no button was found</returns>
+		private Button FindButtonFromLocation(ButtonLocationDelegate predicate)
+		{
+			Button result = null;
+			foreach (Control control in paButtons.Controls)
+			{
+				if (control is Button bt)
+				{
+					if (result == null || predicate(result, bt))
+						result = bt;
+				}
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Predicate to find <see cref="Button"/>s from <see cref="paButtons"/> based on location
+		/// </summary>
+		/// <param name="bt1">Button that is cached as return value</param>
+		/// <param name="bt2">Button that is to be compared</param>
+		/// <returns><see langword="true"/> if <paramref name="bt2"/> should be returned instead of <paramref name="bt1"/> and <see langword="false"/> otherwise</returns>
+		private delegate bool ButtonLocationDelegate(Button bt1, Button bt2);
 
 		/// <summary>
 		/// Sets texts of buttons and click events using <see cref="MessageBoxButtons"/>
