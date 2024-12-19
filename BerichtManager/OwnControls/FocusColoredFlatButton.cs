@@ -146,16 +146,16 @@ namespace BerichtManager.OwnControls
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			Rectangle focusBounds = new Rectangle(0, 0, e.ClipRectangle.Width, e.ClipRectangle.Height);
-			if (ButtonFocusBoxWidth == 1)
-			{
-				focusBounds.Width -= 1;
-				focusBounds.Height -= 1;
-			}
 			if (FlatStyle != FlatStyle.Flat)
 			{
 				base.OnPaint(e);
 				return;
+			}
+			Rectangle focusBounds = new Rectangle(new Point(0, 0), Size);
+			if (ButtonFocusBoxWidth == 1)
+			{
+				focusBounds.Width -= 1;
+				focusBounds.Height -= 1;
 			}
 			Graphics g = e.Graphics;
 			if (IsMouseHovering)
@@ -166,7 +166,7 @@ namespace BerichtManager.OwnControls
 
 			if (Focused)
 			{
-				using (Pen p = new Pen(buttonFocusBoxColor, buttonFocusBoxWidth) { Alignment = System.Drawing.Drawing2D.PenAlignment.Inset})
+				using (Pen p = new Pen(buttonFocusBoxColor, buttonFocusBoxWidth) { Alignment = System.Drawing.Drawing2D.PenAlignment.Inset })
 					e.Graphics.DrawRectangle(p, focusBounds);
 			}
 		}
