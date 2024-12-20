@@ -522,6 +522,10 @@ namespace BerichtManager.OwnControls
 			/// </summary>
 			WM_NCACTIVATE = 0x86,
 			/// <summary>
+			/// Sent if mouse moves in non client area
+			/// </summary>
+			WM_NCMOUSEMOVE = 0xA0,
+			/// <summary>
 			/// Sent if left mouse button was clicked over non client area
 			/// </summary>
 			WM_NCLBUTTONDOWN = 0xA1,
@@ -541,6 +545,10 @@ namespace BerichtManager.OwnControls
 			/// Sent to window when it stopped moving or sizing
 			/// </summary>
 			WM_EXITSIZEMOVE = 0x0232,
+			/// <summary>
+			/// Sent when mouse leaves non client area
+			/// </summary>
+			WM_NCMOUSELEAVE = 0x2A2,
 			/// <summary>
 			/// Start of WM_USER message range for private messages in this control (0x0400 thorugh 0x7FFF)
 			/// </summary>
@@ -1292,6 +1300,32 @@ namespace BerichtManager.OwnControls
 			m.Result = (IntPtr)0;
 		}
 
+		private void WM_NCMOUSEMOVE(ref Message m)
+		{
+			switch ((NCHitTestResult)m.WParam)
+			{
+				case NCHitTestResult.HT_CLOSE:
+					HoveringButton = 0;
+					break;
+				case NCHitTestResult.HT_MAXBUTTON:
+					HoveringButton = 1;
+					break;
+				case NCHitTestResult.HT_MINBUTTON:
+					HoveringButton = 2;
+					break;
+				default:
+					HoveringButton = -1;
+					base.WndProc(ref m);
+					break;
+			}
+		}
+
+		private void WM_NCMouseLeave(ref Message m)
+		{
+			HoveringButton = -1;
+			base.WndProc(ref m);
+		}
+
 		protected override void WndProc(ref Message m)
 		{
 			if (FormBorderStyle != FormBorderStyle.None)
@@ -1315,6 +1349,12 @@ namespace BerichtManager.OwnControls
 					WM_NCACTIVATE(ref m);
 					if (WindowState == FormWindowState.Minimized)
 						DefWndProc(ref m);
+					break;
+				case WMMessageCodes.WM_NCMOUSEMOVE:
+					WM_NCMOUSEMOVE(ref m);
+					break;
+				case WMMessageCodes.WM_NCMOUSELEAVE:
+					WM_NCMouseLeave(ref m);
 					break;
 				case WMMessageCodes.WM_NCLBUTTONDOWN:
 					WM_NCLBUTTONDOWN(ref m);
