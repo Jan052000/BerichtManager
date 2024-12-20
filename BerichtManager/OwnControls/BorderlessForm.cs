@@ -1219,8 +1219,9 @@ namespace BerichtManager.OwnControls
 				default:
 					ClickedButton = -1;
 					base.WndProc(ref m);
-					break;
+					return;
 			}
+			m.Result = (IntPtr)0;
 		}
 
 		/// <summary>
