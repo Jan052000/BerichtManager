@@ -1153,15 +1153,8 @@ namespace BerichtManager
 				return;
 			if (!EditMode)
 				return;
-			if (!WasEdited)
-			{
-				Doc.Close(SaveChanges: false);
-				Doc = null;
-				EditMode = false;
-				return;
-			}
 
-			if (ThemedMessageBox.Show(text: "Save unsaved changes?", title: "Save?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+			if (WasEdited && ThemedMessageBox.Show(text: "Save unsaved changes?", title: "Save?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 				SaveFromTb();
 			Doc.Close(SaveChanges: false);
 			Doc = null;
