@@ -24,6 +24,7 @@ using BerichtManager.IHKClient.Exceptions;
 using BerichtManager.IHKClient.ReportContents;
 using BerichtManager.WordTemplate;
 using BerichtManager.OwnControls.OwnTreeView;
+using BerichtManager.Extensions;
 
 namespace BerichtManager
 {
@@ -117,7 +118,7 @@ namespace BerichtManager
 				if (OpenedReportNode != null)
 				{
 					OpenedReportNode.IsOpened = false;
-					tvReports.Invalidate(OpenedReportNode.Bounds);
+					tvReports.ExecuteWithInvoke(() => tvReports.Invalidate(OpenedReportNode.Bounds));
 				}
 				_OpenedReportNode = value;
 				if (OpenedReportNode != null)
@@ -1695,8 +1696,8 @@ namespace BerichtManager
 			if (Doc == null)
 				return;
 			SaveOrExit();
-			rtbSchool.Text = "";
-			rtbWork.Text = "";
+			rtbSchool.ExecuteWithInvoke(() => rtbSchool.Text = "");
+			rtbWork.ExecuteWithInvoke(() => rtbWork.Text = "");
 			WasEdited = false;
 			EditMode = false;
 		}
@@ -1749,15 +1750,15 @@ namespace BerichtManager
 		/// <param name="activePath">Path to open in text box edit</param>
 		private void OpenAllDocuments(List<string> paths, string activePath)
 		{
-			paths.ForEach(path =>
+			foreach (string path in paths)
 			{
 				if (string.IsNullOrWhiteSpace(path))
 					return;
 				if (path == activePath)
-					EditInTb(path);
+					this.ExecuteWithInvoke(() => EditInTb(path));
 				else
 					WordApp.Documents.Open(FileName: path);
-			});
+			};
 		}
 
 		/// <summary>
