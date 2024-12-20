@@ -1744,6 +1744,20 @@ namespace BerichtManager
 		}
 
 		/// <summary>
+		/// Checks if two <see cref="Word.Document"/>s are equal by comparing the differences in their contents
+		/// </summary>
+		/// <param name="doc1">First <see cref="Word.Document"/> to compare</param>
+		/// <param name="doc2">Second <see cref="Word.Document"/> to compare</param>
+		/// <returns><see langword="true"/> if docs contents are the same and <see langword="false"/> otherwise</returns>
+		private bool IsDocSameDoc(Word.Document doc1, Word.Document doc2)
+		{
+			Word.Document compareDoc = WordApp.CompareDocuments(doc1, doc2);
+			bool docIsSameAsOpened = compareDoc.Revisions.Count == 0;
+			compareDoc.Close(SaveChanges: false);
+			return docIsSameAsOpened;
+		}
+
+		/// <summary>
 		/// Opens a list of <see cref="Word.Document"/>s from <paramref name="paths"/> and opens <paramref name="activePath"/> in text boxes
 		/// </summary>
 		/// <param name="paths">Paths of previously opened reports</param>
@@ -1771,7 +1785,7 @@ namespace BerichtManager
 			foreach (Word.Document doc in WordApp.Documents)
 			{
 				result.Add(doc.FullName);
-				if (doc == Doc)
+				if (IsDocSameDoc(Doc, doc))
 					CloseOpenDocument();
 				else
 					doc.Close();
