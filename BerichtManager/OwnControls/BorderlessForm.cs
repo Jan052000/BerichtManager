@@ -1313,6 +1313,8 @@ namespace BerichtManager.OwnControls
 					break;
 				case WMMessageCodes.WM_NCACTIVATE:
 					WM_NCACTIVATE(ref m);
+					if (WindowState == FormWindowState.Minimized)
+						DefWndProc(ref m);
 					break;
 				case WMMessageCodes.WM_NCLBUTTONDOWN:
 					WM_NCLBUTTONDOWN(ref m);
