@@ -1155,7 +1155,7 @@ namespace BerichtManager.OwnControls
 				WindowState = FormWindowState.Normal;
 			else
 			{
-				IsActive = m.WParam.ToInt32() == 1;
+				IsActive = m.WParam.ToInt32() == 1 || m.WParam.ToInt32() == 2;
 				ForceRedrawNCA();
 				m.Result = (IntPtr)1;
 			}
