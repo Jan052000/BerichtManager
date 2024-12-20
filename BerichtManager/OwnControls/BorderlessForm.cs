@@ -156,12 +156,12 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Sets region outside of form which is able to trigger resize
 		/// </summary>
-		private int resizeHitbox { get; set; } = 3;
+		private int resizeHitbox { get; set; } = 4;
 		/// <summary>
 		/// Sets region outside of form which is able to trigger resize
 		/// </summary>
 		[Category("Style")]
-		[DefaultValue(3)]
+		[DefaultValue(4)]
 		public int ResizeHitbox
 		{
 			get => resizeHitbox;
@@ -501,7 +501,21 @@ namespace BerichtManager.OwnControls
 					return;
 				shouldUseCustomBorder = value;
 				if (FormBorderStyleIsSetting)
+				{
+					var ncaThickness = System.Windows.SystemParameters.WindowNonClientFrameThickness;
+					var resizeThickness = System.Windows.SystemParameters.WindowResizeBorderThickness;
+					//if (FormBorderStyle == FormBorderStyle.None)
+					//{
+					//	Size = new Size(Size.Width + (int)ncaThickness.Left + (int)ncaThickness.Right + (int)resizeThickness.Left + (int)resizeThickness.Right, Size.Height + (int)ncaThickness.Top + (int)ncaThickness.Bottom + (int)resizeThickness.Top + (int)resizeThickness.Bottom);
+
+					//}
+					//else
+					//{
+					//	Size = new Size(Size.Width - (int)ncaThickness.Left - (int)ncaThickness.Right - (int)resizeThickness.Left - (int)resizeThickness.Right, Size.Height - (int)ncaThickness.Top - (int)ncaThickness.Bottom - (int)resizeThickness.Top - (int)resizeThickness.Bottom);
+
+					//}
 					return;
+				}
 				if (ShouldUseCustomBorder)
 				{
 					CustomBorderIsSetting = true;
@@ -692,13 +706,26 @@ namespace BerichtManager.OwnControls
 			set
 			{
 				if (CustomBorderIsSetting)
-				{
 					FormBorderStyleCache = FormBorderStyle;
-					base.FormBorderStyle = value;
+				else
+					FormBorderStyleCache = value;
+				base.FormBorderStyle = value;
+				if (CustomBorderIsSetting)
+				{
+					var ncaThickness = System.Windows.SystemParameters.WindowNonClientFrameThickness;
+					var resizeThickness = System.Windows.SystemParameters.WindowResizeBorderThickness;
+					//if (FormBorderStyle == FormBorderStyle.None)
+					//{
+					//	Size = new Size(Size.Width + (int)ncaThickness.Left + (int)ncaThickness.Right + (int)resizeThickness.Left + (int)resizeThickness.Right, Size.Height + (int)ncaThickness.Top + (int)ncaThickness.Bottom + (int)resizeThickness.Top + (int)resizeThickness.Bottom);
+
+					//}
+					//else
+					//{
+					//	Size = new Size(Size.Width - (int)ncaThickness.Left - (int)ncaThickness.Right - (int)resizeThickness.Left - (int)resizeThickness.Right, Size.Height - (int)ncaThickness.Top - (int)ncaThickness.Bottom - (int)resizeThickness.Top - (int)resizeThickness.Bottom);
+
+					//}
 					return;
 				}
-				FormBorderStyleCache = value;
-				base.FormBorderStyle = value;
 				FormBorderStyleIsSetting = true;
 				ShouldUseCustomBorder = false;
 				FormBorderStyleIsSetting = false;
@@ -1204,17 +1231,23 @@ namespace BerichtManager.OwnControls
 		/// https://stackoverflow.com/questions/28277039/how-to-set-the-client-area-clientrectangle-in-a-borderless-form
 		private void WM_NCCALCSIZE(ref Message m)
 		{
+			int pixelMargin = 1;
 			if (m.WParam != (IntPtr)0)
 			{
 				NCCALCSIZE_PARAMS nccp = (NCCALCSIZE_PARAMS)m.GetLParam(typeof(NCCALCSIZE_PARAMS));
-				nccp.rgrc0.top += TitleBarHeight;
+				nccp.rgrc0.top += TitleBarHeight + ResizeHitbox - pixelMargin;
+				nccp.rgrc0.left += ResizeHitbox + (int)System.Windows.SystemParameters.WindowNonClientFrameThickness.Left;
+				nccp.rgrc0.right -= ResizeHitbox + (int)System.Windows.SystemParameters.WindowNonClientFrameThickness.Right;
+				nccp.rgrc0.bottom -= ResizeHitbox;
 				Marshal.StructureToPtr(nccp, m.LParam, true);
-
 			}
 			else
 			{
 				RECT rect = (RECT)m.GetLParam(typeof(RECT));
-				rect.top += TitleBarHeight;
+				rect.top += TitleBarHeight + ResizeHitbox - pixelMargin;
+				rect.left += ResizeHitbox + (int)System.Windows.SystemParameters.WindowNonClientFrameThickness.Left;
+				rect.right -= ResizeHitbox + (int)System.Windows.SystemParameters.WindowNonClientFrameThickness.Right;
+				rect.bottom -= ResizeHitbox;
 				Marshal.StructureToPtr(rect, m.LParam, true);
 			}
 			ForceNCRedraw = true;
