@@ -1020,7 +1020,6 @@ namespace BerichtManager.OwnControls
 					BufferedGraphics.Dispose();
 				BufferedGraphics = BufferedGraphicsContext.Allocate(hdc, new Rectangle(0, 0, Size.Width, TitleBarHeight));
 				DrawTitleBar(BufferedGraphics.Graphics);
-				ReleaseDC(m.HWnd, hdc);
 			}
 			else
 			{
@@ -1036,9 +1035,9 @@ namespace BerichtManager.OwnControls
 				BufferedGraphics.Dispose();
 				BufferedGraphics = BufferedGraphicsContext.Allocate(hdc, new Rectangle(0, 0, Size.Width, TitleBarHeight));
 				DrawTitleBar(BufferedGraphics.Graphics);
-				//If dc is not released then title bar will not update color unless form was resized prior
-				ReleaseDC(m.HWnd, hdc);
 			}
+			//If dc is not released then title bar will not update color unless form was resized prior
+			ReleaseDC(m.HWnd, hdc);
 			m.Result = (IntPtr)0;
 		}
 
