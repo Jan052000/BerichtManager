@@ -484,6 +484,55 @@ namespace BerichtManager.OwnControls
 				return base.Text;
 			}
 		}
+
+		/// <inheritdoc cref="ShouldUseCustomBorder" path="/summary"/>
+		private bool shouldUseCustomBorder { get; set; } = false;
+		/// <summary>
+		/// Wether or not <see cref="FormBorderStyle"/> should be ignored and the custom border should be drawn
+		/// </summary>
+		[Category("Style")]
+		[DefaultValue(false)]
+		public bool ShouldUseCustomBorder
+		{
+			get => shouldUseCustomBorder;
+			set
+			{
+				if (ShouldUseCustomBorder == value)
+					return;
+				shouldUseCustomBorder = value;
+				if (FormBorderStyleIsSetting)
+					return;
+				if (ShouldUseCustomBorder)
+				{
+					CustomBorderIsSetting = true;
+					FormBorderStyle = FormBorderStyleCache;
+					CustomBorderIsSetting = false;
+				}
+				else
+				{
+					CustomBorderIsSetting = true;
+					FormBorderStyle = FormBorderStyleCache;
+					FormBorderStyleCache = FormBorderStyle;
+					CustomBorderIsSetting = false;
+				}
+				Invalidate();
+			}
+		}
+
+		/// <summary>
+		/// Internal cache for <see cref="FormBorderStyle"/>
+		/// </summary>
+		private FormBorderStyle FormBorderStyleCache { get; set; }
+
+		/// <summary>
+		/// Internal flag if <see cref="ShouldUseCustomBorder"/> is setting <see cref="FormBorderStyle"/>
+		/// </summary>
+		private bool CustomBorderIsSetting { get; set; } = false;
+
+		/// <summary>
+		/// Internal flag if <see cref="FormBorderStyle"/> is setting <see cref="ShouldUseCustomBorder"/>
+		/// </summary>
+		private bool FormBorderStyleIsSetting { get; set; } = false;
 		#endregion
 
 		#region Windows message constants
@@ -637,8 +686,25 @@ namespace BerichtManager.OwnControls
 		/// Overwrite and pass through for base.FormBorderStyle to change designer category
 		/// </summary>
 		[Category("Style")]
-		[DefaultValue(typeof(FormBorderStyle), "None")]
-		public new FormBorderStyle FormBorderStyle { get => base.FormBorderStyle; set => base.FormBorderStyle = value; }
+		public new FormBorderStyle FormBorderStyle
+		{
+			get => base.FormBorderStyle;
+			set
+			{
+				if (CustomBorderIsSetting)
+				{
+					FormBorderStyleCache = FormBorderStyle;
+					base.FormBorderStyle = value;
+					return;
+				}
+				FormBorderStyleCache = value;
+				base.FormBorderStyle = value;
+				FormBorderStyleIsSetting = true;
+				ShouldUseCustomBorder = false;
+				FormBorderStyleIsSetting = false;
+				Invalidate();
+			}
+		}
 
 		/// <summary>
 		/// Overwrite and pass through to catch title changing and redrawing non client area
@@ -863,7 +929,7 @@ namespace BerichtManager.OwnControls
 		public BorderlessForm()
 		{
 			SetStyle(ControlStyles.ContainerControl | ControlStyles.CacheText | ControlStyles.OptimizedDoubleBuffer, true);
-			base.FormBorderStyle = FormBorderStyle.None;
+			//base.FormBorderStyle = FormBorderStyle.None;
 			MinimumSize = new Size(3 * TitleBarButtonWidth + 3, TitleBarHeight);
 			//Enable key preview to let form intercept WIN + Arrow combos
 			KeyPreview = true;
@@ -1331,7 +1397,7 @@ namespace BerichtManager.OwnControls
 
 		protected override void WndProc(ref Message m)
 		{
-			if (FormBorderStyle != FormBorderStyle.None)
+			if (!ShouldUseCustomBorder)
 			{
 				base.WndProc(ref m);
 				return;
@@ -1434,17 +1500,6 @@ namespace BerichtManager.OwnControls
 				}
 			}
 			return base.ProcessKeyPreview(ref m);
-		}
-
-		protected override CreateParams CreateParams
-		{
-			get
-			{
-				CreateParams cp = base.CreateParams;
-				cp.Style &= ~0x00010000;    // => WS_MAXIMIZEBOX = false
-				cp.ExStyle |= 0x02000000;   // => WS_EX_COMPOSITED = true
-				return cp;
-			}
 		}
 	}
 }
