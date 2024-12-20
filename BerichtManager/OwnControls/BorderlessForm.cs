@@ -653,8 +653,8 @@ namespace BerichtManager.OwnControls
 				if (Text != value)
 				{
 					base.Text = value;
-					//SendMessage(Handle, (int)WMMessageCodes.WM_USER_REDRAWTITLE, (IntPtr)0, (IntPtr)0);
-					ForceRedrawNCA();
+					if (value.Length <= RenderedText.Length)
+						SendMessage(Handle, (int)WMMessageCodes.WM_USER_REDRAWTITLE, (IntPtr)0, (IntPtr)0);
 				}
 			}
 		}
