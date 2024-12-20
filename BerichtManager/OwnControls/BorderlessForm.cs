@@ -914,6 +914,8 @@ namespace BerichtManager.OwnControls
 				}
 				EndPaint(m.HWnd, ref __);
 				ReleaseDC(m.HWnd, hdc);
+				if (BufferedGraphics == null)
+					return;
 				BufferedGraphics.Graphics.FillRectangle(backgrnd, titleRect);
 				TextRenderer.DrawText(BufferedGraphics.Graphics, RenderedText, Font, TitleBounds, IsActive ? ActiveTitleColor : InactiveTitleColor, TextFormatFlags.Left);
 			}
