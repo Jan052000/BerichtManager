@@ -31,12 +31,12 @@
 			this.components = new System.ComponentModel.Container();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.paButtons = new System.Windows.Forms.Panel();
-			this.paText = new System.Windows.Forms.Panel();
-			this.rtbText = new System.Windows.Forms.RichTextBox();
 			this.btCopyToClipboard = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btYes = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btCancel = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btNo = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.paText = new System.Windows.Forms.Panel();
+			this.rtbText = new System.Windows.Forms.RichTextBox();
 			this.paButtons.SuspendLayout();
 			this.paText.SuspendLayout();
 			this.SuspendLayout();
@@ -52,30 +52,6 @@
 			this.paButtons.Name = "paButtons";
 			this.paButtons.Size = new System.Drawing.Size(434, 29);
 			this.paButtons.TabIndex = 0;
-			// 
-			// paText
-			// 
-			this.paText.AutoScroll = true;
-			this.paText.Controls.Add(this.rtbText);
-			this.paText.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.paText.Location = new System.Drawing.Point(0, 0);
-			this.paText.Name = "paText";
-			this.paText.Padding = new System.Windows.Forms.Padding(12, 0, 12, 0);
-			this.paText.Size = new System.Drawing.Size(434, 197);
-			this.paText.TabIndex = 1;
-			// 
-			// rtbText
-			// 
-			this.rtbText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.rtbText.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.rtbText.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.rtbText.Location = new System.Drawing.Point(12, 0);
-			this.rtbText.Name = "rtbText";
-			this.rtbText.ReadOnly = true;
-			this.rtbText.Size = new System.Drawing.Size(410, 197);
-			this.rtbText.TabIndex = 0;
-			this.rtbText.TabStop = false;
-			this.rtbText.Text = "";
 			// 
 			// btCopyToClipboard
 			// 
@@ -117,6 +93,30 @@
 			this.btNo.TabIndex = 2;
 			this.btNo.Text = "No";
 			this.btNo.UseVisualStyleBackColor = true;
+			// 
+			// paText
+			// 
+			this.paText.AutoScroll = true;
+			this.paText.Controls.Add(this.rtbText);
+			this.paText.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.paText.Location = new System.Drawing.Point(0, 0);
+			this.paText.Name = "paText";
+			this.paText.Padding = new System.Windows.Forms.Padding(12, 12, 12, 0);
+			this.paText.Size = new System.Drawing.Size(434, 197);
+			this.paText.TabIndex = 1;
+			// 
+			// rtbText
+			// 
+			this.rtbText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.rtbText.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.rtbText.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.rtbText.Location = new System.Drawing.Point(12, 12);
+			this.rtbText.Name = "rtbText";
+			this.rtbText.ReadOnly = true;
+			this.rtbText.Size = new System.Drawing.Size(410, 185);
+			this.rtbText.TabIndex = 0;
+			this.rtbText.TabStop = false;
+			this.rtbText.Text = "";
 			// 
 			// ThemedMessageBox
 			// 
