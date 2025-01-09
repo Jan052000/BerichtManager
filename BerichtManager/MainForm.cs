@@ -384,7 +384,8 @@ namespace BerichtManager
 			}
 			try
 			{
-				int weekOfYear = Culture.Calendar.GetWeekOfYear(baseDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				DateTimeFormatInfo dfi = Culture.DateTimeFormat;
+				int weekOfYear = Culture.Calendar.GetWeekOfYear(baseDate, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
 				ldoc = app.Documents.Add(Template: templatePath);
 
 				if (!FormFieldHandler.ValidFormFieldCount(ldoc))
@@ -553,9 +554,8 @@ namespace BerichtManager
 				ThemedMessageBox.Show(text: "Created Document at: " + path, title: "Document saved", allowMessageHighlight: true);
 				ldocWasSaved = true;
 
-				ldoc.Close();
 				SaveOrExit();
-				Doc = WordApp.Documents.Open(path);
+				Doc = ldoc;
 				OpenedReportNode = GetNodeFromPath(path) as ReportNode;
 				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
 				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
@@ -628,7 +628,7 @@ namespace BerichtManager
 		private void CreateMissing(bool vacation = false)
 		{
 			DateTimeFormatInfo dfi = Culture.DateTimeFormat;
-			int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
 			int reportNr = ConfigHandler.LastReportWeekOfYear;
 
 			if (ConfigHandler.LastReportWeekOfYear < weekOfYear)
@@ -644,9 +644,17 @@ namespace BerichtManager
 			{
 				//Missing missing reports over multiple years
 				int nrOfWeeksLastYear = Culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
-				int weekOfCurrentYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				DateTime lastDecemberLastDay = new DateTime(DateTime.Today.Year - 1, 12, 31);
+				DateTime thisWeekStart = lastDecemberLastDay.AddDays(-(int)lastDecemberLastDay.DayOfWeek + 1);
+				DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+				if (ConfigHandler.EndWeekOnFriday)
+					thisWeekEnd = thisWeekEnd.AddDays(-2);
+
+				int weekOfCurrentYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
 
 				int repeats = nrOfWeeksLastYear - reportNr + weekOfCurrentYear;
+				if (Culture.Calendar.GetWeekOfYear(lastDecemberLastDay, dfi.CalendarWeekRule, dfi.FirstDayOfWeek) != Culture.Calendar.GetWeekOfYear(thisWeekEnd, dfi.CalendarWeekRule, dfi.FirstDayOfWeek))
+					repeats--;
 
 				DateTime today = DateTime.Today.AddDays(-(repeats * 7));
 
