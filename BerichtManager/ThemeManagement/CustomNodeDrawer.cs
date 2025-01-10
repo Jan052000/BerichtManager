@@ -214,31 +214,21 @@ namespace BerichtManager.ThemeManagement
 			}
 		}
 
+		/// <summary>
+		/// Draws a check box using <see cref="CustomTreeNode.CheckStatuses"/> as tri state value
+		/// </summary>
+		/// <param name="graphics"><see cref="Graphics"/> object to paint check box on</param>
+		/// <param name="bounds">Place to draw check box in <paramref name="graphics"/></param>
+		/// <param name="status"><see cref="CustomTreeNode.CheckStatuses"/> status of check box</param>
 		private void DrawCheckBox(Graphics graphics, Rectangle bounds, CustomTreeNode.CheckStatuses status)
 		{
-			using (Brush backColor = new SolidBrush(CheckBoxBackColor))
-				graphics.FillRectangle(backColor, bounds);
-			int checkBoxBorderWidth = 2;
-			float checkWidth = 1.5f;
 			float barWidth = 1.5f;
-
-			using (Pen outline = new Pen(CheckBoxOutlineColor, checkBoxBorderWidth))
-				graphics.DrawRectangle(outline, bounds);
-			switch (status)
+			DrawCheckBox(graphics, bounds, status == CustomTreeNode.CheckStatuses.Checked);
+			if (status != CustomTreeNode.CheckStatuses.Partial)
+				return;
+			using (Pen partial = new Pen(CheckColor, barWidth))
 			{
-				case CustomTreeNode.CheckStatuses.Checked:
-					using (Pen check = new Pen(CheckColor, checkWidth))
-					{
-						graphics.DrawLine(check, new Point(bounds.X + 2, bounds.Y + 7), new Point(bounds.X + 4, bounds.Y + 9));
-						graphics.DrawLine(check, new Point(bounds.X + 5, bounds.Y + 9), new Point(bounds.X + 5 + 5, bounds.Y + 9 - 5));
-					}
-					break;
-				case CustomTreeNode.CheckStatuses.Partial:
-					using (Pen partial = new Pen(CheckColor, barWidth))
-					{
-						graphics.DrawLine(partial, new Point(bounds.X + 2, bounds.Y + bounds.Height / 2 + (int)barWidth / 2), new Point(bounds.X + 5 + 5, bounds.Y + bounds.Height / 2 + (int)barWidth / 2));
-					}
-					break;
+				graphics.DrawLine(partial, new Point(bounds.X + 2, bounds.Y + bounds.Height / 2 + (int)barWidth / 2), new Point(bounds.X + 5 + 5, bounds.Y + bounds.Height / 2 + (int)barWidth / 2));
 			}
 		}
 
