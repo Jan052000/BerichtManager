@@ -64,7 +64,7 @@ namespace BerichtManager.Config
 			{"Name", (Type.GetType("System.String"), "")},
 			{"Font", (Type.GetType("System.String"), "Arial")},
 			{"EditorFontSize", (Type.GetType("System.Single"), 8.25f)},
-			{"LastReportWeekOfYear", (Type.GetType("System.Int32"), new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday) - 1)},
+			{"LastReportWeekOfYear", (Type.GetType("System.Int32"), new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, MainForm.DateTimeFormatInfo.CalendarWeekRule, MainForm.DateTimeFormatInfo.FirstDayOfWeek) - 1)},
 			{"StayLoggedIn", (Type.GetType("System.Boolean"), false)},
 			{"UseCustomPrefix", (Type.GetType("System.Boolean"), false)},
 			{"CustomPrefix", (Type.GetType("System.String"), "-")},

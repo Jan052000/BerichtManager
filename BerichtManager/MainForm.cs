@@ -49,7 +49,8 @@ namespace BerichtManager
 		/// Directory containing all reports
 		/// </summary>
 		private DirectoryInfo Info { get; set; }
-		private CultureInfo Culture { get; } = new CultureInfo("de-DE");
+		public static CultureInfo Culture { get; } = new CultureInfo("de-DE");
+		public static DateTimeFormatInfo DateTimeFormatInfo => Culture.DateTimeFormat;
 		private int TvReportsMaxWidth { get; set; } = 50;
 		/// <summary>
 		/// If a word document is opened
@@ -384,8 +385,7 @@ namespace BerichtManager
 			}
 			try
 			{
-				DateTimeFormatInfo dfi = Culture.DateTimeFormat;
-				int weekOfYear = Culture.Calendar.GetWeekOfYear(baseDate, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+				int weekOfYear = Culture.Calendar.GetWeekOfYear(baseDate, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
 				ldoc = app.Documents.Add(Template: templatePath);
 
 				if (!FormFieldHandler.ValidFormFieldCount(ldoc))
@@ -627,8 +627,7 @@ namespace BerichtManager
 		/// <param name="vacation">Passed on to <see cref="CreateDocument(string, DateTime, Word.Application, bool, int, bool)"/> for if you were on vacation</param>
 		private void CreateMissing(bool vacation = false)
 		{
-			DateTimeFormatInfo dfi = Culture.DateTimeFormat;
-			int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+			int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
 			int reportNr = ConfigHandler.LastReportWeekOfYear;
 
 			if (ConfigHandler.LastReportWeekOfYear < weekOfYear)
@@ -643,17 +642,17 @@ namespace BerichtManager
 			else
 			{
 				//Missing missing reports over multiple years
-				int nrOfWeeksLastYear = Culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+				int nrOfWeeksLastYear = Culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
 				DateTime lastDecemberLastDay = new DateTime(DateTime.Today.Year - 1, 12, 31);
 				DateTime thisWeekStart = lastDecemberLastDay.AddDays(-(int)lastDecemberLastDay.DayOfWeek + 1);
 				DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
 				if (ConfigHandler.EndWeekOnFriday)
 					thisWeekEnd = thisWeekEnd.AddDays(-2);
 
-				int weekOfCurrentYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+				int weekOfCurrentYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
 
 				int repeats = nrOfWeeksLastYear - reportNr + weekOfCurrentYear;
-				if (Culture.Calendar.GetWeekOfYear(lastDecemberLastDay, dfi.CalendarWeekRule, dfi.FirstDayOfWeek) != Culture.Calendar.GetWeekOfYear(thisWeekEnd, dfi.CalendarWeekRule, dfi.FirstDayOfWeek))
+				if (Culture.Calendar.GetWeekOfYear(lastDecemberLastDay, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek) != Culture.Calendar.GetWeekOfYear(thisWeekEnd, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek))
 					repeats--;
 
 				DateTime today = DateTime.Today.AddDays(-(repeats * 7));
@@ -707,7 +706,7 @@ namespace BerichtManager
 		private int GetDistanceToToday()
 		{
 			int lastReportKW = ConfigHandler.LastReportWeekOfYear;
-			int todaysWeek = Culture.Calendar.GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+			int todaysWeek = Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
 			//Both weeks are in the same year
 			if (lastReportKW <= todaysWeek)
 			{
@@ -716,7 +715,7 @@ namespace BerichtManager
 			//Both weeks are in different years
 			else
 			{
-				int lastWeekOfLastYear = Culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				int lastWeekOfLastYear = Culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
 				return lastWeekOfLastYear - lastReportKW + todaysWeek;
 			}
 		}
@@ -3156,7 +3155,7 @@ namespace BerichtManager
 			var last = downloadedContents.LastOrDefault();
 			if (downloadedContents.Count > 0 && ConfigHandler.ReportNumber < last.Value.Number)
 			{
-				ConfigHandler.LastReportWeekOfYear = Culture.Calendar.GetWeekOfYear(last.Key.StartDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+				ConfigHandler.LastReportWeekOfYear = Culture.Calendar.GetWeekOfYear(last.Key.StartDate, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
 				ConfigHandler.ReportNumber = last.Value.Number;
 				ConfigHandler.LastCreated = newLatestPath;
 			}
