@@ -218,6 +218,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebUntisClient\TimetableClasses.cs" />
     <Compile Include="WebUntisClient\YearDataClasses.cs" />
+    <Compile Include="WordTemplate\FieldAttribute.cs" />
     <Compile Include="WordTemplate\Fields.cs" />
     <Compile Include="WordTemplate\FormField.cs" />
     <Compile Include="WordTemplate\FormFieldHandler.cs" />

@@ -25,6 +25,7 @@ using BerichtManager.IHKClient.ReportContents;
 using BerichtManager.WordTemplate;
 using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.Extensions;
+using System.Reflection;
 
 namespace BerichtManager
 {
@@ -105,6 +106,11 @@ namespace BerichtManager
 			}
 		}
 
+		/// <summary>
+		/// <see cref="List{Fields}"/> of <see cref="Fields"/> that have manually created <see cref="ToolStripMenuItem"/>s
+		/// </summary>
+		private List<Fields> DefaultQuickEditActions => new List<Fields>() { Fields.Work, Fields.School, Fields.Number };
+
 		private ReportNode _OpenedReportNode { get; set; } = null;
 		/// <summary>
 		/// <see cref="ReportNode"/> of report opened for edit in <see cref="WordApp"/>
@@ -132,6 +138,8 @@ namespace BerichtManager
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(ttTips);
+			if (ConfigHandler.AddAllQuickEdits)
+				AddQuickEdits();
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
@@ -1372,6 +1380,18 @@ namespace BerichtManager
 			Edit(FullSelectedPath, field: field, quickEditTitle: title);
 		}
 
+		private void AddQuickEdits()
+		{
+			foreach (Fields field in Enum.GetValues(typeof(Fields)))
+			{
+				if (DefaultQuickEditActions.Contains(field))
+					continue;
+				FieldAttribute attr = typeof(Fields).GetMember(field.ToString()).FirstOrDefault().GetCustomAttribute<FieldAttribute>();
+				string displayName = attr != null ? attr.FieldFormattedName.ToLowerInvariant() : field.ToString().ToLowerInvariant();
+				miQuickEditOptions.DropDownItems.Add(new ToolStripMenuItem($"Edit {displayName}", null, (s, e) => Edit(FullSelectedPath, field: field, quickEditTitle: $"Edit {displayName}")));
+			}
+		}
+
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			bool isInLogs = false;
@@ -1406,7 +1426,6 @@ namespace BerichtManager
 
 		private void btOptions_Click(object sender, EventArgs e)
 		{
-			int tabStops = ConfigHandler.TabStops;
 			OptionMenu optionMenu = new OptionMenu();
 			optionMenu.ActiveThemeChanged += ActiveThemeChanged;
 			optionMenu.ReportFolderChanged += ReportFolderChanged;
