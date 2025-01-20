@@ -2043,7 +2043,7 @@ namespace BerichtManager
 					break;
 				case CreateResults.CreationFailed:
 				case CreateResults.UploadFailed:
-					ThemedMessageBox.Show(text: $"Upload of {reportFilePath} failed, upload was canceled!", title: "Upload failed");
+					ThemedMessageBox.Show(text: $"Upload of {reportFilePath} failed, upload was canceled!{(result.AdditionalInfo != null && result.AdditionalInfo != "" ? $"\n{result.AdditionalInfo}" : "")}", title: "Upload failed");
 					if (closeDoc)
 						doc.Close(SaveChanges: false);
 					OpenAllDocuments(openReports, activePath);

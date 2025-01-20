@@ -16,6 +16,10 @@ namespace BerichtManager.IHKClient
 		/// lfdnr of report on IHK servers
 		/// </summary>
 		public int? LfdNR { get; set; }
+		/// <summary>
+		/// Additional info on result
+		/// </summary>
+		public string AdditionalInfo { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="UploadResult"/> object
@@ -33,10 +37,11 @@ namespace BerichtManager.IHKClient
 		/// Creates a new <see cref="UploadResult"/> object
 		/// </summary>
 		/// <param name="result">Result of upload process</param>
-		public UploadResult(CreateResults result)
+		public UploadResult(CreateResults result, string additionalInfo = "")
 		{
 			Result = result;
 			StartDate = new DateTime();
+			AdditionalInfo = additionalInfo;
 		}
 	}
 }

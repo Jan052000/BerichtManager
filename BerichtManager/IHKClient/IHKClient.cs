@@ -536,7 +536,7 @@ namespace BerichtManager.IHKClient
 			//Post content to create report
 			response = await PostAndRefer("tibrosBB/azubiHeftAdd.jsp", content);
 			if (response.StatusCode != HttpStatusCode.Found && !response.IsSuccessStatusCode)
-				return new UploadResult(CreateResults.UploadFailed);
+				return new UploadResult(CreateResults.UploadFailed, additionalInfo: $"Status code: {response.StatusCode}");
 			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
 				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
