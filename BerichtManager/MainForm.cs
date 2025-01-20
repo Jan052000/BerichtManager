@@ -1862,7 +1862,7 @@ namespace BerichtManager
 				return;
 			}
 
-			StartWaitCursor();
+			UseWaitCursor = true;
 
 			Word.Document doc;
 			bool close = true;
@@ -1877,27 +1877,28 @@ namespace BerichtManager
 			{
 				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
 				doc.Close(SaveChanges: false);
-				EndWaitCursor();
+				UseWaitCursor = false;
 				return;
 			}
 			UploadResult result = await TryUploadReportToIHK(doc);
 			if (result == null)
 			{
-				EndWaitCursor();
+				UseWaitCursor = false;
 				return;
 			}
 
 			//Handle upload result
 			if (HandleUploadResult(result, doc, null, FullSelectedPath, tvReports.SelectedNode.FullPath, new List<string>(), FullSelectedPath, out bool shouldReturn, closeDoc: close) && shouldReturn)
 			{
-				EndWaitCursor();
+				UseWaitCursor = false;
+				ThemedMessageBox.Show(text: $"Uploaded {FullSelectedPath} to IHK.", title: "Upload successful");
 				return;
 			}
 
 			if (close)
 				doc.Close(SaveChanges: false);
 
-			EndWaitCursor();
+			UseWaitCursor = false;
 			UpdateTree();
 		}
 
