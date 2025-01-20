@@ -1351,18 +1351,25 @@ namespace BerichtManager
 
 		private void miQuickEditWork_Click(object sender, EventArgs e)
 		{
-			if (!HasWordStarted()) return;
-
-			SaveOrExit();
-			Edit(FullSelectedPath, field: Fields.Work, quickEditTitle: "Edit work");
+			QuickEdit(Fields.Work, "Edit work");
 		}
 
 		private void miQuickEditSchool_Click(object sender, EventArgs e)
 		{
+			QuickEdit(Fields.School, "Edit school");
+		}
+
+		private void miQuickEditNumber_Click(object sender, EventArgs e)
+		{
+			QuickEdit(Fields.Number, "Edit report number");
+		}
+
+		private void QuickEdit(Fields field, string title)
+		{
 			if (!HasWordStarted()) return;
 
 			SaveOrExit();
-			Edit(FullSelectedPath, field: Fields.School, quickEditTitle: "Edit school");
+			Edit(FullSelectedPath, field: field, quickEditTitle: title);
 		}
 
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
