@@ -1721,14 +1721,14 @@ namespace BerichtManager
 			string activePath = Doc?.FullName ?? "";
 			List<string> openReports = CloseAllReports();
 			ReportChecker checker = new ReportChecker(WordApp);
-			Cursor = Cursors.WaitCursor;
+			UseWaitCursor = true;
 			if (!checker.Check(select.FilteredNode, out List<IReportDiscrepancy> discrepancies, check: check))
 			{
-				Cursor = Cursors.Default;
+				UseWaitCursor = false;
 				OpenAllDocuments(openReports, activePath);
 				return;
 			}
-			Cursor = Cursors.Default;
+			UseWaitCursor = false;
 			OpenAllDocuments(openReports, activePath);
 			if (discrepancies == null)
 				return;
