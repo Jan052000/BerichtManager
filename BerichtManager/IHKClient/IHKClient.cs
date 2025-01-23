@@ -59,6 +59,7 @@ namespace BerichtManager.IHKClient
 			HttpClient = new HttpClient(HttpClientHandler);
 			HttpClientHandler.CookieContainer = CookieContainer;
 			HttpClientHandler.UseCookies = true;
+			HttpClientHandler.AllowAutoRedirect = false;
 			HttpClient.BaseAddress = new Uri(BASEURL);
 			HttpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0");
 		}
@@ -107,7 +108,6 @@ namespace BerichtManager.IHKClient
 		/// <returns><see cref="HttpResponseMessage"/> of request</returns>
 		private async Task<HttpResponseMessage> PostAndRefer(string uri, HttpContent content)
 		{
-			//await Task.Delay(200 + new Random().Next(-50, 50));
 			HttpResponseMessage response = await HttpClient.PostAsync(uri, content);
 			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(uri);
 			return response;
