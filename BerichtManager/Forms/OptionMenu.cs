@@ -17,6 +17,10 @@ namespace BerichtManager.Forms
 		/// </summary>
 		private bool IsDirty { get; set; }
 		/// <summary>
+		/// Internal cache for last tool tip of <see cref="tbNamingPattern"/> on <see cref="toolTip1"/>
+		/// </summary>
+		private string NamingPatternToolTip { get; set; }
+		/// <summary>
 		/// Cache object to reduce number of .Instance in code
 		/// </summary>
 		private ConfigHandler ConfigHandler { get; } = ConfigHandler.Instance;
@@ -62,6 +66,8 @@ namespace BerichtManager.Forms
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(toolTip1);
 			ThemeSetter.SetThemes(ttErrors);
+
+			NamingPatternToolTip = toolTip1.GetToolTip(tbNamingPattern);
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = ConfigHandler.UseCustomPrefix;
 			cbShouldUseUntis.Checked = ConfigHandler.UseWebUntis;
@@ -304,20 +310,15 @@ namespace BerichtManager.Forms
 				return;
 			if (ValidateNamingPattern() is string message)
 			{
-				int durationS = 15;
-				int durationMS = durationS * 1000;
-				ttErrors.Show(message, tbNamingPattern, durationMS);
-				Timer timer = new Timer();
-				timer.Interval = durationMS;
-				timer.Tick += NamingPatternErrorDurationOver;
+				ttErrors.SetToolTip(tbNamingPattern, message);
+				NamingPatternToolTip = toolTip1.GetToolTip(tbNamingPattern);
+				toolTip1.SetToolTip(tbNamingPattern, null);
 			}
-		}
-
-		private void NamingPatternErrorDurationOver(object sender, EventArgs e)
-		{
-			Timer timer = sender as Timer;
-			timer.Stop();
-			ttErrors.SetToolTip(tbNamingPattern, null);
+			else
+			{
+				ttErrors.SetToolTip(tbNamingPattern, null);
+				toolTip1.SetToolTip(tbNamingPattern, NamingPatternToolTip);
+			}
 		}
 
 		/// <summary>
