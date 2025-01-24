@@ -1750,7 +1750,7 @@ namespace BerichtManager
 		{
 			if (!HasWordStarted())
 				return;
-			FolderSelect select = new FolderSelect(tvReports.Nodes[0]);
+			FolderSelect select = new FolderSelect(tvReports.Nodes[0], node => !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0);
 			if (select.ShowDialog() != DialogResult.OK)
 				return;
 			if (select.FilteredNode == null)
