@@ -1374,8 +1374,8 @@ namespace BerichtManager
 
 		private void QuickEdit(Fields field, string title)
 		{
-			if (!HasWordStarted()) return;
-
+			if (!HasWordStarted())
+				return;
 			SaveOrExit();
 			Edit(FullSelectedPath, field: field, quickEditTitle: title);
 		}

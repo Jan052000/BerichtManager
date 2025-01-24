@@ -8,6 +8,7 @@ using BerichtManager.HelperClasses;
 using BerichtManager.Extensions;
 using System.Linq;
 using BerichtManager.OwnControls;
+using System.Reflection;
 
 namespace BerichtManager.WordTemplate
 {
@@ -27,47 +28,10 @@ namespace BerichtManager.WordTemplate
 		private static string FormFieldConfigPath { get; } = Path.Combine(ConfigFolderPath, ConfigFileName);
 
 		/// <summary>
-		/// <see cref="Type"/> of <see cref="int"/>
-		/// </summary>
-		private static Type Int32Type { get; } = typeof(int);
-		/// <summary>
-		/// <see cref="Type"/> of <see cref="string"/>
-		/// </summary>
-		private static Type StringType { get; } = typeof(string);
-		/// <summary>
-		/// <see cref="Type"/> of <see cref="DateTime"/>
-		/// </summary>
-		private static Type DateTimeType { get; } = typeof(DateTime);
-		/// <summary>
-		/// <see cref="Type"/> of <see cref="bool"/>
-		/// </summary>
-		private static Type BooleanType { get; } = typeof(bool);
-
-		/// <summary>
 		/// <see cref="Dictionary{TKey, TValue}"/> containing form field order and <see cref="Type"/>s
 		/// Note that <see cref="Word.FormFields"/> start at index <c>1</c>
 		/// </summary>
 		private Dictionary<Fields, FormField> FormFields { get; set; } = GetInitialConfig();
-
-		/// <summary>
-		/// Holds all known <see cref="Fields"/> and their respective <see cref="Type"/>s
-		/// </summary>
-		private static Dictionary<Fields, Type> FieldTypes
-		{
-			get => new Dictionary<Fields, Type>()
-			{
-				{Fields.Name, Int32Type },
-				{Fields.Number, Int32Type },
-				{Fields.StartDate, DateTimeType },
-				{Fields.EndDate, DateTimeType },
-				{Fields.Year, Int32Type },
-				{Fields.Work, StringType },
-				{Fields.Seminars, StringType },
-				{Fields.School, StringType },
-				{Fields.SignDateYou, DateTimeType },
-				{Fields.SignDateSupervisor, DateTimeType }
-			};
-		}
 
 		/// <summary>
 		/// <see cref="Dictionary{TKey, TValue}"/> to switch an <see cref="object"/> to a respective <see cref="Type"/>
@@ -106,19 +70,27 @@ namespace BerichtManager.WordTemplate
 		/// <returns>Default form fields config</returns>
 		internal static Dictionary<Fields, FormField> GetInitialConfig()
 		{
-			return new Dictionary<Fields, FormField>()
+			Dictionary<Fields, FormField> dict = new Dictionary<Fields, FormField>();
+
+			List<MemberInfo> members = typeof(Fields).GetMembers().Where(member => member.MemberType == MemberTypes.Field && Enum.IsDefined(typeof(Fields), member.Name)).ToList();
+
+			List<Fields> fields = new List<Fields>();
+			foreach (Fields field in Enum.GetValues(typeof(Fields)))
+				fields.Add(field);
+
+			for (int i = 0; i < fields.Count; i++)
 			{
-				{Fields.Name, new FormField(1, FieldTypes[Fields.Name]) },
-				{Fields.Number, new FormField(2, FieldTypes[Fields.Number]) },
-				{Fields.StartDate, new FormField(3, FieldTypes[Fields.StartDate]) },
-				{Fields.EndDate, new FormField(4, FieldTypes[Fields.EndDate]) },
-				{Fields.Year, new FormField(5, FieldTypes[Fields.Year]) },
-				{Fields.Work, new FormField(6, FieldTypes[Fields.Work]) },
-				{Fields.Seminars, new FormField(7, FieldTypes[Fields.Seminars]) },
-				{Fields.School, new FormField(8, FieldTypes[Fields.School]) },
-				{Fields.SignDateYou, new FormField(9, FieldTypes[Fields.SignDateYou]) },
-				{Fields.SignDateSupervisor, new FormField(10, FieldTypes[Fields.SignDateSupervisor]) }
-			};
+				string fieldName = Enum.GetName(typeof(Fields), fields[i]);
+				MemberInfo memberInfo = members.First(m => m.Name == fieldName);
+				FieldsTypeAttribute typeAttr = memberInfo.GetCustomAttribute<FieldsTypeAttribute>();
+				FieldAttribute fieldAttr = memberInfo.GetCustomAttribute<FieldAttribute>();
+				if (fieldName == null)
+					throw new Exception($"{typeof(Fields).Name}.{fieldName} is missing a FieldsTypeAttribute!");
+
+				dict.Add(fields[i], new FormField(i + 1, typeAttr.FieldType, fieldAttr != null ? fieldAttr.FieldFormattedName : fieldName));
+			}
+
+			return dict;
 		}
 
 		/// <summary>
@@ -230,7 +202,7 @@ namespace BerichtManager.WordTemplate
 				throw new ArgumentException($"{newIndex} is an invalid index, Word form fields start at index 1", "newIndex");
 			if (!Instance.FormFields.TryGetValue(field, out FormField form))
 			{
-				FormField newForm = new FormField(index: newIndex, type: FieldTypes[field]);
+				FormField newForm = new FormField(index: newIndex, type: form.FieldType, form.DisplayText);
 				Instance.FormFields.Add(field, newForm);
 			}
 			if (form?.Index == newIndex)
@@ -248,11 +220,12 @@ namespace BerichtManager.WordTemplate
 		public static void UpdateFormFieldIndexes(List<(Fields Field, int Index)> fields)
 		{
 			Dictionary<Fields, FormField> newFormFields = new Dictionary<Fields, FormField>();
-			foreach ((Fields Field, int Index) item in fields)
+			Dictionary<Fields, FormField> initial = GetInitialConfig();
+			foreach ((Fields Field, int Index) in fields)
 			{
-				if (item.Index < 1)
-					throw new ArgumentException($"{item.Index} is an invalid index, Word form fields start at index 1", "newIndex");
-				newFormFields.Add(item.Field, new FormField(item.Index, FieldTypes[item.Field]));
+				if (Index < 1)
+					throw new ArgumentException($"{Index} is an invalid index, Word form fields start at index 1", "newIndex");
+				newFormFields.Add(Field, new FormField(Index, initial[Field].FieldType, initial[Field].DisplayText));
 			}
 
 			Instance.FormFields = newFormFields;

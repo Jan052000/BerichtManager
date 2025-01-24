@@ -220,6 +220,7 @@
     <Compile Include="WebUntisClient\YearDataClasses.cs" />
     <Compile Include="WordTemplate\FieldAttribute.cs" />
     <Compile Include="WordTemplate\Fields.cs" />
+    <Compile Include="WordTemplate\FieldsTypeAttribute.cs" />
     <Compile Include="WordTemplate\FormField.cs" />
     <Compile Include="WordTemplate\FormFieldHandler.cs" />
     <Compile Include="WordTemplate\WordTemplateForm.cs">
