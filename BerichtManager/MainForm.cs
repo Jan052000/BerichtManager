@@ -1388,7 +1388,7 @@ namespace BerichtManager
 					continue;
 				FieldAttribute attr = typeof(Fields).GetMember(field.ToString()).FirstOrDefault().GetCustomAttribute<FieldAttribute>();
 				string displayName = attr != null ? attr.FieldFormattedName.ToLowerInvariant() : field.ToString().ToLowerInvariant();
-				miQuickEditOptions.DropDownItems.Add(new ToolStripMenuItem($"Edit {displayName}", null, (s, e) => Edit(FullSelectedPath, field: field, quickEditTitle: $"Edit {displayName}")));
+				miQuickEditOptions.DropDownItems.Add(new ToolStripMenuItem($"Edit {displayName}", null, (s, e) => QuickEdit(field, $"Edit {displayName}")));
 			}
 		}
 
