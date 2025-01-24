@@ -44,14 +44,14 @@ namespace BerichtManager.HelperClasses
 		/// Creates a new <see cref="Form"/> of <see cref="FolderSelect"/>
 		/// </summary>
 		/// <param name="node">Initial <see cref="CustomTreeNode"/> which represents a <see cref="System.IO.Directory"/></param>
-		/// <param name="filter"><see cref="NodeFilter"/> used to filter <paramref name="node"/> removes nodes if <see langword="true"/> is returned</param>
+		/// <param name="removeFilter"><see cref="NodeFilter"/> used to filter <paramref name="node"/> removes nodes if <see langword="true"/> is returned</param>
 		/// <param name="title">Title of <see cref="FolderSelect"/></param>
-		public FolderSelect(CustomTreeNode node, NodeFilter filter, string title = "")
+		public FolderSelect(CustomTreeNode node, NodeFilter removeFilter, string title = "")
 		{
 			InitializeComponent();
 			Text = title;
 			ThemeSetter.SetThemes(this);
-			FilterNode(AddNode(node), filter);
+			FilterNode(AddNode(node), removeFilter);
 		}
 
 		/// <summary>
