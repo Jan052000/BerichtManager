@@ -86,7 +86,6 @@ namespace BerichtManager.WordTemplate
 				FieldAttribute fieldAttr = memberInfo.GetCustomAttribute<FieldAttribute>();
 				if (fieldName == null)
 					throw new Exception($"{typeof(Fields).Name}.{fieldName} is missing a FieldsTypeAttribute!");
-
 				dict.Add(fields[i], new FormField(i + 1, typeAttr.FieldType, fieldAttr != null ? fieldAttr.FieldFormattedName : fieldName));
 			}
 

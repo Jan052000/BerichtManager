@@ -85,7 +85,6 @@ namespace BerichtManager.Forms
 			tbUpdate.Text = ConfigHandler.PublishPath;
 			tbNamingPattern.Text = ConfigHandler.NamingPattern;
 			cbUseWordWrap.Checked = ConfigHandler.UseWordWrap;
-			cbAddAllQuickEditOptions.Checked = ConfigHandler.AddAllQuickEdits;
 
 			//IHK
 			nudUploadDelay.Value = ConfigHandler.IHKUploadDelay;
@@ -257,7 +256,6 @@ namespace BerichtManager.Forms
 				ConfigHandler.UseWordWrap = cbUseWordWrap.Checked;
 				wordWrapChanged = true;
 			}
-			ConfigHandler.AddAllQuickEdits = cbAddAllQuickEditOptions.Checked;
 			//IHK
 			ConfigHandler.IHKUploadDelay = (int)nudUploadDelay.Value;
 			ConfigHandler.IHKJobField = tbJobField.Text;

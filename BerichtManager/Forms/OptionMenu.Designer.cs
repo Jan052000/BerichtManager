@@ -30,66 +30,65 @@ namespace BerichtManager.Forms
 		{
 			this.components = new System.ComponentModel.Container();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.ttErrors = new System.Windows.Forms.ToolTip(this.components);
-			this.gbIHK = new BerichtManager.OwnControls.ColoredGroupBox();
-			this.cbIHKAutoGetComment = new System.Windows.Forms.CheckBox();
 			this.cbIHKCheckMatchingStartDates = new System.Windows.Forms.CheckBox();
-			this.laIHKBaseUrl = new System.Windows.Forms.Label();
-			this.tbIHKBaseUrl = new System.Windows.Forms.TextBox();
-			this.cbAutoSyncStatusesWithIHK = new System.Windows.Forms.CheckBox();
-			this.laSupervisorMail = new System.Windows.Forms.Label();
 			this.tbSupervisorMail = new System.Windows.Forms.TextBox();
-			this.laJobField = new System.Windows.Forms.Label();
 			this.tbJobField = new System.Windows.Forms.TextBox();
 			this.btIHKLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.nudUploadDelay = new System.Windows.Forms.NumericUpDown();
-			this.laUploadDelay = new System.Windows.Forms.Label();
-			this.gbManagerOptions = new BerichtManager.OwnControls.ColoredGroupBox();
-			this.cbAddAllQuickEditOptions = new System.Windows.Forms.CheckBox();
-			this.cbUseWordWrap = new System.Windows.Forms.CheckBox();
-			this.laFontSize = new System.Windows.Forms.Label();
-			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
-			this.laTabStop = new System.Windows.Forms.Label();
 			this.nudTabStops = new System.Windows.Forms.NumericUpDown();
-			this.laFolder = new System.Windows.Forms.Label();
 			this.cbLegacyEdit = new System.Windows.Forms.CheckBox();
 			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
 			this.btCreateTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.tbUpdate = new System.Windows.Forms.TextBox();
-			this.laTheme = new System.Windows.Forms.Label();
-			this.laUpdate = new System.Windows.Forms.Label();
 			this.btEditTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.tbFolder = new System.Windows.Forms.TextBox();
-			this.gbConfig = new BerichtManager.OwnControls.ColoredGroupBox();
-			this.btFieldsConfig = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
 			this.tbNamingPattern = new System.Windows.Forms.TextBox();
 			this.tbName = new System.Windows.Forms.TextBox();
-			this.laNumber = new System.Windows.Forms.Label();
-			this.laName = new System.Windows.Forms.Label();
 			this.nudNumber = new System.Windows.Forms.NumericUpDown();
-			this.laNamingPattern = new System.Windows.Forms.Label();
 			this.tbTemplate = new System.Windows.Forms.TextBox();
-			this.laTemplate = new System.Windows.Forms.Label();
-			this.gbWebUntis = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.cbShouldUseUntis = new System.Windows.Forms.CheckBox();
 			this.tbSchool = new System.Windows.Forms.TextBox();
 			this.btLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.laSchool = new System.Windows.Forms.Label();
 			this.tbServer = new System.Windows.Forms.TextBox();
-			this.laServer = new System.Windows.Forms.Label();
-			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.cbUseCustomPrefix = new System.Windows.Forms.CheckBox();
 			this.tbCustomPrefix = new System.Windows.Forms.TextBox();
+			this.ttErrors = new System.Windows.Forms.ToolTip(this.components);
+			this.gbIHK = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.cbIHKAutoGetComment = new System.Windows.Forms.CheckBox();
+			this.laIHKBaseUrl = new System.Windows.Forms.Label();
+			this.tbIHKBaseUrl = new System.Windows.Forms.TextBox();
+			this.cbAutoSyncStatusesWithIHK = new System.Windows.Forms.CheckBox();
+			this.laSupervisorMail = new System.Windows.Forms.Label();
+			this.laJobField = new System.Windows.Forms.Label();
+			this.laUploadDelay = new System.Windows.Forms.Label();
+			this.gbManagerOptions = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.cbUseWordWrap = new System.Windows.Forms.CheckBox();
+			this.laFontSize = new System.Windows.Forms.Label();
+			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
+			this.laTabStop = new System.Windows.Forms.Label();
+			this.laFolder = new System.Windows.Forms.Label();
+			this.laTheme = new System.Windows.Forms.Label();
+			this.laUpdate = new System.Windows.Forms.Label();
+			this.gbConfig = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.btFieldsConfig = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.laNumber = new System.Windows.Forms.Label();
+			this.laName = new System.Windows.Forms.Label();
+			this.laNamingPattern = new System.Windows.Forms.Label();
+			this.laTemplate = new System.Windows.Forms.Label();
+			this.gbWebUntis = new BerichtManager.OwnControls.ColoredGroupBox();
+			this.laSchool = new System.Windows.Forms.Label();
+			this.laServer = new System.Windows.Forms.Label();
+			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.gbIHK.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
+			this.gbIHK.SuspendLayout();
 			this.gbManagerOptions.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			this.gbConfig.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
 			this.gbWebUntis.SuspendLayout();
 			this.gbPrefix.SuspendLayout();
 			this.SuspendLayout();
@@ -101,40 +100,6 @@ namespace BerichtManager.Forms
 			this.toolTip1.OwnerDraw = true;
 			this.toolTip1.ReshowDelay = 100;
 			this.toolTip1.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this.toolTip1_Draw);
-			// 
-			// gbIHK
-			// 
-			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbIHK.Controls.Add(this.cbIHKAutoGetComment);
-			this.gbIHK.Controls.Add(this.cbIHKCheckMatchingStartDates);
-			this.gbIHK.Controls.Add(this.laIHKBaseUrl);
-			this.gbIHK.Controls.Add(this.tbIHKBaseUrl);
-			this.gbIHK.Controls.Add(this.cbAutoSyncStatusesWithIHK);
-			this.gbIHK.Controls.Add(this.laSupervisorMail);
-			this.gbIHK.Controls.Add(this.tbSupervisorMail);
-			this.gbIHK.Controls.Add(this.laJobField);
-			this.gbIHK.Controls.Add(this.tbJobField);
-			this.gbIHK.Controls.Add(this.btIHKLogin);
-			this.gbIHK.Controls.Add(this.nudUploadDelay);
-			this.gbIHK.Controls.Add(this.laUploadDelay);
-			this.gbIHK.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbIHK.Location = new System.Drawing.Point(0, 428);
-			this.gbIHK.Name = "gbIHK";
-			this.gbIHK.Size = new System.Drawing.Size(800, 141);
-			this.gbIHK.TabIndex = 6;
-			this.gbIHK.TabStop = false;
-			this.gbIHK.Text = "IHK";
-			// 
-			// cbIHKAutoGetComment
-			// 
-			this.cbIHKAutoGetComment.AutoSize = true;
-			this.cbIHKAutoGetComment.Location = new System.Drawing.Point(487, 118);
-			this.cbIHKAutoGetComment.Name = "cbIHKAutoGetComment";
-			this.cbIHKAutoGetComment.Size = new System.Drawing.Size(194, 17);
-			this.cbIHKAutoGetComment.TabIndex = 11;
-			this.cbIHKAutoGetComment.Text = "Get comment on edit when possible";
-			this.cbIHKAutoGetComment.UseVisualStyleBackColor = true;
-			this.cbIHKAutoGetComment.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
 			// cbIHKCheckMatchingStartDates
 			// 
@@ -149,45 +114,6 @@ namespace BerichtManager.Forms
 			this.cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
 			this.cbIHKCheckMatchingStartDates.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
-			// laIHKBaseUrl
-			// 
-			this.laIHKBaseUrl.AutoSize = true;
-			this.laIHKBaseUrl.Location = new System.Drawing.Point(51, 95);
-			this.laIHKBaseUrl.Name = "laIHKBaseUrl";
-			this.laIHKBaseUrl.Size = new System.Drawing.Size(41, 13);
-			this.laIHKBaseUrl.TabIndex = 7;
-			this.laIHKBaseUrl.Text = "IHK Url";
-			// 
-			// tbIHKBaseUrl
-			// 
-			this.tbIHKBaseUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
-			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
-			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
-			this.tbIHKBaseUrl.TabIndex = 8;
-			this.tbIHKBaseUrl.TextChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// cbAutoSyncStatusesWithIHK
-			// 
-			this.cbAutoSyncStatusesWithIHK.AutoSize = true;
-			this.cbAutoSyncStatusesWithIHK.Location = new System.Drawing.Point(98, 118);
-			this.cbAutoSyncStatusesWithIHK.Name = "cbAutoSyncStatusesWithIHK";
-			this.cbAutoSyncStatusesWithIHK.Size = new System.Drawing.Size(172, 17);
-			this.cbAutoSyncStatusesWithIHK.TabIndex = 9;
-			this.cbAutoSyncStatusesWithIHK.Text = "Sync report statuses on startup";
-			this.cbAutoSyncStatusesWithIHK.UseVisualStyleBackColor = true;
-			this.cbAutoSyncStatusesWithIHK.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// laSupervisorMail
-			// 
-			this.laSupervisorMail.AutoSize = true;
-			this.laSupervisorMail.Location = new System.Drawing.Point(5, 69);
-			this.laSupervisorMail.Name = "laSupervisorMail";
-			this.laSupervisorMail.Size = new System.Drawing.Size(87, 13);
-			this.laSupervisorMail.TabIndex = 5;
-			this.laSupervisorMail.Text = "Supervisor e-mail";
-			// 
 			// tbSupervisorMail
 			// 
 			this.tbSupervisorMail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -198,15 +124,6 @@ namespace BerichtManager.Forms
 			this.tbSupervisorMail.TabIndex = 6;
 			this.toolTip1.SetToolTip(this.tbSupervisorMail, "E-mail of supervisor");
 			this.tbSupervisorMail.TextChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// laJobField
-			// 
-			this.laJobField.AutoSize = true;
-			this.laJobField.Location = new System.Drawing.Point(46, 43);
-			this.laJobField.Name = "laJobField";
-			this.laJobField.Size = new System.Drawing.Size(46, 13);
-			this.laJobField.TabIndex = 3;
-			this.laJobField.Text = "Job field";
 			// 
 			// tbJobField
 			// 
@@ -249,92 +166,6 @@ namespace BerichtManager.Forms
 			this.toolTip1.SetToolTip(this.nudUploadDelay, "Time in ms between report uploads");
 			this.nudUploadDelay.ValueChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
-			// laUploadDelay
-			// 
-			this.laUploadDelay.AutoSize = true;
-			this.laUploadDelay.Location = new System.Drawing.Point(1, 16);
-			this.laUploadDelay.Name = "laUploadDelay";
-			this.laUploadDelay.Size = new System.Drawing.Size(91, 13);
-			this.laUploadDelay.TabIndex = 0;
-			this.laUploadDelay.Text = "Upload delay (ms)";
-			// 
-			// gbManagerOptions
-			// 
-			this.gbManagerOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.gbManagerOptions.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbManagerOptions.Controls.Add(this.cbAddAllQuickEditOptions);
-			this.gbManagerOptions.Controls.Add(this.cbUseWordWrap);
-			this.gbManagerOptions.Controls.Add(this.laFontSize);
-			this.gbManagerOptions.Controls.Add(this.nudFontSize);
-			this.gbManagerOptions.Controls.Add(this.laTabStop);
-			this.gbManagerOptions.Controls.Add(this.nudTabStops);
-			this.gbManagerOptions.Controls.Add(this.laFolder);
-			this.gbManagerOptions.Controls.Add(this.cbLegacyEdit);
-			this.gbManagerOptions.Controls.Add(this.coTheme);
-			this.gbManagerOptions.Controls.Add(this.btCreateTheme);
-			this.gbManagerOptions.Controls.Add(this.tbUpdate);
-			this.gbManagerOptions.Controls.Add(this.laTheme);
-			this.gbManagerOptions.Controls.Add(this.laUpdate);
-			this.gbManagerOptions.Controls.Add(this.btEditTheme);
-			this.gbManagerOptions.Controls.Add(this.tbFolder);
-			this.gbManagerOptions.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbManagerOptions.Location = new System.Drawing.Point(0, 288);
-			this.gbManagerOptions.Name = "gbManagerOptions";
-			this.gbManagerOptions.Size = new System.Drawing.Size(800, 140);
-			this.gbManagerOptions.TabIndex = 5;
-			this.gbManagerOptions.TabStop = false;
-			this.gbManagerOptions.Text = "Manager";
-			// 
-			// cbAddAllQuickEditOptions
-			// 
-			this.cbAddAllQuickEditOptions.AutoSize = true;
-			this.cbAddAllQuickEditOptions.Location = new System.Drawing.Point(264, 117);
-			this.cbAddAllQuickEditOptions.Name = "cbAddAllQuickEditOptions";
-			this.cbAddAllQuickEditOptions.Size = new System.Drawing.Size(144, 17);
-			this.cbAddAllQuickEditOptions.TabIndex = 14;
-			this.cbAddAllQuickEditOptions.Text = "Add all quick edit options";
-			this.toolTip1.SetToolTip(this.cbAddAllQuickEditOptions, "Adds all fields as quick edit optione on restart.");
-			this.cbAddAllQuickEditOptions.UseVisualStyleBackColor = true;
-			this.cbAddAllQuickEditOptions.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// cbUseWordWrap
-			// 
-			this.cbUseWordWrap.AutoSize = true;
-			this.cbUseWordWrap.Location = new System.Drawing.Point(98, 117);
-			this.cbUseWordWrap.Name = "cbUseWordWrap";
-			this.cbUseWordWrap.Size = new System.Drawing.Size(160, 17);
-			this.cbUseWordWrap.TabIndex = 13;
-			this.cbUseWordWrap.Text = "Use word wrap on textboxes";
-			this.cbUseWordWrap.UseVisualStyleBackColor = true;
-			this.cbUseWordWrap.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// laFontSize
-			// 
-			this.laFontSize.AutoSize = true;
-			this.laFontSize.Location = new System.Drawing.Point(391, 15);
-			this.laFontSize.Name = "laFontSize";
-			this.laFontSize.Size = new System.Drawing.Size(49, 13);
-			this.laFontSize.TabIndex = 3;
-			this.laFontSize.Text = "Font size";
-			// 
-			// nudFontSize
-			// 
-			this.nudFontSize.DecimalPlaces = 2;
-			this.nudFontSize.Location = new System.Drawing.Point(446, 12);
-			this.nudFontSize.Name = "nudFontSize";
-			this.nudFontSize.Size = new System.Drawing.Size(120, 20);
-			this.nudFontSize.TabIndex = 4;
-			this.nudFontSize.ValueChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// laTabStop
-			// 
-			this.laTabStop.AutoSize = true;
-			this.laTabStop.Location = new System.Drawing.Point(38, 15);
-			this.laTabStop.Name = "laTabStop";
-			this.laTabStop.Size = new System.Drawing.Size(54, 13);
-			this.laTabStop.TabIndex = 0;
-			this.laTabStop.Text = "Tab stops";
-			// 
 			// nudTabStops
 			// 
 			this.nudTabStops.Location = new System.Drawing.Point(98, 12);
@@ -343,15 +174,6 @@ namespace BerichtManager.Forms
 			this.nudTabStops.TabIndex = 1;
 			this.toolTip1.SetToolTip(this.nudTabStops, "Number of units in each tab");
 			this.nudTabStops.ValueChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// laFolder
-			// 
-			this.laFolder.AutoSize = true;
-			this.laFolder.Location = new System.Drawing.Point(56, 68);
-			this.laFolder.Name = "laFolder";
-			this.laFolder.Size = new System.Drawing.Size(36, 13);
-			this.laFolder.TabIndex = 9;
-			this.laFolder.Text = "Folder";
 			// 
 			// cbLegacyEdit
 			// 
@@ -411,24 +233,6 @@ namespace BerichtManager.Forms
 			this.toolTip1.SetToolTip(this.tbUpdate, "Path to check if an update is available");
 			this.tbUpdate.Click += new System.EventHandler(this.tbUpdate_Click);
 			// 
-			// laTheme
-			// 
-			this.laTheme.AutoSize = true;
-			this.laTheme.Location = new System.Drawing.Point(52, 41);
-			this.laTheme.Name = "laTheme";
-			this.laTheme.Size = new System.Drawing.Size(40, 13);
-			this.laTheme.TabIndex = 5;
-			this.laTheme.Text = "Theme";
-			// 
-			// laUpdate
-			// 
-			this.laUpdate.AutoSize = true;
-			this.laUpdate.Location = new System.Drawing.Point(26, 94);
-			this.laUpdate.Name = "laUpdate";
-			this.laUpdate.Size = new System.Drawing.Size(66, 13);
-			this.laUpdate.TabIndex = 11;
-			this.laUpdate.Text = "Update path";
-			// 
 			// btEditTheme
 			// 
 			this.btEditTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -452,39 +256,6 @@ namespace BerichtManager.Forms
 			this.tbFolder.TabIndex = 10;
 			this.toolTip1.SetToolTip(this.tbFolder, "Path to folder containing reports");
 			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
-			// 
-			// gbConfig
-			// 
-			this.gbConfig.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.gbConfig.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbConfig.Controls.Add(this.btFieldsConfig);
-			this.gbConfig.Controls.Add(this.cbEndOfWeek);
-			this.gbConfig.Controls.Add(this.tbNamingPattern);
-			this.gbConfig.Controls.Add(this.tbName);
-			this.gbConfig.Controls.Add(this.laNumber);
-			this.gbConfig.Controls.Add(this.laName);
-			this.gbConfig.Controls.Add(this.nudNumber);
-			this.gbConfig.Controls.Add(this.laNamingPattern);
-			this.gbConfig.Controls.Add(this.tbTemplate);
-			this.gbConfig.Controls.Add(this.laTemplate);
-			this.gbConfig.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbConfig.Location = new System.Drawing.Point(0, 166);
-			this.gbConfig.Name = "gbConfig";
-			this.gbConfig.Size = new System.Drawing.Size(800, 122);
-			this.gbConfig.TabIndex = 4;
-			this.gbConfig.TabStop = false;
-			this.gbConfig.Text = "Report";
-			// 
-			// btFieldsConfig
-			// 
-			this.btFieldsConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btFieldsConfig.Location = new System.Drawing.Point(713, 41);
-			this.btFieldsConfig.Name = "btFieldsConfig";
-			this.btFieldsConfig.Size = new System.Drawing.Size(75, 23);
-			this.btFieldsConfig.TabIndex = 4;
-			this.btFieldsConfig.Text = "Fields config";
-			this.btFieldsConfig.UseVisualStyleBackColor = true;
-			this.btFieldsConfig.Click += new System.EventHandler(this.btFieldsConfig_Click);
 			// 
 			// cbEndOfWeek
 			// 
@@ -520,24 +291,6 @@ namespace BerichtManager.Forms
 			this.toolTip1.SetToolTip(this.tbName, "Your name (Last name, First name)");
 			this.tbName.TextChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
-			// laNumber
-			// 
-			this.laNumber.AutoSize = true;
-			this.laNumber.Location = new System.Drawing.Point(13, 73);
-			this.laNumber.Name = "laNumber";
-			this.laNumber.Size = new System.Drawing.Size(79, 13);
-			this.laNumber.TabIndex = 5;
-			this.laNumber.Text = "Report Number";
-			// 
-			// laName
-			// 
-			this.laName.AutoSize = true;
-			this.laName.Location = new System.Drawing.Point(57, 19);
-			this.laName.Name = "laName";
-			this.laName.Size = new System.Drawing.Size(35, 13);
-			this.laName.TabIndex = 0;
-			this.laName.Text = "Name";
-			// 
 			// nudNumber
 			// 
 			this.nudNumber.Location = new System.Drawing.Point(98, 70);
@@ -552,15 +305,6 @@ namespace BerichtManager.Forms
 			this.toolTip1.SetToolTip(this.nudNumber, "Number of the next report that will be created");
 			this.nudNumber.ValueChanged += new System.EventHandler(this.MarkAsDirty);
 			// 
-			// laNamingPattern
-			// 
-			this.laNamingPattern.AutoSize = true;
-			this.laNamingPattern.Location = new System.Drawing.Point(13, 99);
-			this.laNamingPattern.Name = "laNamingPattern";
-			this.laNamingPattern.Size = new System.Drawing.Size(79, 13);
-			this.laNamingPattern.TabIndex = 8;
-			this.laNamingPattern.Text = "Naming pattern";
-			// 
 			// tbTemplate
 			// 
 			this.tbTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -572,33 +316,6 @@ namespace BerichtManager.Forms
 			this.tbTemplate.TabIndex = 3;
 			this.toolTip1.SetToolTip(this.tbTemplate, "Path to word template");
 			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
-			// 
-			// laTemplate
-			// 
-			this.laTemplate.AutoSize = true;
-			this.laTemplate.Location = new System.Drawing.Point(41, 47);
-			this.laTemplate.Name = "laTemplate";
-			this.laTemplate.Size = new System.Drawing.Size(51, 13);
-			this.laTemplate.TabIndex = 2;
-			this.laTemplate.Text = "Template";
-			// 
-			// gbWebUntis
-			// 
-			this.gbWebUntis.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.gbWebUntis.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbWebUntis.Controls.Add(this.cbShouldUseUntis);
-			this.gbWebUntis.Controls.Add(this.tbSchool);
-			this.gbWebUntis.Controls.Add(this.btLogin);
-			this.gbWebUntis.Controls.Add(this.laSchool);
-			this.gbWebUntis.Controls.Add(this.tbServer);
-			this.gbWebUntis.Controls.Add(this.laServer);
-			this.gbWebUntis.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbWebUntis.Location = new System.Drawing.Point(0, 72);
-			this.gbWebUntis.Name = "gbWebUntis";
-			this.gbWebUntis.Size = new System.Drawing.Size(800, 94);
-			this.gbWebUntis.TabIndex = 3;
-			this.gbWebUntis.TabStop = false;
-			this.gbWebUntis.Text = "WebUntis";
 			// 
 			// cbShouldUseUntis
 			// 
@@ -634,15 +351,6 @@ namespace BerichtManager.Forms
 			this.btLogin.UseVisualStyleBackColor = true;
 			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
 			// 
-			// laSchool
-			// 
-			this.laSchool.AutoSize = true;
-			this.laSchool.Location = new System.Drawing.Point(23, 71);
-			this.laSchool.Name = "laSchool";
-			this.laSchool.Size = new System.Drawing.Size(69, 13);
-			this.laSchool.TabIndex = 4;
-			this.laSchool.Text = "School name";
-			// 
 			// tbServer
 			// 
 			this.tbServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -653,29 +361,6 @@ namespace BerichtManager.Forms
 			this.tbServer.TabIndex = 3;
 			this.toolTip1.SetToolTip(this.tbServer, "Name of the WebUntis server of your school");
 			this.tbServer.TextChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// laServer
-			// 
-			this.laServer.AutoSize = true;
-			this.laServer.Location = new System.Drawing.Point(6, 45);
-			this.laServer.Name = "laServer";
-			this.laServer.Size = new System.Drawing.Size(86, 13);
-			this.laServer.TabIndex = 2;
-			this.laServer.Text = "Webuntis Server";
-			// 
-			// gbPrefix
-			// 
-			this.gbPrefix.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.gbPrefix.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbPrefix.Controls.Add(this.cbUseCustomPrefix);
-			this.gbPrefix.Controls.Add(this.tbCustomPrefix);
-			this.gbPrefix.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbPrefix.Location = new System.Drawing.Point(0, 0);
-			this.gbPrefix.Name = "gbPrefix";
-			this.gbPrefix.Size = new System.Drawing.Size(800, 72);
-			this.gbPrefix.TabIndex = 2;
-			this.gbPrefix.TabStop = false;
-			this.gbPrefix.Text = "Prefix";
 			// 
 			// cbUseCustomPrefix
 			// 
@@ -700,6 +385,307 @@ namespace BerichtManager.Forms
 			this.tbCustomPrefix.TabIndex = 1;
 			this.toolTip1.SetToolTip(this.tbCustomPrefix, "Prefix to be used in school field");
 			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// gbIHK
+			// 
+			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbIHK.Controls.Add(this.cbIHKAutoGetComment);
+			this.gbIHK.Controls.Add(this.cbIHKCheckMatchingStartDates);
+			this.gbIHK.Controls.Add(this.laIHKBaseUrl);
+			this.gbIHK.Controls.Add(this.tbIHKBaseUrl);
+			this.gbIHK.Controls.Add(this.cbAutoSyncStatusesWithIHK);
+			this.gbIHK.Controls.Add(this.laSupervisorMail);
+			this.gbIHK.Controls.Add(this.tbSupervisorMail);
+			this.gbIHK.Controls.Add(this.laJobField);
+			this.gbIHK.Controls.Add(this.tbJobField);
+			this.gbIHK.Controls.Add(this.btIHKLogin);
+			this.gbIHK.Controls.Add(this.nudUploadDelay);
+			this.gbIHK.Controls.Add(this.laUploadDelay);
+			this.gbIHK.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbIHK.Location = new System.Drawing.Point(0, 428);
+			this.gbIHK.Name = "gbIHK";
+			this.gbIHK.Size = new System.Drawing.Size(800, 141);
+			this.gbIHK.TabIndex = 6;
+			this.gbIHK.TabStop = false;
+			this.gbIHK.Text = "IHK";
+			// 
+			// cbIHKAutoGetComment
+			// 
+			this.cbIHKAutoGetComment.AutoSize = true;
+			this.cbIHKAutoGetComment.Location = new System.Drawing.Point(487, 118);
+			this.cbIHKAutoGetComment.Name = "cbIHKAutoGetComment";
+			this.cbIHKAutoGetComment.Size = new System.Drawing.Size(194, 17);
+			this.cbIHKAutoGetComment.TabIndex = 11;
+			this.cbIHKAutoGetComment.Text = "Get comment on edit when possible";
+			this.cbIHKAutoGetComment.UseVisualStyleBackColor = true;
+			this.cbIHKAutoGetComment.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laIHKBaseUrl
+			// 
+			this.laIHKBaseUrl.AutoSize = true;
+			this.laIHKBaseUrl.Location = new System.Drawing.Point(51, 95);
+			this.laIHKBaseUrl.Name = "laIHKBaseUrl";
+			this.laIHKBaseUrl.Size = new System.Drawing.Size(41, 13);
+			this.laIHKBaseUrl.TabIndex = 7;
+			this.laIHKBaseUrl.Text = "IHK Url";
+			// 
+			// tbIHKBaseUrl
+			// 
+			this.tbIHKBaseUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
+			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
+			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
+			this.tbIHKBaseUrl.TabIndex = 8;
+			this.tbIHKBaseUrl.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// cbAutoSyncStatusesWithIHK
+			// 
+			this.cbAutoSyncStatusesWithIHK.AutoSize = true;
+			this.cbAutoSyncStatusesWithIHK.Location = new System.Drawing.Point(98, 118);
+			this.cbAutoSyncStatusesWithIHK.Name = "cbAutoSyncStatusesWithIHK";
+			this.cbAutoSyncStatusesWithIHK.Size = new System.Drawing.Size(172, 17);
+			this.cbAutoSyncStatusesWithIHK.TabIndex = 9;
+			this.cbAutoSyncStatusesWithIHK.Text = "Sync report statuses on startup";
+			this.cbAutoSyncStatusesWithIHK.UseVisualStyleBackColor = true;
+			this.cbAutoSyncStatusesWithIHK.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laSupervisorMail
+			// 
+			this.laSupervisorMail.AutoSize = true;
+			this.laSupervisorMail.Location = new System.Drawing.Point(5, 69);
+			this.laSupervisorMail.Name = "laSupervisorMail";
+			this.laSupervisorMail.Size = new System.Drawing.Size(87, 13);
+			this.laSupervisorMail.TabIndex = 5;
+			this.laSupervisorMail.Text = "Supervisor e-mail";
+			// 
+			// laJobField
+			// 
+			this.laJobField.AutoSize = true;
+			this.laJobField.Location = new System.Drawing.Point(46, 43);
+			this.laJobField.Name = "laJobField";
+			this.laJobField.Size = new System.Drawing.Size(46, 13);
+			this.laJobField.TabIndex = 3;
+			this.laJobField.Text = "Job field";
+			// 
+			// laUploadDelay
+			// 
+			this.laUploadDelay.AutoSize = true;
+			this.laUploadDelay.Location = new System.Drawing.Point(1, 16);
+			this.laUploadDelay.Name = "laUploadDelay";
+			this.laUploadDelay.Size = new System.Drawing.Size(91, 13);
+			this.laUploadDelay.TabIndex = 0;
+			this.laUploadDelay.Text = "Upload delay (ms)";
+			// 
+			// gbManagerOptions
+			// 
+			this.gbManagerOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.gbManagerOptions.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbManagerOptions.Controls.Add(this.cbUseWordWrap);
+			this.gbManagerOptions.Controls.Add(this.laFontSize);
+			this.gbManagerOptions.Controls.Add(this.nudFontSize);
+			this.gbManagerOptions.Controls.Add(this.laTabStop);
+			this.gbManagerOptions.Controls.Add(this.nudTabStops);
+			this.gbManagerOptions.Controls.Add(this.laFolder);
+			this.gbManagerOptions.Controls.Add(this.cbLegacyEdit);
+			this.gbManagerOptions.Controls.Add(this.coTheme);
+			this.gbManagerOptions.Controls.Add(this.btCreateTheme);
+			this.gbManagerOptions.Controls.Add(this.tbUpdate);
+			this.gbManagerOptions.Controls.Add(this.laTheme);
+			this.gbManagerOptions.Controls.Add(this.laUpdate);
+			this.gbManagerOptions.Controls.Add(this.btEditTheme);
+			this.gbManagerOptions.Controls.Add(this.tbFolder);
+			this.gbManagerOptions.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbManagerOptions.Location = new System.Drawing.Point(0, 288);
+			this.gbManagerOptions.Name = "gbManagerOptions";
+			this.gbManagerOptions.Size = new System.Drawing.Size(800, 140);
+			this.gbManagerOptions.TabIndex = 5;
+			this.gbManagerOptions.TabStop = false;
+			this.gbManagerOptions.Text = "Manager";
+			// 
+			// cbUseWordWrap
+			// 
+			this.cbUseWordWrap.AutoSize = true;
+			this.cbUseWordWrap.Location = new System.Drawing.Point(98, 117);
+			this.cbUseWordWrap.Name = "cbUseWordWrap";
+			this.cbUseWordWrap.Size = new System.Drawing.Size(160, 17);
+			this.cbUseWordWrap.TabIndex = 13;
+			this.cbUseWordWrap.Text = "Use word wrap on textboxes";
+			this.cbUseWordWrap.UseVisualStyleBackColor = true;
+			this.cbUseWordWrap.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laFontSize
+			// 
+			this.laFontSize.AutoSize = true;
+			this.laFontSize.Location = new System.Drawing.Point(391, 15);
+			this.laFontSize.Name = "laFontSize";
+			this.laFontSize.Size = new System.Drawing.Size(49, 13);
+			this.laFontSize.TabIndex = 3;
+			this.laFontSize.Text = "Font size";
+			// 
+			// nudFontSize
+			// 
+			this.nudFontSize.DecimalPlaces = 2;
+			this.nudFontSize.Location = new System.Drawing.Point(446, 12);
+			this.nudFontSize.Name = "nudFontSize";
+			this.nudFontSize.Size = new System.Drawing.Size(120, 20);
+			this.nudFontSize.TabIndex = 4;
+			this.nudFontSize.ValueChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
+			// laTabStop
+			// 
+			this.laTabStop.AutoSize = true;
+			this.laTabStop.Location = new System.Drawing.Point(38, 15);
+			this.laTabStop.Name = "laTabStop";
+			this.laTabStop.Size = new System.Drawing.Size(54, 13);
+			this.laTabStop.TabIndex = 0;
+			this.laTabStop.Text = "Tab stops";
+			// 
+			// laFolder
+			// 
+			this.laFolder.AutoSize = true;
+			this.laFolder.Location = new System.Drawing.Point(56, 68);
+			this.laFolder.Name = "laFolder";
+			this.laFolder.Size = new System.Drawing.Size(36, 13);
+			this.laFolder.TabIndex = 9;
+			this.laFolder.Text = "Folder";
+			// 
+			// laTheme
+			// 
+			this.laTheme.AutoSize = true;
+			this.laTheme.Location = new System.Drawing.Point(52, 41);
+			this.laTheme.Name = "laTheme";
+			this.laTheme.Size = new System.Drawing.Size(40, 13);
+			this.laTheme.TabIndex = 5;
+			this.laTheme.Text = "Theme";
+			// 
+			// laUpdate
+			// 
+			this.laUpdate.AutoSize = true;
+			this.laUpdate.Location = new System.Drawing.Point(26, 94);
+			this.laUpdate.Name = "laUpdate";
+			this.laUpdate.Size = new System.Drawing.Size(66, 13);
+			this.laUpdate.TabIndex = 11;
+			this.laUpdate.Text = "Update path";
+			// 
+			// gbConfig
+			// 
+			this.gbConfig.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.gbConfig.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbConfig.Controls.Add(this.btFieldsConfig);
+			this.gbConfig.Controls.Add(this.cbEndOfWeek);
+			this.gbConfig.Controls.Add(this.tbNamingPattern);
+			this.gbConfig.Controls.Add(this.tbName);
+			this.gbConfig.Controls.Add(this.laNumber);
+			this.gbConfig.Controls.Add(this.laName);
+			this.gbConfig.Controls.Add(this.nudNumber);
+			this.gbConfig.Controls.Add(this.laNamingPattern);
+			this.gbConfig.Controls.Add(this.tbTemplate);
+			this.gbConfig.Controls.Add(this.laTemplate);
+			this.gbConfig.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbConfig.Location = new System.Drawing.Point(0, 166);
+			this.gbConfig.Name = "gbConfig";
+			this.gbConfig.Size = new System.Drawing.Size(800, 122);
+			this.gbConfig.TabIndex = 4;
+			this.gbConfig.TabStop = false;
+			this.gbConfig.Text = "Report";
+			// 
+			// btFieldsConfig
+			// 
+			this.btFieldsConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btFieldsConfig.Location = new System.Drawing.Point(713, 41);
+			this.btFieldsConfig.Name = "btFieldsConfig";
+			this.btFieldsConfig.Size = new System.Drawing.Size(75, 23);
+			this.btFieldsConfig.TabIndex = 4;
+			this.btFieldsConfig.Text = "Fields config";
+			this.btFieldsConfig.UseVisualStyleBackColor = true;
+			this.btFieldsConfig.Click += new System.EventHandler(this.btFieldsConfig_Click);
+			// 
+			// laNumber
+			// 
+			this.laNumber.AutoSize = true;
+			this.laNumber.Location = new System.Drawing.Point(13, 73);
+			this.laNumber.Name = "laNumber";
+			this.laNumber.Size = new System.Drawing.Size(79, 13);
+			this.laNumber.TabIndex = 5;
+			this.laNumber.Text = "Report Number";
+			// 
+			// laName
+			// 
+			this.laName.AutoSize = true;
+			this.laName.Location = new System.Drawing.Point(57, 19);
+			this.laName.Name = "laName";
+			this.laName.Size = new System.Drawing.Size(35, 13);
+			this.laName.TabIndex = 0;
+			this.laName.Text = "Name";
+			// 
+			// laNamingPattern
+			// 
+			this.laNamingPattern.AutoSize = true;
+			this.laNamingPattern.Location = new System.Drawing.Point(13, 99);
+			this.laNamingPattern.Name = "laNamingPattern";
+			this.laNamingPattern.Size = new System.Drawing.Size(79, 13);
+			this.laNamingPattern.TabIndex = 8;
+			this.laNamingPattern.Text = "Naming pattern";
+			// 
+			// laTemplate
+			// 
+			this.laTemplate.AutoSize = true;
+			this.laTemplate.Location = new System.Drawing.Point(41, 47);
+			this.laTemplate.Name = "laTemplate";
+			this.laTemplate.Size = new System.Drawing.Size(51, 13);
+			this.laTemplate.TabIndex = 2;
+			this.laTemplate.Text = "Template";
+			// 
+			// gbWebUntis
+			// 
+			this.gbWebUntis.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.gbWebUntis.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbWebUntis.Controls.Add(this.cbShouldUseUntis);
+			this.gbWebUntis.Controls.Add(this.tbSchool);
+			this.gbWebUntis.Controls.Add(this.btLogin);
+			this.gbWebUntis.Controls.Add(this.laSchool);
+			this.gbWebUntis.Controls.Add(this.tbServer);
+			this.gbWebUntis.Controls.Add(this.laServer);
+			this.gbWebUntis.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbWebUntis.Location = new System.Drawing.Point(0, 72);
+			this.gbWebUntis.Name = "gbWebUntis";
+			this.gbWebUntis.Size = new System.Drawing.Size(800, 94);
+			this.gbWebUntis.TabIndex = 3;
+			this.gbWebUntis.TabStop = false;
+			this.gbWebUntis.Text = "WebUntis";
+			// 
+			// laSchool
+			// 
+			this.laSchool.AutoSize = true;
+			this.laSchool.Location = new System.Drawing.Point(23, 71);
+			this.laSchool.Name = "laSchool";
+			this.laSchool.Size = new System.Drawing.Size(69, 13);
+			this.laSchool.TabIndex = 4;
+			this.laSchool.Text = "School name";
+			// 
+			// laServer
+			// 
+			this.laServer.AutoSize = true;
+			this.laServer.Location = new System.Drawing.Point(6, 45);
+			this.laServer.Name = "laServer";
+			this.laServer.Size = new System.Drawing.Size(86, 13);
+			this.laServer.TabIndex = 2;
+			this.laServer.Text = "Webuntis Server";
+			// 
+			// gbPrefix
+			// 
+			this.gbPrefix.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.gbPrefix.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbPrefix.Controls.Add(this.cbUseCustomPrefix);
+			this.gbPrefix.Controls.Add(this.tbCustomPrefix);
+			this.gbPrefix.Dock = System.Windows.Forms.DockStyle.Top;
+			this.gbPrefix.Location = new System.Drawing.Point(0, 0);
+			this.gbPrefix.Name = "gbPrefix";
+			this.gbPrefix.Size = new System.Drawing.Size(800, 72);
+			this.gbPrefix.TabIndex = 2;
+			this.gbPrefix.TabStop = false;
+			this.gbPrefix.Text = "Prefix";
 			// 
 			// btSave
 			// 
@@ -739,16 +725,16 @@ namespace BerichtManager.Forms
 			this.Name = "OptionMenu";
 			this.Text = "OptionMenu";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionMenu_FormClosing);
+			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
 			this.gbIHK.ResumeLayout(false);
 			this.gbIHK.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).EndInit();
 			this.gbManagerOptions.ResumeLayout(false);
 			this.gbManagerOptions.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).EndInit();
 			this.gbConfig.ResumeLayout(false);
 			this.gbConfig.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
 			this.gbWebUntis.ResumeLayout(false);
 			this.gbWebUntis.PerformLayout();
 			this.gbPrefix.ResumeLayout(false);
@@ -811,6 +797,5 @@ namespace BerichtManager.Forms
 		private OwnControls.FocusColoredFlatButton btFieldsConfig;
 		private System.Windows.Forms.ToolTip ttErrors;
 		private System.Windows.Forms.CheckBox cbUseWordWrap;
-		private System.Windows.Forms.CheckBox cbAddAllQuickEditOptions;
 	}
 }

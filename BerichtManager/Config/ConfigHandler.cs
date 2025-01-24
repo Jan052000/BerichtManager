@@ -77,7 +77,6 @@ namespace BerichtManager.Config
 			{"ReportPath", (Type.GetType("System.String"), Path.GetFullPath(".\\.."))},
 			{"PublishPath", (Type.GetType("System.String"), "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
 			{"UseWordWrap", (Type.GetType("System.Boolean"), false)},
-			{"AddAllQuickEdits", (Type.GetType("System.Boolean"), false)},
 			{"TabStops", (Type.GetType("System.Int32"), 20)},
 			{"NamingPattern", (Type.GetType("System.String"), "WochenberichtKW~+CW+~")},
 			{"AutoSyncStatusesWithIHK", (Type.GetType("System.Boolean"), false)},
@@ -406,15 +405,6 @@ namespace BerichtManager.Config
 		{
 			get => GenericGet<bool>("UseWordWrap");
 			set => GenericSet("UseWordWrap", value);
-		}
-
-		/// <summary>
-		/// Wether or not menu items for all quick edit options should be added programmatically
-		/// </summary>
-		public bool AddAllQuickEdits
-		{
-			get => GenericGet<bool>("AddAllQuickEdits");
-			set => GenericSet("AddAllQuickEdits", value);
 		}
 		#endregion
 

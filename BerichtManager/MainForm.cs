@@ -136,10 +136,9 @@ namespace BerichtManager
 		public MainForm()
 		{
 			InitializeComponent();
+			AddQuickEdits();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(ttTips);
-			if (ConfigHandler.AddAllQuickEdits)
-				AddQuickEdits();
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
@@ -1382,14 +1381,30 @@ namespace BerichtManager
 
 		private void AddQuickEdits()
 		{
+			miQuickEditOptions.DropDownItems.Clear();
+			List<(Fields Field, ToolStripItem Item)> toAdd = new List<(Fields, ToolStripItem)>();
 			foreach (KeyValuePair<Fields, FormField> kvp in FormFieldHandler.GetCurrentFields())
 			{
 				Fields field = kvp.Key;
-				if (DefaultQuickEditActions.Contains(field))
-					continue;
+				//if (DefaultQuickEditActions.Contains(field))
+				//	continue;
 				string displayName = kvp.Value.DisplayText;
-				miQuickEditOptions.DropDownItems.Add(new ToolStripMenuItem($"Edit {displayName}", null, (s, e) => QuickEdit(field, $"Edit {displayName}")));
+				toAdd.Add((field, new ToolStripMenuItem($"Edit {displayName}", null, (s, e) => QuickEdit(field, $"Edit {displayName}"))));
 			}
+			toAdd.Sort(new Comparison<(Fields Field, ToolStripItem Item)>((i1, i2) =>
+			{
+				bool i1IsDefault = DefaultQuickEditActions.Contains(i1.Field);
+				bool i2IsDefault = DefaultQuickEditActions.Contains(i2.Field);
+				if (i1IsDefault && i2IsDefault)
+					return DefaultQuickEditActions.IndexOf(i1.Field).CompareTo(DefaultQuickEditActions.IndexOf(i2.Field) * -1);
+				else if (i1IsDefault && !i2IsDefault)
+					return -1;
+				else if (!i1IsDefault && i2IsDefault)
+					return 1;
+				else
+					return 0;
+			}));
+			miQuickEditOptions.DropDownItems.AddRange(toAdd.Select(item => item.Item).ToArray());
 		}
 
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
