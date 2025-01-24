@@ -94,6 +94,15 @@ namespace BerichtManager.WordTemplate
 		}
 
 		/// <summary>
+		/// Generates a clone of the internal form field config
+		/// </summary>
+		/// <returns>Clone of internal form field config</returns>
+		public static Dictionary<Fields, FormField> GetCurrentFields()
+		{
+			return Instance.FormFields.Where(_ => true).ToDictionary(kvp1 => kvp1.Key, kvp2 => kvp2.Value);
+		}
+
+		/// <summary>
 		/// Gets the index of a <see cref="Word.FormField"/> in the template config
 		/// </summary>
 		/// <param name="field"><see cref="Fields"/> value of <see cref="Word.FormField"/> to get index of</param>

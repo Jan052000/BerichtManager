@@ -1382,12 +1382,12 @@ namespace BerichtManager
 
 		private void AddQuickEdits()
 		{
-			foreach (Fields field in Enum.GetValues(typeof(Fields)))
+			foreach (KeyValuePair<Fields, FormField> kvp in FormFieldHandler.GetCurrentFields())
 			{
+				Fields field = kvp.Key;
 				if (DefaultQuickEditActions.Contains(field))
 					continue;
-				FieldAttribute attr = typeof(Fields).GetMember(field.ToString()).FirstOrDefault().GetCustomAttribute<FieldAttribute>();
-				string displayName = attr != null ? attr.FieldFormattedName.ToLowerInvariant() : field.ToString().ToLowerInvariant();
+				string displayName = kvp.Value.DisplayText;
 				miQuickEditOptions.DropDownItems.Add(new ToolStripMenuItem($"Edit {displayName}", null, (s, e) => QuickEdit(field, $"Edit {displayName}")));
 			}
 		}
