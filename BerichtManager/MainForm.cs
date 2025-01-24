@@ -25,7 +25,6 @@ using BerichtManager.IHKClient.ReportContents;
 using BerichtManager.WordTemplate;
 using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.Extensions;
-using System.Reflection;
 
 namespace BerichtManager
 {
@@ -904,7 +903,7 @@ namespace BerichtManager
 						if (stopLoop)
 							break;
 						string value = FormFieldHandler.GetValueFromDoc<string>(selected.Field, Doc);
-						EditForm edit = new EditForm(title: selected.DisplayText, text: value);
+						EditForm edit = new EditForm(title: selected.CheckBoxText, text: value);
 						edit.RefreshConfigs += RefreshConfig;
 						switch (edit.ShowDialog())
 						{

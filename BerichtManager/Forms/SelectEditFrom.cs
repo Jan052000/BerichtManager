@@ -14,11 +14,11 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// <see cref="List{T}"/> of <see cref="Fields"/> selected for edit
 		/// </summary>
-		public List<SelectedField> SelectedFields { get; set; }
+		public List<SelectedField> SelectedFields { get; set; } = new List<SelectedField>();
 		/// <summary>
 		/// Count of checked <see cref="CheckBox"/>es
 		/// </summary>
-		private int Count = 0;
+		private int Count { get; set; } = 0;
 
 		/// <summary>
 		/// Creates a new <see cref="SelectEditFrom"/> object
@@ -26,45 +26,40 @@ namespace BerichtManager.Forms
 		public SelectEditFrom()
 		{
 			InitializeComponent();
+			AddCheckBoxes();
 			ThemeSetter.SetThemes(this);
-			SelectedFields = new List<SelectedField>();
 			btConfirm.Text = "Close";
 		}
 
-		private void btClose_Click(object sender, EventArgs e)
+		/// <summary>
+		/// Creates <see cref="CheckBox"/>es for active form fields in <see cref="FormFieldHandler"/> and adds them to <see cref="flpCheckBoxes"/>
+		/// </summary>
+		private void AddCheckBoxes()
 		{
-			DialogResult = DialogResult.Cancel;
-			Close();
+			foreach (KeyValuePair<Fields, FormField> kvp in FormFieldHandler.GetCurrentFields())
+			{
+				CheckBox cb = new CheckBox();
+				cb.CheckedChanged += CbCheckedChanged;
+				cb.Text = $"Edit {kvp.Value.DisplayText.ToLowerInvariant()}";
+				cb.Tag = kvp.Key;
+				flpCheckBoxes.Controls.Add(cb);
+			}
 		}
 
 		private void btConfirm_Click(object sender, EventArgs e)
 		{
-			AddToResult(cbEditName, Fields.Name, "Enter your name");
-			AddToResult(cbEditNumber, Fields.Number, "Edit report nr.");
-			AddToResult(cbEditStartDate, Fields.StartDate, "Edit start of week");
-			AddToResult(cbEditEndDate, Fields.EndDate, "Edit end of week");
-			AddToResult(cbEditYear, Fields.Year, "Edit year");
-			AddToResult(cbEditWork, Fields.Work, "Edit work");
-			AddToResult(cbEditSeminars, Fields.Seminars, "Edit seminar");
-			AddToResult(cbEditSchool, Fields.School, "Edit school");
-			AddToResult(cbEditSignY, Fields.SignDateYou, "Edit signdate (you)");
-			AddToResult(cbEditSign, Fields.SignDateSupervisor, "Edit signdate (not you)");
+			foreach (Control control in flpCheckBoxes.Controls)
+			{
+				if (!(control is CheckBox cb))
+					continue;
+				if (cb.Checked && cb.Tag is Fields field)
+					SelectedFields.Add(new SelectedField(field, cb.Text));
+			}
 			DialogResult = DialogResult.OK;
 			Close();
 		}
 
-		/// <summary>
-		/// Adds <paramref name="field"/> to <see cref="SelectedFields"/> if <paramref name="cb"/> is checked
-		/// </summary>
-		/// <param name="cb"><see cref="CheckBox"/> to check</param>
-		/// <param name="field"><see cref="Fields"/> field to add to <see cref="SelectedFields"/> if <paramref name="cb"/> is checked</param>
-		private void AddToResult(CheckBox cb, Fields field, string displayText = "")
-		{
-			if (cb.Checked)
-				SelectedFields.Add(new SelectedField(field, displayText));
-		}
-
-		private void cbChecked_Changed(object sender, EventArgs e)
+		private void CbCheckedChanged(object sender, EventArgs e)
 		{
 			if (((CheckBox)sender).Checked)
 			{
@@ -97,12 +92,12 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// Text that can be used instead of <see cref="Field"/> name
 		/// </summary>
-		public string DisplayText { get; set; }
+		public string CheckBoxText { get; set; }
 
 		public SelectedField(Fields field, string displayText)
 		{
 			this.Field = field;
-			this.DisplayText = displayText;
+			this.CheckBoxText = displayText;
 		}
 	}
 }
