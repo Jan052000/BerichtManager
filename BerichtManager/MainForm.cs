@@ -1921,12 +1921,7 @@ namespace BerichtManager
 			}
 
 			//Handle upload result
-			if (HandleUploadResult(result, doc, null, FullSelectedPath, tvReports.SelectedNode.FullPath, new List<string>(), FullSelectedPath, out bool shouldReturn, closeDoc: close) && shouldReturn)
-			{
-				UseWaitCursor = false;
-				ThemedMessageBox.Show(text: $"Uploaded {FullSelectedPath} to IHK.", title: "Upload successful");
-				return;
-			}
+			HandleUploadResult(result, doc, null, FullSelectedPath, tvReports.SelectedNode.FullPath, new List<string>(), FullSelectedPath, out _, closeDoc: close);
 
 			if (close)
 				doc.Close(SaveChanges: false);
@@ -2042,7 +2037,7 @@ namespace BerichtManager
 		/// </summary>
 		/// <param name="doc"><see cref="Word.Document"/> that is being uploaded</param>
 		/// <param name="result"><see cref="UploadResult"/> of upload process</param>
-		/// <param name="progressForm"><see cref="EventProgressForm"/> to display data on</param>
+		/// <param name="progressForm"><see cref="EventProgressForm"/> to display data on if <see langword="null"/> is provided, a <see cref="ThemedMessageBox"/> will be shown</param>
 		/// <param name="reportFilePath">Path of report file</param>
 		/// <param name="nodePath">Path of report node</param>
 		/// <param name="openReports"><see cref="List{string}"/> of paths of previously open reports</param>
@@ -2053,6 +2048,7 @@ namespace BerichtManager
 		private bool HandleUploadResult(UploadResult result, Word.Document doc, EventProgressForm progressForm, string reportFilePath, string nodePath, List<string> openReports,
 			string activePath, out bool shouldReturn, bool closeDoc = true)
 		{
+			bool res = true;
 			shouldReturn = false;
 			string progressFormNewStatus;
 			bool shouldCallDone = false;
@@ -2067,7 +2063,7 @@ namespace BerichtManager
 					progressFormNewStatus = "Upload successful";
 					break;
 				case CreateResults.Unauthorized:
-					ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
+					//ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
 					if (closeDoc)
 						doc.Close(SaveChanges: false);
 					OpenAllDocuments(openReports, activePath);
@@ -2077,7 +2073,6 @@ namespace BerichtManager
 					break;
 				case CreateResults.CreationFailed:
 				case CreateResults.UploadFailed:
-					ThemedMessageBox.Show(text: $"Upload of {reportFilePath} failed, upload was canceled!{(result.AdditionalInfo != null && result.AdditionalInfo != "" ? $"\n{result.AdditionalInfo}" : "")}", title: "Upload failed");
 					if (closeDoc)
 						doc.Close(SaveChanges: false);
 					OpenAllDocuments(openReports, activePath);
@@ -2086,9 +2081,10 @@ namespace BerichtManager
 					shouldReturn = true;
 					break;
 				default:
-					progressForm.Status = $"Unknown creation result: {result.Result}";
+					progressFormNewStatus = $"Unknown creation result: {result.Result}";
 					shouldReturn = true;
-					return false;
+					res = false;
+					break;
 			}
 			if (progressForm != null)
 			{
@@ -2096,7 +2092,11 @@ namespace BerichtManager
 				if (shouldCallDone)
 					progressForm.Done();
 			}
-			return true;
+			else
+			{
+				ThemedMessageBox.Show(text: progressFormNewStatus, title: "Upload result");
+			}
+			return res;
 		}
 
 		/// <summary>
