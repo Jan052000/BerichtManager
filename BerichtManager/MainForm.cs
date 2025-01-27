@@ -1942,6 +1942,8 @@ namespace BerichtManager
 			return Task.Run(async () =>
 			{
 				bool shouldStop = false;
+				bool aborted = false;
+				int uploaded = 0;
 				progressForm.Stop += () => shouldStop = true;
 
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
@@ -1985,21 +1987,19 @@ namespace BerichtManager
 					if (!FormFieldHandler.ValidFormFieldCount(doc))
 					{
 						progressForm.Status = $"Uploading aborted: Invalid dcument";
-						ThemedMessageBox.Show(text: $"Invalid document, please add missing form fields to {path}.\nUploading is stopped", title: "Invalid document");
+						ThemedMessageBox.Show(text: $"Invalid document, please add missing form fields to {path}.\nAborting upload", title: "Invalid document");
 						doc.Close(SaveChanges: false);
-						OpenAllDocuments(openReports, activePath);
-						progressForm.Done();
-						return;
+						aborted = true;
+						break;
 					}
 					UploadResult result = await TryUploadReportToIHK(doc, ihkReports);
 					if (result == null)
 					{
 						progressForm.Status = $"Uploading aborted: upload failed";
-						ThemedMessageBox.Show(text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
+						ThemedMessageBox.Show(text: $"Upload of {path} failed, aborting upload!", title: "Upload failed");
 						doc.Close(SaveChanges: false);
-						OpenAllDocuments(openReports, activePath);
-						progressForm.Done();
-						return;
+						aborted = true;
+						break;
 					}
 
 					//Handle upload result
@@ -2009,19 +2009,19 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: status, title: "Unexpected result");
 						progressForm.Status = status;
 						doc.Close(SaveChanges: false);
-						OpenAllDocuments(openReports, activePath);
-						progressForm.Done();
-						return;
+						aborted = true;
+						break;
 					}
 					if (uploadSuccess)
 					{
 						progressForm.Status = $"Uploading aborted: upload failed";
-						ThemedMessageBox.Show(text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
+						ThemedMessageBox.Show(text: $"Upload of {path} failed, aborting upload!", title: "Upload failed");
 						doc.Close(SaveChanges: false);
-						OpenAllDocuments(openReports, activePath);
-						progressForm.Done();
-						return;
+						aborted = true;
+						break;
 					}
+
+					uploaded++;
 
 					doc.Close(SaveChanges: false);
 
@@ -2036,14 +2036,24 @@ namespace BerichtManager
 
 				progressForm.Status = "Opening closed reports";
 				OpenAllDocuments(openReports, activePath);
-				progressForm.Status = $"Done";
-				progressForm.Done();
-				string text = "";
-				if (reports.Count == 1)
-					text = "Upload of report was succesful";
+				if (aborted)
+				{
+					ThemedMessageBox.Show(text: $"Upload was aborted, {uploaded} / {reports.Count} reports were uploaded.", title: "Upload was aborted");
+					progressForm.Status = $"Upload aborted, {uploaded} / {reports.Count} uploaded";
+				}
 				else
-					text = $"Upload of all {reports.Count} reports was successful";
-				ThemedMessageBox.Show(text: text, title: "Upload finished");
+				{
+					string text = "";
+					if (reports.Count == 1)
+						text = "Upload of report was succesful.";
+					else if (uploaded != reports.Count)
+						text = $"Upload of {uploaded} / {reports.Count} reports was successful.";
+					else
+						text = $"Upload of all {reports.Count} reports was successful.";
+					ThemedMessageBox.Show(text: text, title: shouldStop ? "Upload stopped" : "Upload finished");
+					progressForm.Status = $"Done";
+				}
+				progressForm.Done();
 				UpdateTree();
 			});
 		}
