@@ -606,8 +606,7 @@ namespace BerichtManager
 						ldoc.Close(SaveChanges: false);
 						break;
 					default:
-						Logger.LogError(ex);
-						ThemedMessageBox.Show(text: ex.StackTrace);
+						ThemedMessageBox.Error(ex);
 						try
 						{
 							ldoc.Close(SaveChanges: false);
@@ -811,9 +810,7 @@ namespace BerichtManager
 					}
 					catch (Exception ex)
 					{
-						Logger.LogError(ex);
-						ThemedMessageBox.Show(text: ex.StackTrace, title: "Error while printing" + filePath);
-						Console.Write(ex.StackTrace);
+						ThemedMessageBox.Error(ex, title: "Error while printing");
 					}
 				});
 			}
@@ -969,9 +966,7 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
 					default:
-						Logger.LogError(ex);
-						ThemedMessageBox.Show(text: ex.StackTrace);
-						Console.Write(ex.StackTrace);
+						ThemedMessageBox.Error(ex);
 						break;
 				}
 			}
@@ -1080,9 +1075,7 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
 					default:
-						Logger.LogError(ex);
-						ThemedMessageBox.Show(text: ex.StackTrace, title: ex.GetType().Name);
-						Console.Write(ex.StackTrace);
+						ThemedMessageBox.Error(ex);
 						break;
 				}
 			}
@@ -1147,9 +1140,7 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
 					default:
-						Logger.LogError(ex);
-						ThemedMessageBox.Show(text: ex.StackTrace);
-						Console.Write(ex.StackTrace);
+						ThemedMessageBox.Error(ex);
 						break;
 				}
 			}
@@ -1248,9 +1239,7 @@ namespace BerichtManager
 			}
 			catch (Exception ex)
 			{
-				Logger.LogError(ex);
-				ThemedMessageBox.Show(text: ex.StackTrace);
-				Console.Write(ex.StackTrace);
+				ThemedMessageBox.Error(ex);
 			}
 		}
 
@@ -1880,7 +1869,7 @@ namespace BerichtManager
 			}
 			catch (Exception ex)
 			{
-				ThemedMessageBox.Show(text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
+				ThemedMessageBox.Error(ex);
 				return null;
 			}
 		}
@@ -2227,7 +2216,7 @@ namespace BerichtManager
 			}
 			catch (Exception ex)
 			{
-				ThemedMessageBox.Show(text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
+				ThemedMessageBox.Error(ex);
 			}
 			return false;
 		}
@@ -2588,7 +2577,7 @@ namespace BerichtManager
 						ThemedMessageBox.Show(text: "A network error has occurred, please check your connection", title: "Network error");
 						return null;
 					default:
-						ThemedMessageBox.Show(text: $"An unexpected exception has occurred, a complete log has been saved to\n{Logger.LogError(ex)}:\n{ex.StackTrace}", title: ex.GetType().Name);
+						ThemedMessageBox.Error(ex);
 						return null;
 				}
 			}

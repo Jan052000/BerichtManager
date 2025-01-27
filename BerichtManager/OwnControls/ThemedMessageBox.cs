@@ -62,13 +62,16 @@ namespace BerichtManager.OwnControls
 		/// <param name="blockExecution">Wether or not execution should wait for user to close the <see cref="ThemedMessageBox"/></param>
 		/// <inheritdoc cref="Show(string, string, MessageBoxButtons, bool)" path="/param"/>
 		/// <param name="createLogFile">Wether or not a file containing the <see cref="Exception"/> should be created</param>
-		public static void Error(Exception ex, bool blockExecution = true, bool allowMessageHighlight = false, bool createLogFile = true, JObject additionalData = null)
+		/// <param name="additionalData">Additional data to display</param>
+		public static void Error(Exception ex, string title = "", bool blockExecution = true, bool allowMessageHighlight = false, bool createLogFile = true, JObject additionalData = null)
 		{
 			string errorMessage = "An unexpected exception has occurred";
 			if (createLogFile)
 				errorMessage += $", a complete log has been saved to\n{Logger.LogError(ex, additionalData: additionalData)}:";
-			errorMessage += $"{ex.GetType().Name}, {ex.Message}: \n{ex.StackTrace}";
-			ThemedMessageBox mb = new ThemedMessageBox(text: errorMessage, title: ex.GetType().Name, allowMessageHighlight: allowMessageHighlight);
+			else
+				errorMessage += ":";
+			errorMessage += $"\n{ex.GetType().Name}, {ex.Message}: \n{ex.StackTrace}";
+			ThemedMessageBox mb = new ThemedMessageBox(text: errorMessage, title: string.IsNullOrEmpty(title) ? ex.GetType().Name : title, allowMessageHighlight: allowMessageHighlight);
 			if (blockExecution)
 				mb.ShowDialog();
 			else

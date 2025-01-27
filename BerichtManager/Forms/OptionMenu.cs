@@ -164,8 +164,7 @@ namespace BerichtManager.Forms
 					}
 					catch (Exception ex)
 					{
-						Logger.LogError(ex);
-						ThemedMessageBox.Show(text: ex.StackTrace);
+						ThemedMessageBox.Error(ex);
 					}
 				}
 			}
@@ -193,8 +192,7 @@ namespace BerichtManager.Forms
 				}
 				catch (Exception ex)
 				{
-					HelperClasses.Logger.LogError(ex);
-					ThemedMessageBox.Show(text: ex.StackTrace);
+					ThemedMessageBox.Error(ex);
 				}
 			}
 			btSave.Enabled = false;

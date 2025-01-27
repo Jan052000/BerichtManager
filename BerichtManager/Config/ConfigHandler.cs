@@ -356,8 +356,7 @@ namespace BerichtManager.Config
 				}
 				catch (Exception e)
 				{
-					string logPath = Logger.LogError(e);
-					ThemedMessageBox.Show(text: "Something went wrong saving the supervisor e-mail, a log was saved to:\n" + logPath, title: "An error occurred");
+					ThemedMessageBox.Error(e);
 				}
 			}
 		}
