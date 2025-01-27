@@ -1915,6 +1915,7 @@ namespace BerichtManager
 			UploadResult result = await TryUploadReportToIHK(doc);
 			if (result == null)
 			{
+				ThemedMessageBox.Show(text: "Upload of report failed", title: "Upload failed");
 				UseWaitCursor = false;
 				return;
 			}
