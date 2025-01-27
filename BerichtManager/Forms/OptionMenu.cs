@@ -1,4 +1,4 @@
-﻿using BerichtManager.Config;
+using BerichtManager.Config;
 using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
@@ -244,9 +244,9 @@ namespace BerichtManager.Forms
 			if (ThemeName != coTheme.Text)
 			{
 				ConfigHandler.ActiveTheme = coTheme.Text;
-				ITheme activeTheme = ThemeManager.Instance.GetTheme(ThemeName);
 				ThemeSetter.SetThemes(this);
 				ThemeSetter.SetThemes(toolTip1);
+				ThemeSetter.SetThemes(ttErrors);
 				activeThemeChanged = true;
 			}
 			if (ConfigHandler.ReportPath != tbFolder.Text)
