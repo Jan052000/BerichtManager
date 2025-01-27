@@ -214,16 +214,16 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// Fetches a <see cref="List{T}"/> of <see cref="UploadedReport"/>s from IHK site
 		/// </summary>
-		/// <returns><see cref="List{T}"/> with found <see cref="UploadedReport"/>s</returns>
+		/// <returns><see cref="List{T}"/> with found <see cref="UploadedReport"/>s or <see langword="null"/> if the operation was not successful</returns>
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<List<UploadedReport>> GetIHKReports()
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
-					return new List<UploadedReport>();
+					return null;
 			HttpResponseMessage response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			if (!response.IsSuccessStatusCode)
-				return new List<UploadedReport>();
+				return null;
 			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
 			List<HtmlElement> reportElements = doc.Body.CSSSelect("div.reihe");
 			ResetTimer();
@@ -266,13 +266,10 @@ namespace BerichtManager.IHKClient
 			lfdnr = null;
 			Regex regex = new Regex(@"(lfdnr=(?<lfdnr>\d+))", RegexOptions.Singleline | RegexOptions.ExplicitCapture);
 			Match match = regex.Match(hRefLink);
-			if (match.Success)
+			if (match.Success && int.TryParse(match.Groups["lfdnr"].Value, out int result))
 			{
-				if (int.TryParse(match.Groups["lfdnr"].Value, out int result))
-				{
-					lfdnr = result;
-					return true;
-				}
+				lfdnr = result;
+				return true;
 			}
 			return false;
 		}

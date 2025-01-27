@@ -1860,6 +1860,8 @@ namespace BerichtManager
 				Report report = ReportTransformer.WordToIHK(doc);
 				if (ihkSiteReportsCache == null)
 					ihkSiteReportsCache = await IHKClient.GetIHKReports();
+				if (ihkSiteReportsCache == null)
+					return null;
 				if (ihkSiteReportsCache.FirstOrDefault(r => r.StartDate.ToString("dd.MM.yyyy") == report.ReportContent.StartDate) is UploadedReport uploadedReport)
 					return new UploadResult(CreateResults.ReportAlreadyUploaded, uploadedReport.StartDate, uploadedReport.LfdNR);
 
@@ -1963,6 +1965,14 @@ namespace BerichtManager
 
 				//Cache IHK report list
 				List<UploadedReport> ihkReports = await IHKClient.GetIHKReports();
+				if (ihkReports == null)
+				{
+					string status = "Unable to fetch list of uploaded reports from IHK, aborting upload!";
+					ThemedMessageBox.Show(text: status, title: "Unable to fetch list of uploaded reports");
+					progressForm.Status = status;
+					progressForm.Done();
+					return;
+				}
 
 				foreach (TreeNode report in reports)
 				{
