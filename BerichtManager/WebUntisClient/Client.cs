@@ -20,25 +20,11 @@ namespace BerichtManager.WebUntisClient
 		/// <summary>
 		/// Server part of the url
 		/// </summary>
-		private string Server { get; set; }
+		private string Server => ConfigHandler.WebUntisServer;
 		/// <summary>
 		/// Name of school in clear text
 		/// </summary>
-		private string SchoolName { get; set; }
-		public Client()
-		{
-			UpdateConfigData();
-		}
-
-		/// <summary>
-		/// Updates the <see cref="Server"/> and <see cref="SchoolName"/> variables
-		/// </summary>
-		private void UpdateConfigData()
-		{
-			//Get school and server
-			SchoolName = ConfigHandler.SchoolName;
-			Server = ConfigHandler.WebUntisServer;
-		}
+		private string SchoolName => ConfigHandler.SchoolName;
 
 		/// <summary>
 		/// Requests time table from WebUntis server
@@ -46,9 +32,8 @@ namespace BerichtManager.WebUntisClient
 		/// <returns>List containing names of classes in time table</returns>
 		public List<string> GetClassesFromWebUntis()
 		{
-			if (!ConfigHandler.UseWebUntis) return new List<string>();
-
-			UpdateConfigData();
+			if (!ConfigHandler.UseWebUntis)
+				return new List<string>();
 
 			List<string> classes = new List<string>();
 
@@ -93,7 +78,6 @@ namespace BerichtManager.WebUntisClient
 					responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(content)).Result;
 				}
 			}
-			//HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 
 			//Set cookie data
 			string newCookie = "schoolname=\"_" + System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
@@ -306,7 +290,6 @@ namespace BerichtManager.WebUntisClient
 		/// <returns><see cref="Holidays"/> object if request was successful or null if not</returns>
 		private Holidays GetHolidays(HttpClient useClient = null)
 		{
-			UpdateConfigData();
 			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
 			HttpClient client;
 			IEnumerable<string> id;
@@ -354,7 +337,6 @@ namespace BerichtManager.WebUntisClient
 					}
 				}
 				responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(loginContent)).Result;
-				//HttpResponseMessage responseMessage = client.GetAsync("https://borys.webuntis.com/WebUntis/j_spring_security_check?school=pictorus-bk&j_username=" + configHandler.LoadUsername() + "&j_password=" + configHandler.LoadPassword()).Result;
 
 				//Set cookie data
 				string newCookie = "schoolname=\"_" + System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
