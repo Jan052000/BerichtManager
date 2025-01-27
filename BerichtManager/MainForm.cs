@@ -2003,8 +2003,25 @@ namespace BerichtManager
 					}
 
 					//Handle upload result
-					if (!HandleUploadResult(result, doc, progressForm, path, nodePath, openReports, activePath, out bool shouldReturn) || shouldReturn)
+					if (!HandleUploadResult(result, doc, progressForm, path, nodePath, openReports, activePath, out bool uploadSuccess))
+					{
+						string status = $"Unexpected upload result: {result.Result}, aborting upload";
+						ThemedMessageBox.Show(text: status, title: "Unexpected result");
+						progressForm.Status = status;
+						doc.Close(SaveChanges: false);
+						OpenAllDocuments(openReports, activePath);
+						progressForm.Done();
 						return;
+					}
+					if (uploadSuccess)
+					{
+						progressForm.Status = $"Uploading aborted: upload failed";
+						ThemedMessageBox.Show(text: $"Upload of {path} failed, upload was canceled!", title: "Upload failed");
+						doc.Close(SaveChanges: false);
+						OpenAllDocuments(openReports, activePath);
+						progressForm.Done();
+						return;
+					}
 
 					doc.Close(SaveChanges: false);
 
@@ -2052,14 +2069,14 @@ namespace BerichtManager
 		/// <param name="nodePath">Path of report node</param>
 		/// <param name="openReports"><see cref="List{string}"/> of paths of previously open reports</param>
 		/// <param name="activePath">Path of last open report</param>
-		/// <param name="shouldReturn"><see langword="true"/> if further execution is advised to return and <see langword="false"/> otherwise</param>
+		/// <param name="uploadSuccess"><see langword="true"/> if further execution is advised to return as upload has failed and <see langword="false"/> otherwise</param>
 		/// <param name="closeDoc">Wether or not <paramref name="doc"/> should be closed if necessary</param>
 		/// <returns><see langword="true"/> if <paramref name="result"/> was handled and <see langword="false"/> otherwise</returns>
 		private bool HandleUploadResult(UploadResult result, Word.Document doc, EventProgressForm progressForm, string reportFilePath, string nodePath, List<string> openReports,
-			string activePath, out bool shouldReturn, bool closeDoc = true)
+			string activePath, out bool uploadSuccess, bool closeDoc = true)
 		{
 			bool res = true;
-			shouldReturn = false;
+			uploadSuccess = false;
 			string progressFormNewStatus;
 			bool shouldCallDone = false;
 			switch (result.Result)
@@ -2079,7 +2096,7 @@ namespace BerichtManager
 					OpenAllDocuments(openReports, activePath);
 					progressFormNewStatus = $"Abort: Unauthorized";
 					shouldCallDone = true;
-					shouldReturn = true;
+					uploadSuccess = true;
 					break;
 				case CreateResults.CreationFailed:
 				case CreateResults.UploadFailed:
@@ -2088,11 +2105,11 @@ namespace BerichtManager
 					OpenAllDocuments(openReports, activePath);
 					progressFormNewStatus = $"Abort: Upload failed";
 					shouldCallDone = true;
-					shouldReturn = true;
+					uploadSuccess = true;
 					break;
 				default:
 					progressFormNewStatus = $"Unknown creation result: {result.Result}";
-					shouldReturn = true;
+					uploadSuccess = true;
 					res = false;
 					break;
 			}
