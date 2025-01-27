@@ -80,7 +80,7 @@ namespace BerichtManager
 		/// <summary>
 		/// Full path to report folder
 		/// </summary>
-		private string ActivePath { get; set; } = Path.GetFullPath(".\\..");
+		private string ActivePath { get => ConfigHandler.ReportPath; }
 
 		/// <summary>
 		/// Status if the word app is running
@@ -141,7 +141,6 @@ namespace BerichtManager
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
-			ActivePath = ConfigHandler.ReportPath;
 			rtbSchool.WordWrap = ConfigHandler.UseWordWrap;
 			rtbWork.WordWrap = ConfigHandler.UseWordWrap;
 			UpdateTree();
