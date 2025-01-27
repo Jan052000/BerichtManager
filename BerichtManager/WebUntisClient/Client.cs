@@ -45,18 +45,17 @@ namespace BerichtManager.WebUntisClient
 			HttpResponseMessage responseMessage;
 			string jSpringURL = "https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check";
 
+			Dictionary<string, string> content;
 			//Generate Headers and Login
 			if (ConfigHandler.WebUntisStayLoggedIn)
 			{
-				//Obtain JSessionId
-				Dictionary<string, string> content = new Dictionary<string, string>()
+				content = new Dictionary<string, string>()
 				{
 					{ "school", SchoolName },
 					{ "j_username", ConfigHandler.WebUntisUsername },
 					{ "j_password", ConfigHandler.WebUntisPassword },
 					{ "token", "" }
 				};
-				responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(content)).Result;
 			}
 			else
 			{
@@ -66,21 +65,19 @@ namespace BerichtManager.WebUntisClient
 					ThemedMessageBox.Show(text: "You need to login to automatically enter classes");
 					return classes;
 				}
-				else
+				content = new Dictionary<string, string>()
 				{
-					Dictionary<string, string> content = new Dictionary<string, string>()
-					{
-						{ "school", SchoolName },
-						{ "j_username", user.Username },
-						{ "j_password", user.Password },
-						{ "token", "" }
-					};
-					responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(content)).Result;
-				}
+					{ "school", SchoolName },
+					{ "j_username", user.Username },
+					{ "j_password", user.Password },
+					{ "token", "" }
+				};
 			}
+			//Obtain JSessionId
+			responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(content)).Result;
 
 			//Set cookie data
-			string newCookie = "schoolname=\"_" + System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
+			string newCookie = "schoolname=\"_" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
 			if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
 			{
 				List<string> cookieHeaders = new List<string>();
@@ -325,21 +322,18 @@ namespace BerichtManager.WebUntisClient
 						ThemedMessageBox.Show(text: "You need to login to automatically enter classes");
 						return null;
 					}
-					else
+					loginContent = new Dictionary<string, string>()
 					{
-						loginContent = new Dictionary<string, string>()
-						{
-							{ "school", SchoolName },
-							{ "j_username", user.Username },
-							{ "j_password", user.Password },
-							{ "token", "" }
-						};
-					}
+						{ "school", SchoolName },
+						{ "j_username", user.Username },
+						{ "j_password", user.Password },
+						{ "token", "" }
+					};
 				}
 				responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(loginContent)).Result;
 
 				//Set cookie data
-				string newCookie = "schoolname=\"_" + System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
+				string newCookie = "schoolname=\"_" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
 				if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
 				{
 					List<string> cookieHeaders = new List<string>();
