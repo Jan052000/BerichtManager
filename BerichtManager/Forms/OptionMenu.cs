@@ -1,4 +1,4 @@
-using BerichtManager.Config;
+﻿using BerichtManager.Config;
 using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
@@ -211,6 +211,7 @@ namespace BerichtManager.Forms
 			bool activeThemeChanged = false;
 			bool wordWrapChanged = false;
 			bool ihkBaseAddressChanged = false;
+			bool reportFolderChanged = false;
 
 			//Prefix
 			ConfigHandler.UseCustomPrefix = cbUseCustomPrefix.Checked;
@@ -251,9 +252,8 @@ namespace BerichtManager.Forms
 			}
 			if (ConfigHandler.ReportPath != tbFolder.Text)
 			{
-				if (ThemedMessageBox.Show(text: "Do you want to switch over imediately?", title: "Change directory?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
-					ReportFolderChanged?.Invoke(this, tbFolder.Text);
 				ConfigHandler.ReportPath = tbFolder.Text;
+				reportFolderChanged = true;
 			}
 			if (ConfigHandler.PublishPath != tbUpdate.Text)
 				ConfigHandler.PublishPath = tbUpdate.Text;
@@ -285,6 +285,8 @@ namespace BerichtManager.Forms
 				UseWordWrapChanged?.Invoke(cbUseWordWrap.Checked);
 			if (ihkBaseAddressChanged)
 				IHKBaseAddressChanged?.Invoke();
+			if (reportFolderChanged)
+				ReportFolderChanged?.Invoke(this, tbFolder.Text);
 		}
 
 		/// <summary>
