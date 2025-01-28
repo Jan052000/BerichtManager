@@ -117,22 +117,22 @@ namespace BerichtManager.UploadChecking
 			bool save = false;
 			if (!GetUploadedReport(path, out UploadedReport report))
 				return;
-			if (report.Status != status && status.HasValue)
+			if (status.HasValue && report.Status != status)
 			{
 				save = true;
 				report.Status = status.Value;
 			}
-			if (report.LfdNR != lfdnr && lfdnr.HasValue)
+			if (lfdnr.HasValue && report.LfdNR != lfdnr)
 			{
 				save = true;
 				report.LfdNR = lfdnr.Value;
 			}
-			if (report.WasEditedLocally != wasEdited && wasEdited.HasValue)
+			if (wasEdited.HasValue && report.WasEditedLocally != wasEdited)
 			{
 				save = true;
 				report.WasEditedLocally = wasEdited.Value;
 			}
-			if (report.WasUpdated != wasUpdated && wasUpdated.HasValue)
+			if (wasUpdated.HasValue && report.WasUpdated != wasUpdated)
 			{
 				save = true;
 				report.WasUpdated = wasUpdated.Value;
