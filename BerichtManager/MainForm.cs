@@ -70,7 +70,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.20.1";
+		public const string VersionNumber = "1.21";
 
 		/// <summary>
 		/// String to be printed
