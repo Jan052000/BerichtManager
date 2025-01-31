@@ -69,9 +69,9 @@ namespace BerichtManager.OwnControls.OwnTreeView
 					CustomNodeDrawer.DrawNodeText(e);
 					break;
 				default:
-					base.OnDrawNode(e);
 					break;
 			}
+			base.OnDrawNode(e);
 		}
 
 		private bool IsAlreadyUpdating { get; set; } = false;
