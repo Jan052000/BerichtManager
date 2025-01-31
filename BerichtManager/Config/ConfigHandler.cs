@@ -54,7 +54,7 @@ namespace BerichtManager.Config
 		/// <summary>
 		/// Holds all values for config with the keys as key and the type and default value as values
 		/// </summary>
-		private Dictionary<string, (Type Type, object DefaultValue)> Config { get; } = new Dictionary<string, (Type, object)>()
+		private Dictionary<string, (Type Type, object DefaultValue)> DefaultConfig { get; } = new Dictionary<string, (Type, object)>()
 		{
 			{"TemplatePath", (Type.GetType("System.String"), "")},
 			{"ReportNR", (Type.GetType("System.Int32"), 1)},
@@ -415,7 +415,7 @@ namespace BerichtManager.Config
 				Directory.CreateDirectory(ConfigFolderPath);
 				File.Create(FullPath).Close();
 				ConfigObject = new JObject();
-				foreach (KeyValuePair<string, (Type Type, object DefaultValue)> kvp in Config)
+				foreach (KeyValuePair<string, (Type Type, object DefaultValue)> kvp in DefaultConfig)
 				{
 					ConfigObject.Add(new JProperty(kvp.Key, Convert.ChangeType(kvp.Value.DefaultValue, kvp.Value.Type)));
 				}
@@ -431,7 +431,7 @@ namespace BerichtManager.Config
 				{
 					ConfigObject = JObject.Parse(File.ReadAllText(FullPath));
 				}
-				foreach (KeyValuePair<string, (Type Type, object DefaultValue)> kvp in Config)
+				foreach (KeyValuePair<string, (Type Type, object DefaultValue)> kvp in DefaultConfig)
 				{
 					if (ConfigObject.ContainsKey(kvp.Key))
 						continue;
@@ -475,19 +475,17 @@ namespace BerichtManager.Config
 				}
 			}
 
-			if (!isComplete)
+			//Clean unused fields
+			List<string> removeFields = new List<string>();
+			foreach (KeyValuePair<string, JToken> kvp in ConfigObject)
 			{
-				//Clean unused fields
-				List<string> removeFields = new List<string>();
-				foreach (KeyValuePair<string, JToken> kvp in ConfigObject)
-				{
-					if (!Config.ContainsKey(kvp.Key))
-						removeFields.Add(kvp.Key);
-				}
-				removeFields.ForEach(field => ConfigObject.Remove(field));
-
-				File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
+				if (!DefaultConfig.ContainsKey(kvp.Key))
+					removeFields.Add(kvp.Key);
 			}
+			removeFields.ForEach(field => ConfigObject.Remove(field));
+
+			if (!isComplete || removeFields.Count > 0)
+				File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
 			IsInitializing = false;
 		}
 
