@@ -1,6 +1,5 @@
 ﻿using BerichtManager.ThemeManagement;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace BerichtManager.OwnControls.OwnTreeView
@@ -79,14 +78,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 
 		protected override void OnAfterCheck(TreeViewEventArgs e)
 		{
-			if (IsAlreadyUpdating)
-				return;
-			if (e.Action == TreeViewAction.Collapse || e.Action == TreeViewAction.Expand)
-			{
-				base.OnAfterCheck(e);
-				return;
-			}
-			if (!(e.Node is CustomTreeNode customNode))
+			if (IsAlreadyUpdating || !(e.Node is CustomTreeNode customNode))
 			{
 				base.OnAfterCheck(e);
 				return;
@@ -105,6 +97,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			}
 			EndUpdate();
 			IsAlreadyUpdating = false;
+			base.OnAfterCheck(e);
 		}
 	}
 }
