@@ -1912,10 +1912,7 @@ namespace BerichtManager
 			}
 
 			//Handle upload result
-			HandleUploadResult(result, doc, null, FullSelectedPath, tvReports.SelectedNode.FullPath, new List<string>(), FullSelectedPath, out _, closeDoc: close);
-
-			if (close)
-				doc.Close(SaveChanges: false);
+			HandleUploadResult(result, doc, null, FullSelectedPath, tvReports.SelectedNode.FullPath, new List<string>(), FullSelectedPath, out _, out _, closeDoc: close);
 
 			UseWaitCursor = false;
 			UpdateTree();
@@ -1992,7 +1989,7 @@ namespace BerichtManager
 					}
 
 					//Handle upload result
-					if (!HandleUploadResult(result, doc, progressForm, path, nodePath, openReports, activePath, out bool uploadSuccess))
+					if (!HandleUploadResult(result, doc, progressForm, path, nodePath, openReports, activePath, out bool uploadFailed, out bool stop, closeDoc: false))
 					{
 						string status = $"Unexpected upload result: {result.Result}, aborting upload";
 						ThemedMessageBox.Show(text: status, title: "Unexpected result");
@@ -2001,13 +1998,20 @@ namespace BerichtManager
 						aborted = true;
 						break;
 					}
-					if (uploadSuccess)
+					if (uploadFailed)
 					{
 						progressForm.Status = $"Uploading aborted: upload failed";
 						ThemedMessageBox.Show(text: $"Upload of {path} failed, aborting upload!", title: "Upload failed");
 						doc.Close(SaveChanges: false);
 						aborted = true;
 						break;
+					}
+					if (stop)
+					{
+						progressForm.Status = $"Uploaded {path}, but unable to get lfdnr from IHK";
+						ThemedMessageBox.Show(text: progressForm.Status, title: "Upload stopped");
+						shouldStop = true;
+						aborted = true;
 					}
 
 					uploaded++;
@@ -2068,14 +2072,16 @@ namespace BerichtManager
 		/// <param name="nodePath">Path of report node</param>
 		/// <param name="openReports"><see cref="List{string}"/> of paths of previously open reports</param>
 		/// <param name="activePath">Path of last open report</param>
-		/// <param name="uploadSuccess"><see langword="true"/> if further execution is advised to return as upload has failed and <see langword="false"/> otherwise</param>
+		/// <param name="uploadFailed"><see langword="true"/> if further execution is advised to return as upload has failed and <see langword="false"/> otherwise</param>
 		/// <param name="closeDoc">Wether or not <paramref name="doc"/> should be closed if necessary</param>
+		/// <param name="shouldStop"><see langword="true"/> if further uploading is disadvised</param>
 		/// <returns><see langword="true"/> if <paramref name="result"/> was handled and <see langword="false"/> otherwise</returns>
 		private bool HandleUploadResult(UploadResult result, Word.Document doc, EventProgressForm progressForm, string reportFilePath, string nodePath, List<string> openReports,
-			string activePath, out bool uploadSuccess, bool closeDoc = true)
+			string activePath, out bool uploadFailed, out bool shouldStop, bool closeDoc = true)
 		{
 			bool res = true;
-			uploadSuccess = false;
+			uploadFailed = true;
+			shouldStop = false;
 			string progressFormNewStatus;
 			bool shouldCallDone = false;
 			switch (result.Result)
@@ -2083,19 +2089,28 @@ namespace BerichtManager
 				case CreateResults.ReportAlreadyUploaded:
 					UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 					progressFormNewStatus = $"Report {reportFilePath} was already uploaded, marking it as uploaded";
+					uploadFailed = false;
 					break;
 				case CreateResults.Success:
 					UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate, lfdNr: result.LfdNR));
 					progressFormNewStatus = "Upload successful";
+					uploadFailed = false;
+					break;
+				case CreateResults.UnableToFetchLFDNR:
+					if (closeDoc)
+						doc.Close(SaveChanges: false);
+					UploadedReports.AddReport(nodePath, new UploadedReport(result.StartDate));
+					progressFormNewStatus = "Unable to read lfdnr from IHK, update manually";
+					uploadFailed = false;
+					shouldStop = true;
 					break;
 				case CreateResults.Unauthorized:
-					//ThemedMessageBox.Show(text: "Session has expired please try again", title: "Session expired");
 					if (closeDoc)
 						doc.Close(SaveChanges: false);
 					OpenAllDocuments(openReports, activePath);
 					progressFormNewStatus = $"Abort: Unauthorized";
 					shouldCallDone = true;
-					uploadSuccess = true;
+					shouldStop = true;
 					break;
 				case CreateResults.CreationFailed:
 				case CreateResults.UploadFailed:
@@ -2104,12 +2119,12 @@ namespace BerichtManager
 					OpenAllDocuments(openReports, activePath);
 					progressFormNewStatus = $"Abort: Upload failed";
 					shouldCallDone = true;
-					uploadSuccess = true;
+					shouldStop = true;
 					break;
 				default:
 					progressFormNewStatus = $"Unknown creation result: {result.Result}";
-					uploadSuccess = true;
 					res = false;
+					shouldStop = true;
 					break;
 			}
 			if (progressForm != null)

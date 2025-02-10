@@ -24,6 +24,10 @@
 		/// <summary>
 		/// Report was already uploaded
 		/// </summary>
-		ReportAlreadyUploaded
+		ReportAlreadyUploaded,
+		/// <summary>
+		/// Report was created but lfdnr could not be read
+		/// </summary>
+		UnableToFetchLFDNR
 	}
 }

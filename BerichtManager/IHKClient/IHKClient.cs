@@ -101,28 +101,27 @@ namespace BerichtManager.IHKClient
 		}
 
 		/// <summary>
-		/// Sends an async post request using <see cref="HttpClient"/> and sets the referer to the <paramref name="uri"/> path
+		/// Sends an async post request using <see cref="HttpClient"/> and sets the referer to the <paramref name="relativePath"/> path
 		/// </summary>
-		/// <param name="uri">Relative path</param>
+		/// <param name="relativePath">Relative path</param>
 		/// <param name="content">Content to be posted</param>
 		/// <returns><see cref="HttpResponseMessage"/> of request</returns>
-		private async Task<HttpResponseMessage> PostAndRefer(string uri, HttpContent content)
+		private async Task<HttpResponseMessage> PostAndRefer(string relativePath, HttpContent content)
 		{
-			HttpResponseMessage response = await HttpClient.PostAsync(uri, content);
-			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(uri);
+			HttpResponseMessage response = await HttpClient.PostAsync(relativePath, content);
+			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(relativePath);
 			return response;
 		}
 
 		/// <summary>
-		/// Sends an async get request using <see cref="HttpClient"/> and sets the referer to the <paramref name="uri"/> path
+		/// Sends an async get request using <see cref="HttpClient"/> and sets the referer to the <paramref name="relativePath"/> path
 		/// </summary>
-		/// <param name="uri">Relative path</param>
+		/// <param name="relativePath">Relative path</param>
 		/// <returns><see cref="HttpResponseMessage"/> of request</returns>
-		private async Task<HttpResponseMessage> GetAndRefer(string uri)
+		private async Task<HttpResponseMessage> GetAndRefer(string relativePath)
 		{
-			//await Task.Delay(200 + new Random().Next(-50, 50));
-			HttpResponseMessage response = await HttpClient.GetAsync(uri);
-			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(uri);
+			HttpResponseMessage response = await HttpClient.GetAsync(relativePath);
+			HttpClient.DefaultRequestHeaders.Referrer = FromRelativeUri(relativePath);
 			return response;
 		}
 
@@ -131,9 +130,15 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <param name="uri">Uri</param>
 		/// <returns><see cref="HttpResponseMessage"/> of request</returns>
-		private async Task<HttpResponseMessage> GetAndRefer(Uri uri)
+		private async Task<HttpResponseMessage> GetAndRefer(Uri uri, int requestPort)
 		{
-			//await Task.Delay(200 + new Random().Next(-50, 50));
+			if (uri.Scheme == Uri.UriSchemeHttp)
+			{
+				UriBuilder builder = new UriBuilder(uri);
+				builder.Scheme = Uri.UriSchemeHttps;
+				builder.Port = requestPort;
+				uri = builder.Uri;
+			}
 			HttpResponseMessage response = await HttpClient.GetAsync(uri);
 			HttpClient.DefaultRequestHeaders.Referrer = uri;
 			return response;
@@ -142,7 +147,6 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// Retrieves and sets the first necessary cookies and referer from IHK
 		/// </summary>
-		/// <param name="path">Relative path to get cookies from</param>
 		/// <returns><see langword="true"/> if cookies were recieved and set, <see langword="false"/> otherwise</returns>
 		private async Task<bool> SetFirstCookie()
 		{
@@ -476,7 +480,7 @@ namespace BerichtManager.IHKClient
 			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
 				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
-				response = await GetAndRefer(response.Headers.Location);
+				response = await GetAndRefer(response.Headers.Location, response.RequestMessage.RequestUri.Port);
 
 			ResetTimer();
 			return true;
@@ -510,7 +514,9 @@ namespace BerichtManager.IHKClient
 				if (!await DoLogin())
 					return new UploadResult(CreateResults.Unauthorized);
 
-			if (!await EnsureReferrer("tibrosBB/azubiHeft.jsp"))
+			string azubiHeftPath = "/tibrosBB/azubiHeft.jsp";
+
+			if (!await EnsureReferrer(azubiHeftPath))
 				return new UploadResult(CreateResults.Unauthorized);
 			HttpResponseMessage response;
 			if (lfdNR.HasValue && lfdNR >= 0)
@@ -534,10 +540,12 @@ namespace BerichtManager.IHKClient
 			response = await PostAndRefer("tibrosBB/azubiHeftAdd.jsp", content);
 			if (response.StatusCode != HttpStatusCode.Found && !response.IsSuccessStatusCode)
 				return new UploadResult(CreateResults.UploadFailed, additionalInfo: $"Status code: {response.StatusCode}");
-			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
-				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
+			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString())/* || response.Headers.Location.LocalPath == azubiHeftPath*/)
+				response = await GetAndRefer(azubiHeftPath);
 			else
-				response = await GetAndRefer(response.Headers.Location);
+				response = await GetAndRefer(response.Headers.Location, response.RequestMessage.RequestUri.Port);
+			if (!response.IsSuccessStatusCode)
+				return new UploadResult(CreateResults.UnableToFetchLFDNR, report.ReportContent.StartDate);
 			int? lfdnr = lfdNR;
 			//Get lfdnr from last report in list as shown in html on IHK site
 			if (!lfdnr.HasValue || lfdnr < 0)
@@ -584,7 +592,7 @@ namespace BerichtManager.IHKClient
 				await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
 			*/
-			await GetAndRefer(response.Headers.Location);
+			await GetAndRefer(response.Headers.Location, response.RequestMessage.RequestUri.Port);
 
 			ResetTimer();
 			return new GetReportResult(GetReportResult.ResultStatuses.Success, report.ReportContent);
