@@ -2312,7 +2312,7 @@ namespace BerichtManager
 				return;
 			}
 
-			UploadedReports.UpdateReport(FullSelectedPath, status: ReportNode.UploadStatuses.HandedIn, wasEdited: false, wasUpdated: true);
+			UploadedReports.UpdateReport(FullSelectedPath, status: ReportNode.UploadStatuses.HandedIn, wasEdited: false, wasUpdated: false);
 			UpdateTree();
 			EndWaitCursor();
 			ThemedMessageBox.Show(text: "Hand in successful", title: "Report handed in");
@@ -2373,7 +2373,7 @@ namespace BerichtManager
 					bool statusIsUploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
 					bool rejectedWasEdited = report?.Status == ReportNode.UploadStatuses.Rejected && (report?.WasEditedLocally).Value;
 					bool emptyNonReportNode = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
-					bool wasUpdated = isUploaded && report.WasUpdated;
+					bool wasUpdated = isUploaded && report.WasUpdated && report?.Status == ReportNode.UploadStatuses.Rejected;
 					return isReport && (!isUploaded || !statusIsUploaded) && !rejectedWasEdited && !wasUpdated || emptyNonReportNode;
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
@@ -2502,7 +2502,7 @@ namespace BerichtManager
 					needsUpdate = true;
 					handedIn++;
 					progressForm.Status = "\t- Updating status";
-					UploadedReports.UpdateReport(nodePath, status: ReportNode.UploadStatuses.HandedIn, wasEdited: false, wasUpdated: true);
+					UploadedReports.UpdateReport(nodePath, status: ReportNode.UploadStatuses.HandedIn, wasEdited: false, wasUpdated: false);
 
 					if (shouldStop)
 					{

@@ -28,7 +28,8 @@ namespace BerichtManager.UploadChecking
 		[DefaultValue(false)]
 		public bool WasEditedLocally { get; set; }
 		/// <summary>
-		/// Marks report as updated
+		/// Marks report as updated<br/>
+		/// (Was introduced as rejected reports with local changes could be updated without handing them in resulting in users not being able to hand them in after)
 		/// </summary>
 		[JsonProperty]
 		[DefaultValue(false)]
