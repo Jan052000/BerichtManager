@@ -85,7 +85,7 @@ namespace BerichtManager
 		/// <summary>
 		/// Status if the word app is running
 		/// </summary>
-		private bool WordIsOpen { get; set; } = false;
+		private bool WordIsOpen = false;
 
 		/// <summary>
 		/// Factory for creating tasks that start word
@@ -152,7 +152,7 @@ namespace BerichtManager
 			UpdateTabStops(this, ConfigHandler.TabStops);
 			if (File.Exists(ConfigHandler.PublishPath) && CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(ConfigHandler.PublishPath).FileVersion) > 0)
 				VersionString += "*";
-			WordTaskFactory.StartNew(RestartWord);
+			WordTaskFactory.StartNew(RestartWordIfNeeded);
 		}
 
 		/// <summary>
@@ -384,6 +384,7 @@ namespace BerichtManager
 		/// <param name="isSingle">Used to tell the method that this is a regular create job</param>
 		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application app, bool vacation = false, int reportDifference = 0, bool isSingle = false)
 		{
+			RestartWordIfNeeded();
 			Word.Document ldoc = null;
 			bool ldocWasSaved = false;
 			if (!File.Exists(templatePath))
@@ -581,7 +582,7 @@ namespace BerichtManager
 					//{"Der Remoteprozeduraufruf ist fehlgeschlagen. (Ausnahme von HRESULT: 0x800706BE)"}
 					case -2147023170:
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please wait while it restarts");
-						RestartWord();
+						RestartWordIfNeeded();
 						if (ldocWasSaved)
 						{
 							ThemedMessageBox.Show(text: "Unable to automatically open report, Word was closed unexpectedly", title: "Loading was cancelled because word closed");
@@ -674,8 +675,6 @@ namespace BerichtManager
 
 		private void btCreate_Click(object sender, EventArgs e)
 		{
-			if (!HasWordStarted()) return;
-
 			//Check if report for this week was already created
 			string docName = NamingPatternResolver.ResolveNameWithExtension(DateTime.Today, ConfigHandler.ReportNumber - 1);
 			if (File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\ " + docName) || File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\Gedruckt\\" + docName))
@@ -729,8 +728,6 @@ namespace BerichtManager
 
 		private void btEdit_Click(object sender, EventArgs e)
 		{
-			if (!HasWordStarted()) return;
-
 			if (DocIsSamePathAsSelected())
 				return;
 			SaveOrExit();
@@ -742,7 +739,7 @@ namespace BerichtManager
 
 		private void btPrintAll_Click(object sender, EventArgs e)
 		{
-			if (!HasWordStarted()) return;
+			RestartWordIfNeeded();
 
 			if (!Directory.Exists(ActivePath)) return;
 			Dictionary<string, List<string>> unPrintedFiles = new Dictionary<string, List<string>>();
@@ -837,6 +834,7 @@ namespace BerichtManager
 				}
 				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 					return;
+				RestartWordIfNeeded();
 				if (!DocIsSamePathAsSelected())
 				{
 					SaveOrExit();
@@ -957,7 +955,7 @@ namespace BerichtManager
 					case -2147467262:
 					case -2146823679:
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
-						RestartWord();
+						RestartWordIfNeeded();
 						break;
 					//case -2146822750:
 					//Document is only one page long
@@ -1039,6 +1037,7 @@ namespace BerichtManager
 					HandleCommentResult(result);
 				}
 
+				RestartWordIfNeeded();
 				Doc = WordApp.Documents.Open(path);
 				if (!FormFieldHandler.ValidFormFieldCount(Doc))
 				{
@@ -1066,7 +1065,7 @@ namespace BerichtManager
 					case -2147467262:
 					case -2146823679:
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
-						RestartWord();
+						RestartWordIfNeeded();
 						break;
 					//case -2146822750:
 					//	//Document is only one page long
@@ -1085,13 +1084,13 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Saves active document
+		/// Saves active document does not close
 		/// </summary>
 		private void SaveFromTb()
 		{
 			try
 			{
-				if (Doc == null || WordApp == null || !WasEdited)
+				if (Doc == null || !CheckIfWordRunning() || !WasEdited)
 					return;
 				//Stop saving of accepted reports
 				if (UploadedReports.GetUploadedReport(Doc.FullName, out UploadedReport report))
@@ -1134,7 +1133,7 @@ namespace BerichtManager
 					case -2147467262:
 					case -2146823679:
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please try again shortly");
-						RestartWord();
+						RestartWordIfNeeded();
 						break;
 					//case -2146822750:
 					//	//Document is one page already
@@ -1158,6 +1157,8 @@ namespace BerichtManager
 			if (Doc == null)
 				return;
 			if (!EditMode)
+				return;
+			if (!CheckIfWordRunning())
 				return;
 
 			if (WasEdited && ThemedMessageBox.Show(text: "Save unsaved changes?", title: "Save?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -1225,6 +1226,7 @@ namespace BerichtManager
 					rtbWork.Text = "";
 					WasEdited = false;
 				};
+				RestartWordIfNeeded();
 				Word.Document document = WordApp.Documents.Open(path, ReadOnly: true);
 				WordApp.Visible = WordVisible;
 				document.PrintOut(Background: false);
@@ -1302,7 +1304,6 @@ namespace BerichtManager
 				return;
 			if (!ReportUtils.IsNameValid(Path.GetFileName(FullSelectedPath)))
 				return;
-			if (!HasWordStarted()) return;
 			if (tvReports.SelectedNode == null)
 				return;
 			if (DocIsSamePathAsSelected())
@@ -1333,16 +1334,12 @@ namespace BerichtManager
 
 		private void miEdit_Click(object sender, EventArgs e)
 		{
-			if (!HasWordStarted()) return;
-
 			SaveOrExit();
 			Edit(FullSelectedPath);
 		}
 
 		private void miPrint_Click(object sender, EventArgs e)
 		{
-			if (!HasWordStarted()) return;
-
 			PrintDocument(FullSelectedPath);
 		}
 
@@ -1363,8 +1360,6 @@ namespace BerichtManager
 
 		private void QuickEdit(Fields field, string title)
 		{
-			if (!HasWordStarted())
-				return;
 			SaveOrExit();
 			Edit(FullSelectedPath, field: field, quickEditTitle: title);
 		}
@@ -1516,12 +1511,25 @@ namespace BerichtManager
 			WasEdited = true;
 		}
 
-
+		private bool internalWordVisibleCheckedChange = false;
 		private void miWordVisible_Click(object sender, EventArgs e)
 		{
+			if (internalWordVisibleCheckedChange)
+			{
+				internalWordVisibleCheckedChange = false;
+				return;
+			}
 			if (CheckIfWordRunning())
+			{
 				WordApp.Visible = miWordVisible.Checked;
-			WordVisible = miWordVisible.Checked;
+				WordVisible = miWordVisible.Checked;
+			}
+			else
+			{
+				internalWordVisibleCheckedChange = true;
+				miWordVisible.Checked = false;
+				WordVisible = false;
+			}
 		}
 
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -1578,8 +1586,9 @@ namespace BerichtManager
 					}
 					if (!ReportUtils.IsNameValid(Path.GetFileName(FullSelectedPath)))
 						return;
-					if (!HasWordStarted()) return;
-					if (DocIsSamePathAsSelected()) return;
+					RestartWordIfNeeded();
+					if (DocIsSamePathAsSelected())
+						return;
 					SaveOrExit();
 					EditInTb(FullSelectedPath);
 					break;
@@ -1627,20 +1636,6 @@ namespace BerichtManager
 			UpdateTree();
 		}
 
-		/// <summary>
-		/// Checks if Word has started
-		/// </summary>
-		/// <returns>Has Word finished starting</returns>
-		private bool HasWordStarted()
-		{
-			if (!CheckIfWordRunning())
-			{
-				ThemedMessageBox.Show(text: "Word is still starting, please try again", title: "Please try again");
-				return false;
-			}
-			return true;
-		}
-
 		private void miRevealInExplorer_Click(object sender, EventArgs e)
 		{
 			if (Directory.Exists(ActivePath))
@@ -1662,6 +1657,7 @@ namespace BerichtManager
 		/// </summary>
 		private void OnWordClose()
 		{
+			Doc = null;
 			WordIsOpen = false;
 		}
 
@@ -1688,7 +1684,7 @@ namespace BerichtManager
 		/// <summary>
 		/// Restarts word if it has been closed
 		/// </summary>
-		private void RestartWord()
+		private void RestartWordIfNeeded()
 		{
 			if (CheckIfWordRunning())
 				return;
@@ -1739,8 +1735,6 @@ namespace BerichtManager
 		/// <param name="check">Kind of check to execute</param>
 		private void CheckDiscrepancies(ReportChecker.CheckKinds check)
 		{
-			if (!HasWordStarted())
-				return;
 			FolderSelect select = new FolderSelect(tvReports.Nodes[0], node => !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0);
 			if (select.ShowDialog() != DialogResult.OK)
 				return;
@@ -1749,17 +1743,18 @@ namespace BerichtManager
 				ThemedMessageBox.Show(text: "No file or folder was selected, check was canceled", title: "No selection was made");
 				return;
 			}
+			RestartWordIfNeeded();
 			string activePath = Doc?.FullName ?? "";
 			List<string> openReports = CloseAllReports();
 			ReportChecker checker = new ReportChecker(WordApp);
-			UseWaitCursor = true;
+			StartWaitCursor();
 			if (!checker.Check(select.FilteredNode, out List<IReportDiscrepancy> discrepancies, check: check))
 			{
-				UseWaitCursor = false;
+				EndWaitCursor();
 				OpenAllDocuments(openReports, activePath);
 				return;
 			}
-			UseWaitCursor = false;
+			EndWaitCursor();
 			OpenAllDocuments(openReports, activePath);
 			if (discrepancies == null)
 				return;
@@ -1802,7 +1797,7 @@ namespace BerichtManager
 				if (path == activePath)
 					this.ExecuteWithInvoke(() => EditInTb(path));
 				else
-					WordApp.Documents.Open(FileName: path);
+					Doc = WordApp.Documents.Open(FileName: path);
 			};
 		}
 
@@ -1879,8 +1874,6 @@ namespace BerichtManager
 
 		private async void miUploadAsNext_Click(object sender, EventArgs e)
 		{
-			if (!HasWordStarted())
-				return;
 			//should not happen as menu item should be disabled
 			if (UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out _))
 			{
@@ -1888,7 +1881,7 @@ namespace BerichtManager
 				return;
 			}
 
-			UseWaitCursor = true;
+			StartWaitCursor();
 
 			Word.Document doc;
 			bool close = true;
@@ -1902,22 +1895,25 @@ namespace BerichtManager
 			if (!FormFieldHandler.ValidFormFieldCount(doc))
 			{
 				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
-				doc.Close(SaveChanges: false);
-				UseWaitCursor = false;
+				if (close)
+					doc.Close(SaveChanges: false);
+				EndWaitCursor();
 				return;
 			}
 			UploadResult result = await TryUploadReportToIHK(doc);
 			if (result == null)
 			{
 				ThemedMessageBox.Show(text: "Upload of report failed", title: "Upload failed");
-				UseWaitCursor = false;
+				if (close)
+					doc.Close(SaveChanges: false);
+				EndWaitCursor();
 				return;
 			}
 
 			//Handle upload result
 			HandleUploadResult(result, doc, null, FullSelectedPath, tvReports.SelectedNode.FullPath, new List<string>(), FullSelectedPath, out _, out _, closeDoc: close);
 
-			UseWaitCursor = false;
+			EndWaitCursor();
 			UpdateTree();
 		}
 
@@ -2056,10 +2052,9 @@ namespace BerichtManager
 
 		private async void UploadSelectionClick(object sender, EventArgs e)
 		{
-			if (!HasWordStarted())
-				return;
 			if (ThemedMessageBox.Show(text: "Warning, this will upload all reports selected in the next window in the order they appear!\nDo you want to proceed?", title: "Caution", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
+			RestartWordIfNeeded();
 			EventProgressForm progressForm = new EventProgressForm("Upload progress");
 			progressForm.Show();
 			await UploadSelection(progressForm);
@@ -2284,7 +2279,7 @@ namespace BerichtManager
 				}
 
 				StartWaitCursor();
-
+				RestartWordIfNeeded();
 				Word.Document doc;
 				if (DocIsSamePathAsSelected())
 					doc = Doc;
@@ -2428,11 +2423,7 @@ namespace BerichtManager
 					//Prevent unsaved changes from being left locally
 					if (report.WasEditedLocally)
 					{
-						if (!CheckIfWordRunning())
-						{
-							ThemedMessageBox.Show(text: "Word has not started yet, hand in was canceled", title: "Hand in canceled");
-							return;
-						}
+						RestartWordIfNeeded();
 						//Check if changes should be uploaded or not
 						if (!updateSet)
 						{
@@ -2547,7 +2538,9 @@ namespace BerichtManager
 				return;
 			EventProgressForm progressForm = new EventProgressForm("Hand in progress");
 			progressForm.Show();
+			StartWaitCursor();
 			await HandInSelection(progressForm);
+			EndWaitCursor();
 		}
 
 		/// <summary>
@@ -2557,7 +2550,7 @@ namespace BerichtManager
 		/// <returns><see cref="Word.Document"/> if document is opened in <see cref="WordApp"/> and <see langword="null"/> otherwise</returns>
 		private Word.Document GetDocumentIfOpen(string path)
 		{
-			if (!HasWordStarted())
+			if (!CheckIfWordRunning())
 				return null;
 			Word.Document document = null;
 			foreach (Word.Document doc in WordApp.Documents)
@@ -2603,8 +2596,6 @@ namespace BerichtManager
 
 		private async void SendReportToIHK(object sender, EventArgs e)
 		{
-			if (!HasWordStarted())
-				return;
 			if (!CheckNetwork())
 			{
 				ThemedMessageBox.Show(text: "No network connection", title: "No connection");
@@ -2622,7 +2613,9 @@ namespace BerichtManager
 			}
 			if (!report.WasEditedLocally)
 				return;
+
 			StartWaitCursor();
+			RestartWordIfNeeded();
 			Word.Document doc;
 			//Prevent word app from showing when opening an already open document
 			bool close = true;
@@ -2666,8 +2659,6 @@ namespace BerichtManager
 
 		private async void SendSelectionToIHK(object sender, EventArgs e)
 		{
-			if (!HasWordStarted())
-				return;
 			if (!CheckNetwork())
 			{
 				ThemedMessageBox.Show(text: "No network connection", title: "No connection");
@@ -2707,6 +2698,7 @@ namespace BerichtManager
 			else
 				progressForm.Status = $"{reportNodes.Count} {(reportNodes.Count == 1 ? "report" : "reports")} were selected";
 
+			RestartWordIfNeeded();
 			progressForm.Status = "Closing all reports";
 			string activePath = Doc?.FullName;
 			List<string> openReports = CloseAllReports();
@@ -2896,16 +2888,13 @@ namespace BerichtManager
 		/// <param name="e"><see cref="EventArgs"/> of event</param>
 		private async void CheckFormat(object sender, EventArgs e)
 		{
-			if (!HasWordStarted())
-				return;
-
 			//Create progress form
 			bool stop = false;
 			EventProgressForm progressForm = new EventProgressForm("Checking formats");
 			progressForm.Stop += () => stop = true;
 			progressForm.Show();
 
-
+			RestartWordIfNeeded();
 			//Close documents
 			progressForm.Status = "Closing open documents";
 			string activePath = Doc?.FullName;
@@ -3068,6 +3057,7 @@ namespace BerichtManager
 			}
 			ReportFinder.FindReports(select.FilteredNode, out List<TreeNode> reportNodes);
 
+			RestartWordIfNeeded();
 			//Index local reports
 			string activePath = Doc?.FullName ?? "";
 			List<string> openReports = CloseAllReports();
