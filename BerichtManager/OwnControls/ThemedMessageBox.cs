@@ -63,9 +63,17 @@ namespace BerichtManager.OwnControls
 		/// <inheritdoc cref="Show(string, string, MessageBoxButtons, bool)" path="/param"/>
 		/// <param name="createLogFile">Wether or not a file containing the <see cref="Exception"/> should be created</param>
 		/// <param name="additionalData">Additional data to display</param>
-		public static void Error(Exception ex, string title = "", bool blockExecution = true, bool allowMessageHighlight = false, bool createLogFile = true, JObject additionalData = null)
+		/// <param name="errorWhileActivity">Description of process that threw the error ("while" is added if not contained in string) e.g. "while editing file..."</param>
+		public static void Error(Exception ex, string title = "", bool blockExecution = true, bool allowMessageHighlight = false, bool createLogFile = true, JObject additionalData = null, string errorWhileActivity = "")
 		{
 			string errorMessage = "An unexpected exception has occurred";
+			if (!string.IsNullOrEmpty(errorWhileActivity))
+			{
+				if (errorWhileActivity.StartsWith("while"))
+					errorMessage += $" {errorWhileActivity}";
+				else
+					errorMessage += $"while {errorWhileActivity}";
+			}
 			if (createLogFile)
 				errorMessage += $", a complete log has been saved to\n{Logger.LogError(ex, additionalData: additionalData)}:";
 			else
