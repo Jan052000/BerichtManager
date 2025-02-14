@@ -1,4 +1,6 @@
-﻿using BerichtManager.OwnControls.OwnTreeView;
+﻿using BerichtManager.HelperClasses;
+using BerichtManager.OwnControls.OwnTreeView;
+using System;
 
 namespace BerichtManager.UploadChecking
 {
@@ -24,6 +26,10 @@ namespace BerichtManager.UploadChecking
 		/// Marks the report as updated
 		/// </summary>
 		public bool WasUpdated { get; set; } = false;
+		/// <summary>
+		/// Last edit time of file represented by node
+		/// </summary>
+		public DateTime? FileLastWriteTime { get; private set; } = null;
 
 		/// <summary>
 		/// Statuses of report on IHK servers
@@ -54,7 +60,10 @@ namespace BerichtManager.UploadChecking
 
 		public ReportNode() : base() { }
 
-		public ReportNode(string text) : base(text) { }
+		public ReportNode(string text = "", DateTime? lastWriteTime = null) : base(text)
+		{
+			FileLastWriteTime = lastWriteTime;
+		}
 
 		public override object Clone()
 		{
@@ -64,6 +73,7 @@ namespace BerichtManager.UploadChecking
 			_this.IsOpened = IsOpened;
 			_this.LfdNr = LfdNr;
 			_this.WasUpdated = WasUpdated;
+			_this.FileLastWriteTime = FileLastWriteTime;
 			return _this;
 		}
 
@@ -77,6 +87,17 @@ namespace BerichtManager.UploadChecking
 			UploadStatus = report.Status;
 			LfdNr = report.LfdNR;
 			WasUpdated = report.WasUpdated;
+		}
+
+		/// <summary>
+		/// Sets tool tip to be displayed
+		/// </summary>
+		public void SetToolTip()
+		{
+			string ttip = $"Status: {UploadStatus}";
+			if (FileLastWriteTime is DateTime dt)
+				ttip += $"\nLast write: {dt.ToString(DateTimeUtils.DATEFORMAT)}";
+			ToolTipText = ttip;
 		}
 	}
 }

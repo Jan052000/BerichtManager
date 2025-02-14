@@ -1,7 +1,7 @@
 ﻿using BerichtManager.OwnControls;
+using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.Properties;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 
 namespace BerichtManager.ThemeManagement
@@ -57,6 +57,8 @@ namespace BerichtManager.ThemeManagement
 					treeView.BackColor = Theme.BackColor;
 					treeView.ForeColor = Theme.ForeColor;
 					treeView.LineColor = Theme.TreeViewDottedLineColor;
+					if (treeView is CustomTreeView ctv && ctv.NodeToolTip != null)
+						SetThemes(ctv.NodeToolTip);
 					break;
 				case Form form:
 					form.BackColor = Theme.BackColor;

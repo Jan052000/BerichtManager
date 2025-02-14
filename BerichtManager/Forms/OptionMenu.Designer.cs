@@ -82,6 +82,7 @@ namespace BerichtManager.Forms
 			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
 			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
 			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
+			this.cbShowReportToolTip = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
@@ -481,6 +482,7 @@ namespace BerichtManager.Forms
 			// 
 			this.gbManagerOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.gbManagerOptions.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+			this.gbManagerOptions.Controls.Add(this.cbShowReportToolTip);
 			this.gbManagerOptions.Controls.Add(this.cbUseWordWrap);
 			this.gbManagerOptions.Controls.Add(this.laFontSize);
 			this.gbManagerOptions.Controls.Add(this.nudFontSize);
@@ -709,6 +711,17 @@ namespace BerichtManager.Forms
 			this.btClose.UseVisualStyleBackColor = true;
 			this.btClose.Click += new System.EventHandler(this.btClose_Click);
 			// 
+			// cbShowReportToolTip
+			// 
+			this.cbShowReportToolTip.AutoSize = true;
+			this.cbShowReportToolTip.Location = new System.Drawing.Point(276, 117);
+			this.cbShowReportToolTip.Name = "cbShowReportToolTip";
+			this.cbShowReportToolTip.Size = new System.Drawing.Size(122, 17);
+			this.cbShowReportToolTip.TabIndex = 14;
+			this.cbShowReportToolTip.Text = "Show report tool tips";
+			this.cbShowReportToolTip.UseVisualStyleBackColor = true;
+			this.cbShowReportToolTip.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			// 
 			// OptionMenu
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -797,5 +810,6 @@ namespace BerichtManager.Forms
 		private OwnControls.FocusColoredFlatButton btFieldsConfig;
 		private System.Windows.Forms.ToolTip ttErrors;
 		private System.Windows.Forms.CheckBox cbUseWordWrap;
+		private System.Windows.Forms.CheckBox cbShowReportToolTip;
 	}
 }

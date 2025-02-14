@@ -1,11 +1,18 @@
 ﻿using BerichtManager.ThemeManagement;
+using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace BerichtManager.OwnControls.OwnTreeView
 {
 	public class CustomTreeView : TreeView
 	{
+		/// <summary>
+		/// Internal cache to remember which <see cref="CustomTreeNode"/> had its tool tip displayed last
+		/// </summary>
+		private CustomTreeNode LastHovered { get; set; }
+
 		/// <inheritdoc cref="CascadeCheckedChanges" path=""/>
 		private bool cascadeCheckedChanges { get; set; } = true;
 		/// <summary>
@@ -24,6 +31,38 @@ namespace BerichtManager.OwnControls.OwnTreeView
 				}
 			}
 		}
+
+		/// <inheritdoc cref="ShowNodeToolTips" path=""/>
+		private bool showNodeToolTips { get; set; } = false;
+		/// <summary>
+		/// Wether or not <see cref="CustomTreeView"/> should show node tool tips
+		/// </summary>
+		[DefaultValue(false)]
+		[Category("Advanced")]
+		public new bool ShowNodeToolTips
+		{
+			get => showNodeToolTips;
+			set
+			{
+				if (showNodeToolTips != value)
+				{
+					showNodeToolTips = value;
+					if (value && NodeToolTip == null)
+						NodeToolTip = new ToolTip();
+					else if (!value)
+					{
+						NodeToolTip?.RemoveAll();
+						NodeToolTip?.Dispose();
+						NodeToolTip = null;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Internal <see cref="ToolTip"/> to display node tool tips
+		/// </summary>
+		internal ToolTip NodeToolTip { get; private set; }
 
 		/// <inheritdoc cref="CustomNodeDrawer" path=""/>
 		private ICustomNodeDrawer customNodeDrawer { get; set; } = new CustomNodeDrawer();
@@ -98,6 +137,54 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			EndUpdate();
 			IsAlreadyUpdating = false;
 			base.OnAfterCheck(e);
+		}
+
+		protected override void OnMouseHover(EventArgs e)
+		{
+			if (ShowNodeToolTips)
+				ShowToolTip();
+			base.OnMouseHover(e);
+		}
+
+		/// <summary>
+		/// Handles showing a new tool tip or removing old one if new hovered node does not have one set
+		/// </summary>
+		private void ShowToolTip()
+		{
+			Point mousePos = PointToClient(MousePosition);
+			Point toolTipPos = new Point(mousePos.X + 2, mousePos.Y + 2);
+			CustomTreeNode node = (CustomTreeNode)GetNodeAt(mousePos);
+			if (LastHovered != node)
+			{
+				if (string.IsNullOrEmpty(node?.ToolTipText))
+				{
+					NodeToolTip?.RemoveAll();
+				}
+				else
+				{
+					NodeToolTip?.RemoveAll();
+					NodeToolTip?.Show(node.ToolTipText, this, toolTipPos);
+				}
+				LastHovered = node;
+			}
+		}
+
+		protected override void OnMouseLeave(EventArgs e)
+		{
+			NodeToolTip?.RemoveAll();
+			LastHovered = null;
+			base.OnMouseLeave(e);
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				NodeToolTip?.RemoveAll();
+				NodeToolTip?.Dispose();
+				NodeToolTip = null;
+			}
+			base.Dispose(disposing);
 		}
 	}
 }

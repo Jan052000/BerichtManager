@@ -311,7 +311,7 @@ namespace BerichtManager
 				directoryNode.Nodes.Add(CreateDirectoryNode(directory));
 			foreach (var file in directoryInfo.GetFiles())
 				if (ReportUtils.IsNameValid(file.Name))
-					directoryNode.Nodes.Add(new ReportNode(file.Name));
+					directoryNode.Nodes.Add(new ReportNode(file.Name, file.LastWriteTime));
 				else
 					directoryNode.Nodes.Add(new CustomTreeNode(file.Name));
 			return directoryNode;
@@ -324,7 +324,10 @@ namespace BerichtManager
 		private void FillReportNodes(TreeNode node)
 		{
 			if (node is ReportNode reportNode && UploadedReports.GetUploadedReport(reportNode.TreeView != null ? reportNode.FullPath : GetFullNodePath(reportNode), out UploadedReport report))
+			{
 				reportNode.SetReportProperties(report);
+				reportNode.SetToolTip();
+			}
 			foreach (TreeNode child in node.Nodes)
 				FillReportNodes(child);
 		}

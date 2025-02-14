@@ -77,6 +77,7 @@ namespace BerichtManager.Config
 			{"ReportPath", (Type.GetType("System.String"), Path.GetFullPath(".\\.."))},
 			{"PublishPath", (Type.GetType("System.String"), "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
 			{"UseWordWrap", (Type.GetType("System.Boolean"), false)},
+			{"ShowReportToolTip", (Type.GetType("System.Boolean"), false)},
 			{"TabStops", (Type.GetType("System.Int32"), 20)},
 			{"NamingPattern", (Type.GetType("System.String"), "WochenberichtKW~+CW+~")},
 			{"AutoSyncStatusesWithIHK", (Type.GetType("System.Boolean"), false)},
@@ -404,6 +405,15 @@ namespace BerichtManager.Config
 		{
 			get => GenericGet<bool>("UseWordWrap");
 			set => GenericSet("UseWordWrap", value);
+		}
+
+		/// <summary>
+		/// Wether or not to display tool tips in file <see cref="TreeView"/>
+		/// </summary>
+		public bool ShowReportToolTip
+		{
+			get => GenericGet<bool>("ShowReportToolTip");
+			set => GenericSet("ShowReportToolTip", value);
 		}
 		#endregion
 

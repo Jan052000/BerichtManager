@@ -91,6 +91,7 @@ namespace BerichtManager.Forms
 			tbUpdate.Text = ConfigHandler.PublishPath;
 			tbNamingPattern.Text = ConfigHandler.NamingPattern;
 			cbUseWordWrap.Checked = ConfigHandler.UseWordWrap;
+			cbShowReportToolTip.Checked = ConfigHandler.ShowReportToolTip;
 
 			//IHK
 			nudUploadDelay.Value = ConfigHandler.IHKUploadDelay;
@@ -260,6 +261,7 @@ namespace BerichtManager.Forms
 				ConfigHandler.UseWordWrap = cbUseWordWrap.Checked;
 				wordWrapChanged = true;
 			}
+			ConfigHandler.ShowReportToolTip = cbShowReportToolTip.Checked;
 			//IHK
 			ConfigHandler.IHKUploadDelay = (int)nudUploadDelay.Value;
 			ConfigHandler.IHKJobField = tbJobField.Text;

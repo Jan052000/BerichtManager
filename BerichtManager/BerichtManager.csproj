@@ -99,6 +99,7 @@
     <Compile Include="Forms\EventProgressForm.Designer.cs">
       <DependentUpon>EventProgressForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="HelperClasses\DateTimeUtils.cs" />
     <Compile Include="HelperClasses\FolderSelect.cs">
       <SubType>Form</SubType>
     </Compile>
