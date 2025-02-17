@@ -739,82 +739,61 @@ namespace BerichtManager
 
 		private void btPrintAll_Click(object sender, EventArgs e)
 		{
-			RestartWordIfNeeded();
-
-			if (!Directory.Exists(ActivePath)) return;
-			Dictionary<string, List<string>> unPrintedFiles = new Dictionary<string, List<string>>();
-			foreach (string dirName in Directory.GetDirectories(ActivePath))
+			try
 			{
-				foreach (string file in Directory.GetFiles(dirName))
+				if (!Directory.Exists(ActivePath))
+					return;
+
+				StartWaitCursor();
+				bool stop = false;
+				EventProgressForm progressForm = new EventProgressForm("Print reports");
+				progressForm.Stop += () => stop = true;
+				progressForm.Show();
+
+				FolderSelect select = new FolderSelect(tvReports.Nodes[0], node =>
 				{
-					if (Path.GetExtension(file) == ".docx")
-					{
-						if (!Directory.Exists(dirName + "\\Gedruckt"))
-						{
-							Directory.CreateDirectory(dirName + "\\Gedruckt");
-						}
-						if (!unPrintedFiles.ContainsKey(dirName))
-						{
-							unPrintedFiles.Add(dirName, new List<string>());
-						}
-						unPrintedFiles[dirName].Add(file);
-					}
+					bool isReport = (node is ReportNode reportNode);
+					bool emptyNonReportNode = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
+					return !isReport && emptyNonReportNode;
+				}, title: "Select reports to print");
+				select.ShowDialog();
+				if (select.DialogResult != DialogResult.OK)
+				{
+					progressForm.Done();
+					return;
 				}
-			}
-			if (unPrintedFiles.Count == 0)
-			{
-				ThemedMessageBox.Show(text: "No unprinted reports found");
-				return;
-			}
 
-			PrintDialog printDialog = new PrintDialog();
-			if (printDialog.ShowDialog() != DialogResult.OK) return;
-			foreach (string key in unPrintedFiles.Keys)
-			{
-				if (unPrintedFiles[key].Contains(ConfigHandler.LastCreated))
+				if (stop)
+					return;
+
+				int printed = 0;
+				ReportFinder.FindReports(select.FilteredNode, out List<TreeNode> reports);
+				foreach (TreeNode node in reports)
 				{
-					if (ThemedMessageBox.Show(text: "Do you want to also print the last created report?\n(" + ConfigHandler.LastCreated + ")", title: "Print last created?", buttons: MessageBoxButtons.YesNo) == DialogResult.No)
-					{
-						unPrintedFiles[key].Remove(ConfigHandler.LastCreated);
-					}
+					if (stop)
+						break;
+					string filePath = GetFullPath(node);
+					string message = PrintReport(filePath) ?? $"Printed {filePath}";
+					progressForm.Status = message;
+					if (message == null)
+						printed++;
 				}
-			}
-			foreach (string key in unPrintedFiles.Keys)
-			{
-				unPrintedFiles[key].ForEach((filePath) =>
-				{
 
-					try
-					{
-						bool isSameAsOpened;
-						if (Doc != null)
-							isSameAsOpened = filePath == Doc.Path + "\\" + Doc.Name;
-						else isSameAsOpened = false;
-						if (isSameAsOpened)
-						{
-							SaveOrExit();
-							rtbSchool.Text = "";
-							rtbWork.Text = "";
-							WasEdited = false;
-						};
-						Word.Document document = WordApp.Documents.Open(FileName: filePath, ReadOnly: true);
-						WordApp.Visible = WordVisible;
-						document.PrintOut(Background: false);
-						document.Close();
-						File.Move(filePath, key + "\\Gedruckt\\" + Path.GetFileName(filePath));
-						string oldRelPath = filePath.Substring(ActivePath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-						List<string> splitPath = oldRelPath.Split(Path.DirectorySeparatorChar).ToList();
-						splitPath.Insert(splitPath.Count - 2, "Gedruckt");
-						var newRelPath = Path.Combine(splitPath.ToArray());
-						UploadedReports.MoveReport(oldRelPath, newRelPath);
-					}
-					catch (Exception ex)
-					{
-						ThemedMessageBox.Error(ex, title: "Error while printing");
-					}
-				});
+				string title = stop ? "Print canceled" : "Print finished";
+				progressForm.Status = title;
+				progressForm.Done();
+				ThemedMessageBox.Show(text: $"Printed {printed} / {reports.Count} reports.", title: title);
+
 			}
-			UpdateTree();
+			catch (Exception ex)
+			{
+				ThemedMessageBox.Error(ex, title: "Print canceled");
+			}
+			finally
+			{
+				UpdateTree();
+				EndWaitCursor();
+			}
 		}
 
 		/// <summary>
@@ -1187,65 +1166,58 @@ namespace BerichtManager
 			}
 		}
 
+		private const string PRINTEDFOLDERNAME = "Gedruckt";
 		/// <summary>
-		/// Method for printing a document located at the path
+		/// Prints a report and moves it into the folder of printed reports
 		/// </summary>
-		/// <param name="path">Path of document to print out</param>
-		private void PrintDocument(string path)
+		/// <param name="path">Path of report to print</param>
+		/// <returns>Result message</returns>
+		private string PrintReport(string path)
 		{
+			if (!Path.IsPathRooted(path))
+				path = Path.Combine(ActivePath, path);
+			if (!File.Exists(path))
+				return "File not found";
 			if (Path.GetExtension(path) != ".docx")
-			{
-				ThemedMessageBox.Show(text: "You may only print Documents(*.docx) files");
-				return;
-			}
-			DirectoryInfo printed = new DirectoryInfo(Path.GetDirectoryName(path));
-			if (printed.Name == "Gedruckt")
-			{
-				if (ThemedMessageBox.Show(text: "Report was already printed do you want to print it again?", title: "Reprint?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
-				{
-					return;
-				}
-			}
-			PrintDialog printDialog = new PrintDialog();
-			if (printDialog.ShowDialog() != DialogResult.OK) return;
-			if (!File.Exists(path)) return;
-			if (!Directory.Exists(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt"))
-			{
-				Directory.CreateDirectory(path.Substring(0, path.Length - Path.GetFileName(path).Length) + "\\Gedruckt");
-			}
+				return "File is not a report (.docx)";
+
+			DirectoryInfo reportFolder = new DirectoryInfo(path);
+			bool pathAlreadyPrinted = reportFolder.Name == PRINTEDFOLDERNAME;
+			if (!pathAlreadyPrinted && !reportFolder.GetDirectories().Any(folder => folder.Name == PRINTEDFOLDERNAME))
+				reportFolder.CreateSubdirectory(PRINTEDFOLDERNAME);
+
 			try
 			{
 				bool isSameAsOpened;
 				if (Doc != null)
 					isSameAsOpened = path == Doc.FullName;
-				else isSameAsOpened = false;
-				if (isSameAsOpened)
-				{
-					SaveOrExit();
-					rtbSchool.Text = "";
-					rtbWork.Text = "";
-					WasEdited = false;
-				};
+				else
+					isSameAsOpened = false;
+
 				RestartWordIfNeeded();
-				Word.Document document = WordApp.Documents.Open(path, ReadOnly: true);
-				WordApp.Visible = WordVisible;
+				Word.Document document;
+				if (isSameAsOpened)
+					document = Doc;
+				else
+					document = WordApp.Documents.Open(path, ReadOnly: true);
 				document.PrintOut(Background: false);
-				document.Close();
-				if (printed.Name != "Gedruckt")
+				if (!isSameAsOpened)
+					document.Close();
+				if (!pathAlreadyPrinted)
 				{
 					string oldRelPath = path.Substring(ActivePath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 					List<string> splitPath = oldRelPath.Split(Path.DirectorySeparatorChar).ToList();
-					splitPath.Insert(splitPath.Count - 2, "Gedruckt");
+					splitPath.Insert(splitPath.Count - 2, PRINTEDFOLDERNAME);
 					var newRelPath = Path.Combine(splitPath.ToArray());
-					File.Move(path, Path.Combine(path.Substring(0, path.Length - Path.GetFileName(path).Length), "Gedruckt", Path.GetFileName(path)));
+					File.Move(path, Path.Combine(path.Substring(0, path.Length - Path.GetFileName(path).Length), PRINTEDFOLDERNAME, Path.GetFileName(path)));
 					UploadedReports.MoveReport(oldRelPath, newRelPath);
-					UpdateTree();
 				}
 			}
 			catch (Exception ex)
 			{
-				ThemedMessageBox.Error(ex);
+				return $"{ex.GetType().Name} while printing {path}";
 			}
+			return null;
 		}
 
 		/// <summary>
@@ -1340,7 +1312,13 @@ namespace BerichtManager
 
 		private void miPrint_Click(object sender, EventArgs e)
 		{
-			PrintDocument(FullSelectedPath);
+			if (DocIsSamePathAsSelected() && WasEdited && ThemedMessageBox.Show(text: $"Report {FullSelectedPath} has unsaved changes!\nSave?", title: "Save unsaved changes", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+				SaveFromTb();
+			StartWaitCursor();
+			string result = PrintReport(FullSelectedPath);
+			ThemedMessageBox.Show(text: result ?? $"Printed {FullSelectedPath}", title: result == null ? "Print finished" : "Print aborted");
+			UpdateTree();
+			EndWaitCursor();
 		}
 
 		private void miQuickEditWork_Click(object sender, EventArgs e)
