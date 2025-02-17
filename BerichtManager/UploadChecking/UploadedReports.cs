@@ -43,17 +43,31 @@ namespace BerichtManager.UploadChecking
 			Load();
 		}
 
+		/// <summary>
+		/// Extracts the relative part of a report path anchored to report path of <see cref="ConfigHandler.ReportPath"/>
+		/// </summary>
+		/// <param name="path">Path to extrace relative path from</param>
+		/// <returns>Relative path including base directory</returns>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="path"/> is not in report path of <see cref="ConfigHandler"/></exception>
 		private static string ExtractRelativePath(string path)
 		{
+			if (string.IsNullOrEmpty(path))
+				throw new ArgumentException($"Path may not be null or empty", nameof(path));
+			if (path.StartsWith("/") || path.StartsWith("\\"))
+				path = path.Substring(1);
+			if (Path.IsPathRooted(path) && !path.StartsWith(ConfigHandler.Instance.ReportPath))
+				throw new ArgumentException($@"Path ""{path}"" is rooted but not in report path ""{ConfigHandler.Instance.ReportPath}""!", nameof(path));
 			string toSplit = path.Replace('/', '\\');
 			List<string> splitPath = toSplit.Split('\\').ToList();
 			string reportRoot = ConfigHandler.Instance.ReportPath.Replace('/', '\\').Split('\\').Last();
+			if (!splitPath.Contains(reportRoot))
+				throw new ArgumentException($@"Path ""{path}"" is not rooted in ""{ConfigHandler.Instance.ReportPath}""", nameof(path));
 			splitPath.RemoveRange(0, splitPath.IndexOf(reportRoot));
 			return String.Join('\\'.ToString(), splitPath);
 		}
 
 		/// <summary>
-		/// Adds <paramref name="value"/> to the <see cref="List{T}"/> at <paramref name="key"/>
+		/// Adds <paramref name="report"/> to the <see cref="UploadedReports"/>
 		/// </summary>
 		/// <param name="path">Path of report</param>
 		/// <param name="report">Report object to save</param>
@@ -225,6 +239,8 @@ namespace BerichtManager.UploadChecking
 		/// <param name="newPath">New path relative to <see cref="ConfigHandler.Instance"/>s report path</param>
 		public static void MoveReport(string oldPath, string newPath)
 		{
+			oldPath = ExtractRelativePath(oldPath);
+			newPath = ExtractRelativePath(newPath);
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport> reports))
 				return;
 			if (!reports.TryGetValue(oldPath, out UploadedReport toMove))
