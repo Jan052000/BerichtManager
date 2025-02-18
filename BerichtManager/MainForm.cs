@@ -135,12 +135,12 @@ namespace BerichtManager
 		public MainForm()
 		{
 			InitializeComponent();
-			AddQuickEdits();
-			ThemeSetter.SetThemes(this);
-			ThemeSetter.SetThemes(ttTips);
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			tvReports.ShowNodeToolTips = ConfigHandler.ShowReportToolTip;
+			AddQuickEdits();
+			ThemeSetter.SetThemes(this);
+			ThemeSetter.SetThemes(ttTips);
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
 			rtbSchool.WordWrap = ConfigHandler.UseWordWrap;
 			rtbWork.WordWrap = ConfigHandler.UseWordWrap;
