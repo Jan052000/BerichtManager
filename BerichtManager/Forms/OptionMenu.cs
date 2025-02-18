@@ -60,6 +60,11 @@ namespace BerichtManager.Forms
 		/// </summary>
 		public event UseWordWrapDelegate UseWordWrapChanged;
 
+		/// <summary>
+		/// Emits when status of show report tool tip changes
+		/// </summary>
+		public event GenericOptionChangeDelegate<bool> ShowReportToolTipChanged;
+
 		public OptionMenu()
 		{
 			InitializeComponent();
@@ -147,6 +152,13 @@ namespace BerichtManager.Forms
 		/// <param name="useWordWrap">New value of use word wrap option</param>
 		public delegate void UseWordWrapDelegate(bool useWordWrap);
 
+		/// <summary>
+		/// Delegate for change of generic options
+		/// </summary>
+		/// <typeparam name="T"><see cref="Type"/> of option that has changed</typeparam>
+		/// <param name="newValue">Changed value</param>
+		public delegate void GenericOptionChangeDelegate<T>(T newValue);
+
 		private void btClose_Click(object sender, EventArgs e)
 		{
 			if (IsDirty)
@@ -211,6 +223,7 @@ namespace BerichtManager.Forms
 			bool wordWrapChanged = false;
 			bool ihkBaseAddressChanged = false;
 			bool reportFolderChanged = false;
+			bool showReportToolTipChanged = false;
 
 			//Prefix
 			ConfigHandler.UseCustomPrefix = cbUseCustomPrefix.Checked;
@@ -261,7 +274,11 @@ namespace BerichtManager.Forms
 				ConfigHandler.UseWordWrap = cbUseWordWrap.Checked;
 				wordWrapChanged = true;
 			}
-			ConfigHandler.ShowReportToolTip = cbShowReportToolTip.Checked;
+			if (ConfigHandler.ShowReportToolTip != cbShowReportToolTip.Checked)
+			{
+				ConfigHandler.ShowReportToolTip = cbShowReportToolTip.Checked;
+				showReportToolTipChanged = true;
+			}
 			//IHK
 			ConfigHandler.IHKUploadDelay = (int)nudUploadDelay.Value;
 			ConfigHandler.IHKJobField = tbJobField.Text;
@@ -285,6 +302,8 @@ namespace BerichtManager.Forms
 				UseWordWrapChanged?.Invoke(cbUseWordWrap.Checked);
 			if (ihkBaseAddressChanged)
 				IHKBaseAddressChanged?.Invoke();
+			if (showReportToolTipChanged)
+				ShowReportToolTipChanged?.Invoke(cbShowReportToolTip.Checked);
 			if (reportFolderChanged)
 				ReportFolderChanged?.Invoke(this, tbFolder.Text);
 		}

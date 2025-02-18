@@ -1411,6 +1411,7 @@ namespace BerichtManager
 			optionMenu.FontSizeChanged += ChangeFontSize;
 			optionMenu.IHKBaseAddressChanged += IHKBaseAddressChanged;
 			optionMenu.UseWordWrapChanged += UseWordWrapChanged;
+			optionMenu.ShowReportToolTipChanged += ShowReportToolTipChanged;
 			optionMenu.ShowDialog();
 			optionMenu.ActiveThemeChanged -= ActiveThemeChanged;
 			optionMenu.ReportFolderChanged -= ReportFolderChanged;
@@ -1418,6 +1419,12 @@ namespace BerichtManager
 			optionMenu.FontSizeChanged -= ChangeFontSize;
 			optionMenu.IHKBaseAddressChanged -= IHKBaseAddressChanged;
 			optionMenu.UseWordWrapChanged -= UseWordWrapChanged;
+			optionMenu.ShowReportToolTipChanged -= ShowReportToolTipChanged;
+		}
+
+		private void ShowReportToolTipChanged(bool status)
+		{
+			tvReports.ShowNodeToolTips = status;
 		}
 
 		private void UseWordWrapChanged(bool useWordWrap)

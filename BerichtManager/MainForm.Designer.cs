@@ -380,7 +380,6 @@ namespace BerichtManager
 			this.tvReports.Location = new System.Drawing.Point(0, 0);
 			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
 			this.tvReports.Name = "tvReports";
-			this.tvReports.ShowNodeToolTips = true;
 			this.tvReports.Size = new System.Drawing.Size(235, 426);
 			this.tvReports.TabIndex = 0;
 			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
