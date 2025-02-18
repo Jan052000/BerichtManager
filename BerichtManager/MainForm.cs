@@ -140,6 +140,7 @@ namespace BerichtManager
 			ThemeSetter.SetThemes(ttTips);
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
+			tvReports.ShowNodeToolTips = ConfigHandler.ShowReportToolTip;
 			Info = new DirectoryInfo(ConfigHandler.ReportPath);
 			rtbSchool.WordWrap = ConfigHandler.UseWordWrap;
 			rtbWork.WordWrap = ConfigHandler.UseWordWrap;
