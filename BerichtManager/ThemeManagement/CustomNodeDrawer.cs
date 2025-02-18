@@ -52,14 +52,19 @@ namespace BerichtManager.ThemeManagement
 		private Color ReportOpenedColor { get => Theme.TreeViewReportOpenedHighlightColor; }
 
 		/// <summary>
+		/// Size of the expand and collapse icons
+		/// </summary>
+		private static int ExpandImageSize => 16;
+
+		/// <summary>
 		/// Icon displayed before a collapsed node
 		/// </summary>
-		private Bitmap FolderClosedIcon { get; set; } = new Bitmap(Properties.Resources.Folder_Closed);
+		private Bitmap FolderClosedIcon { get; set; } = new Bitmap(Properties.Resources.Folder_Closed, ExpandImageSize, ExpandImageSize);
 
 		/// <summary>
 		/// Icon displayed before an expanded node
 		/// </summary>
-		private Bitmap FolderOpenedIcon { get; set; } = new Bitmap(Properties.Resources.Folder_Open);
+		private Bitmap FolderOpenedIcon { get; set; } = new Bitmap(Properties.Resources.Folder_Open, ExpandImageSize, ExpandImageSize);
 
 		/// <summary>
 		/// Creates a CustomDrawer object
@@ -92,7 +97,6 @@ namespace BerichtManager.ThemeManagement
 			bool drawCheckBoxes = e.Node.TreeView.CheckBoxes;
 
 			TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.TreeView.Font, new Point(e.Node.Bounds.X, e.Node.Bounds.Y), e.Node.TreeView.ForeColor);
-			int iconSize = 18;
 			int boxWidth = 13;
 
 			Rectangle iconBounds;
@@ -101,7 +105,7 @@ namespace BerichtManager.ThemeManagement
 			if (drawCheckBoxes)
 			{
 				checkBoxBounds = new Rectangle(e.Node.Bounds.X - 1 - boxWidth, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - boxWidth / 2, boxWidth, boxWidth);
-				iconBounds = new Rectangle(checkBoxBounds.Value.X - iconSize - 1, e.Node.Bounds.Y, iconSize, e.Node.Bounds.Height);
+				iconBounds = new Rectangle(checkBoxBounds.Value.X - ExpandImageSize - 1, e.Node.Bounds.Y, ExpandImageSize, e.Node.Bounds.Height);
 				if (e.Node is CustomTreeNode custom && e.Node.TreeView is CustomTreeView)
 					DrawCheckBox(e.Graphics, checkBoxBounds.Value, custom.CheckStatus);
 				else
@@ -117,11 +121,6 @@ namespace BerichtManager.ThemeManagement
 
 			if (e.Node.TreeView.ShowLines)
 				DrawDottedLine(e, iconBounds, checkBoxBounds);
-
-			if (FolderOpenedIcon.Width != iconBounds.Width || FolderOpenedIcon.Height != iconBounds.Height)
-				FolderOpenedIcon = new Bitmap(FolderOpenedIcon, iconBounds.Size);
-			if (FolderClosedIcon.Width != iconBounds.Width || FolderClosedIcon.Height != iconBounds.Height)
-				FolderClosedIcon = new Bitmap(FolderClosedIcon, iconBounds.Size);
 
 			if (e.Node.Nodes.Count > 0)
 			{
