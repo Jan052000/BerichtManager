@@ -324,9 +324,10 @@ namespace BerichtManager
 		/// <param name="node"><see cref="TreeNode"/> to set properties of child <see cref="ReportNode"/>s for</param>
 		private void FillReportNodes(TreeNode node)
 		{
-			if (node is ReportNode reportNode && UploadedReports.GetUploadedReport(reportNode.TreeView != null ? reportNode.FullPath : GetFullNodePath(reportNode), out UploadedReport report))
+			if (node is ReportNode reportNode)
 			{
-				reportNode.SetReportProperties(report);
+				if (UploadedReports.GetUploadedReport(GetFullNodePath(reportNode), out UploadedReport report))
+					reportNode.SetReportProperties(report);
 				reportNode.SetToolTip();
 			}
 			foreach (TreeNode child in node.Nodes)

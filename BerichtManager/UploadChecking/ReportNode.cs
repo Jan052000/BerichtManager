@@ -30,6 +30,10 @@ namespace BerichtManager.UploadChecking
 		/// Last edit time of file represented by node
 		/// </summary>
 		public DateTime? FileLastWriteTime { get; private set; } = null;
+		/// <summary>
+		/// Start date of report
+		/// </summary>
+		public DateTime? StartDate { get; set; } = null;
 
 		/// <summary>
 		/// Statuses of report on IHK servers
@@ -74,6 +78,7 @@ namespace BerichtManager.UploadChecking
 			_this.LfdNr = LfdNr;
 			_this.WasUpdated = WasUpdated;
 			_this.FileLastWriteTime = FileLastWriteTime;
+			_this.StartDate = StartDate;
 			return _this;
 		}
 
@@ -87,6 +92,7 @@ namespace BerichtManager.UploadChecking
 			UploadStatus = report.Status;
 			LfdNr = report.LfdNR;
 			WasUpdated = report.WasUpdated;
+			StartDate = report.StartDate;
 		}
 
 		/// <summary>
@@ -95,6 +101,12 @@ namespace BerichtManager.UploadChecking
 		public void SetToolTip()
 		{
 			string ttip = $"Status: {UploadStatus}";
+			if (WasEditedLocally)
+				ttip += "\nHas local changes";
+			if (StartDate is DateTime dtStart)
+				ttip += $"\nStart date: {dtStart.ToString(DateTimeUtils.DATEFORMAT)}";
+			if (LfdNr.HasValue)
+				ttip += $"\nLfdnr: {LfdNr}";
 			if (FileLastWriteTime is DateTime dt)
 				ttip += $"\nLast write: {dt.ToString(DateTimeUtils.DATEFORMAT)}";
 			ToolTipText = ttip;
