@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.IHKClient
+﻿namespace BerichtManager.IHKClient
 {
 	internal class UploadResult
 	{

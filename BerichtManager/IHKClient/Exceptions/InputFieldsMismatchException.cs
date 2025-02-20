@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.IHKClient.Exceptions
+﻿namespace BerichtManager.IHKClient.Exceptions
 {
 	/// <summary>
 	/// Exception in case there is a mismatch between found form inputs and report content properties

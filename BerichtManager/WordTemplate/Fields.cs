@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.WordTemplate
+﻿namespace BerichtManager.WordTemplate
 {
 	/// <summary>
 	/// Supported auto fill fields

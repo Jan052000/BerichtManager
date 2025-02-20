@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.ReportChecking.Discrepancies
+﻿namespace BerichtManager.ReportChecking.Discrepancies
 {
 	/// <summary>
 	/// Class for skipped dates

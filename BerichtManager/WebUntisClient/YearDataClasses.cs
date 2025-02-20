@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BerichtManager.WebUntisClient
+﻿namespace BerichtManager.WebUntisClient
 {
 	[Serializable]
 	public class YearData 

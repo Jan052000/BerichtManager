@@ -1,8 +1,5 @@
 ﻿using BerichtManager.HelperClasses.HtmlClasses.CSSSelectors;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace BerichtManager.HelperClasses.HtmlClasses
 {

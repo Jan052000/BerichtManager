@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.WordTemplate
+﻿namespace BerichtManager.WordTemplate
 {
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	internal class FieldsTypeAttribute : Attribute

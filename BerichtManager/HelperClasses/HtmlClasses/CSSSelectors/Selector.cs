@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
+﻿namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 {
 	/// <summary>
 	/// Class for CSS selectors following a " "

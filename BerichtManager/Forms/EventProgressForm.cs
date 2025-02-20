@@ -1,6 +1,4 @@
 ﻿using BerichtManager.ThemeManagement;
-using System;
-using System.Windows.Forms;
 
 namespace BerichtManager.Forms
 {

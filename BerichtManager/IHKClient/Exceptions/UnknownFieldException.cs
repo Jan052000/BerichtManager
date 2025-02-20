@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.IHKClient.Exceptions
+﻿namespace BerichtManager.IHKClient.Exceptions
 {
 	/// <summary>
 	/// Exception for when an unknown field is encountered in html form of report

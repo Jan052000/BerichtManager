@@ -1,8 +1,5 @@
 ﻿using BerichtManager.ThemeManagement;
 using BerichtManager.WordTemplate;
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace BerichtManager.Forms
 {

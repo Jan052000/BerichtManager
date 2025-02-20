@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net;
 using BerichtManager.Config;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Reflection;
 using BerichtManager.IHKClient.Exceptions;
 using Word = Microsoft.Office.Interop.Word;
@@ -12,9 +7,9 @@ using BerichtManager.HelperClasses;
 using System.Text.RegularExpressions;
 using BerichtManager.UploadChecking;
 using System.Globalization;
-using System.Threading;
-using BerichtManager.HelperClasses.HtmlClasses;
 using BerichtManager.IHKClient.ReportContents;
+using HtmlDocument = BerichtManager.HelperClasses.HtmlClasses.HtmlDocument;
+using HtmlElement = BerichtManager.HelperClasses.HtmlClasses.HtmlElement;
 
 namespace BerichtManager.IHKClient
 {

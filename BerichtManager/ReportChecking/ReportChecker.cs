@@ -3,12 +3,7 @@ using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ReportChecking.Discrepancies;
 using BerichtManager.WordTemplate;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace BerichtManager.ReportChecking

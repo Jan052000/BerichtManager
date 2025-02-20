@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.IHKClient.Exceptions
+﻿namespace BerichtManager.IHKClient.Exceptions
 {
 	internal class NoInputsFoundException : Exception
 	{

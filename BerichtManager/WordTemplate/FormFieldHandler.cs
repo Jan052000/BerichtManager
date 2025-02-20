@@ -1,12 +1,8 @@
 ﻿using Word = Microsoft.Office.Interop.Word;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Newtonsoft.Json;
 using System.Globalization;
 using BerichtManager.HelperClasses;
 using BerichtManager.Extensions;
-using System.Linq;
 using BerichtManager.OwnControls;
 using System.Reflection;
 

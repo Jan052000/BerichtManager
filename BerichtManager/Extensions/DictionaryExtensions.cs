@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BerichtManager.Extensions
+﻿namespace BerichtManager.Extensions
 {
 	/// <summary>
 	/// Holds extension methods for <see cref="Dictionary{TKey, TValue}"/>

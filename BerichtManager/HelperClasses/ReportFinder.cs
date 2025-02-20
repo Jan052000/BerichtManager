@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-
-namespace BerichtManager.HelperClasses
+﻿namespace BerichtManager.HelperClasses
 {
 	/// <summary>
 	/// Functions to find Reports in trees

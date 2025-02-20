@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+﻿using System.Diagnostics;
 
 namespace BerichtManager.HelperClasses.HtmlClasses
 {

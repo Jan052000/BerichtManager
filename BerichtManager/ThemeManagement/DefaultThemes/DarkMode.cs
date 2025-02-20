@@ -1,5 +1,3 @@
-using System.Drawing;
-
 namespace BerichtManager.ThemeManagement.DefaultThemes
 {
 	internal class DarkMode : ITheme

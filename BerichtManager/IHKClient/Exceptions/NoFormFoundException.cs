@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.IHKClient.Exceptions
+﻿namespace BerichtManager.IHKClient.Exceptions
 {
 	/// <summary>
 	/// Exception for when no form element was found in html

@@ -1,8 +1,5 @@
 ﻿using BerichtManager.ThemeManagement;
-using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace BerichtManager.OwnControls.OwnTreeView
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using BerichtManager.HelperClasses;
+﻿using BerichtManager.HelperClasses;
 using BerichtManager.ThemeManagement;
 using Newtonsoft.Json.Linq;
 

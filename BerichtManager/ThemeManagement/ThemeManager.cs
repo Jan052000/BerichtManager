@@ -1,10 +1,5 @@
 ﻿using BerichtManager.ThemeManagement.DefaultThemes;
 using Newtonsoft.Json;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Drawing;
 using BerichtManager.OwnControls;
 using System.ComponentModel;
 using BerichtManager.Config;

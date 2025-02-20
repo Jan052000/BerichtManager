@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.IHKClient
+﻿namespace BerichtManager.IHKClient
 {
 	/// <summary>
 	/// Class for combined fields for fetch result for IHK report comments

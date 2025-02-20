@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace BerichtManager.ThemeManagement
+﻿namespace BerichtManager.ThemeManagement
 {
 	public interface ITheme
 	{

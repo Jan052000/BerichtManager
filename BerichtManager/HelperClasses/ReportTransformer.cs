@@ -1,6 +1,5 @@
 using BerichtManager.IHKClient;
 using Word = Microsoft.Office.Interop.Word;
-using System;
 using BerichtManager.Config;
 using BerichtManager.IHKClient.Exceptions;
 using System.Globalization;

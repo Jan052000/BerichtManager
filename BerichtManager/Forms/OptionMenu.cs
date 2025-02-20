@@ -3,10 +3,6 @@ using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
 using BerichtManager.WordTemplate;
-using System;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace BerichtManager.Forms
 {

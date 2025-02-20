@@ -1,15 +1,9 @@
-using System;
-using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Linq;
-using System.Windows.Forms;
 using BerichtManager.Forms;
-using System.Collections.Generic;
 using System.Globalization;
 using BerichtManager.OwnControls;
 using System.Net.Mail;
-using BerichtManager.HelperClasses;
 
 namespace BerichtManager.Config
 {

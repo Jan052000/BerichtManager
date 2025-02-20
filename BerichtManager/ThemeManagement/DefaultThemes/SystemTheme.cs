@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace BerichtManager.ThemeManagement.DefaultThemes
+﻿namespace BerichtManager.ThemeManagement.DefaultThemes
 {
 	internal class SystemTheme : ITheme
 	{

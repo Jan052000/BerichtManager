@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BerichtManager.HelperClasses
+﻿namespace BerichtManager.HelperClasses
 {
 	/// <summary>
 	/// Class holding methods used for interacting with properties of reports
