@@ -728,7 +728,7 @@ namespace BerichtManager
 			}
 		}
 
-		private void btEdit_Click(object sender, EventArgs e)
+		private void miEditLatest_Click(object sender, EventArgs e)
 		{
 			if (DocIsSamePathAsSelected())
 				return;

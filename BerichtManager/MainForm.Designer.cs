@@ -428,7 +428,7 @@ namespace BerichtManager
 			this.miEditLatest.Name = "miEditLatest";
 			this.miEditLatest.Size = new System.Drawing.Size(191, 22);
 			this.miEditLatest.Text = "Edit latest";
-			this.miEditLatest.Click += new System.EventHandler(this.btEdit_Click);
+			this.miEditLatest.Click += new System.EventHandler(this.miEditLatest_Click);
 			// 
 			// miPrintAll
 			// 
