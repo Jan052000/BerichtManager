@@ -69,6 +69,8 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// <param name="element"><see cref="System.Windows.Forms.HtmlElement"/> to copy</param>
 		public HtmlElement(System.Windows.Forms.HtmlElement element)
 		{
+			if (element == null)
+				throw new ArgumentNullException(nameof(element));
 			Tag = element.TagName;
 			Classes = element.GetAttribute("className").Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 			Name = element.Name;
@@ -159,8 +161,11 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// <param name="root">Root <see cref="HtmlElement"/> to search</param>
 		/// <param name="cssSelector">Selector to use</param>
 		/// <returns><see cref="List{T}"/> of matching <see cref="HtmlElement"/>s</returns>
+		/// <exception cref="ArgumentNullException">If <paramref name="cssSelector"/> is <see langword="null"/></exception>
 		public List<HtmlElement> CSSSelect(string cssSelector)
 		{
+			if(cssSelector == null)
+				throw new ArgumentNullException(nameof(cssSelector));
 			return new CSSSelectorChain(cssSelector, this).StartSearch();
 		}
 	}

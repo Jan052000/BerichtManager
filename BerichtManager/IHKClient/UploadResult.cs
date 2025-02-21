@@ -17,7 +17,7 @@
 		/// <summary>
 		/// Additional info on result
 		/// </summary>
-		public string AdditionalInfo { get; set; }
+		public string? AdditionalInfo { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="UploadResult"/> object
@@ -35,7 +35,8 @@
 		/// Creates a new <see cref="UploadResult"/> object
 		/// </summary>
 		/// <param name="result">Result of upload process</param>
-		public UploadResult(CreateResults result, string additionalInfo = "")
+		/// <param name="additionalInfo">Additional info</param>
+		public UploadResult(CreateResults result, string? additionalInfo = null)
 		{
 			Result = result;
 			StartDate = new DateTime();

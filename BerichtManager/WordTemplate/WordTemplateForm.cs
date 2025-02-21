@@ -22,12 +22,23 @@ namespace BerichtManager.WordTemplate
 		/// </summary>
 		private void Setup()
 		{
+			foreach (Control control in flpOrder.Controls)
+			{
+				if (control is Label la)
+					LabelUnsubscribe(la);
+			}
+			foreach (Control control in flpFieldOptions.Controls)
+			{
+				if (control is Label la)
+					LabelUnsubscribe(la);
+			}
+
 			flpOrder.Controls.Clear();
 			flpFieldOptions.Controls.Clear();
 
 			List<Fields> fields = Enum.GetValues(typeof(Fields)).Cast<Fields>().ToList();
-			List<Fields> configFields = fields.Where(f => FormFieldHandler.GetFormField(f, out _)).OrderBy(f => FormFieldHandler.GetFormFieldIndex(f)).ToList();
-			List<Fields> unused = fields.Where(f => !FormFieldHandler.GetFormField(f, out _)).ToList();
+			List<Fields> configFields = fields.Where(f => FormFieldHandler.TryGetFormField(f, out _)).OrderBy(FormFieldHandler.GetFormFieldIndex).ToList();
+			List<Fields> unused = fields.Where(f => !FormFieldHandler.TryGetFormField(f, out _)).ToList();
 
 			foreach (Fields field in configFields)
 			{
@@ -45,28 +56,48 @@ namespace BerichtManager.WordTemplate
 		/// </summary>
 		/// <param name="text">Text in label</param>
 		/// <returns>Styled <see cref="Label"/></returns>
-		private Label GetLabel(string text)
+		private Label GetLabel(string? text)
 		{
 			Label l = new Label();
-			l.Text = text;
+			l.Text = text ?? "";
 			Size s = TextRenderer.MeasureText(l.Text, l.Font);
 			l.Width = s.Width;
 			l.Height = s.Height;
-			l.BackColor = ThemeManager.Instance.ActiveTheme.ButtonColor;
-			l.ForeColor = ThemeManager.Instance.ActiveTheme.ForeColor;
+			l.BackColor = ThemeManager.ActiveTheme.ButtonColor;
+			l.ForeColor = ThemeManager.ActiveTheme.ForeColor;
 			l.Margin = new Padding(3);
-			l.MouseDown += LabelMouseDown;
+			LabelSubscribe(l);
 			return l;
 		}
 
-		private void LabelMouseDown(object sender, MouseEventArgs e)
+		/// <summary>
+		/// Subsctibes to events of <paramref name="label"/>
+		/// </summary>
+		/// <param name="label"><see cref="Label"/> to subscribe handlers to</param>
+		private void LabelSubscribe(Label label)
 		{
-			(sender as Control)?.DoDragDrop(new DataObject(DataFormats.Serializable, sender), DragDropEffects.Move);
+			label.MouseDown += LabelMouseDown;
+		}
+
+		/// <summary>
+		/// Unsubscribes from events of <paramref name="label"/>
+		/// </summary>
+		/// <param name="label"><see cref="Label"/> to unsubscribe handlers of</param>
+		private void LabelUnsubscribe(Label label)
+		{
+			label.MouseDown -= LabelMouseDown;
+		}
+
+		private void LabelMouseDown(object? sender, MouseEventArgs e)
+		{
+			if (sender is not Control control)
+				return;
+			control.DoDragDrop(new DataObject(DataFormats.Serializable, control), DragDropEffects.Move);
 		}
 
 		private void PanelDragEnter(object sender, DragEventArgs e)
 		{
-			if (e.Data.GetData(DataFormats.Serializable) is Control control && control.Parent != null && control.Parent == sender)
+			if (e.Data?.GetData(DataFormats.Serializable) is Control control && control.Parent != null && control.Parent == sender)
 				e.Effect = DragDropEffects.None;
 			else
 				e.Effect = DragDropEffects.Move;
@@ -74,7 +105,9 @@ namespace BerichtManager.WordTemplate
 
 		private void PanelDragDrop(object sender, DragEventArgs e)
 		{
-			(sender as Control).Controls.Add(e.Data.GetData(DataFormats.Serializable) as Control);
+			if (sender is not Control control)
+				return;
+			control.Controls.Add(e.Data?.GetData(DataFormats.Serializable) as Control);
 			IsDirty = true;
 		}
 
@@ -100,7 +133,7 @@ namespace BerichtManager.WordTemplate
 			int index = 1;
 			foreach (Control control in flpOrder.Controls)
 			{
-				if (!(control is Label label))
+				if (control is not Label label)
 					continue;
 				if (!Enum.TryParse(label.Text, true, out Fields field))
 					throw new Exception($"Field {label.Text} was not found in FormFieldHandler");

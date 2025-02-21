@@ -32,9 +32,9 @@ namespace BerichtManager.WordTemplate
 			DisplayText = displayText ?? FieldType.ToString();
 		}
 
-		public bool Equals(FormField other)
+		public bool Equals(FormField? other)
 		{
-			return Index == other.Index && FieldType == other.FieldType;
+			return other != null && Index == other.Index && FieldType == other.FieldType && DisplayText == other.DisplayText;
 		}
 
 		/// <summary>

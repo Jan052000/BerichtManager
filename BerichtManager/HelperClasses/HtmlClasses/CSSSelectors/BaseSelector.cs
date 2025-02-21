@@ -27,11 +27,11 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 		/// <summary>
 		/// Root <see cref="HtmlElement"/> to search if start of chain
 		/// </summary>
-		private HtmlElement Root { get; set; }
+		private HtmlElement? Root { get; set; }
 		/// <summary>
 		/// Next <see cref="BaseSelector"/> in chain
 		/// </summary>
-		private BaseSelector Next { get; set; }
+		private BaseSelector? Next { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="BaseSelector"/> object
@@ -39,7 +39,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 		/// <param name="selector">The part of the CSS selector to be handled</param>
 		/// <param name="next">Next <see cref="BaseSelector"/> in the chain</param>
 		/// <param name="root">Root <see cref="HtmlElement"/> to search</param>
-		public BaseSelector(string selector, BaseSelector next, HtmlElement root)
+		public BaseSelector(string selector, BaseSelector? next, HtmlElement? root)
 		{
 			Selector = selector;
 			Next = next;
@@ -58,7 +58,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 		/// </summary>
 		/// <param name="elements"><see cref="List{T}"/> of <see cref="HtmlElement"/>s to search</param>
 		/// <returns><see cref="List{T}"/> of <see cref="HtmlElement"/>s that match <see cref="Selector"/></returns>
-		public List<HtmlElement> Search(List<HtmlElement> elements)
+		private List<HtmlElement> Search(List<HtmlElement> elements)
 		{
 			if (Root != null)
 				if (Next == null)
@@ -80,6 +80,12 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 			return result;
 		}
 
+		/// <inheritdoc cref="Search(List{HtmlElement})" path=""/>
+		public List<HtmlElement> Search()
+		{
+			return Search(null!);
+		}
+
 		/// <summary>
 		/// Searches all <see cref="HtmlElement"/>s in <paramref name="elements"/> for elements matching <see cref="Selector"/>
 		/// </summary>
@@ -93,7 +99,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 				if (match.Success)
 					classes.Add(match.Value);
 			}
-			string id = Regex.Match(Selector, IDRegex, RegexOptions.ExplicitCapture | RegexOptions.Multiline, new TimeSpan(0, 1, 0)).Value;
+			string? id = Regex.Match(Selector, IDRegex, RegexOptions.ExplicitCapture | RegexOptions.Multiline, new TimeSpan(0, 1, 0)).Value;
 			if (string.IsNullOrEmpty(id))
 				id = null;
 

@@ -22,7 +22,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 		/// <summary>
 		/// Root selector to start search at
 		/// </summary>
-		private BaseSelector RootSelector { get; set; }
+		private BaseSelector? RootSelector { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="CSSSelectorChain"/> object
@@ -85,7 +85,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 			List<BaseSelector> chain = new List<BaseSelector>();
 			foreach ((Type Type, string selector) tuple in toBuild)
 			{
-				HtmlElement root = null;
+				HtmlElement? root = null;
 				if (tuple == toBuild.Last())
 					root = Root;
 				BaseSelector toAdd;
@@ -118,7 +118,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 		/// <returns><see cref="List{T}"/> of <see cref="HtmlElement"/>s that fit the provided selector</returns>
 		public List<HtmlElement> StartSearch()
 		{
-			return RootSelector.Search(null);
+			return RootSelector!.Search();
 		}
 	}
 }

@@ -20,7 +20,7 @@ namespace BerichtManager.HelperClasses
 			Report report = new Report();
 			WordToIHK(doc, report, throwMismatchStartDate);
 			report.ReportContent.StartDate = FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc);
-			report.ReportContent.EndDate = FormFieldHandler.GetValueFromDoc<string>(Fields.EndDate, doc);
+			report.ReportContent.EndDate = ReportUtils.TransformTextToIHK(FormFieldHandler.GetValueFromDoc<string>(Fields.EndDate, doc));
 			return report;
 		}
 
@@ -36,8 +36,12 @@ namespace BerichtManager.HelperClasses
 		{
 			if (!FormFieldHandler.ValidFormFieldCount(doc))
 				throw new InvalidDocumentException();
-			if (throwMismatchStartDate && report.ReportContent.StartDate != FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc))
-				throw new StartDateMismatchException(FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc), report.ReportContent.StartDate);
+			string? reportStartDate = report.ReportContent.StartDate;
+			string? documentStartDate = FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc);
+			if (reportStartDate == null || documentStartDate == null)
+				throw new NullOrEmptyStartDateException();
+			if (throwMismatchStartDate && reportStartDate != documentStartDate)
+				throw new StartDateMismatchException(documentStartDate, reportStartDate);
 
 			//Dates are auto filled by IHK
 			//report.ReportContent.StartDate = FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc);
@@ -61,7 +65,7 @@ namespace BerichtManager.HelperClasses
 			FormFieldHandler.SetValueInDoc(Fields.Number, doc, report.ReportNr.ToString());
 			FormFieldHandler.SetValueInDoc(Fields.StartDate, doc, report.ReportContent.StartDate);
 			FormFieldHandler.SetValueInDoc(Fields.EndDate, doc, report.ReportContent.EndDate);
-			FormFieldHandler.SetValueInDoc(Fields.Year, doc, DateTime.ParseExact(report.ReportContent.StartDate, "dd.MM.yyyy", CultureInfo.CurrentCulture).Year.ToString());
+			FormFieldHandler.SetValueInDoc(Fields.Year, doc, DateTime.ParseExact(report.ReportContent.StartDate!, "dd.MM.yyyy", CultureInfo.CurrentCulture).Year.ToString());
 			FormFieldHandler.SetValueInDoc(Fields.Work, doc, report.ReportContent.JobFieldContent);
 			FormFieldHandler.SetValueInDoc(Fields.Seminars, doc, report.ReportContent.SeminarsField);
 			FormFieldHandler.SetValueInDoc(Fields.School, doc, report.ReportContent.SchoolField);
@@ -73,6 +77,14 @@ namespace BerichtManager.HelperClasses
 	public class InvalidDocumentException : Exception
 	{
 		public InvalidDocumentException() : base("Document does not have the necessary form fields")
+		{
+
+		}
+	}
+
+	public class NullOrEmptyStartDateException : Exception
+	{
+		public NullOrEmptyStartDateException() : base("Start date of either report document or generated report object is invalid")
 		{
 
 		}

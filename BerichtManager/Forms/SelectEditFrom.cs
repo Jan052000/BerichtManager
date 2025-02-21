@@ -56,9 +56,9 @@ namespace BerichtManager.Forms
 			Close();
 		}
 
-		private void CbCheckedChanged(object sender, EventArgs e)
+		private void CbCheckedChanged(object? sender, EventArgs e)
 		{
-			if (((CheckBox)sender).Checked)
+			if (((CheckBox)sender!).Checked)
 			{
 				Count++;
 			}

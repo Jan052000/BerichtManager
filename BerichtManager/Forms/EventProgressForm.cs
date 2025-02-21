@@ -81,7 +81,7 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// Event which is invoked if stop button was clicked
 		/// </summary>
-		public event StopHandler Stop;
+		public event StopHandler? Stop;
 
 		public EventProgressForm(string title)
 		{
@@ -114,7 +114,7 @@ namespace BerichtManager.Forms
 			DialogResult = DialogResult.OK;
 		}
 
-		private void btStop_Click(object sender, EventArgs e)
+		private void btStop_Click(object? sender, EventArgs e)
 		{
 			ShouldClose = true;
 			btStop.Text = "Close";

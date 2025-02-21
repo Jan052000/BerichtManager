@@ -12,14 +12,16 @@ namespace BerichtManager.ThemeManagement
 		/// <summary>
 		/// Active theme set in <see cref="ThemeManager"/>
 		/// </summary>
-		private static ITheme Theme { get => ThemeManager.Instance.ActiveTheme; }
+		private static ITheme Theme { get => ThemeManager.ActiveTheme; }
 
 		/// <summary>
 		/// Sets theme for <see href="control"/> and its children
 		/// </summary>
 		/// <param name="control">Top control to set theme for</param>
-		public static void SetThemes(Control control)
+		public static void SetThemes(Control? control)
 		{
+			if (control is null)
+				return;
 			switch (control)
 			{
 				case RichTextBox rtb:
@@ -116,8 +118,10 @@ namespace BerichtManager.ThemeManagement
 		/// Sets the theme of <paramref name="toolTip"/>
 		/// </summary>
 		/// <param name="toolTip"><see cref="ToolTip"/> to set theme of</param>
-		public static void SetThemes(ToolTip toolTip)
+		public static void SetThemes(ToolTip? toolTip)
 		{
+			if (toolTip is null)
+				return;
 			toolTip.Draw -= ToolTip_Draw;
 			toolTip.BackColor = Theme.BackColor;
 			toolTip.ForeColor = Theme.ForeColor;
@@ -125,11 +129,12 @@ namespace BerichtManager.ThemeManagement
 			toolTip.Draw += ToolTip_Draw;
 		}
 
-		private static void ToolTip_Draw(object sender, DrawToolTipEventArgs e)
+		private static void ToolTip_Draw(object? sender, DrawToolTipEventArgs e)
 		{
 			e.DrawBackground();
 			e.DrawBorder();
-			TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, e.AssociatedControl.ForeColor);
+			Color foreColor = (sender as ToolTip)?.ForeColor ?? e.AssociatedControl?.ForeColor ?? Theme.ForeColor;
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, foreColor);
 		}
 	}
 
@@ -141,7 +146,7 @@ namespace BerichtManager.ThemeManagement
 		private ITheme Theme { get; }
 		public ThemeColorTable(ITheme theme) : base()
 		{
-			this.Theme = theme;
+			Theme = theme;
 		}
 		public override Color ToolStripDropDownBackground => Theme.MenuStripDropdownBackColor;
 	}
@@ -154,7 +159,7 @@ namespace BerichtManager.ThemeManagement
 		private ITheme Theme { get; }
 		public ThemeRenderer(ProfessionalColorTable table, ITheme theme) : base(table)
 		{
-			this.Theme = theme;
+			Theme = theme;
 		}
 
 		protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)

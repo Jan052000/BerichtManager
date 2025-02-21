@@ -125,7 +125,7 @@ namespace BerichtManager.OwnControls
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		[DefaultValue(typeof(FlatButtonAppearance), "")]
-		public new string FlatAppearance { get; set; }
+		private new string FlatAppearance { get; set; } = "";
 
 		/// <summary>
 		/// Variable to pass FlatStyle through to base <see cref="Button"/> class

@@ -4,10 +4,13 @@ namespace BerichtManager.HelperClasses
 {
 	internal class TreeNodeSorter : IComparer
 	{
-		public int Compare(object x, object y)
+		public int Compare(object? x, object? y)
 		{
-			TreeNode xNode = x as TreeNode;
-			TreeNode yNode = y as TreeNode;
+			TreeNode? xNode = x as TreeNode;
+			TreeNode? yNode = y as TreeNode;
+			if (xNode == null || yNode == null)
+				return string.Compare(xNode?.Text, yNode?.Text);
+
 			if (ReportUtils.IsNameValid(xNode.Text) && ReportUtils.IsNameValid(yNode.Text))
 			{
 				int result = 0;
@@ -35,7 +38,7 @@ namespace BerichtManager.HelperClasses
 					}
 				return result;
 			}
-			return string.Compare(xNode.Text, yNode.Text);
+			return string.Compare(xNode?.Text, yNode?.Text);
 		}
 	}
 }

@@ -32,7 +32,7 @@ namespace BerichtManager.Config
 		public static bool IsInitializing { get; private set; } = true;
 
 		#region Singleton
-		private static ConfigHandler Singleton;
+		private static ConfigHandler? Singleton;
 		public static ConfigHandler Instance
 		{
 			get
@@ -44,46 +44,53 @@ namespace BerichtManager.Config
 		}
 		#endregion
 
+		#region Types
+		private static Type StringType => typeof(string);
+		private static Type IntType => typeof(int);
+		private static Type BoolType => typeof(bool);
+		private static Type FloatType => typeof(float);
+		#endregion
+
 		#region Default config properties
 		/// <summary>
 		/// Holds all values for config with the keys as key and the type and default value as values
 		/// </summary>
 		private Dictionary<string, (Type Type, object DefaultValue)> DefaultConfig { get; } = new Dictionary<string, (Type, object)>()
 		{
-			{"TemplatePath", (Type.GetType("System.String"), "")},
-			{"ReportNR", (Type.GetType("System.Int32"), 1)},
-			{"LastCreated", (Type.GetType("System.String"), "")},
-			{"Username", (Type.GetType("System.String"), "")},
-			{"Password", (Type.GetType("System.String"), "")},
-			{"Name", (Type.GetType("System.String"), "")},
-			{"Font", (Type.GetType("System.String"), "Arial")},
-			{"EditorFontSize", (Type.GetType("System.Single"), 8.25f)},
-			{"LastReportWeekOfYear", (Type.GetType("System.Int32"), new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, MainForm.DateTimeFormatInfo.CalendarWeekRule, MainForm.DateTimeFormatInfo.FirstDayOfWeek) - 1)},
-			{"StayLoggedIn", (Type.GetType("System.Boolean"), false)},
-			{"UseCustomPrefix", (Type.GetType("System.Boolean"), false)},
-			{"CustomPrefix", (Type.GetType("System.String"), "-")},
-			{"WebUntisServer", (Type.GetType("System.String"), "borys")},
-			{"SchoolName", (Type.GetType("System.String"), "pictorus-bk")},
-			{"UseWebUntis", (Type.GetType("System.Boolean"), true)},
-			{"EndWeekOnFriday", (Type.GetType("System.Boolean"), false)},
-			{"UseLegacyEdit", (Type.GetType("System.Boolean"), false)},
-			{"ActiveTheme", (Type.GetType("System.String"), "Dark Mode")},
-			{"ReportPath", (Type.GetType("System.String"), Path.GetFullPath(".\\.."))},
-			{"PublishPath", (Type.GetType("System.String"), "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
-			{"UseWordWrap", (Type.GetType("System.Boolean"), false)},
-			{"ShowReportToolTip", (Type.GetType("System.Boolean"), false)},
-			{"TabStops", (Type.GetType("System.Int32"), 20)},
-			{"NamingPattern", (Type.GetType("System.String"), "WochenberichtKW~+CW+~")},
-			{"AutoSyncStatusesWithIHK", (Type.GetType("System.Boolean"), false)},
-			{"IHKUserName", (Type.GetType("System.String"), "")},
-			{"IHKPassword", (Type.GetType("System.String"), "")},
-			{"IHKStayLoggedIn", (Type.GetType("System.Boolean"), false)},
-			{"IHKJobField", (Type.GetType("System.String"), "")},
-			{"IHKSupervisorEMail", (Type.GetType("System.String"), "")},
-			{"IHKBaseUrl", (Type.GetType("System.String"), "https://www.bildung-ihk-nordwestfalen.de/")},
-			{"IHKUploadDelay", (Type.GetType("System.Int32"), 500)},
-			{"IHKCheckMatchingStartDates", (Type.GetType("System.Boolean"), true)},
-			{"IHKAutoGetComment", (Type.GetType("System.Boolean"), false)}
+			{"TemplatePath", (StringType, "")},
+			{"ReportNR", (IntType, 1)},
+			{"LastCreated", (StringType, "")},
+			{"Username", (StringType, "")},
+			{"Password", (StringType, "")},
+			{"Name", (StringType, "")},
+			{"Font", (StringType, "Arial")},
+			{"EditorFontSize", (FloatType, 8.25f)},
+			{"LastReportWeekOfYear", (IntType, new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, MainForm.DateTimeFormatInfo.CalendarWeekRule, MainForm.DateTimeFormatInfo.FirstDayOfWeek) - 1)},
+			{"StayLoggedIn", (BoolType, false)},
+			{"UseCustomPrefix", (BoolType, false)},
+			{"CustomPrefix", (StringType, "-")},
+			{"WebUntisServer", (StringType, "borys")},
+			{"SchoolName", (StringType, "pictorus-bk")},
+			{"UseWebUntis", (BoolType, true)},
+			{"EndWeekOnFriday", (BoolType, false)},
+			{"UseLegacyEdit", (BoolType, false)},
+			{"ActiveTheme", (StringType, "Dark Mode")},
+			{"ReportPath", (StringType, Path.GetFullPath(".\\.."))},
+			{"PublishPath", (StringType, "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
+			{"UseWordWrap", (BoolType, false)},
+			{"ShowReportToolTip", (BoolType, false)},
+			{"TabStops", (IntType, 20)},
+			{"NamingPattern", (StringType, "WochenberichtKW~+CW+~")},
+			{"AutoSyncStatusesWithIHK", (BoolType, false)},
+			{"IHKUserName", (StringType, "")},
+			{"IHKPassword", (StringType, "")},
+			{"IHKStayLoggedIn", (BoolType, false)},
+			{"IHKJobField", (StringType, "")},
+			{"IHKSupervisorEMail", (StringType, "")},
+			{"IHKBaseUrl", (StringType, "https://www.bildung-ihk-nordwestfalen.de/")},
+			{"IHKUploadDelay", (IntType, 500)},
+			{"IHKCheckMatchingStartDates", (BoolType, true)},
+			{"IHKAutoGetComment", (BoolType, false)}
 		};
 		#endregion
 
@@ -481,7 +488,7 @@ namespace BerichtManager.Config
 
 			//Clean unused fields
 			List<string> removeFields = new List<string>();
-			foreach (KeyValuePair<string, JToken> kvp in ConfigObject)
+			foreach (KeyValuePair<string, JToken?> kvp in ConfigObject)
 			{
 				if (!DefaultConfig.ContainsKey(kvp.Key))
 					removeFields.Add(kvp.Key);
@@ -510,7 +517,7 @@ namespace BerichtManager.Config
 		/// <returns>Value of <paramref name="key"/> converted to type <typeparamref name="T"/></returns>
 		private T GenericGet<T>(string key)
 		{
-			return ConfigObject.Value<T>(key);
+			return ConfigObject.Value<T>(key) ?? (T)DefaultConfig[key].DefaultValue;
 		}
 
 		/// <summary>
@@ -519,7 +526,7 @@ namespace BerichtManager.Config
 		/// <typeparam name="T">Type of the value to set</typeparam>
 		/// <param name="key">Key of the value to set</param>
 		/// <param name="value">Value to set</param>
-		private void GenericSet<T>(string key, T value)
+		private void GenericSet<T>(string key, T? value)
 		{
 			ConfigObject.Remove(key);
 			ConfigObject.Add(new JProperty(key, value));
@@ -574,10 +581,10 @@ namespace BerichtManager.Config
 		/// Opens a <see cref="Login"/> form and saves the login data
 		/// </summary>
 		/// <returns>New <see cref="User"/> containing username and password or <see langword="null"/> if login was aborted</returns>
-		public User DoIHKLogin()
+		public User? DoIHKLogin()
 		{
 			Login login = new Login("IHK");
-			User user = null;
+			User? user = null;
 			if (login.ShowDialog() == DialogResult.OK)
 			{
 				if (login.KeepLoggedIn)

@@ -23,11 +23,11 @@ namespace BerichtManager.ThemeManagement
 		/// <summary>
 		/// Path to themes folder
 		/// </summary>
-		private string ThemesFolderPath { get => Path.GetFullPath(".\\Config\\Themes"); }
+		private static string ThemesFolderPath { get => Path.GetFullPath(".\\Config\\Themes"); }
 		/// <summary>
 		/// Event that is called when the themes list has been updated
 		/// </summary>
-		public event UpdateThemesListDelegate UpdatedThemesList;
+		public event UpdateThemesListDelegate? UpdatedThemesList;
 		/// <summary>
 		/// Delegate for <see cref="UpdatedThemesList"/> event
 		/// </summary>
@@ -35,20 +35,19 @@ namespace BerichtManager.ThemeManagement
 		/// <summary>
 		/// Active theme to use
 		/// </summary>
-		public ITheme ActiveTheme
+		public static ITheme ActiveTheme
 		{
 			get
 			{
 				if (ConfigHandler.IsInitializing)
 					return new DarkMode();
-				ITheme activeTheme = Singleton.GetTheme(ConfigHandler.Instance.ActiveTheme);
-				if (activeTheme == null) activeTheme = new DarkMode();
+				ITheme activeTheme = Instance.GetTheme(ConfigHandler.Instance.ActiveTheme) ?? new DarkMode();
 				return activeTheme;
 			}
 		}
 
 		#region Singleton
-		private static ThemeManager Singleton;
+		private static ThemeManager? Singleton { get; set; }
 		/// <summary>
 		/// Instance of <see cref="ThemeManager"/> object
 		/// </summary>
@@ -80,9 +79,10 @@ namespace BerichtManager.ThemeManagement
 			{
 				try
 				{
-					ITheme theme = JsonConvert.DeserializeObject<ThemeSerialization>(File.ReadAllText(file));
-					if (!Themes.ContainsKey(theme.Name))
-						Themes.Add(theme.Name, theme);
+					ITheme? theme = JsonConvert.DeserializeObject<ThemeSerialization>(File.ReadAllText(file));
+					if (theme == null)
+						return;
+					Themes.TryAdd(theme.Name, theme);
 				}
 				catch
 				{
@@ -96,7 +96,7 @@ namespace BerichtManager.ThemeManagement
 		/// </summary>
 		/// <param name="name">Name of theme</param>
 		/// <returns>Theme or <see langword="null"/> if not found</returns>
-		public ITheme GetTheme(string name)
+		public ITheme? GetTheme(string name)
 		{
 			if (!Themes.ContainsKey(name))
 				return null;
@@ -160,7 +160,7 @@ namespace BerichtManager.ThemeManagement
 	public class ThemeSerialization : ITheme
 	{
 		[DefaultValue("Untitled")]
-		public string Name { get; set; }
+		public required string Name { get; set; }
 		[DefaultValue(typeof(Color), "White")]
 		public Color TextBoxBackColor { get; set; }
 		[DefaultValue(typeof(Color), "White")]

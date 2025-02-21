@@ -9,7 +9,7 @@
 		/// Creates a new <see cref="Selector"/> object
 		/// </summary>
 		/// <inheritdoc cref="BaseSelector(string, BaseSelector, HtmlElement)" path="/param"/>
-		public Selector(string selector, BaseSelector next, HtmlElement root) : base(selector, next, root)
+		public Selector(string selector, BaseSelector? next, HtmlElement? root) : base(selector, next, root)
 		{
 
 		}
