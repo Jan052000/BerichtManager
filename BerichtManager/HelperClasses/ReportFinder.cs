@@ -1,4 +1,6 @@
-﻿namespace BerichtManager.HelperClasses
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace BerichtManager.HelperClasses
 {
 	/// <summary>
 	/// Functions to find Reports in trees
@@ -11,7 +13,7 @@
 		/// <param name="node">Directory to search</param>
 		/// <param name="reports"><see cref="List{T}"/> of found reports to fill</param>
 		/// <returns><see cref="List{T}"/> of <see cref="TreeNode"/>s that represent all valid reports</returns>
-		public static void FindReports(TreeNode node, out List<TreeNode> reports)
+		public static void FindReports(TreeNode? node, [NotNull] out List<TreeNode> reports)
 		{
 			reports = new List<TreeNode>();
 			if (node == null)
