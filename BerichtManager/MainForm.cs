@@ -815,15 +815,12 @@ namespace BerichtManager
 				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 					return;
 				RestartWordIfNeeded();
+
+				bool readOnly = !UploadedReports.CanBeEdited(path);
 				if (!DocIsSamePathAsSelected())
 				{
-					SaveOrExit();
-					Doc = WordApp!.Documents.Open(path);
-				}
-				if (UploadedReports.GetUploadStatus(path, out ReportNode.UploadStatuses status) && (status == ReportNode.UploadStatuses.HandedIn || status == ReportNode.UploadStatuses.Accepted))
-				{
-					ThemedMessageBox.Show(text: "Cannot edit report that was handed in or accepted", title: "Unable to edit");
-					return;
+					CloseOpenDocument();
+					Doc = WordApp!.Documents.Open(FileName: path, ReadOnly: readOnly);
 				}
 				if (Doc == null)
 				{
@@ -843,7 +840,7 @@ namespace BerichtManager
 				if (field.HasValue)
 				{
 					string? value = FormFieldHandler.GetValueFromDoc<string>(field.Value, Doc);
-					EditForm edit = new EditForm(title: quickEditTitle, text: value);
+					EditForm edit = new EditForm(title: quickEditTitle, text: value, isReadonly: readOnly);
 					edit.RefreshConfigs += RefreshConfig;
 					switch (edit.ShowDialog())
 					{
@@ -885,7 +882,7 @@ namespace BerichtManager
 						if (stopLoop)
 							break;
 						string? value = FormFieldHandler.GetValueFromDoc<string>(selected.Field, Doc);
-						EditForm edit = new EditForm(title: selected.CheckBoxText, text: value);
+						EditForm edit = new EditForm(title: selected.CheckBoxText, text: value, isReadonly: readOnly);
 						edit.RefreshConfigs += RefreshConfig;
 						switch (edit.ShowDialog())
 						{
@@ -917,7 +914,7 @@ namespace BerichtManager
 
 				}
 
-				if (save)
+				if (save && Doc.ReadOnly != true)
 				{
 					FitToPage(Doc);
 					Doc.Save();
@@ -927,7 +924,9 @@ namespace BerichtManager
 				}
 
 				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
+				rtbWork.ReadOnly = readOnly;
 				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
+				rtbSchool.ReadOnly = readOnly;
 				EditMode = true;
 				WasEdited = false;
 				OpenedReportNode = GetNodeFromPath(path) as ReportNode;
@@ -1025,7 +1024,8 @@ namespace BerichtManager
 				}
 
 				RestartWordIfNeeded();
-				Doc = WordApp!.Documents.Open(path);
+				bool readOnly = !UploadedReports.CanBeEdited(path);
+				Doc = WordApp!.Documents.Open(FileName: path, ReadOnly: readOnly);
 				if (!FormFieldHandler.ValidFormFieldCount(Doc))
 				{
 					ThemedMessageBox.Show(text: "Invalid document (you will have to manually edit)");
@@ -1033,6 +1033,7 @@ namespace BerichtManager
 					Doc = null;
 					EditMode = false;
 					WasEdited = false;
+					OpenedReportNode = null;
 					return;
 				}
 
@@ -1040,7 +1041,9 @@ namespace BerichtManager
 					OpenedReportNode = reportNode;
 
 				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
+				rtbWork.ReadOnly = readOnly;
 				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
+				rtbSchool.ReadOnly = readOnly;
 				EditMode = true;
 				WasEdited = false;
 			}
@@ -1148,7 +1151,7 @@ namespace BerichtManager
 			if (!CheckIfWordRunning())
 				return;
 
-			if (WasEdited && ThemedMessageBox.Show(text: "Save unsaved changes?", title: "Save?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+			if (WasEdited && !Doc.ReadOnly && ThemedMessageBox.Show(text: "Save unsaved changes?", title: "Save?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 				SaveFromTb();
 			Doc.Close(SaveChanges: false);
 			Doc = null;
@@ -1288,15 +1291,10 @@ namespace BerichtManager
 				return;
 			if (DocIsSamePathAsSelected())
 				return;
-			SaveOrExit();
 			if (ConfigHandler.UseLegacyEdit)
-			{
 				Edit(FullSelectedPath);
-			}
 			else
-			{
 				EditInTb(FullSelectedPath);
-			}
 		}
 
 		private void tvReports_Click(object sender, EventArgs e)
@@ -1722,8 +1720,16 @@ namespace BerichtManager
 			if (Doc == null)
 				return;
 			SaveOrExit();
-			rtbSchool.ExecuteWithInvoke(() => rtbSchool.Text = "");
-			rtbWork.ExecuteWithInvoke(() => rtbWork.Text = "");
+			rtbSchool.ExecuteWithInvoke(() =>
+			{
+				rtbSchool.Text = "";
+				rtbSchool.ReadOnly = false;
+			});
+			rtbWork.ExecuteWithInvoke(() =>
+			{
+				rtbWork.Text = "";
+				rtbWork.ReadOnly = false;
+			});
 			WasEdited = false;
 			EditMode = false;
 		}

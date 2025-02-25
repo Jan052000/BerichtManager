@@ -398,6 +398,36 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Determines wether or not a report can be edited
+		/// </summary>
+		/// <param name="path">File path of report</param>
+		/// <returns><see langword="true"/> if report can be edited and <see langword="false"/> if not</returns>
+		public static bool CanBeEdited(string path)
+		{
+			if (!GetUploadStatus(path, out ReportNode.UploadStatuses status))
+				return true;
+			return CanBeEdited(status);
+		}
+
+		/// <inheritdoc cref="CanBeEdited(string)" path="/summary"/>
+		/// <inheritdoc cref="CanBeEdited(string)" path="/returns"/>
+		/// <param name="report">Report to check</param>
+		public static bool CanBeEdited(UploadedReport report)
+		{
+			return CanBeEdited(report.Status);
+		}
+
+		/// <summary>
+		/// Determines if a report with <paramref name="status"/> can be edited
+		/// </summary>
+		/// <param name="status">Upload status of report</param>
+		/// <inheritdoc cref="CanBeEdited(string)" path="/returns"/>
+		public static bool CanBeEdited(ReportNode.UploadStatuses status)
+		{
+			return status != ReportNode.UploadStatuses.HandedIn && status != ReportNode.UploadStatuses.Accepted; ;
+		}
+
+		/// <summary>
 		/// Loads the uploaded repor dictionary from file
 		/// </summary>
 		private void Load()

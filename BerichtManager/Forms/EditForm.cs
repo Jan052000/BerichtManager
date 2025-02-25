@@ -31,7 +31,7 @@ namespace BerichtManager.Forms
 		/// <param name="text">Text to b set in input</param>
 		/// <param name="isCreate"><see cref="bool"/> If form is in creation mode which changes button texts, enabled status and tool tips</param>
 		/// <param name="defaultValue">The default value <see cref="Result"/> should have if Input is left empty</param>
-		public EditForm(string title = "", string? text = null, bool isCreate = false, string defaultValue = "")
+		public EditForm(string title = "", string? text = null, bool isCreate = false, string defaultValue = "", bool isReadonly = false)
 		{
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
@@ -54,6 +54,7 @@ namespace BerichtManager.Forms
 				cbFontFamily.Text = ConfigHandler.EditorFont;
 				rtInput.Font = new Font(ConfigHandler.EditorFont, (float)nudFontSize.Value);
 				rtInput.WordWrap = ConfigHandler.UseWordWrap;
+				rtInput.ReadOnly = isReadonly;
 				for (int i = 1; tabstops.Count < 32; i++)
 				{
 					tabstops.Add(i * ConfigHandler.TabStops);
