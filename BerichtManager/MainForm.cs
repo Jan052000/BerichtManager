@@ -1675,7 +1675,9 @@ namespace BerichtManager
 		{
 			if (CheckIfWordRunning())
 				return;
+			StartWaitCursor();
 			WordApp = new Word.Application();
+			EndWaitCursor();
 			((Word.ApplicationEvents4_Event)WordApp).Quit += OnWordClose;
 			WordIsOpen = true;
 			internalWordVisibleCheckedChange = true;
