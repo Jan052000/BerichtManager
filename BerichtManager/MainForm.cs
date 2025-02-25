@@ -836,6 +836,11 @@ namespace BerichtManager
 					return;
 				}
 
+				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
+				rtbWork.ReadOnly = readOnly;
+				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
+				rtbSchool.ReadOnly = readOnly;
+
 				bool save = false;
 				if (field.HasValue)
 				{
