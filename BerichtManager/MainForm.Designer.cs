@@ -39,572 +39,536 @@ namespace BerichtManager
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.toRightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
-			this.miEdit = new System.Windows.Forms.ToolStripMenuItem();
-			this.miQuickEditOptions = new System.Windows.Forms.ToolStripMenuItem();
-			this.tiQuickEditWork = new System.Windows.Forms.ToolStripMenuItem();
-			this.miQuickEditSchool = new System.Windows.Forms.ToolStripMenuItem();
-			this.miQuickEditNumber = new System.Windows.Forms.ToolStripMenuItem();
-			this.miPrint = new System.Windows.Forms.ToolStripMenuItem();
-			this.miIHKOptions = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRcUpdateStatuses = new System.Windows.Forms.ToolStripMenuItem();
-			this.miUploadAsNext = new System.Windows.Forms.ToolStripMenuItem();
-			this.miUploadAllSelected = new System.Windows.Forms.ToolStripMenuItem();
-			this.miHandInSingle = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRcHandInSelection = new System.Windows.Forms.ToolStripMenuItem();
-			this.miUpdateReport = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRCUpdateSelection = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRcShowComment = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRcCheckFormat = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRcDownloadReports = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRefresh = new System.Windows.Forms.ToolStripMenuItem();
-			this.ttTips = new System.Windows.Forms.ToolTip(this.components);
-			this.rtbWork = new System.Windows.Forms.RichTextBox();
-			this.rtbSchool = new System.Windows.Forms.RichTextBox();
-			this.paMainView = new System.Windows.Forms.Panel();
-			this.scTextBoxes = new System.Windows.Forms.SplitContainer();
-			this.paPadding1 = new System.Windows.Forms.Panel();
-			this.paPadding2 = new System.Windows.Forms.Panel();
-			this.splitterTreeBoxes = new System.Windows.Forms.Splitter();
-			this.paFileTree = new System.Windows.Forms.Panel();
-			this.tvReports = new BerichtManager.OwnControls.OwnTreeView.CustomTreeView();
-			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.miFile = new System.Windows.Forms.ToolStripMenuItem();
-			this.miCreate = new System.Windows.Forms.ToolStripMenuItem();
-			this.miEditLatest = new System.Windows.Forms.ToolStripMenuItem();
-			this.miPrintAll = new System.Windows.Forms.ToolStripMenuItem();
-			this.miCheckDiscrepancy = new System.Windows.Forms.ToolStripMenuItem();
-			this.miNumbers = new System.Windows.Forms.ToolStripMenuItem();
-			this.miDates = new System.Windows.Forms.ToolStripMenuItem();
-			this.miFullCheck = new System.Windows.Forms.ToolStripMenuItem();
-			this.miIHK = new System.Windows.Forms.ToolStripMenuItem();
-			this.miUpdateStatuses = new System.Windows.Forms.ToolStripMenuItem();
-			this.miUploadSelection = new System.Windows.Forms.ToolStripMenuItem();
-			this.miHandInSelection = new System.Windows.Forms.ToolStripMenuItem();
-			this.miUpdateSelection = new System.Windows.Forms.ToolStripMenuItem();
-			this.miCheckFormat = new System.Windows.Forms.ToolStripMenuItem();
-			this.miDownloadReports = new System.Windows.Forms.ToolStripMenuItem();
-			this.miCloseReport = new System.Windows.Forms.ToolStripMenuItem();
-			this.miRevealInExplorer = new System.Windows.Forms.ToolStripMenuItem();
-			this.miOptions = new System.Windows.Forms.ToolStripMenuItem();
-			this.miOptionsMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.miWordVisible = new System.Windows.Forms.ToolStripMenuItem();
-			this.miClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.toRightClickMenu.SuspendLayout();
-			this.paMainView.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).BeginInit();
-			this.scTextBoxes.Panel1.SuspendLayout();
-			this.scTextBoxes.Panel2.SuspendLayout();
-			this.scTextBoxes.SuspendLayout();
-			this.paPadding1.SuspendLayout();
-			this.paPadding2.SuspendLayout();
-			this.paFileTree.SuspendLayout();
-			this.menuStrip1.SuspendLayout();
-			this.SuspendLayout();
+			components = new System.ComponentModel.Container();
+			toRightClickMenu = new ContextMenuStrip(components);
+			miDelete = new ToolStripMenuItem();
+			miEdit = new ToolStripMenuItem();
+			miQuickEditOptions = new ToolStripMenuItem();
+			tiQuickEditWork = new ToolStripMenuItem();
+			miQuickEditSchool = new ToolStripMenuItem();
+			miQuickEditNumber = new ToolStripMenuItem();
+			miPrint = new ToolStripMenuItem();
+			miIHKOptions = new ToolStripMenuItem();
+			miRcUpdateStatuses = new ToolStripMenuItem();
+			miUploadAsNext = new ToolStripMenuItem();
+			miUploadAllSelected = new ToolStripMenuItem();
+			miHandInSingle = new ToolStripMenuItem();
+			miRcHandInSelection = new ToolStripMenuItem();
+			miUpdateReport = new ToolStripMenuItem();
+			miRCUpdateSelection = new ToolStripMenuItem();
+			miRcShowComment = new ToolStripMenuItem();
+			miRcCheckFormat = new ToolStripMenuItem();
+			miRcDownloadReports = new ToolStripMenuItem();
+			miRefresh = new ToolStripMenuItem();
+			ttTips = new ToolTip(components);
+			rtbWork = new RichTextBox();
+			rtbSchool = new RichTextBox();
+			menuStrip1 = new MenuStrip();
+			miFile = new ToolStripMenuItem();
+			miCreate = new ToolStripMenuItem();
+			miEditLatest = new ToolStripMenuItem();
+			miPrintAll = new ToolStripMenuItem();
+			miCheckDiscrepancy = new ToolStripMenuItem();
+			miNumbers = new ToolStripMenuItem();
+			miDates = new ToolStripMenuItem();
+			miFullCheck = new ToolStripMenuItem();
+			miIHK = new ToolStripMenuItem();
+			miUpdateStatuses = new ToolStripMenuItem();
+			miUploadSelection = new ToolStripMenuItem();
+			miHandInSelection = new ToolStripMenuItem();
+			miUpdateSelection = new ToolStripMenuItem();
+			miCheckFormat = new ToolStripMenuItem();
+			miDownloadReports = new ToolStripMenuItem();
+			miCloseReport = new ToolStripMenuItem();
+			miRevealInExplorer = new ToolStripMenuItem();
+			miOptions = new ToolStripMenuItem();
+			miOptionsMenu = new ToolStripMenuItem();
+			miWordVisible = new ToolStripMenuItem();
+			miClose = new ToolStripMenuItem();
+			paMainView = new Panel();
+			scTextBoxes = new SplitContainer();
+			paPadding1 = new Panel();
+			paPadding2 = new Panel();
+			splitterTreeBoxes = new Splitter();
+			paFileTree = new Panel();
+			tvReports = new OwnControls.OwnTreeView.CustomTreeView();
+			toRightClickMenu.SuspendLayout();
+			menuStrip1.SuspendLayout();
+			paMainView.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)scTextBoxes).BeginInit();
+			scTextBoxes.Panel1.SuspendLayout();
+			scTextBoxes.Panel2.SuspendLayout();
+			scTextBoxes.SuspendLayout();
+			paPadding1.SuspendLayout();
+			paPadding2.SuspendLayout();
+			paFileTree.SuspendLayout();
+			SuspendLayout();
 			// 
 			// toRightClickMenu
 			// 
-			this.toRightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miDelete,
-            this.miEdit,
-            this.miQuickEditOptions,
-            this.miPrint,
-            this.miIHKOptions,
-            this.miRefresh});
-			this.toRightClickMenu.Name = "contextMenuStrip1";
-			this.toRightClickMenu.Size = new System.Drawing.Size(147, 136);
-			this.toRightClickMenu.Opening += new System.ComponentModel.CancelEventHandler(this.toRightClickMenu_Opening);
+			toRightClickMenu.Items.AddRange(new ToolStripItem[] { miDelete, miEdit, miQuickEditOptions, miPrint, miIHKOptions, miRefresh });
+			toRightClickMenu.Name = "contextMenuStrip1";
+			toRightClickMenu.Size = new Size(147, 136);
+			toRightClickMenu.Opening += toRightClickMenu_Opening;
 			// 
 			// miDelete
 			// 
-			this.miDelete.Name = "miDelete";
-			this.miDelete.Size = new System.Drawing.Size(146, 22);
-			this.miDelete.Text = "Delete";
-			this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
+			miDelete.Name = "miDelete";
+			miDelete.Size = new Size(146, 22);
+			miDelete.Text = "Delete";
+			miDelete.Click += miDelete_Click;
 			// 
 			// miEdit
 			// 
-			this.miEdit.Name = "miEdit";
-			this.miEdit.Size = new System.Drawing.Size(146, 22);
-			this.miEdit.Text = "Edit";
-			this.miEdit.Click += new System.EventHandler(this.miEdit_Click);
+			miEdit.Name = "miEdit";
+			miEdit.Size = new Size(146, 22);
+			miEdit.Text = "Edit";
+			miEdit.Click += miEdit_Click;
 			// 
 			// miQuickEditOptions
 			// 
-			this.miQuickEditOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tiQuickEditWork,
-            this.miQuickEditSchool,
-            this.miQuickEditNumber});
-			this.miQuickEditOptions.Name = "miQuickEditOptions";
-			this.miQuickEditOptions.Size = new System.Drawing.Size(146, 22);
-			this.miQuickEditOptions.Text = "Quick actions";
+			miQuickEditOptions.DropDownItems.AddRange(new ToolStripItem[] { tiQuickEditWork, miQuickEditSchool, miQuickEditNumber });
+			miQuickEditOptions.Name = "miQuickEditOptions";
+			miQuickEditOptions.Size = new Size(146, 22);
+			miQuickEditOptions.Text = "Quick actions";
 			// 
 			// tiQuickEditWork
 			// 
-			this.tiQuickEditWork.Name = "tiQuickEditWork";
-			this.tiQuickEditWork.Size = new System.Drawing.Size(174, 22);
-			this.tiQuickEditWork.Text = "Edit work";
-			this.tiQuickEditWork.Click += new System.EventHandler(this.miQuickEditWork_Click);
+			tiQuickEditWork.Name = "tiQuickEditWork";
+			tiQuickEditWork.Size = new Size(174, 22);
+			tiQuickEditWork.Text = "Edit work";
+			tiQuickEditWork.Click += miQuickEditWork_Click;
 			// 
 			// miQuickEditSchool
 			// 
-			this.miQuickEditSchool.Name = "miQuickEditSchool";
-			this.miQuickEditSchool.Size = new System.Drawing.Size(174, 22);
-			this.miQuickEditSchool.Text = "Edit school";
-			this.miQuickEditSchool.Click += new System.EventHandler(this.miQuickEditSchool_Click);
+			miQuickEditSchool.Name = "miQuickEditSchool";
+			miQuickEditSchool.Size = new Size(174, 22);
+			miQuickEditSchool.Text = "Edit school";
+			miQuickEditSchool.Click += miQuickEditSchool_Click;
 			// 
 			// miQuickEditNumber
 			// 
-			this.miQuickEditNumber.Name = "miQuickEditNumber";
-			this.miQuickEditNumber.Size = new System.Drawing.Size(174, 22);
-			this.miQuickEditNumber.Text = "Edit report number";
-			this.miQuickEditNumber.Click += new System.EventHandler(this.miQuickEditNumber_Click);
+			miQuickEditNumber.Name = "miQuickEditNumber";
+			miQuickEditNumber.Size = new Size(174, 22);
+			miQuickEditNumber.Text = "Edit report number";
+			miQuickEditNumber.Click += miQuickEditNumber_Click;
 			// 
 			// miPrint
 			// 
-			this.miPrint.Name = "miPrint";
-			this.miPrint.Size = new System.Drawing.Size(146, 22);
-			this.miPrint.Text = "Print";
-			this.miPrint.Click += new System.EventHandler(this.miPrint_Click);
+			miPrint.Name = "miPrint";
+			miPrint.Size = new Size(146, 22);
+			miPrint.Text = "Print";
+			miPrint.Click += miPrint_Click;
 			// 
 			// miIHKOptions
 			// 
-			this.miIHKOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miRcUpdateStatuses,
-            this.miUploadAsNext,
-            this.miUploadAllSelected,
-            this.miHandInSingle,
-            this.miRcHandInSelection,
-            this.miUpdateReport,
-            this.miRCUpdateSelection,
-            this.miRcShowComment,
-            this.miRcCheckFormat,
-            this.miRcDownloadReports});
-			this.miIHKOptions.Name = "miIHKOptions";
-			this.miIHKOptions.Size = new System.Drawing.Size(146, 22);
-			this.miIHKOptions.Text = "IHK";
-			this.miIHKOptions.ToolTipText = "All options for interactions with IHK";
+			miIHKOptions.DropDownItems.AddRange(new ToolStripItem[] { miRcUpdateStatuses, miUploadAsNext, miUploadAllSelected, miHandInSingle, miRcHandInSelection, miUpdateReport, miRCUpdateSelection, miRcShowComment, miRcCheckFormat, miRcDownloadReports });
+			miIHKOptions.Name = "miIHKOptions";
+			miIHKOptions.Size = new Size(146, 22);
+			miIHKOptions.Text = "IHK";
+			miIHKOptions.ToolTipText = "All options for interactions with IHK";
 			// 
 			// miRcUpdateStatuses
 			// 
-			this.miRcUpdateStatuses.Name = "miRcUpdateStatuses";
-			this.miRcUpdateStatuses.Size = new System.Drawing.Size(168, 22);
-			this.miRcUpdateStatuses.Text = "Update statuses";
-			this.miRcUpdateStatuses.ToolTipText = "Update statuses of reports";
-			this.miRcUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
+			miRcUpdateStatuses.Name = "miRcUpdateStatuses";
+			miRcUpdateStatuses.Size = new Size(168, 22);
+			miRcUpdateStatuses.Text = "Update statuses";
+			miRcUpdateStatuses.ToolTipText = "Update statuses of reports";
+			miRcUpdateStatuses.Click += miUpdateStatuses_Click;
 			// 
 			// miUploadAsNext
 			// 
-			this.miUploadAsNext.Name = "miUploadAsNext";
-			this.miUploadAsNext.Size = new System.Drawing.Size(168, 22);
-			this.miUploadAsNext.Text = "Upload";
-			this.miUploadAsNext.ToolTipText = "Upload the selected report as next report";
-			this.miUploadAsNext.Click += new System.EventHandler(this.miUploadAsNext_Click);
+			miUploadAsNext.Name = "miUploadAsNext";
+			miUploadAsNext.Size = new Size(168, 22);
+			miUploadAsNext.Text = "Upload";
+			miUploadAsNext.ToolTipText = "Upload the selected report as next report";
+			miUploadAsNext.Click += miUploadAsNext_Click;
 			// 
 			// miUploadAllSelected
 			// 
-			this.miUploadAllSelected.Name = "miUploadAllSelected";
-			this.miUploadAllSelected.Size = new System.Drawing.Size(168, 22);
-			this.miUploadAllSelected.Text = "Upload selection";
-			this.miUploadAllSelected.ToolTipText = "Upload all reports selected in following form";
-			this.miUploadAllSelected.Click += new System.EventHandler(this.UploadSelectionClick);
+			miUploadAllSelected.Name = "miUploadAllSelected";
+			miUploadAllSelected.Size = new Size(168, 22);
+			miUploadAllSelected.Text = "Upload selection";
+			miUploadAllSelected.ToolTipText = "Upload all reports selected in following form";
+			miUploadAllSelected.Click += UploadSelectionClick;
 			// 
 			// miHandInSingle
 			// 
-			this.miHandInSingle.Name = "miHandInSingle";
-			this.miHandInSingle.Size = new System.Drawing.Size(168, 22);
-			this.miHandInSingle.Text = "Hand in";
-			this.miHandInSingle.ToolTipText = "Hand in this report";
-			this.miHandInSingle.Click += new System.EventHandler(this.miHandInSingle_Click);
+			miHandInSingle.Name = "miHandInSingle";
+			miHandInSingle.Size = new Size(168, 22);
+			miHandInSingle.Text = "Hand in";
+			miHandInSingle.ToolTipText = "Hand in this report";
+			miHandInSingle.Click += miHandInSingle_Click;
 			// 
 			// miRcHandInSelection
 			// 
-			this.miRcHandInSelection.Name = "miRcHandInSelection";
-			this.miRcHandInSelection.Size = new System.Drawing.Size(168, 22);
-			this.miRcHandInSelection.Text = "Hand in selection";
-			this.miRcHandInSelection.ToolTipText = "Hand in all reports selected in following form";
-			this.miRcHandInSelection.Click += new System.EventHandler(this.HandInSelectionClick);
+			miRcHandInSelection.Name = "miRcHandInSelection";
+			miRcHandInSelection.Size = new Size(168, 22);
+			miRcHandInSelection.Text = "Hand in selection";
+			miRcHandInSelection.ToolTipText = "Hand in all reports selected in following form";
+			miRcHandInSelection.Click += HandInSelectionClick;
 			// 
 			// miUpdateReport
 			// 
-			this.miUpdateReport.Name = "miUpdateReport";
-			this.miUpdateReport.Size = new System.Drawing.Size(168, 22);
-			this.miUpdateReport.Text = "Update report";
-			this.miUpdateReport.ToolTipText = "Upload local changes to IHK";
-			this.miUpdateReport.Click += new System.EventHandler(this.SendReportToIHK);
+			miUpdateReport.Name = "miUpdateReport";
+			miUpdateReport.Size = new Size(168, 22);
+			miUpdateReport.Text = "Update report";
+			miUpdateReport.ToolTipText = "Upload local changes to IHK";
+			miUpdateReport.Click += SendReportToIHK;
 			// 
 			// miRCUpdateSelection
 			// 
-			this.miRCUpdateSelection.Name = "miRCUpdateSelection";
-			this.miRCUpdateSelection.Size = new System.Drawing.Size(168, 22);
-			this.miRCUpdateSelection.Text = "Update selection";
-			this.miRCUpdateSelection.Click += new System.EventHandler(this.SendSelectionToIHK);
+			miRCUpdateSelection.Name = "miRCUpdateSelection";
+			miRCUpdateSelection.Size = new Size(168, 22);
+			miRCUpdateSelection.Text = "Update selection";
+			miRCUpdateSelection.Click += SendSelectionToIHK;
 			// 
 			// miRcShowComment
 			// 
-			this.miRcShowComment.Name = "miRcShowComment";
-			this.miRcShowComment.Size = new System.Drawing.Size(168, 22);
-			this.miRcShowComment.Text = "Show comment";
-			this.miRcShowComment.Click += new System.EventHandler(this.miRcShowComment_Click);
+			miRcShowComment.Name = "miRcShowComment";
+			miRcShowComment.Size = new Size(168, 22);
+			miRcShowComment.Text = "Show comment";
+			miRcShowComment.Click += miRcShowComment_Click;
 			// 
 			// miRcCheckFormat
 			// 
-			this.miRcCheckFormat.Name = "miRcCheckFormat";
-			this.miRcCheckFormat.Size = new System.Drawing.Size(168, 22);
-			this.miRcCheckFormat.Text = "Check format";
-			this.miRcCheckFormat.Click += new System.EventHandler(this.CheckFormat);
+			miRcCheckFormat.Name = "miRcCheckFormat";
+			miRcCheckFormat.Size = new Size(168, 22);
+			miRcCheckFormat.Text = "Check format";
+			miRcCheckFormat.Click += CheckFormat;
 			// 
 			// miRcDownloadReports
 			// 
-			this.miRcDownloadReports.Name = "miRcDownloadReports";
-			this.miRcDownloadReports.Size = new System.Drawing.Size(168, 22);
-			this.miRcDownloadReports.Text = "Download reports";
-			this.miRcDownloadReports.Click += new System.EventHandler(this.DownloadIHKReports);
+			miRcDownloadReports.Name = "miRcDownloadReports";
+			miRcDownloadReports.Size = new Size(168, 22);
+			miRcDownloadReports.Text = "Download reports";
+			miRcDownloadReports.Click += DownloadIHKReports;
 			// 
 			// miRefresh
 			// 
-			this.miRefresh.Name = "miRefresh";
-			this.miRefresh.Size = new System.Drawing.Size(146, 22);
-			this.miRefresh.Text = "Refresh";
-			this.miRefresh.Click += new System.EventHandler(this.MiRefresh_Click);
+			miRefresh.Name = "miRefresh";
+			miRefresh.Size = new Size(146, 22);
+			miRefresh.Text = "Refresh";
+			miRefresh.Click += MiRefresh_Click;
 			// 
 			// rtbWork
 			// 
-			this.rtbWork.AcceptsTab = true;
-			this.rtbWork.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.rtbWork.Location = new System.Drawing.Point(0, 3);
-			this.rtbWork.Margin = new System.Windows.Forms.Padding(0);
-			this.rtbWork.Name = "rtbWork";
-			this.rtbWork.Size = new System.Drawing.Size(559, 209);
-			this.rtbWork.TabIndex = 0;
-			this.rtbWork.Text = "";
-			this.ttTips.SetToolTip(this.rtbWork, "Work");
-			this.rtbWork.WordWrap = false;
-			this.rtbWork.TextChanged += new System.EventHandler(this.EditRichTextBox);
-			this.rtbWork.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
+			rtbWork.AcceptsTab = true;
+			rtbWork.Dock = DockStyle.Fill;
+			rtbWork.Location = new Point(0, 3);
+			rtbWork.Margin = new Padding(0);
+			rtbWork.Name = "rtbWork";
+			rtbWork.Size = new Size(651, 242);
+			rtbWork.TabIndex = 0;
+			rtbWork.Text = "";
+			ttTips.SetToolTip(rtbWork, "Work");
+			rtbWork.WordWrap = false;
+			rtbWork.TextChanged += EditRichTextBox;
+			rtbWork.KeyDown += OnKeyDownDefault;
 			// 
 			// rtbSchool
 			// 
-			this.rtbSchool.AcceptsTab = true;
-			this.rtbSchool.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.rtbSchool.Location = new System.Drawing.Point(0, 0);
-			this.rtbSchool.Margin = new System.Windows.Forms.Padding(0);
-			this.rtbSchool.Name = "rtbSchool";
-			this.rtbSchool.Size = new System.Drawing.Size(559, 210);
-			this.rtbSchool.TabIndex = 0;
-			this.rtbSchool.Text = "";
-			this.ttTips.SetToolTip(this.rtbSchool, "School");
-			this.rtbSchool.WordWrap = false;
-			this.rtbSchool.TextChanged += new System.EventHandler(this.EditRichTextBox);
-			this.rtbSchool.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
-			// 
-			// paMainView
-			// 
-			this.paMainView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.paMainView.Controls.Add(this.scTextBoxes);
-			this.paMainView.Controls.Add(this.splitterTreeBoxes);
-			this.paMainView.Controls.Add(this.paFileTree);
-			this.paMainView.Location = new System.Drawing.Point(0, 24);
-			this.paMainView.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
-			this.paMainView.Name = "paMainView";
-			this.paMainView.Size = new System.Drawing.Size(800, 426);
-			this.paMainView.TabIndex = 0;
-			// 
-			// scTextBoxes
-			// 
-			this.scTextBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.scTextBoxes.Location = new System.Drawing.Point(238, 0);
-			this.scTextBoxes.Name = "scTextBoxes";
-			this.scTextBoxes.Orientation = System.Windows.Forms.Orientation.Horizontal;
-			// 
-			// scTextBoxes.Panel1
-			// 
-			this.scTextBoxes.Panel1.Controls.Add(this.paPadding1);
-			// 
-			// scTextBoxes.Panel2
-			// 
-			this.scTextBoxes.Panel2.Controls.Add(this.paPadding2);
-			this.scTextBoxes.Size = new System.Drawing.Size(562, 426);
-			this.scTextBoxes.SplitterDistance = 212;
-			this.scTextBoxes.SplitterWidth = 1;
-			this.scTextBoxes.TabIndex = 1;
-			this.scTextBoxes.TabStop = false;
-			// 
-			// paPadding1
-			// 
-			this.paPadding1.Controls.Add(this.rtbWork);
-			this.paPadding1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.paPadding1.Location = new System.Drawing.Point(0, 0);
-			this.paPadding1.Name = "paPadding1";
-			this.paPadding1.Padding = new System.Windows.Forms.Padding(0, 3, 3, 0);
-			this.paPadding1.Size = new System.Drawing.Size(562, 212);
-			this.paPadding1.TabIndex = 0;
-			// 
-			// paPadding2
-			// 
-			this.paPadding2.Controls.Add(this.rtbSchool);
-			this.paPadding2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.paPadding2.Location = new System.Drawing.Point(0, 0);
-			this.paPadding2.Name = "paPadding2";
-			this.paPadding2.Padding = new System.Windows.Forms.Padding(0, 0, 3, 3);
-			this.paPadding2.Size = new System.Drawing.Size(562, 213);
-			this.paPadding2.TabIndex = 0;
-			// 
-			// splitterTreeBoxes
-			// 
-			this.splitterTreeBoxes.Location = new System.Drawing.Point(235, 0);
-			this.splitterTreeBoxes.Name = "splitterTreeBoxes";
-			this.splitterTreeBoxes.Size = new System.Drawing.Size(3, 426);
-			this.splitterTreeBoxes.TabIndex = 1;
-			this.splitterTreeBoxes.TabStop = false;
-			// 
-			// paFileTree
-			// 
-			this.paFileTree.Controls.Add(this.tvReports);
-			this.paFileTree.Dock = System.Windows.Forms.DockStyle.Left;
-			this.paFileTree.Location = new System.Drawing.Point(0, 0);
-			this.paFileTree.Name = "paFileTree";
-			this.paFileTree.Size = new System.Drawing.Size(235, 426);
-			this.paFileTree.TabIndex = 0;
-			// 
-			// tvReports
-			// 
-			this.tvReports.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tvReports.ContextMenuStrip = this.toRightClickMenu;
-			this.tvReports.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvReports.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawAll;
-			this.tvReports.Location = new System.Drawing.Point(0, 0);
-			this.tvReports.Margin = new System.Windows.Forms.Padding(0);
-			this.tvReports.Name = "tvReports";
-			this.tvReports.Size = new System.Drawing.Size(235, 426);
-			this.tvReports.TabIndex = 0;
-			this.tvReports.Click += new System.EventHandler(this.tvReports_Click);
-			this.tvReports.DoubleClick += new System.EventHandler(this.tvReports_DoubleClick);
-			this.tvReports.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
-			this.tvReports.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tvReports_KeyUp);
+			rtbSchool.AcceptsTab = true;
+			rtbSchool.Dock = DockStyle.Fill;
+			rtbSchool.Location = new Point(0, 0);
+			rtbSchool.Margin = new Padding(0);
+			rtbSchool.Name = "rtbSchool";
+			rtbSchool.Size = new Size(651, 244);
+			rtbSchool.TabIndex = 0;
+			rtbSchool.Text = "";
+			ttTips.SetToolTip(rtbSchool, "School");
+			rtbSchool.WordWrap = false;
+			rtbSchool.TextChanged += EditRichTextBox;
+			rtbSchool.KeyDown += OnKeyDownDefault;
 			// 
 			// menuStrip1
 			// 
-			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miFile,
-            this.miOptions,
-            this.miClose});
-			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(800, 24);
-			this.menuStrip1.TabIndex = 1;
-			this.menuStrip1.TabStop = true;
-			this.menuStrip1.Text = "menuStrip1";
-			this.menuStrip1.Paint += new System.Windows.Forms.PaintEventHandler(this.menuStrip1_Paint);
-			this.menuStrip1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
+			menuStrip1.Items.AddRange(new ToolStripItem[] { miFile, miOptions, miClose });
+			menuStrip1.Location = new Point(0, 0);
+			menuStrip1.Name = "menuStrip1";
+			menuStrip1.Padding = new Padding(7, 2, 0, 2);
+			menuStrip1.Size = new Size(933, 24);
+			menuStrip1.TabIndex = 1;
+			menuStrip1.TabStop = true;
+			menuStrip1.Text = "menuStrip1";
+			menuStrip1.Paint += menuStrip1_Paint;
+			menuStrip1.KeyDown += OnKeyDownDefault;
 			// 
 			// miFile
 			// 
-			this.miFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miCreate,
-            this.miEditLatest,
-            this.miPrintAll,
-            this.miCheckDiscrepancy,
-            this.miIHK,
-            this.miCloseReport,
-            this.miRevealInExplorer});
-			this.miFile.Name = "miFile";
-			this.miFile.Size = new System.Drawing.Size(37, 20);
-			this.miFile.Text = "File";
+			miFile.DropDownItems.AddRange(new ToolStripItem[] { miCreate, miEditLatest, miPrintAll, miCheckDiscrepancy, miIHK, miCloseReport, miRevealInExplorer });
+			miFile.Name = "miFile";
+			miFile.Size = new Size(37, 20);
+			miFile.Text = "File";
 			// 
 			// miCreate
 			// 
-			this.miCreate.Name = "miCreate";
-			this.miCreate.Size = new System.Drawing.Size(191, 22);
-			this.miCreate.Text = "Create";
-			this.miCreate.Click += new System.EventHandler(this.btCreate_Click);
+			miCreate.Name = "miCreate";
+			miCreate.Size = new Size(191, 22);
+			miCreate.Text = "Create";
+			miCreate.Click += btCreate_Click;
 			// 
 			// miEditLatest
 			// 
-			this.miEditLatest.Name = "miEditLatest";
-			this.miEditLatest.Size = new System.Drawing.Size(191, 22);
-			this.miEditLatest.Text = "Edit latest";
-			this.miEditLatest.Click += new System.EventHandler(this.miEditLatest_Click);
+			miEditLatest.Name = "miEditLatest";
+			miEditLatest.Size = new Size(191, 22);
+			miEditLatest.Text = "Edit latest";
+			miEditLatest.Click += miEditLatest_Click;
 			// 
 			// miPrintAll
 			// 
-			this.miPrintAll.Name = "miPrintAll";
-			this.miPrintAll.Size = new System.Drawing.Size(191, 22);
-			this.miPrintAll.Text = "Print all";
-			this.miPrintAll.Click += new System.EventHandler(this.btPrintAll_Click);
+			miPrintAll.Name = "miPrintAll";
+			miPrintAll.Size = new Size(191, 22);
+			miPrintAll.Text = "Print all";
+			miPrintAll.Click += btPrintAll_Click;
 			// 
 			// miCheckDiscrepancy
 			// 
-			this.miCheckDiscrepancy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miNumbers,
-            this.miDates,
-            this.miFullCheck});
-			this.miCheckDiscrepancy.Name = "miCheckDiscrepancy";
-			this.miCheckDiscrepancy.Size = new System.Drawing.Size(191, 22);
-			this.miCheckDiscrepancy.Text = "Check for discrepancy";
+			miCheckDiscrepancy.DropDownItems.AddRange(new ToolStripItem[] { miNumbers, miDates, miFullCheck });
+			miCheckDiscrepancy.Name = "miCheckDiscrepancy";
+			miCheckDiscrepancy.Size = new Size(191, 22);
+			miCheckDiscrepancy.Text = "Check for discrepancy";
 			// 
 			// miNumbers
 			// 
-			this.miNumbers.Name = "miNumbers";
-			this.miNumbers.Size = new System.Drawing.Size(157, 22);
-			this.miNumbers.Text = "Check numbers";
-			this.miNumbers.ToolTipText = "Check if report numbers are continuous";
-			this.miNumbers.Click += new System.EventHandler(this.CheckNumbers_Click);
+			miNumbers.Name = "miNumbers";
+			miNumbers.Size = new Size(157, 22);
+			miNumbers.Text = "Check numbers";
+			miNumbers.ToolTipText = "Check if report numbers are continuous";
+			miNumbers.Click += CheckNumbers_Click;
 			// 
 			// miDates
 			// 
-			this.miDates.Name = "miDates";
-			this.miDates.Size = new System.Drawing.Size(157, 22);
-			this.miDates.Text = "Check dates";
-			this.miDates.Click += new System.EventHandler(this.CheckDates_Click);
+			miDates.Name = "miDates";
+			miDates.Size = new Size(157, 22);
+			miDates.Text = "Check dates";
+			miDates.Click += CheckDates_Click;
 			// 
 			// miFullCheck
 			// 
-			this.miFullCheck.Name = "miFullCheck";
-			this.miFullCheck.Size = new System.Drawing.Size(157, 22);
-			this.miFullCheck.Text = "Full check";
-			this.miFullCheck.Click += new System.EventHandler(this.FullCheck_Click);
+			miFullCheck.Name = "miFullCheck";
+			miFullCheck.Size = new Size(157, 22);
+			miFullCheck.Text = "Full check";
+			miFullCheck.Click += FullCheck_Click;
 			// 
 			// miIHK
 			// 
-			this.miIHK.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miUpdateStatuses,
-            this.miUploadSelection,
-            this.miHandInSelection,
-            this.miUpdateSelection,
-            this.miCheckFormat,
-            this.miDownloadReports});
-			this.miIHK.Name = "miIHK";
-			this.miIHK.Size = new System.Drawing.Size(191, 22);
-			this.miIHK.Text = "IHK";
-			this.miIHK.ToolTipText = "All options for interactions with IHK";
+			miIHK.DropDownItems.AddRange(new ToolStripItem[] { miUpdateStatuses, miUploadSelection, miHandInSelection, miUpdateSelection, miCheckFormat, miDownloadReports });
+			miIHK.Name = "miIHK";
+			miIHK.Size = new Size(191, 22);
+			miIHK.Text = "IHK";
+			miIHK.ToolTipText = "All options for interactions with IHK";
 			// 
 			// miUpdateStatuses
 			// 
-			this.miUpdateStatuses.Name = "miUpdateStatuses";
-			this.miUpdateStatuses.Size = new System.Drawing.Size(168, 22);
-			this.miUpdateStatuses.Text = "Update statuses";
-			this.miUpdateStatuses.ToolTipText = "Update statuses of reports";
-			this.miUpdateStatuses.Click += new System.EventHandler(this.miUpdateStatuses_Click);
+			miUpdateStatuses.Name = "miUpdateStatuses";
+			miUpdateStatuses.Size = new Size(168, 22);
+			miUpdateStatuses.Text = "Update statuses";
+			miUpdateStatuses.ToolTipText = "Update statuses of reports";
+			miUpdateStatuses.Click += miUpdateStatuses_Click;
 			// 
 			// miUploadSelection
 			// 
-			this.miUploadSelection.Name = "miUploadSelection";
-			this.miUploadSelection.Size = new System.Drawing.Size(168, 22);
-			this.miUploadSelection.Text = "Upload selection";
-			this.miUploadSelection.ToolTipText = "Upload all reports selected in following form";
-			this.miUploadSelection.Click += new System.EventHandler(this.UploadSelectionClick);
+			miUploadSelection.Name = "miUploadSelection";
+			miUploadSelection.Size = new Size(168, 22);
+			miUploadSelection.Text = "Upload selection";
+			miUploadSelection.ToolTipText = "Upload all reports selected in following form";
+			miUploadSelection.Click += UploadSelectionClick;
 			// 
 			// miHandInSelection
 			// 
-			this.miHandInSelection.Name = "miHandInSelection";
-			this.miHandInSelection.Size = new System.Drawing.Size(168, 22);
-			this.miHandInSelection.Text = "Hand in selection";
-			this.miHandInSelection.ToolTipText = "Hand in all reports selected in following form";
-			this.miHandInSelection.Click += new System.EventHandler(this.HandInSelectionClick);
+			miHandInSelection.Name = "miHandInSelection";
+			miHandInSelection.Size = new Size(168, 22);
+			miHandInSelection.Text = "Hand in selection";
+			miHandInSelection.ToolTipText = "Hand in all reports selected in following form";
+			miHandInSelection.Click += HandInSelectionClick;
 			// 
 			// miUpdateSelection
 			// 
-			this.miUpdateSelection.Name = "miUpdateSelection";
-			this.miUpdateSelection.Size = new System.Drawing.Size(168, 22);
-			this.miUpdateSelection.Text = "Update selection";
-			this.miUpdateSelection.Click += new System.EventHandler(this.SendSelectionToIHK);
+			miUpdateSelection.Name = "miUpdateSelection";
+			miUpdateSelection.Size = new Size(168, 22);
+			miUpdateSelection.Text = "Update selection";
+			miUpdateSelection.Click += SendSelectionToIHK;
 			// 
 			// miCheckFormat
 			// 
-			this.miCheckFormat.Name = "miCheckFormat";
-			this.miCheckFormat.Size = new System.Drawing.Size(168, 22);
-			this.miCheckFormat.Text = "Check format";
-			this.miCheckFormat.Click += new System.EventHandler(this.CheckFormat);
+			miCheckFormat.Name = "miCheckFormat";
+			miCheckFormat.Size = new Size(168, 22);
+			miCheckFormat.Text = "Check format";
+			miCheckFormat.Click += CheckFormat;
 			// 
 			// miDownloadReports
 			// 
-			this.miDownloadReports.Name = "miDownloadReports";
-			this.miDownloadReports.Size = new System.Drawing.Size(168, 22);
-			this.miDownloadReports.Text = "Download reports";
-			this.miDownloadReports.Click += new System.EventHandler(this.DownloadIHKReports);
+			miDownloadReports.Name = "miDownloadReports";
+			miDownloadReports.Size = new Size(168, 22);
+			miDownloadReports.Text = "Download reports";
+			miDownloadReports.Click += DownloadIHKReports;
 			// 
 			// miCloseReport
 			// 
-			this.miCloseReport.Name = "miCloseReport";
-			this.miCloseReport.Size = new System.Drawing.Size(191, 22);
-			this.miCloseReport.Text = "Close Report";
-			this.miCloseReport.Click += new System.EventHandler(this.miCloseReport_Click);
+			miCloseReport.Name = "miCloseReport";
+			miCloseReport.Size = new Size(191, 22);
+			miCloseReport.Text = "Close Report";
+			miCloseReport.Click += miCloseReport_Click;
 			// 
 			// miRevealInExplorer
 			// 
-			this.miRevealInExplorer.Name = "miRevealInExplorer";
-			this.miRevealInExplorer.Size = new System.Drawing.Size(191, 22);
-			this.miRevealInExplorer.Text = "Reveal in explorer";
-			this.miRevealInExplorer.Click += new System.EventHandler(this.miRevealInExplorer_Click);
+			miRevealInExplorer.Name = "miRevealInExplorer";
+			miRevealInExplorer.Size = new Size(191, 22);
+			miRevealInExplorer.Text = "Reveal in explorer";
+			miRevealInExplorer.Click += miRevealInExplorer_Click;
 			// 
 			// miOptions
 			// 
-			this.miOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miOptionsMenu,
-            this.miWordVisible});
-			this.miOptions.Name = "miOptions";
-			this.miOptions.Size = new System.Drawing.Size(61, 20);
-			this.miOptions.Text = "Options";
+			miOptions.DropDownItems.AddRange(new ToolStripItem[] { miOptionsMenu, miWordVisible });
+			miOptions.Name = "miOptions";
+			miOptions.Size = new Size(61, 20);
+			miOptions.Text = "Options";
 			// 
 			// miOptionsMenu
 			// 
-			this.miOptionsMenu.Name = "miOptionsMenu";
-			this.miOptionsMenu.Size = new System.Drawing.Size(150, 22);
-			this.miOptionsMenu.Text = "Options menu";
-			this.miOptionsMenu.Click += new System.EventHandler(this.btOptions_Click);
+			miOptionsMenu.Name = "miOptionsMenu";
+			miOptionsMenu.Size = new Size(150, 22);
+			miOptionsMenu.Text = "Options menu";
+			miOptionsMenu.Click += btOptions_Click;
 			// 
 			// miWordVisible
 			// 
-			this.miWordVisible.CheckOnClick = true;
-			this.miWordVisible.Name = "miWordVisible";
-			this.miWordVisible.Size = new System.Drawing.Size(150, 22);
-			this.miWordVisible.Text = "Word visible";
-			this.miWordVisible.Click += new System.EventHandler(this.miWordVisible_Click);
+			miWordVisible.CheckOnClick = true;
+			miWordVisible.Name = "miWordVisible";
+			miWordVisible.Size = new Size(150, 22);
+			miWordVisible.Text = "Word visible";
+			miWordVisible.Click += miWordVisible_Click;
 			// 
 			// miClose
 			// 
-			this.miClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.miClose.Enabled = false;
-			this.miClose.Name = "miClose";
-			this.miClose.Size = new System.Drawing.Size(48, 20);
-			this.miClose.Text = "Close";
-			this.miClose.Visible = false;
-			this.miClose.Click += new System.EventHandler(this.btClose_Click);
+			miClose.Alignment = ToolStripItemAlignment.Right;
+			miClose.Enabled = false;
+			miClose.Name = "miClose";
+			miClose.Size = new Size(48, 20);
+			miClose.Text = "Close";
+			miClose.Visible = false;
+			miClose.Click += btClose_Click;
+			// 
+			// paMainView
+			// 
+			paMainView.Controls.Add(scTextBoxes);
+			paMainView.Controls.Add(splitterTreeBoxes);
+			paMainView.Controls.Add(paFileTree);
+			paMainView.Dock = DockStyle.Fill;
+			paMainView.Location = new Point(0, 24);
+			paMainView.Margin = new Padding(0, 0, 4, 3);
+			paMainView.Name = "paMainView";
+			paMainView.Size = new Size(933, 495);
+			paMainView.TabIndex = 2;
+			// 
+			// scTextBoxes
+			// 
+			scTextBoxes.Dock = DockStyle.Fill;
+			scTextBoxes.Location = new Point(278, 0);
+			scTextBoxes.Margin = new Padding(4, 3, 4, 3);
+			scTextBoxes.Name = "scTextBoxes";
+			scTextBoxes.Orientation = Orientation.Horizontal;
+			// 
+			// scTextBoxes.Panel1
+			// 
+			scTextBoxes.Panel1.Controls.Add(paPadding1);
+			// 
+			// scTextBoxes.Panel2
+			// 
+			scTextBoxes.Panel2.Controls.Add(paPadding2);
+			scTextBoxes.Size = new Size(655, 495);
+			scTextBoxes.SplitterDistance = 245;
+			scTextBoxes.SplitterWidth = 3;
+			scTextBoxes.TabIndex = 1;
+			scTextBoxes.TabStop = false;
+			// 
+			// paPadding1
+			// 
+			paPadding1.Controls.Add(rtbWork);
+			paPadding1.Dock = DockStyle.Fill;
+			paPadding1.Location = new Point(0, 0);
+			paPadding1.Margin = new Padding(4, 3, 4, 3);
+			paPadding1.Name = "paPadding1";
+			paPadding1.Padding = new Padding(0, 3, 4, 0);
+			paPadding1.Size = new Size(655, 245);
+			paPadding1.TabIndex = 0;
+			// 
+			// paPadding2
+			// 
+			paPadding2.Controls.Add(rtbSchool);
+			paPadding2.Dock = DockStyle.Fill;
+			paPadding2.Location = new Point(0, 0);
+			paPadding2.Margin = new Padding(4, 3, 4, 3);
+			paPadding2.Name = "paPadding2";
+			paPadding2.Padding = new Padding(0, 0, 4, 3);
+			paPadding2.Size = new Size(655, 247);
+			paPadding2.TabIndex = 0;
+			// 
+			// splitterTreeBoxes
+			// 
+			splitterTreeBoxes.Location = new Point(274, 0);
+			splitterTreeBoxes.Margin = new Padding(4, 3, 4, 3);
+			splitterTreeBoxes.Name = "splitterTreeBoxes";
+			splitterTreeBoxes.Size = new Size(4, 495);
+			splitterTreeBoxes.TabIndex = 1;
+			splitterTreeBoxes.TabStop = false;
+			// 
+			// paFileTree
+			// 
+			paFileTree.Controls.Add(tvReports);
+			paFileTree.Dock = DockStyle.Left;
+			paFileTree.Location = new Point(0, 0);
+			paFileTree.Margin = new Padding(4, 3, 4, 3);
+			paFileTree.Name = "paFileTree";
+			paFileTree.Size = new Size(274, 495);
+			paFileTree.TabIndex = 0;
+			// 
+			// tvReports
+			// 
+			tvReports.BorderStyle = BorderStyle.None;
+			tvReports.ContextMenuStrip = toRightClickMenu;
+			tvReports.Dock = DockStyle.Fill;
+			tvReports.DrawMode = TreeViewDrawMode.OwnerDrawAll;
+			tvReports.Location = new Point(0, 0);
+			tvReports.Margin = new Padding(0);
+			tvReports.Name = "tvReports";
+			tvReports.Size = new Size(274, 495);
+			tvReports.TabIndex = 0;
+			tvReports.Click += tvReports_Click;
+			tvReports.DoubleClick += tvReports_DoubleClick;
+			tvReports.KeyDown += OnKeyDownDefault;
+			tvReports.KeyUp += tvReports_KeyUp;
 			// 
 			// MainForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.SystemColors.Window;
-			this.ClientSize = new System.Drawing.Size(800, 450);
-			this.Controls.Add(this.menuStrip1);
-			this.Controls.Add(this.paMainView);
-			this.MainMenuStrip = this.menuStrip1;
-			this.MinimumSize = new System.Drawing.Size(545, 289);
-			this.Name = "MainForm";
-			this.Text = "Bericht Manager";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-			this.Shown += new System.EventHandler(this.MainForm_Load);
-			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownDefault);
-			this.toRightClickMenu.ResumeLayout(false);
-			this.paMainView.ResumeLayout(false);
-			this.scTextBoxes.Panel1.ResumeLayout(false);
-			this.scTextBoxes.Panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.scTextBoxes)).EndInit();
-			this.scTextBoxes.ResumeLayout(false);
-			this.paPadding1.ResumeLayout(false);
-			this.paPadding2.ResumeLayout(false);
-			this.paFileTree.ResumeLayout(false);
-			this.menuStrip1.ResumeLayout(false);
-			this.menuStrip1.PerformLayout();
-			this.ResumeLayout(false);
-			this.PerformLayout();
-
+			AutoScaleDimensions = new SizeF(7F, 15F);
+			AutoScaleMode = AutoScaleMode.Font;
+			BackColor = SystemColors.Window;
+			ClientSize = new Size(933, 519);
+			Controls.Add(paMainView);
+			Controls.Add(menuStrip1);
+			MainMenuStrip = menuStrip1;
+			Margin = new Padding(4, 3, 4, 3);
+			MinimumSize = new Size(633, 327);
+			Name = "MainForm";
+			Text = "Bericht Manager";
+			FormClosing += MainForm_FormClosing;
+			Shown += MainForm_Load;
+			KeyDown += OnKeyDownDefault;
+			toRightClickMenu.ResumeLayout(false);
+			menuStrip1.ResumeLayout(false);
+			menuStrip1.PerformLayout();
+			paMainView.ResumeLayout(false);
+			scTextBoxes.Panel1.ResumeLayout(false);
+			scTextBoxes.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)scTextBoxes).EndInit();
+			scTextBoxes.ResumeLayout(false);
+			paPadding1.ResumeLayout(false);
+			paPadding2.ResumeLayout(false);
+			paFileTree.ResumeLayout(false);
+			ResumeLayout(false);
+			PerformLayout();
 		}
 
 		#endregion
@@ -616,12 +580,6 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miQuickEditOptions;
 		private System.Windows.Forms.ToolStripMenuItem tiQuickEditWork;
 		private System.Windows.Forms.ToolStripMenuItem miQuickEditSchool;
-		private System.Windows.Forms.RichTextBox rtbWork;
-		private System.Windows.Forms.RichTextBox rtbSchool;
-		private System.Windows.Forms.Panel paMainView;
-		private System.Windows.Forms.Panel paFileTree;
-		private System.Windows.Forms.Splitter splitterTreeBoxes;
-		private System.Windows.Forms.SplitContainer scTextBoxes;
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem miFile;
 		private System.Windows.Forms.ToolStripMenuItem miCreate;
@@ -632,8 +590,6 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miOptionsMenu;
 		private System.Windows.Forms.ToolStripMenuItem miClose;
 		private System.Windows.Forms.ToolStripMenuItem miRefresh;
-		private System.Windows.Forms.Panel paPadding1;
-		private System.Windows.Forms.Panel paPadding2;
 		private System.Windows.Forms.ToolStripMenuItem miRevealInExplorer;
 		private System.Windows.Forms.ToolStripMenuItem miCloseReport;
 		private System.Windows.Forms.ToolStripMenuItem miCheckDiscrepancy;
@@ -658,8 +614,16 @@ namespace BerichtManager
 		private System.Windows.Forms.ToolStripMenuItem miRcShowComment;
 		private System.Windows.Forms.ToolStripMenuItem miRcDownloadReports;
 		private System.Windows.Forms.ToolStripMenuItem miDownloadReports;
-		private OwnControls.OwnTreeView.CustomTreeView tvReports;
 		private System.Windows.Forms.ToolStripMenuItem miQuickEditNumber;
+		private Panel paMainView;
+		private SplitContainer scTextBoxes;
+		private Panel paPadding1;
+		private RichTextBox rtbWork;
+		private Panel paPadding2;
+		private RichTextBox rtbSchool;
+		private Splitter splitterTreeBoxes;
+		private Panel paFileTree;
+		private OwnControls.OwnTreeView.CustomTreeView tvReports;
 	}
 }
 

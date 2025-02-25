@@ -130,6 +130,7 @@ namespace BerichtManager
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			tvReports.ShowNodeToolTips = ConfigHandler.ShowReportToolTip;
+			tvReports.Select();
 			AddQuickEdits();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(ttTips);
