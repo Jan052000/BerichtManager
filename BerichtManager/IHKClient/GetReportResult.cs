@@ -7,7 +7,7 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// Content of fetched report
 		/// </summary>
-		public ReportContent ReportContent { get; set; }
+		public ReportContent? ReportContent { get; set; }
 		/// <summary>
 		/// Result of fetching report
 		/// </summary>
@@ -48,7 +48,7 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <param name="result">Result status</param>
 		/// <param name="reportContent"><see cref="ReportContents.ReportContent"/></param>
-		public GetReportResult(ResultStatuses result, ReportContent reportContent = null)
+		public GetReportResult(ResultStatuses result, ReportContent? reportContent = null)
 		{
 			Result = result;
 			ReportContent = reportContent;

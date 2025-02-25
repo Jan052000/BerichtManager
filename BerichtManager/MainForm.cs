@@ -1,25 +1,17 @@
-using System;
-using System.IO;
-using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 using BerichtManager.Config;
 using BerichtManager.Forms;
 using System.Globalization;
-using System.Collections.Generic;
-using System.Drawing;
 using BerichtManager.ThemeManagement;
 using System.Diagnostics;
 using BerichtManager.HelperClasses;
 using BerichtManager.WebUntisClient;
-using System.Threading.Tasks;
 using BerichtManager.OwnControls;
 using BerichtManager.ReportChecking;
 using System.Text;
 using BerichtManager.ReportChecking.Discrepancies;
 using BerichtManager.UploadChecking;
-using System.Linq;
 using BerichtManager.IHKClient;
-using System.Net.Http;
 using BerichtManager.IHKClient.Exceptions;
 using BerichtManager.IHKClient.ReportContents;
 using BerichtManager.WordTemplate;
@@ -33,11 +25,11 @@ namespace BerichtManager
 		/// <summary>
 		/// The currently open word document
 		/// </summary>
-		private Word.Document Doc { get; set; } = null;
+		private Word.Document? Doc { get; set; }
 		/// <summary>
 		/// Global instance of Word
 		/// </summary>
-		private Word.Application WordApp { get; set; }
+		private Word.Application? WordApp { get; set; }
 		private ConfigHandler ConfigHandler { get; } = ConfigHandler.Instance;
 		private Client Client { get; } = new Client();
 		/// <summary>
@@ -110,11 +102,11 @@ namespace BerichtManager
 		/// </summary>
 		private List<Fields> DefaultQuickEditActions => new List<Fields>() { Fields.Work, Fields.School, Fields.Number };
 
-		private ReportNode _OpenedReportNode { get; set; } = null;
+		private ReportNode? _OpenedReportNode { get; set; }
 		/// <summary>
 		/// <see cref="ReportNode"/> of report opened for edit in <see cref="WordApp"/>
 		/// </summary>
-		private ReportNode OpenedReportNode
+		private ReportNode? OpenedReportNode
 		{
 			get => _OpenedReportNode;
 			set
@@ -138,6 +130,7 @@ namespace BerichtManager
 			tvReports.TreeViewNodeSorter = new TreeNodeSorter();
 			tvReports.CustomNodeDrawer = new CustomNodeDrawer();
 			tvReports.ShowNodeToolTips = ConfigHandler.ShowReportToolTip;
+			tvReports.Select();
 			AddQuickEdits();
 			ThemeSetter.SetThemes(this);
 			ThemeSetter.SetThemes(ttTips);
@@ -162,8 +155,10 @@ namespace BerichtManager
 		/// <param name="version1">Version number 1</param>
 		/// <param name="version2">Version number 2</param>
 		/// <returns>0 if versions are equal, positive if version2 is greater and negative if version2 is smaller</returns>
-		private int CompareVersionNumbers(string version1, string version2)
+		private int CompareVersionNumbers(string? version1, string? version2)
 		{
+			if (version1 == null || version2 == null)
+				return string.Compare(version1, version2);
 			string[] splitv1 = version1.Split('.');
 			string[] splitv2 = version2.Split('.');
 			if (splitv1.Length == splitv2.Length)
@@ -247,7 +242,7 @@ namespace BerichtManager
 		{
 			void update()
 			{
-				string openedNodePath = GetFullNodePath(OpenedReportNode);
+				string? openedNodePath = GetFullNodePath(OpenedReportNode);
 				List<TreeNode> expanded = new List<TreeNode>();
 				if (tvReports.Nodes.Count > 0)
 					expanded = GetExpandedNodes(tvReports.Nodes[0]);
@@ -258,7 +253,7 @@ namespace BerichtManager
 
 				expanded.ForEach(node =>
 				{
-					string path = GetFullNodePath(node);
+					string? path = GetFullNodePath(node);
 					GetNodeFromPath(path)?.Expand();
 				});
 
@@ -326,7 +321,7 @@ namespace BerichtManager
 		{
 			if (node is ReportNode reportNode)
 			{
-				if (UploadedReports.GetUploadedReport(GetFullNodePath(reportNode), out UploadedReport report))
+				if (UploadedReports.GetUploadedReport(GetFullNodePath(reportNode), out UploadedReport? report))
 					reportNode.SetReportProperties(report);
 				reportNode.SetToolTip();
 			}
@@ -361,13 +356,13 @@ namespace BerichtManager
 		/// Fits <paramref name="doc"/> to pages
 		/// </summary>
 		/// <param name="doc"></param>
-		private void FitToPage(Word.Document doc = null)
+		private void FitToPage(Word.Document? doc = null)
 		{
 			if (doc == null)
 				doc = Doc;
 			try
 			{
-				doc.FitToPages();
+				doc?.FitToPages();
 			}
 			catch
 			{
@@ -384,10 +379,14 @@ namespace BerichtManager
 		/// <param name="vacation">If you missed reports due to vacation</param>
 		/// <param name="reportDifference">The difference between the next report number and the one for the created report</param>
 		/// <param name="isSingle">Used to tell the method that this is a regular create job</param>
-		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application app, bool vacation = false, int reportDifference = 0, bool isSingle = false)
+		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application? app, bool vacation = false, int reportDifference = 0, bool isSingle = false)
 		{
-			RestartWordIfNeeded();
-			Word.Document ldoc = null;
+			if (app == null)
+			{
+				RestartWordIfNeeded();
+				app = WordApp;
+			}
+			Word.Document? ldoc = null;
 			bool ldocWasSaved = false;
 			if (!File.Exists(templatePath))
 			{
@@ -397,7 +396,7 @@ namespace BerichtManager
 			try
 			{
 				int weekOfYear = Culture.Calendar.GetWeekOfYear(baseDate, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
-				ldoc = app.Documents.Add(Template: templatePath);
+				ldoc = app!.Documents.Add(Template: templatePath);
 
 				if (!FormFieldHandler.ValidFormFieldCount(ldoc))
 				{
@@ -419,7 +418,7 @@ namespace BerichtManager
 					form.RefreshConfigs += RefreshConfig;
 					if (form.ShowDialog() == DialogResult.OK)
 					{
-						ConfigHandler.ReportUserName = form.Result;
+						ConfigHandler.ReportUserName = form.Result!;
 						ConfigHandler.SaveConfig();
 						FormFieldHandler.SetValueInDoc(Fields.Name, ldoc, ConfigHandler.ReportUserName);
 					}
@@ -609,13 +608,13 @@ namespace BerichtManager
 					//Default file format in word is not compatible with .docx
 					case -2146821994:
 						ThemedMessageBox.Show(text: "Please change default document format in your Word app under File>Options>Save>DefaultFileFormat, then try again.", title: "Please change Word settingd");
-						ldoc.Close(SaveChanges: false);
+						ldoc?.Close(SaveChanges: false);
 						break;
 					default:
 						ThemedMessageBox.Error(ex);
 						try
 						{
-							ldoc.Close(SaveChanges: false);
+							ldoc?.Close(SaveChanges: false);
 						}
 						catch
 						{
@@ -819,11 +818,16 @@ namespace BerichtManager
 				if (!DocIsSamePathAsSelected())
 				{
 					SaveOrExit();
-					Doc = WordApp.Documents.Open(path);
+					Doc = WordApp!.Documents.Open(path);
 				}
 				if (UploadedReports.GetUploadStatus(path, out ReportNode.UploadStatuses status) && (status == ReportNode.UploadStatuses.HandedIn || status == ReportNode.UploadStatuses.Accepted))
 				{
 					ThemedMessageBox.Show(text: "Cannot edit report that was handed in or accepted", title: "Unable to edit");
+					return;
+				}
+				if (Doc == null)
+				{
+					ThemedMessageBox.Show(text: "Unable to open report.", title: "Unable to open report");
 					return;
 				}
 
@@ -838,7 +842,7 @@ namespace BerichtManager
 				bool save = false;
 				if (field.HasValue)
 				{
-					string value = FormFieldHandler.GetValueFromDoc<string>(field.Value, Doc);
+					string? value = FormFieldHandler.GetValueFromDoc<string>(field.Value, Doc);
 					EditForm edit = new EditForm(title: quickEditTitle, text: value);
 					edit.RefreshConfigs += RefreshConfig;
 					switch (edit.ShowDialog())
@@ -880,7 +884,7 @@ namespace BerichtManager
 					{
 						if (stopLoop)
 							break;
-						string value = FormFieldHandler.GetValueFromDoc<string>(selected.Field, Doc);
+						string? value = FormFieldHandler.GetValueFromDoc<string>(selected.Field, Doc);
 						EditForm edit = new EditForm(title: selected.CheckBoxText, text: value);
 						edit.RefreshConfigs += RefreshConfig;
 						switch (edit.ShowDialog())
@@ -959,8 +963,10 @@ namespace BerichtManager
 		/// </summary>
 		/// <param name="path">Path of report</param>
 		/// <returns><see cref="TreeNode"/> that <paramref name="path"/> leads to</returns>
-		private TreeNode GetNodeFromPath(string path)
+		private TreeNode? GetNodeFromPath(string? path)
 		{
+			if (path == null)
+				return null;
 			List<string> segments = path.Replace("/", "\\").Split('\\').ToList();
 			segments.RemoveRange(0, segments.IndexOf(tvReports.Nodes[0].Text) + 1);
 			TreeNode result = tvReports.Nodes[0];
@@ -1001,7 +1007,7 @@ namespace BerichtManager
 				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 					return;
 
-				if (ConfigHandler.IHKAutoGetComment && UploadedReports.GetUploadedReport(path, out UploadedReport report) && report.LfdNR.HasValue && report.LfdNR > 0)
+				if (ConfigHandler.IHKAutoGetComment && UploadedReports.GetUploadedReport(path, out UploadedReport? report) && report.LfdNR.HasValue && report.LfdNR > 0)
 				{
 					Task<CommentResult> commentTask = Task.Run(async () =>
 					{
@@ -1019,7 +1025,7 @@ namespace BerichtManager
 				}
 
 				RestartWordIfNeeded();
-				Doc = WordApp.Documents.Open(path);
+				Doc = WordApp!.Documents.Open(path);
 				if (!FormFieldHandler.ValidFormFieldCount(Doc))
 				{
 					ThemedMessageBox.Show(text: "Invalid document (you will have to manually edit)");
@@ -1074,7 +1080,7 @@ namespace BerichtManager
 				if (Doc == null || !CheckIfWordRunning() || !WasEdited)
 					return;
 				//Stop saving of accepted reports
-				if (UploadedReports.GetUploadedReport(Doc.FullName, out UploadedReport report))
+				if (UploadedReports.GetUploadedReport(Doc.FullName, out UploadedReport? report))
 				{
 					switch (report.Status)
 					{
@@ -1173,8 +1179,8 @@ namespace BerichtManager
 		/// Prints a report and moves it into the folder of printed reports
 		/// </summary>
 		/// <param name="path">Path of report to print</param>
-		/// <returns>Result message</returns>
-		private string PrintReport(string path)
+		/// <returns>Result message or <see langword="null"/> if successful</returns>
+		private string? PrintReport(string path)
 		{
 			if (!Path.IsPathRooted(path))
 				path = Path.Combine(ActivePath, path);
@@ -1190,18 +1196,18 @@ namespace BerichtManager
 
 			try
 			{
+				RestartWordIfNeeded();
 				bool isSameAsOpened;
 				if (Doc != null)
 					isSameAsOpened = path == Doc.FullName;
 				else
 					isSameAsOpened = false;
 
-				RestartWordIfNeeded();
 				Word.Document document;
 				if (isSameAsOpened)
-					document = Doc;
+					document = Doc!;
 				else
-					document = WordApp.Documents.Open(path, ReadOnly: true);
+					document = WordApp!.Documents.Open(path, ReadOnly: true);
 				document.PrintOut(Background: false);
 				if (!isSameAsOpened)
 					document.Close();
@@ -1317,7 +1323,7 @@ namespace BerichtManager
 			if (DocIsSamePathAsSelected() && WasEdited && ThemedMessageBox.Show(text: $"Report {FullSelectedPath} has unsaved changes!\nSave?", title: "Save unsaved changes", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 				SaveFromTb();
 			StartWaitCursor();
-			string result = PrintReport(FullSelectedPath);
+			string? result = PrintReport(FullSelectedPath);
 			ThemedMessageBox.Show(text: result ?? $"Printed {FullSelectedPath}", title: result == null ? "Print finished" : "Print aborted");
 			UpdateTree();
 			EndWaitCursor();
@@ -1383,11 +1389,11 @@ namespace BerichtManager
 				}
 			}
 			bool isNameValid = ReportUtils.IsNameValid(tvReports.SelectedNode.Text);
-			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report);
+			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport? report);
 			bool uploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
 			bool rejected = report?.Status == ReportNode.UploadStatuses.Rejected;
-			bool wasEdited = report != null && (report?.WasEditedLocally).Value;
-			bool wasUpdated = report != null && (report?.WasUpdated).Value;
+			bool wasEdited = report?.WasEditedLocally == true;
+			bool wasUpdated = report?.WasUpdated == true;
 
 			miEdit.Enabled = !isInLogs && isNameValid;
 			//miEdit.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
@@ -1400,7 +1406,7 @@ namespace BerichtManager
 			miUploadAsNext.Enabled = !isInLogs && isNameValid && !isUploaded;
 			miHandInSingle.Enabled = isNameValid && isUploaded && (uploaded || rejected && (wasEdited || wasUpdated));
 			miUpdateReport.Enabled = isNameValid && isUploaded && wasEdited && (uploaded || rejected);
-			miRcShowComment.Enabled = isNameValid && isUploaded && report.LfdNR.HasValue;
+			miRcShowComment.Enabled = isNameValid && isUploaded && report!.LfdNR.HasValue;
 			miDownloadReports.Enabled = miRcDownloadReports.Enabled = !string.IsNullOrEmpty(ConfigHandler.IHKUserName) && !string.IsNullOrEmpty(ConfigHandler.IHKPassword);
 		}
 
@@ -1487,7 +1493,7 @@ namespace BerichtManager
 		/// <param name="e"><see cref="KeyEventArgs"/> of KeyDown event</param>
 		private void PasteOnlyText(object sender, KeyEventArgs e)
 		{
-			if (!(sender is RichTextBox rtb))
+			if (sender is not RichTextBox rtb)
 				return;
 			e.SuppressKeyPress = true;
 			rtb.Paste(DataFormats.GetFormat(DataFormats.Text));
@@ -1508,7 +1514,7 @@ namespace BerichtManager
 			}
 			if (CheckIfWordRunning())
 			{
-				WordApp.Visible = miWordVisible.Checked;
+				WordApp!.Visible = miWordVisible.Checked;
 				WordVisible = miWordVisible.Checked;
 			}
 			else
@@ -1549,7 +1555,8 @@ namespace BerichtManager
 		private void menuStrip1_Paint(object sender, PaintEventArgs e)
 		{
 			int versionNumberWidth = (int)e.Graphics.MeasureString(VersionNumber, menuStrip1.Font).Width / 2;
-			Control control = sender as Control;
+			if (sender is not Control control)
+				return;
 			TextRenderer.DrawText(e.Graphics, VersionString, menuStrip1.Font, new Point(control.Location.X + control.Width / 2 - versionNumberWidth, control.Location.Y + control.Padding.Top + 2), control.ForeColor);
 		}
 
@@ -1738,7 +1745,7 @@ namespace BerichtManager
 			RestartWordIfNeeded();
 			string activePath = Doc?.FullName ?? "";
 			List<string> openReports = CloseAllReports();
-			ReportChecker checker = new ReportChecker(WordApp);
+			ReportChecker checker = new ReportChecker(WordApp!);
 			StartWaitCursor();
 			if (!checker.Check(select.FilteredNode, out List<IReportDiscrepancy> discrepancies, check: check))
 			{
@@ -1766,10 +1773,13 @@ namespace BerichtManager
 		/// </summary>
 		/// <param name="doc1">First <see cref="Word.Document"/> to compare</param>
 		/// <param name="doc2">Second <see cref="Word.Document"/> to compare</param>
-		/// <returns><see langword="true"/> if docs contents are the same and <see langword="false"/> otherwise</returns>
-		private bool IsDocSameDoc(Word.Document doc1, Word.Document doc2)
+		/// <returns><see langword="true"/> if docs contents are the same and both are not <see langword="null"/> or <see langword="false"/> otherwise</returns>
+		private bool IsDocSameDoc(Word.Document? doc1, Word.Document? doc2)
 		{
-			Word.Document compareDoc = WordApp.CompareDocuments(doc1, doc2);
+			if (doc1 == null || doc2 == null)
+				return false;
+			RestartWordIfNeeded();
+			Word.Document compareDoc = WordApp!.CompareDocuments(doc1, doc2);
 			bool docIsSameAsOpened = compareDoc.Revisions.Count == 0;
 			compareDoc.Close(SaveChanges: false);
 			return docIsSameAsOpened;
@@ -1780,7 +1790,7 @@ namespace BerichtManager
 		/// </summary>
 		/// <param name="paths">Paths of previously opened reports</param>
 		/// <param name="activePath">Path to open in text box edit</param>
-		private void OpenAllDocuments(List<string> paths, string activePath)
+		private void OpenAllDocuments(List<string> paths, string? activePath)
 		{
 			foreach (string path in paths)
 			{
@@ -1789,7 +1799,7 @@ namespace BerichtManager
 				if (path == activePath)
 					this.ExecuteWithInvoke(() => EditInTb(path));
 				else
-					Doc = WordApp.Documents.Open(FileName: path);
+					Doc = WordApp!.Documents.Open(FileName: path);
 			};
 		}
 
@@ -1800,7 +1810,7 @@ namespace BerichtManager
 		private List<string> CloseAllReports()
 		{
 			List<string> result = new List<string>();
-			foreach (Word.Document doc in WordApp.Documents)
+			foreach (Word.Document doc in WordApp!.Documents)
 			{
 				result.Add(doc.FullName);
 				if (IsDocSameDoc(Doc, doc))
@@ -1832,7 +1842,7 @@ namespace BerichtManager
 		/// <param name="doc">Report to upload</param>
 		/// <param name="ihkSiteReportsCache"><see cref="List{UploadedReport}"/> of <see cref="UploadedReport"/>s from IHK site to check if report was already uploaded</param>
 		/// <returns><see cref="UploadResult"/> of creation or <see langword="null"/> if an error occurred</returns>
-		private async Task<UploadResult> TryUploadReportToIHK(Word.Document doc, List<UploadedReport> ihkSiteReportsCache = null)
+		private async Task<UploadResult?> TryUploadReportToIHK(Word.Document doc, List<UploadedReport>? ihkSiteReportsCache = null)
 		{
 			try
 			{
@@ -1880,10 +1890,10 @@ namespace BerichtManager
 			if (DocIsSamePathAsSelected())
 			{
 				close = false;
-				doc = Doc;
+				doc = Doc!;
 			}
 			else
-				doc = WordApp.Documents.Open(FullSelectedPath);
+				doc = WordApp!.Documents.Open(FullSelectedPath);
 			if (!FormFieldHandler.ValidFormFieldCount(doc))
 			{
 				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
@@ -1892,7 +1902,7 @@ namespace BerichtManager
 				EndWaitCursor();
 				return;
 			}
-			UploadResult result = await TryUploadReportToIHK(doc);
+			UploadResult? result = await TryUploadReportToIHK(doc);
 			if (result == null)
 			{
 				ThemedMessageBox.Show(text: "Upload of report failed", title: "Upload failed");
@@ -1926,7 +1936,7 @@ namespace BerichtManager
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
 					bool isReport = node is ReportNode reportNode;
-					bool wasUploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport report);
+					bool wasUploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport? report);
 					bool emptyNonReportNode = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
 					return isReport && wasUploaded || emptyNonReportNode;
 				});
@@ -1943,7 +1953,7 @@ namespace BerichtManager
 				List<string> openReports = CloseAllReports();
 
 				//Cache IHK report list
-				List<UploadedReport> ihkReports = await IHKClient.GetIHKReports();
+				List<UploadedReport>? ihkReports = await IHKClient.GetIHKReports();
 				if (ihkReports == null)
 				{
 					string status = "Unable to fetch list of uploaded reports from IHK, aborting upload!";
@@ -1955,12 +1965,19 @@ namespace BerichtManager
 
 				foreach (TreeNode report in reports)
 				{
-					string nodePath = GetFullNodePath(report);
+					string? nodePath = GetFullNodePath(report);
+					//Should not happen
+					if (nodePath == null)
+					{
+						aborted = true;
+						progressForm.Status = $"Could not construct file path of a report {report.Parent?.Text}\\{report.Text}";
+						break;
+					}
 					string path = Path.Combine(ActivePath, "..", nodePath);
 
 					progressForm.Status = $"Uploading {nodePath}";
 
-					Word.Document doc = WordApp.Documents.Open(path);
+					Word.Document doc = WordApp!.Documents.Open(path);
 					if (!FormFieldHandler.ValidFormFieldCount(doc))
 					{
 						progressForm.Status = $"Uploading aborted: Invalid dcument";
@@ -1969,7 +1986,7 @@ namespace BerichtManager
 						aborted = true;
 						break;
 					}
-					UploadResult result = await TryUploadReportToIHK(doc, ihkReports);
+					UploadResult? result = await TryUploadReportToIHK(doc, ihkReports);
 					if (result == null)
 					{
 						progressForm.Status = $"Uploading aborted: upload failed";
@@ -2066,7 +2083,7 @@ namespace BerichtManager
 		/// <param name="closeDoc">Wether or not <paramref name="doc"/> should be closed if necessary</param>
 		/// <param name="shouldStop"><see langword="true"/> if further uploading is disadvised</param>
 		/// <returns><see langword="true"/> if <paramref name="result"/> was handled and <see langword="false"/> otherwise</returns>
-		private bool HandleUploadResult(UploadResult result, Word.Document doc, EventProgressForm progressForm, string reportFilePath, string nodePath, List<string> openReports,
+		private bool HandleUploadResult(UploadResult result, Word.Document doc, EventProgressForm? progressForm, string reportFilePath, string nodePath, List<string> openReports,
 			string activePath, out bool uploadFailed, out bool shouldStop, bool closeDoc = true)
 		{
 			bool res = true;
@@ -2136,10 +2153,10 @@ namespace BerichtManager
 		/// <param name="node"><see cref="TreeNode"/> to get path for</param>
 		/// <param name="separator">String to separate path elements with</param>
 		/// <returns>Full path separated by <paramref name="separator"/> or <see langword="null"/> if <paramref name="node"/> is <see langword="null"/></returns>
-		private string GetFullNodePath(TreeNode node, string separator = "\\")
+		private string? GetFullNodePath(TreeNode? node, string separator = "\\")
 		{
-			TreeNode current = node;
-			if (node == null)
+			TreeNode? current = node;
+			if (node == null || current == null)
 				return null;
 
 			if (node.TreeView != null)
@@ -2178,7 +2195,12 @@ namespace BerichtManager
 			try
 			{
 				StartWaitCursor();
-				List<UploadedReport> reportList = await IHKClient.GetIHKReports();
+				List<UploadedReport>? reportList = await IHKClient.GetIHKReports();
+				if (reportList == null)
+				{
+					ThemedMessageBox.Show(text: "Unable to fetch statuses from IHK.", title: "Status update failed");
+					return false;
+				}
 				reportList.ForEach(report => result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status, lfdnr: report.LfdNR));
 				if (result)
 				{
@@ -2228,19 +2250,19 @@ namespace BerichtManager
 
 		private async void miHandInSingle_Click(object sender, EventArgs e)
 		{
-			if (!UploadedReports.GetUploadedPaths(out List<string> paths))
+			if (!UploadedReports.GetUploadedPaths(out _))
 			{
 				//Should never happen as menu item should be diabled
 				ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
 				return;
 			}
-			if (!UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report))
+			if (!UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport? report))
 			{
 				//Should never happen as menu item should be diabled
 				ThemedMessageBox.Show(text: $"Report {FullSelectedPath} was not uploaded yet", title: "Hand in failed");
 				return;
 			}
-			if (!(report.LfdNR is int lfdnr))
+			if (report.LfdNR is not int lfdnr)
 			{
 				ThemedMessageBox.Show(text: $"Lfdnr of {FullSelectedPath} could not be read", title: "Hand in failed");
 				return;
@@ -2274,10 +2296,10 @@ namespace BerichtManager
 				RestartWordIfNeeded();
 				Word.Document doc;
 				if (DocIsSamePathAsSelected())
-					doc = Doc;
+					doc = Doc!;
 				else
-					doc = WordApp.Documents.Open(FullSelectedPath);
-				UploadResult result = await TryUpdateReport(doc, lfdnr);
+					doc = WordApp!.Documents.Open(FullSelectedPath);
+				UploadResult? result = await TryUpdateReport(doc, lfdnr);
 				if (!DocIsSamePathAsSelected())
 					doc.Close();
 
@@ -2349,7 +2371,7 @@ namespace BerichtManager
 				bool shouldStop = false;
 				progressForm.Stop += () => shouldStop = true;
 
-				if (!UploadedReports.GetUploadedPaths(out List<string> files))
+				if (!UploadedReports.GetUploadedPaths(out _))
 				{
 					//Should never happen as menu item should be diabled
 					ThemedMessageBox.Show(text: $"No reports in {ActivePath} have been uploaded yet", title: "Hand in failed");
@@ -2359,11 +2381,11 @@ namespace BerichtManager
 				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
 				{
 					bool isReport = (node is ReportNode reportNode);
-					bool isUploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport report);
+					bool isUploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport? report);
 					bool statusIsUploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
-					bool rejectedWasEdited = report?.Status == ReportNode.UploadStatuses.Rejected && (report?.WasEditedLocally).Value;
+					bool rejectedWasEdited = report?.Status == ReportNode.UploadStatuses.Rejected && (report.WasEditedLocally);
 					bool emptyNonReportNode = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
-					bool wasUpdated = isUploaded && report.WasUpdated && report?.Status == ReportNode.UploadStatuses.Rejected;
+					bool wasUpdated = isUploaded && report!.WasUpdated && report?.Status == ReportNode.UploadStatuses.Rejected;
 					return isReport && (!isUploaded || !statusIsUploaded) && !rejectedWasEdited && !wasUpdated || emptyNonReportNode;
 				});
 				if (fs.ShowDialog() != DialogResult.OK)
@@ -2383,11 +2405,11 @@ namespace BerichtManager
 				int handedIn = 0;
 				foreach (TreeNode reportNode in reports)
 				{
-					string nodePath = GetFullNodePath(reportNode);
+					string nodePath = GetFullNodePath(reportNode)!;
 					string fullPath = Path.GetFullPath(Path.Combine(ActivePath, "..", nodePath));
 					progressForm.Status = $"Handing in {fullPath}:";
 					//Final fail save
-					if (!UploadedReports.GetUploadedReport(nodePath, out UploadedReport report))
+					if (!UploadedReports.GetUploadedReport(nodePath, out UploadedReport? report))
 					{
 						ThemedMessageBox.Show(text: $"Report {fullPath} was not uploaded and could not be handed in as a result", title: "Hand in failed");
 						progressForm.Status = "\t- skipped: Not uploaded";
@@ -2405,7 +2427,7 @@ namespace BerichtManager
 						progressForm.Status = "\t- skipped: Rejected and unchanged";
 						continue;
 					}
-					if (!(report.LfdNR is int lfdnr))
+					if (report.LfdNR is not int lfdnr)
 					{
 						ThemedMessageBox.Show(text: $"Lfdnr of {fullPath} could not be read and report could not be handed in as a result", title: "Hand in failed");
 						progressForm.Status = "\t- skipped: Unable to read lfdnr";
@@ -2433,15 +2455,15 @@ namespace BerichtManager
 
 						//Open document if it is not open
 						bool shouldClose = false;
-						Word.Document doc = GetDocumentIfOpen(fullPath);
+						Word.Document? doc = GetDocumentIfOpen(fullPath);
 						if (doc == null)
 						{
-							doc = WordApp.Documents.Open(fullPath);
+							doc = WordApp!.Documents.Open(fullPath);
 							shouldClose = true;
 						}
 
 						progressForm.Status = "\t- Uploading changes";
-						UploadResult result = await TryUpdateReport(doc, lfdnr);
+						UploadResult? result = await TryUpdateReport(doc, lfdnr);
 
 						//Close report if it was not opened before
 						if (shouldClose)
@@ -2540,12 +2562,12 @@ namespace BerichtManager
 		/// </summary>
 		/// <param name="path">Path of <see cref="Word.Document"/> to find</param>
 		/// <returns><see cref="Word.Document"/> if document is opened in <see cref="WordApp"/> and <see langword="null"/> otherwise</returns>
-		private Word.Document GetDocumentIfOpen(string path)
+		private Word.Document? GetDocumentIfOpen(string path)
 		{
 			if (!CheckIfWordRunning())
 				return null;
-			Word.Document document = null;
-			foreach (Word.Document doc in WordApp.Documents)
+			Word.Document? document = null;
+			foreach (Word.Document doc in WordApp!.Documents)
 			{
 				if (doc.Path == path || doc.Path == Path.Combine(ActivePath, "..", path))
 				{
@@ -2562,7 +2584,7 @@ namespace BerichtManager
 		/// <param name="doc"><see cref="Word.Document"/> to update report with</param>
 		/// <param name="lfdnr">Lfdnr of report on IHK servers</param>
 		/// <returns><see cref="UploadResult"/> of edit process or <see langword="null"/> if an error occurred</returns>
-		private async Task<UploadResult> TryUpdateReport(Word.Document doc, int lfdnr)
+		private async Task<UploadResult?> TryUpdateReport(Word.Document doc, int lfdnr)
 		{
 			try
 			{
@@ -2593,7 +2615,7 @@ namespace BerichtManager
 				ThemedMessageBox.Show(text: "No network connection", title: "No connection");
 				return;
 			}
-			if (!UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport report))
+			if (!UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport? report))
 			{
 				ThemedMessageBox.Show(text: $"Could not find report {FullSelectedPath} in uploaded list, please add {tvReports.SelectedNode.FullPath} if it is uploaded", title: "Report not found");
 				return;
@@ -2614,10 +2636,10 @@ namespace BerichtManager
 			if (DocIsSamePathAsSelected())
 			{
 				close = false;
-				doc = Doc;
+				doc = Doc!;
 			}
 			else
-				doc = WordApp.Documents.Open(FullSelectedPath);
+				doc = WordApp!.Documents.Open(FullSelectedPath);
 			if (!FormFieldHandler.ValidFormFieldCount(doc))
 			{
 				ThemedMessageBox.Show(text: "Invalid document, please upload manually", title: "Invalid document");
@@ -2625,14 +2647,14 @@ namespace BerichtManager
 				EndWaitCursor();
 				return;
 			}
-			if (!(report.LfdNR is int lfdnr))
+			if (report.LfdNR is not int lfdnr)
 			{
 				ThemedMessageBox.Show(text: $"Unable to load lfdnr from {FullSelectedPath}, verify that it is correct", title: "Unable to edit");
 				EndWaitCursor();
 				return;
 			}
 
-			UploadResult result = await TryUpdateReport(doc, lfdnr);
+			UploadResult? result = await TryUpdateReport(doc, lfdnr);
 			if (close)
 				doc.Close();
 
@@ -2667,8 +2689,8 @@ namespace BerichtManager
 			{
 				bool isReport = node is ReportNode;
 				bool emptyNonReport = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
-				bool uploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport report);
-				bool validStatus = uploaded && (report.Status == ReportNode.UploadStatuses.Uploaded || report.Status == ReportNode.UploadStatuses.Rejected);
+				bool uploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport? report);
+				bool validStatus = uploaded && (report!.Status == ReportNode.UploadStatuses.Uploaded || report.Status == ReportNode.UploadStatuses.Rejected);
 				bool wasEdited = report != null && report.WasEditedLocally;
 				return isReport && (!wasEdited || !validStatus) || emptyNonReport;
 			});
@@ -2692,7 +2714,7 @@ namespace BerichtManager
 
 			RestartWordIfNeeded();
 			progressForm.Status = "Closing all reports";
-			string activePath = Doc?.FullName;
+			string? activePath = Doc?.FullName;
 			List<string> openReports = CloseAllReports();
 
 			Dictionary<string, string> skipped = new Dictionary<string, string>();
@@ -2705,20 +2727,20 @@ namespace BerichtManager
 				}
 				string fullPath = GetFullPath(node);
 				progressForm.Status = $"Updating {fullPath}:";
-				if (!UploadedReports.GetUploadedReport(fullPath, out UploadedReport report))
+				if (!UploadedReports.GetUploadedReport(fullPath, out UploadedReport? report))
 				{
 					progressForm.Status = "Skipped, not a report";
 					skipped.Add(fullPath, "not a report");
 					continue;
 				}
-				if (!(report.LfdNR is int lfdnr))
+				if (report.LfdNR is not int lfdnr)
 				{
 					progressForm.Status = "Skipped, lfdnr not found";
 					skipped.Add(fullPath, "lfdnr not found");
 					continue;
 				}
 
-				Word.Document doc = WordApp.Documents.Open(fullPath);
+				Word.Document doc = WordApp!.Documents.Open(fullPath);
 				if (!FormFieldHandler.ValidFormFieldCount(doc))
 				{
 					progressForm.Status = "Skipped, invalid form field count";
@@ -2726,7 +2748,7 @@ namespace BerichtManager
 					continue;
 				}
 
-				UploadResult result = null;
+				UploadResult? result = null;
 				try
 				{
 					result = await IHKClient.EditReport(doc, lfdnr);
@@ -2831,7 +2853,7 @@ namespace BerichtManager
 						break;
 					}
 					bool errorFound = false;
-					Word.Document doc = WordApp.Documents.Open(GetFullPath(node));
+					Word.Document doc = WordApp!.Documents.Open(GetFullPath(node));
 
 					if (!FormFieldHandler.ValidFormFieldCount(doc))
 					{
@@ -2841,9 +2863,9 @@ namespace BerichtManager
 
 					checkFor.ForEach(newLine =>
 					{
-						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Work, doc).Contains(newLine);
-						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Seminars, doc).Contains(newLine);
-						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.School, doc).Contains(newLine);
+						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Work, doc)?.Contains(newLine) == true;
+						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.Seminars, doc)?.Contains(newLine) == true;
+						errorFound |= FormFieldHandler.GetValueFromDoc<string>(Fields.School, doc)?.Contains(newLine) == true;
 					});
 
 					bool canBeUpdated = node is ReportNode report && UploadedReports.GetUploadStatus(GetFullNodePath(node), out var status) && (status == ReportNode.UploadStatuses.Uploaded || status == ReportNode.UploadStatuses.Rejected);
@@ -2870,7 +2892,7 @@ namespace BerichtManager
 		/// <returns>Full file path to file represented by <paramref name="node"/></returns>
 		private string GetFullPath(TreeNode node)
 		{
-			return Path.GetFullPath(Path.Combine(ActivePath, "..", GetFullNodePath(node)));
+			return Path.GetFullPath(Path.Combine(ActivePath, "..", GetFullNodePath(node)!));
 		}
 
 		/// <summary>
@@ -2889,7 +2911,7 @@ namespace BerichtManager
 			RestartWordIfNeeded();
 			//Close documents
 			progressForm.Status = "Closing open documents";
-			string activePath = Doc?.FullName;
+			string? activePath = Doc?.FullName;
 			List<string> closedDocs = CloseAllReports();
 
 			if (stop)
@@ -2929,7 +2951,7 @@ namespace BerichtManager
 			{
 				foreach (ReportNode node in formatErrors)
 				{
-					Word.Document report = WordApp.Documents.Open(GetFullPath(node));
+					Word.Document report = WordApp!.Documents.Open(GetFullPath(node));
 
 					if (!FormFieldHandler.ValidFormFieldCount(report))
 					{
@@ -2984,7 +3006,7 @@ namespace BerichtManager
 		{
 			if (!ReportUtils.IsNameValid(tvReports.SelectedNode.Text))
 				return;
-			if (!UploadedReports.GetUploadedReport(FullSelectedPath, out UploadedReport report))
+			if (!UploadedReports.GetUploadedReport(FullSelectedPath, out UploadedReport? report))
 			{
 				ThemedMessageBox.Show(text: "Report not uploaded", title: "Unable to fetch comment");
 				return;
@@ -3012,7 +3034,7 @@ namespace BerichtManager
 						ThemedMessageBox.Info(text: $"Comment:\n{result.Comment}", title: "Comment", allowMessageHighlight: true);
 					break;
 				case CommentResult.ResultStatus.Exception:
-					ThemedMessageBox.Info(text: $"A(n) {result.Exception?.GetType().Name} occurred, the comment could not be fetched", title: result.Exception?.GetType().Name);
+					ThemedMessageBox.Info(text: $"A(n) {result.Exception?.GetType().Name} occurred, the comment could not be fetched", title: result?.Exception?.GetType().Name ?? "Fetching comment failed");
 					break;
 				default:
 					ThemedMessageBox.Info(text: $"Fetching comment failed: {result.UploadResult}", title: "Failed fetching comment");
@@ -3057,7 +3079,7 @@ namespace BerichtManager
 			List<string> skipped = new List<string>();
 			progressForm.Status = $"Indexing {reportNodes.Count} report{(reportNodes.Count == 1 ? "" : "s")}";
 
-			Dictionary<string, UploadedReport> indexedReports = new Dictionary<string, UploadedReport>();
+			Dictionary<string, UploadedReport?> indexedReports = new Dictionary<string, UploadedReport?>();
 			foreach (TreeNode node in reportNodes)
 			{
 				if (stop)
@@ -3068,7 +3090,7 @@ namespace BerichtManager
 				}
 
 				string fullNodePath = GetFullPath(node);
-				Word.Document doc = WordApp.Documents.Open(fullNodePath, ReadOnly: true);
+				Word.Document doc = WordApp!.Documents.Open(fullNodePath, ReadOnly: true);
 
 				progressForm.Status = $"\t- {doc.FullName}:";
 
@@ -3079,10 +3101,23 @@ namespace BerichtManager
 					continue;
 				}
 
-				if (UploadedReports.GetUploadedReport(fullNodePath, out UploadedReport report))
+				if (UploadedReports.GetUploadedReport(fullNodePath, out UploadedReport? report))
 					indexedReports.Add(report.StartDate.ToString("dd.MM.yyyy"), report);
-				else
-					indexedReports.Add(FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc), null);
+				else if (FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc) is not string startDate)
+				{
+					stop = true;
+					break;
+				}
+				else if (startDate == "")
+				{
+					stop = true;
+					break;
+				}
+				else if (!indexedReports.TryAdd(startDate, null))
+				{
+					stop = true;
+					break;
+				}
 				doc.Close(SaveChanges: false);
 
 				progressForm.Status = "\t\t- Success";
@@ -3111,7 +3146,7 @@ namespace BerichtManager
 			}
 
 			//Get report infos from IHK
-			List<UploadedReport> uploadedReports;
+			List<UploadedReport>? uploadedReports;
 			try
 			{
 				uploadedReports = await IHKClient.GetIHKReports();
@@ -3127,6 +3162,15 @@ namespace BerichtManager
 			if (stop)
 			{
 				DoStop();
+				OpenAllDocuments(openReports, activePath);
+				return;
+			}
+
+			if (uploadedReports == null)
+			{
+				string message = "Could not fetch uploaded reports from IHK servers.";
+				DoStop(message);
+				ThemedMessageBox.Show(text: message, title: "Failed to fetch reports");
 				OpenAllDocuments(openReports, activePath);
 				return;
 			}
@@ -3161,7 +3205,7 @@ namespace BerichtManager
 					switch (result.Result)
 					{
 						case GetReportResult.ResultStatuses.Success:
-							content = result.ReportContent;
+							content = result.ReportContent!;
 							break;
 						default:
 							progressForm.Status = $"\t- Skipped: {result.Result}";
@@ -3192,7 +3236,7 @@ namespace BerichtManager
 					break;
 				}
 
-				Word.Document doc = WordApp.Documents.Add(Template: ConfigHandler.TemplatePath);
+				Word.Document doc = WordApp!.Documents.Add(Template: ConfigHandler.TemplatePath);
 				if (!FormFieldHandler.ValidFormFieldCount(doc))
 				{
 					DoStop("Aborted, template has an invalid field cound");

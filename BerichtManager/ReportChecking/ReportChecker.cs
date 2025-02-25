@@ -3,12 +3,7 @@ using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ReportChecking.Discrepancies;
 using BerichtManager.WordTemplate;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace BerichtManager.ReportChecking
@@ -174,7 +169,7 @@ namespace BerichtManager.ReportChecking
 		/// <param name="node">Directory to search</param>
 		/// <param name="reports"><see cref="List{T}"/> of found reports to fill</param>
 		/// <returns><see cref="List{T}"/> of <see cref="TreeNode"/>s that represent all valid reports</returns>
-		public List<TreeNode> FindReports(TreeNode node, List<TreeNode> reports = null)
+		public List<TreeNode> FindReports(TreeNode node, List<TreeNode>? reports = null)
 		{
 			if (reports == null)
 				reports = new List<TreeNode>();

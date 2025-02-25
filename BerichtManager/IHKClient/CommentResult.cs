@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.IHKClient
+﻿namespace BerichtManager.IHKClient
 {
 	/// <summary>
 	/// Class for combined fields for fetch result for IHK report comments
@@ -14,18 +12,18 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// Comment fetched
 		/// </summary>
-		public string Comment { get; set; }
+		public string? Comment { get; set; }
 		/// <summary>
 		/// Exception if one was thrown
 		/// </summary>
-		public Exception Exception { get; set; }
+		public Exception? Exception { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="CommentResult"> object
 		/// </summary>
 		/// <param name="uploadResult"></param>
 		/// <param name="comment"></param>
-		public CommentResult(ResultStatus uploadResult, string comment = "", Exception exception = null)
+		public CommentResult(ResultStatus uploadResult, string? comment = null, Exception? exception = null)
 		{
 			UploadResult = uploadResult;
 			Comment = comment;

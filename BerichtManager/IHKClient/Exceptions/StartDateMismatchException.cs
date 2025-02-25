@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.IHKClient.Exceptions
+﻿namespace BerichtManager.IHKClient.Exceptions
 {
 	/// <summary>
 	/// <see cref="Exception"/> in case there is a mismatch between IHK suggested start date and actual report start date

@@ -1,14 +1,12 @@
 ﻿using Word = Microsoft.Office.Interop.Word;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Newtonsoft.Json;
 using System.Globalization;
 using BerichtManager.HelperClasses;
 using BerichtManager.Extensions;
-using System.Linq;
 using BerichtManager.OwnControls;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
+using BerichtManager.WordTemplate.Exceptions;
 
 namespace BerichtManager.WordTemplate
 {
@@ -45,7 +43,7 @@ namespace BerichtManager.WordTemplate
 		};
 
 		#region Singleton
-		private static FormFieldHandler Singleton { get; set; }
+		private static FormFieldHandler? Singleton { get; set; }
 		private static FormFieldHandler Instance
 		{
 			get
@@ -80,11 +78,11 @@ namespace BerichtManager.WordTemplate
 
 			for (int i = 0; i < fields.Count; i++)
 			{
-				string fieldName = Enum.GetName(typeof(Fields), fields[i]);
+				string fieldName = Enum.GetName(typeof(Fields), fields[i])!;
 				MemberInfo memberInfo = members.First(m => m.Name == fieldName);
-				FieldsTypeAttribute typeAttr = memberInfo.GetCustomAttribute<FieldsTypeAttribute>();
-				FieldAttribute fieldAttr = memberInfo.GetCustomAttribute<FieldAttribute>();
-				if (fieldName == null)
+				FieldsTypeAttribute? typeAttr = memberInfo.GetCustomAttribute<FieldsTypeAttribute>();
+				FieldAttribute? fieldAttr = memberInfo.GetCustomAttribute<FieldAttribute>();
+				if (typeAttr == null)
 					throw new Exception($"{typeof(Fields).Name}.{fieldName} is missing a FieldsTypeAttribute!");
 				dict.Add(fields[i], new FormField(i + 1, typeAttr.FieldType, fieldAttr != null ? fieldAttr.FieldFormattedName : fieldName));
 			}
@@ -108,20 +106,21 @@ namespace BerichtManager.WordTemplate
 		/// <returns>Index of <paramref name="field"/> in the template config or <see langword="null"/> if <paramref name="field"/> was not found</returns>
 		public static int? GetFormFieldIndex(Fields field)
 		{
-			if (!GetFormField(field, out FormField info))
+			if (!TryGetFormField(field, out FormField? info))
 				return null;
-			return info.Index;
+			return info?.Index;
 		}
 
 		/// <summary>
-		/// Gets the <see cref="FormField"/> object containing field index and type
+		/// Tries to get the <see cref="FormField"/> object containing field index and type
 		/// </summary>
 		/// <param name="field"><see cref="Fields"/> field to get info of</param>
-		/// <returns><see cref="FormField"/> object containing field index and type or <see langword="null"/> if <paramref name="field"/> was not found</returns>
-		public static bool GetFormField(Fields field, out FormField info)
+		/// <param name="info"><see cref="FormField"/> object containing field index and type or <see langword="null"/> if <paramref name="field"/> was not found</param>
+		/// <returns><see langword="true"/> if <paramref name="field"/> is key of <see cref="FormFieldHandler"/></returns>
+		public static bool TryGetFormField(Fields field, [NotNullWhen(true)] out FormField? info)
 		{
 			info = null;
-			if (!Instance.FormFields.TryGetValue(field, out FormField _info))
+			if (!Instance.FormFields.TryGetValue(field, out FormField? _info))
 				return false;
 			info = _info;
 			return true;
@@ -134,10 +133,13 @@ namespace BerichtManager.WordTemplate
 		/// <param name="field"><see cref="Fields"/> field to get from <paramref name="doc"/></param>
 		/// <param name="doc"><see cref="Word.Document"/> to get value of <paramref name="field"/> from</param>
 		/// <returns>Value of <paramref name="field"/> converted to <typeparamref name="T"/> or <see langword="null"/> if no conversion is possible</returns>
-		public static T GetValueFromDoc<T>(Fields field, Word.Document doc)
+		/// <exception cref="UnknownFieldTypeException">Thrown if the <see cref="Type"/> of value for <paramref name="field"/> is not in <see cref="TypeSwitchDict"/></exception>
+		public static T? GetValueFromDoc<T>(Fields field, Word.Document doc) where T : class
 		{
-			if (!GetFormField(field, out FormField info) || !Instance.TypeSwitchDict.TryGetValue(info.FieldType, out Func<string, object> convert))
-				return (T)(object)null;
+			if (!TryGetFormField(field, out FormField? info))
+				return null;
+			if (!Instance.TypeSwitchDict.TryGetValue(info.FieldType, out Func<string, object>? convert))
+				throw new UnknownFieldTypeException(info.FieldType);
 			if (typeof(T) == typeof(string))
 				return (T)Instance.TypeSwitchDict[typeof(string)](doc.FormFields[info.Index].Result);
 			return (T)convert(doc.FormFields[info.Index].Result);
@@ -149,11 +151,11 @@ namespace BerichtManager.WordTemplate
 		/// <param name="field"><see cref="Fields"/> field to set value</param>
 		/// <param name="doc"><see cref="Word.Document"/> to set value of <paramref name="field"/> in</param>
 		/// <param name="value">Value to set <paramref name="field"/> to</param>
-		public static void SetValueInDoc(Fields field, Word.Document doc, string value)
+		public static void SetValueInDoc(Fields field, Word.Document doc, string? value)
 		{
-			if (!GetFormField(field, out FormField info))
+			if (!TryGetFormField(field, out FormField? info))
 				return;
-			FillFormField(doc.Application, doc.FormFields[info.Index], value);
+			FillFormField(doc.Application, doc.FormFields[info!.Index], value);
 		}
 
 		/// <summary>
@@ -173,9 +175,9 @@ namespace BerichtManager.WordTemplate
 		{
 			if (!File.Exists(FormFieldConfigPath))
 				return;
-			Dictionary<Fields, FormField> _FormFields = JsonConvert.DeserializeObject<Dictionary<Fields, FormField>>(File.ReadAllText(FormFieldConfigPath));
-			if (!_FormFields.KeyValuePairsEqualNoSequence(FormFields))
-				FormFields = _FormFields;
+			Dictionary<Fields, FormField>? _FormFields = JsonConvert.DeserializeObject<Dictionary<Fields, FormField>>(File.ReadAllText(FormFieldConfigPath));
+			if (_FormFields != null && _FormFields!.KeyValuePairsEqualNoSequence(FormFields!) == true)
+				FormFields = _FormFields!;
 		}
 
 		/// <summary>
@@ -208,15 +210,19 @@ namespace BerichtManager.WordTemplate
 		{
 			if (newIndex < 1)
 				throw new ArgumentException($"{newIndex} is an invalid index, Word form fields start at index 1", "newIndex");
-			if (!Instance.FormFields.TryGetValue(field, out FormField form))
+			if (Instance.FormFields.TryGetValue(field, out FormField? form))
 			{
-				FormField newForm = new FormField(index: newIndex, type: form.FieldType, form.DisplayText);
+				if (form.Index == newIndex)
+					return;
+				form.Index = newIndex;
+			}
+			else
+			{
+				Dictionary<Fields, FormField> defaultConfig = GetInitialConfig();
+				FormField defaultForm = defaultConfig[field]!;
+				FormField newForm = new FormField(index: newIndex, type: defaultForm.FieldType, defaultForm.DisplayText);
 				Instance.FormFields.Add(field, newForm);
 			}
-			if (form?.Index == newIndex)
-				return;
-			if (form != null)
-				form.Index = newIndex;
 			SaveConfig();
 		}
 
@@ -246,7 +252,7 @@ namespace BerichtManager.WordTemplate
 		private static void SaveConfig()
 		{
 			SortFormFields();
-			if (Instance.FormFields.KeyValuePairsEqualNoSequence(GetInitialConfig()))
+			if (Instance.FormFields!.KeyValuePairsEqualNoSequence(GetInitialConfig()!))
 			{
 				if (File.Exists(FormFieldConfigPath))
 					File.Delete(FormFieldConfigPath);
@@ -281,10 +287,8 @@ namespace BerichtManager.WordTemplate
 		/// <param name="app">The Word Application containing the documents with FormFields to fill</param>
 		/// <param name="field">The FormField to fill with Text</param>
 		/// <param name="text">The Text to Fill</param>
-		private static void FillFormField(Word.Application app, Word.FormField field, string text)
+		private static void FillFormField(Word.Application app, Word.FormField field, string? text)
 		{
-			if (text == null)
-				return;
 			text = ReportUtils.TransformTextToWord(text);
 			field.Select();
 			for (int i = 1; i < 6; i++)

@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net;
 using BerichtManager.Config;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Reflection;
 using BerichtManager.IHKClient.Exceptions;
 using Word = Microsoft.Office.Interop.Word;
@@ -12,9 +7,9 @@ using BerichtManager.HelperClasses;
 using System.Text.RegularExpressions;
 using BerichtManager.UploadChecking;
 using System.Globalization;
-using System.Threading;
-using BerichtManager.HelperClasses.HtmlClasses;
 using BerichtManager.IHKClient.ReportContents;
+using HtmlDocument = BerichtManager.HelperClasses.HtmlClasses.HtmlDocument;
+using HtmlElement = BerichtManager.HelperClasses.HtmlClasses.HtmlElement;
 
 namespace BerichtManager.IHKClient
 {
@@ -75,7 +70,7 @@ namespace BerichtManager.IHKClient
 		/// <summary>
 		/// Handler for <see cref="LoginSessionTimeout"/> elapsed event
 		/// </summary>
-		private void LoginSessionTimeout_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+		private void LoginSessionTimeout_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
 		{
 			LoggedIn = false;
 			HttpClient.DefaultRequestHeaders.Remove("Cookie");
@@ -97,7 +92,7 @@ namespace BerichtManager.IHKClient
 		/// <returns>Full Uri</returns>
 		private Uri FromRelativeUri(string path)
 		{
-			return new Uri(HttpClient.BaseAddress, path);
+			return new Uri(HttpClient.BaseAddress!, path);
 		}
 
 		/// <summary>
@@ -155,7 +150,7 @@ namespace BerichtManager.IHKClient
 			HttpResponseMessage response = await GetAndRefer(path);
 			if (!response.IsSuccessStatusCode)
 				return false;
-			if (!response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
+			if (!response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? setCookies))
 				return false;
 			if (setCookies.Count() == 0)
 				return false;
@@ -185,7 +180,7 @@ namespace BerichtManager.IHKClient
 			string password = ConfigHandler.Instance.IHKPassword;
 			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
 			{
-				User user = ConfigHandler.Instance.DoIHKLogin();
+				User? user = ConfigHandler.Instance.DoIHKLogin();
 				if (user == null)
 					return false;
 				username = user.Username;
@@ -193,7 +188,7 @@ namespace BerichtManager.IHKClient
 				if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
 					return false;
 			}
-			Dictionary<string, string> content = new Dictionary<string, string>()
+			Dictionary<string, string?> content = new Dictionary<string, string?>()
 			{
 				{ "login", username },
 				{ "pass", password },
@@ -220,7 +215,7 @@ namespace BerichtManager.IHKClient
 		/// </summary>
 		/// <returns><see cref="List{T}"/> with found <see cref="UploadedReport"/>s or <see langword="null"/> if the operation was not successful</returns>
 		/// <exception cref="HttpRequestException"></exception>
-		public async Task<List<UploadedReport>> GetIHKReports()
+		public async Task<List<UploadedReport>?> GetIHKReports()
 		{
 			if (!LoggedIn)
 				if (!await DoLogin())
@@ -228,8 +223,8 @@ namespace BerichtManager.IHKClient
 			HttpResponseMessage response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			if (!response.IsSuccessStatusCode)
 				return null;
-			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-			List<HtmlElement> reportElements = doc.Body.CSSSelect("div.reihe");
+			HtmlDocument doc = new HtmlDocument(await response.Content.ReadAsStringAsync());
+			List<HtmlElement>? reportElements = doc.Body?.CSSSelect("div.reihe");
 			ResetTimer();
 			return TransformHtmlToReports(reportElements);
 		}
@@ -240,9 +235,13 @@ namespace BerichtManager.IHKClient
 		/// <param name="reportElements">List of report <see cref="HtmlElement"/>s from IHK page</param>
 		/// <returns><see cref="List{T}"/> with transformed <see cref="UploadedReport"/>s</returns>
 		/// <exception cref="HttpRequestException"></exception>
-		private List<UploadedReport> TransformHtmlToReports(List<HtmlElement> reportElements)
+		private List<UploadedReport> TransformHtmlToReports(List<HtmlElement>? reportElements)
 		{
 			List<UploadedReport> uploadedReports = new List<UploadedReport>();
+
+			if (reportElements == null)
+				return uploadedReports;
+
 			reportElements.ForEach(reportElement =>
 			{
 				if (reportElement.Children.Count < Enum.GetNames(typeof(ReportElementFields)).Length)
@@ -338,7 +337,7 @@ namespace BerichtManager.IHKClient
 				{
 					if (report.ReportContent.GetType().GetProperties().ToList().Find(prop =>
 					{
-						IHKFormDataNameAttribute attr = prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() as IHKFormDataNameAttribute;
+						IHKFormDataNameAttribute? attr = prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() as IHKFormDataNameAttribute;
 						if (attr == null)
 							return false;
 						return attr.Name == htmlElement.Name || prop.Name == htmlElement.Name;
@@ -354,7 +353,7 @@ namespace BerichtManager.IHKClient
 				//Find list of properties which have the same IHKForm name as input
 				List<PropertyInfo> matchingProps = report.ReportContent.GetType().GetProperties().ToList().FindAll(prop =>
 				{
-					if (!(prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() is IHKFormDataNameAttribute attr))
+					if (prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() is not IHKFormDataNameAttribute attr)
 					{
 #if DEBUG
 						Console.WriteLine($"Property {prop.Name} of report has no IHKFormDataNameAttribute");
@@ -423,8 +422,8 @@ namespace BerichtManager.IHKClient
 			MultipartFormDataContent mPFDC = new MultipartFormDataContent();
 			content.GetType().GetProperties().ToList().ForEach(prop =>
 			{
-				IHKFormDataNameAttribute attr = prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() as IHKFormDataNameAttribute;
-				if (!attr.IsActuallySent)
+				IHKFormDataNameAttribute? attr = prop.GetCustomAttributes(typeof(IHKFormDataNameAttribute)).First() as IHKFormDataNameAttribute;
+				if (attr == null || !attr.IsActuallySent)
 					return;
 				string propName;
 				if (attr != null)
@@ -434,10 +433,10 @@ namespace BerichtManager.IHKClient
 
 				if (prop.PropertyType == typeof(byte[]))
 				{
-					ByteArrayContent file = new ByteArrayContent((byte[])prop.GetValue(content) ?? new byte[0]);
+					ByteArrayContent file = new ByteArrayContent((byte[]?)prop.GetValue(content) ?? Array.Empty<byte>());
 					mPFDC.Add(file, $"\"{propName}\"");
 					file.Headers.Add("Content-Type", "application/octet-stream");
-					file.Headers.ContentDisposition.FileName = "\"\"";
+					file.Headers.ContentDisposition!.FileName = "\"\"";
 				}
 				else
 				{
@@ -465,7 +464,7 @@ namespace BerichtManager.IHKClient
 			HttpResponseMessage response = await GetAndRefer($"tibrosBB/azubiHeftEintragDetails.jsp?lfdnr={lfdnr}");
 			if (!response.IsSuccessStatusCode)
 				return false;
-			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
+			HtmlDocument doc = new HtmlDocument(await response.Content.ReadAsStringAsync());
 			if (doc.Forms.Count == 0)
 				throw new NoFormFoundException();
 			if (!FindAllInputInElement(doc.Forms[0], out List<HtmlElement> inputs))
@@ -480,7 +479,7 @@ namespace BerichtManager.IHKClient
 			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString()))
 				response = await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
-				response = await GetAndRefer(response.Headers.Location, response.RequestMessage.RequestUri.Port);
+				response = await GetAndRefer(response.Headers.Location, response.RequestMessage!.RequestUri!.Port);
 
 			ResetTimer();
 			return true;
@@ -522,11 +521,11 @@ namespace BerichtManager.IHKClient
 			if (lfdNR.HasValue && lfdNR >= 0)
 				response = await GetAndRefer($"tibrosBB/azubiHeftEditForm.jsp?lfdnr={lfdNR}");
 			else
-				response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string>() { { "neu", null } }));
+				response = await PostAndRefer("tibrosBB/azubiHeftEditForm.jsp", new FormUrlEncodedContent(new Dictionary<string, string?>() { { "neu", null } }));
 			if (!response.IsSuccessStatusCode)
 				return new UploadResult(CreateResults.CreationFailed);
 			//Fill report with contents from new IHK report
-			HtmlDocument doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
+			HtmlDocument doc = new HtmlDocument(await response.Content.ReadAsStringAsync());
 			Report report = new Report();
 			FillReportContent(report, doc);
 			//Overwrite contents from IHK
@@ -543,20 +542,20 @@ namespace BerichtManager.IHKClient
 			if (response.Headers.Location == null || string.IsNullOrEmpty(response.Headers.Location.ToString())/* || response.Headers.Location.LocalPath == azubiHeftPath*/)
 				response = await GetAndRefer(azubiHeftPath);
 			else
-				response = await GetAndRefer(response.Headers.Location, response.RequestMessage.RequestUri.Port);
+				response = await GetAndRefer(response.Headers.Location, response.RequestMessage!.RequestUri!.Port);
 			if (!response.IsSuccessStatusCode)
 				return new UploadResult(CreateResults.UnableToFetchLFDNR, report.ReportContent.StartDate);
 			int? lfdnr = lfdNR;
 			//Get lfdnr from last report in list as shown in html on IHK site
 			if (!lfdnr.HasValue || lfdnr < 0)
 			{
-				doc = GetHtmlDocument(await response.Content.ReadAsStringAsync());
-				List<UploadedReport> uploadedReports = TransformHtmlToReports(doc.Body.CSSSelect("div.reihe"));
-				if (uploadedReports.Find(ureport => ureport.StartDate == DateTime.Parse(report.ReportContent.StartDate)) is UploadedReport currentReport)
+				doc = new HtmlDocument(await response.Content.ReadAsStringAsync());
+				List<UploadedReport> uploadedReports = TransformHtmlToReports(doc.Body?.CSSSelect("div.reihe"));
+				if (uploadedReports.Find(ureport => ureport.StartDate.ToString(DateTimeUtils.DATETIMEFORMATIHK) == report.ReportContent.StartDate) is UploadedReport currentReport)
 					lfdnr = currentReport.LfdNR;
 			}
 			ResetTimer();
-			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent.StartDate), lfdnr: lfdnr);
+			return new UploadResult(CreateResults.Success, DateTime.Parse(report.ReportContent!.StartDate!), lfdnr: lfdnr);
 		}
 
 		/// <summary>
@@ -592,7 +591,7 @@ namespace BerichtManager.IHKClient
 				await GetAndRefer("tibrosBB/azubiHeft.jsp");
 			else
 			*/
-			await GetAndRefer(response.Headers.Location, response.RequestMessage.RequestUri.Port);
+			await GetAndRefer("tibrosBB/azubiHeft.jsp");
 
 			ResetTimer();
 			return new GetReportResult(GetReportResult.ResultStatuses.Success, report.ReportContent);
@@ -607,8 +606,8 @@ namespace BerichtManager.IHKClient
 		{
 			if (doc.Forms.Count == 0)
 				return false;
-			List<HtmlElement> inputs = doc.Forms[0]?.AllInputs;
-			if (inputs == null || (inputs != null && inputs.Count == 0))
+			List<HtmlElement>? inputs = doc.Forms[0]?.AllInputs;
+			if (inputs == null || inputs.Count == 0)
 				return false;
 			List<string> filledProps = new List<string>();
 			foreach (HtmlElement input in inputs)
@@ -677,11 +676,11 @@ namespace BerichtManager.IHKClient
 		/// <returns><see cref="CommentResult"/> of finding the comment</returns>
 		private CommentResult GetComment(HtmlDocument doc)
 		{
-			List<HtmlElement> list = doc.Body.CSSSelect("div.noc_table > div.row > div");
+			List<HtmlElement>? list = doc.Body?.CSSSelect("div.noc_table > div.row > div");
 			int commentIndex = 2 * (int)EditFormInfoFields.Comment + 1;
-			if (list.Count < commentIndex)
+			if (list?.Count < commentIndex)
 				return new CommentResult(CommentResult.ResultStatus.CommentFieldNotFound);
-			return new CommentResult(CommentResult.ResultStatus.Success, comment: list[commentIndex].InnerText);
+			return new CommentResult(CommentResult.ResultStatus.Success, comment: list?[commentIndex].InnerText);
 		}
 
 		/// <summary>
@@ -726,7 +725,7 @@ namespace BerichtManager.IHKClient
 		/// <param name="path">Relative path</param>
 		private async Task<bool> EnsureReferrer(string path)
 		{
-			if (HttpClient.DefaultRequestHeaders.Referrer == new Uri(HttpClient.BaseAddress, path))
+			if (HttpClient.DefaultRequestHeaders.Referrer == new Uri(HttpClient.BaseAddress!, path))
 				return true;
 			try
 			{
@@ -737,30 +736,6 @@ namespace BerichtManager.IHKClient
 			{
 				return false;
 			}
-		}
-
-		/// <summary>
-		/// Generates an <see cref="HtmlDocument"/> from an HTML string
-		/// </summary>
-		/// <param name="html">HTML string to parse</param>
-		/// <returns>Parsed <see cref="HtmlDocument"/></returns>
-		private HtmlDocument GetHtmlDocument(string html)
-		{
-			HtmlDocument result = null;
-			Thread browserThread = new Thread(() =>
-			{
-				System.Windows.Forms.WebBrowser browser = new System.Windows.Forms.WebBrowser();
-				browser.ScriptErrorsSuppressed = true;
-				browser.DocumentText = html;
-				browser.Document.OpenNew(true);
-				browser.Document.Write(html);
-				browser.Refresh();
-				result = new HtmlDocument(browser.Document);
-			});
-			browserThread.SetApartmentState(ApartmentState.STA);
-			browserThread.Start();
-			browserThread.Join();
-			return result;
 		}
 	}
 }

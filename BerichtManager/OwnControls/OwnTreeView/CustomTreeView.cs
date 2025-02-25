@@ -1,8 +1,5 @@
 ﻿using BerichtManager.ThemeManagement;
-using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace BerichtManager.OwnControls.OwnTreeView
 {
@@ -11,7 +8,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		/// <summary>
 		/// Internal cache to remember which <see cref="CustomTreeNode"/> had its tool tip displayed last
 		/// </summary>
-		private CustomTreeNode LastHovered { get; set; }
+		private CustomTreeNode? LastHovered { get; set; }
 
 		/// <inheritdoc cref="CascadeCheckedChanges" path=""/>
 		private bool cascadeCheckedChanges { get; set; } = true;
@@ -62,7 +59,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		/// <summary>
 		/// Internal <see cref="ToolTip"/> to display node tool tips
 		/// </summary>
-		internal ToolTip NodeToolTip { get; private set; }
+		internal ToolTip? NodeToolTip { get; private set; }
 
 		/// <inheritdoc cref="CustomNodeDrawer" path=""/>
 		private ICustomNodeDrawer customNodeDrawer { get; set; } = new CustomNodeDrawer();

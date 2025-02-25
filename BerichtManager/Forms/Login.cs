@@ -1,7 +1,4 @@
 ﻿using BerichtManager.ThemeManagement;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace BerichtManager.Forms
 {
@@ -34,6 +31,8 @@ namespace BerichtManager.Forms
 			laLogin.Text = laLogin.Text.Replace("{Placeholder}", logInTo);
 			laLogin.Width = TextRenderer.MeasureText(laLogin.Text, laLogin.Font).Width;
 			laLogin.Location = new Point(Width / 2 - laLogin.Width / 2, laLogin.Location.Y);
+			Username = "";
+			Password = "";
 		}
 
 		private void btClose_Click(object sender, EventArgs e)

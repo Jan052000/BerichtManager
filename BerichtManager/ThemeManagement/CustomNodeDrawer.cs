@@ -1,8 +1,6 @@
 using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.UploadChecking;
-using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 
 namespace BerichtManager.ThemeManagement
 {
@@ -15,7 +13,7 @@ namespace BerichtManager.ThemeManagement
 		/// <summary>
 		/// Short reference to active theme set in <see cref="ThemeManager"/>
 		/// </summary>
-		private ITheme Theme { get => ThemeManager.Instance.ActiveTheme; }
+		private ITheme Theme { get => ThemeManager.ActiveTheme; }
 		/// <summary>
 		/// <see cref="Color"/> for drawing dottet lines
 		/// </summary>
@@ -81,7 +79,7 @@ namespace BerichtManager.ThemeManagement
 		/// <param name="e">Event that is passed down when drawing nodes</param>
 		public void DrawNode(DrawTreeNodeEventArgs e)
 		{
-			if (e.Bounds.Width < 1 || e.Bounds.Height < 1)
+			if (e.Bounds.Width < 1 || e.Bounds.Height < 1 || e.Node == null)
 				return;
 			e.DrawDefault = false;
 			if (e.Node == e.Node.TreeView.SelectedNode)
@@ -178,38 +176,35 @@ namespace BerichtManager.ThemeManagement
 		/// <param name="e">Event that is passed down when drawing nodes</param>
 		private void DrawDottedLine(DrawTreeNodeEventArgs e, Rectangle? iconBounds = null, Rectangle? checkBoxBounds = null)
 		{
-			if (e.Node.Parent != null)
+			if (e.Node == null || e.Node.Parent == null)
+				return;
+			using Pen dottedLines = new Pen(DottedLinesColor);
+			dottedLines.DashStyle = DashStyle.Dot;
+			int lineOffset = e.Node.TreeView.CheckBoxes && iconBounds.HasValue ? -(e.Node.Parent.Bounds.X - (iconBounds.Value.X + iconBounds.Value.Width / 2)) : 7;
+			Point verticalLineStart = new Point(e.Node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y);
+			Point verticalLineEndHalf = new Point(e.Node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y + e.Node.Bounds.Height / 2);
+			Point verticalLineEndFull = new Point(e.Node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y + e.Node.Bounds.Height);
+			if (e.Node.Parent.IsExpanded)
 			{
-				using (Pen dottedLines = new Pen(DottedLinesColor))
-				{
-					dottedLines.DashStyle = DashStyle.Dot;
-					int lineOffset = e.Node.TreeView.CheckBoxes && iconBounds.HasValue ? -(e.Node.Parent.Bounds.X - (iconBounds.Value.X + iconBounds.Value.Width / 2)) : 7;
-					Point verticalLineStart = new Point(e.Node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y);
-					Point verticalLineEndHalf = new Point(e.Node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y + e.Node.Bounds.Height / 2);
-					Point verticalLineEndFull = new Point(e.Node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y + e.Node.Bounds.Height);
-					if (e.Node.Parent.IsExpanded)
-					{
-						//vertical lines from parent
-						if (e.Node == e.Node.Parent.Nodes[e.Node.Parent.Nodes.Count - 1])
-							e.Graphics.DrawLine(dottedLines, verticalLineStart, verticalLineEndHalf);
-						else
-							e.Graphics.DrawLine(dottedLines, verticalLineStart, verticalLineEndFull);
-						//horizontal line from line to parent
-						if (checkBoxBounds.HasValue)
-							e.Graphics.DrawLine(dottedLines, verticalLineEndHalf, new Point(checkBoxBounds.Value.X, e.Node.Bounds.Y + e.Node.Bounds.Height / 2));
-						else
-							e.Graphics.DrawLine(dottedLines, verticalLineEndHalf, new Point(e.Node.Bounds.X, e.Node.Bounds.Y + e.Node.Bounds.Height / 2));
-					}
+				//vertical lines from parent
+				if (e.Node == e.Node.Parent.Nodes[e.Node.Parent.Nodes.Count - 1])
+					e.Graphics.DrawLine(dottedLines, verticalLineStart, verticalLineEndHalf);
+				else
+					e.Graphics.DrawLine(dottedLines, verticalLineStart, verticalLineEndFull);
+				//horizontal line from line to parent
+				if (checkBoxBounds.HasValue)
+					e.Graphics.DrawLine(dottedLines, verticalLineEndHalf, new Point(checkBoxBounds.Value.X, e.Node.Bounds.Y + e.Node.Bounds.Height / 2));
+				else
+					e.Graphics.DrawLine(dottedLines, verticalLineEndHalf, new Point(e.Node.Bounds.X, e.Node.Bounds.Y + e.Node.Bounds.Height / 2));
+			}
 
-					//lines from root
-					TreeNode node = e.Node.Parent;
-					while (node.Parent != null)
-					{
-						if (node != node.Parent.LastNode)
-							e.Graphics.DrawLine(dottedLines, new Point(node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y), new Point(node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y + e.Node.Bounds.Height));
-						node = node.Parent;
-					}
-				}
+			//lines from root
+			TreeNode node = e.Node.Parent;
+			while (node.Parent != null)
+			{
+				if (node != node.Parent.LastNode)
+					e.Graphics.DrawLine(dottedLines, new Point(node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y), new Point(node.Parent.Bounds.X + lineOffset, e.Node.Bounds.Y + e.Node.Bounds.Height));
+				node = node.Parent;
 			}
 		}
 
@@ -258,7 +253,7 @@ namespace BerichtManager.ThemeManagement
 
 		public void DrawNodeText(DrawTreeNodeEventArgs e)
 		{
-			if (e.Bounds.X == -1)
+			if (e.Bounds.X == -1 || e.Node == null)
 				return;
 			TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.TreeView.Font, new Point(e.Node.Bounds.X, e.Node.Bounds.Y), e.Node.TreeView.ForeColor);
 		}

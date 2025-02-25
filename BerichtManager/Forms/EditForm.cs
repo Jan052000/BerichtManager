@@ -1,11 +1,7 @@
 ﻿using BerichtManager.Config;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Text;
-using System.Windows.Forms;
 
 namespace BerichtManager.Forms
 {
@@ -14,11 +10,11 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// Text from <see cref="rtInput"/> after form closed
 		/// </summary>
-		public string Result { get; set; }
+		public string? Result { get; set; }
 		/// <summary>
 		/// Cache object to reduce number of .Instance in code
 		/// </summary>
-		private ConfigHandler ConfigHandler { get; }
+		private ConfigHandler? ConfigHandler { get; }
 		/// <summary>
 		/// The default value if string is left empty
 		/// </summary>
@@ -26,7 +22,7 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// Event that is called when config should be reloaded
 		/// </summary>
-		public event TriggerUpdate RefreshConfigs;
+		public event TriggerUpdate? RefreshConfigs;
 
 		/// <summary>
 		/// Creates a new <see cref="EditForm"/> object
@@ -35,7 +31,7 @@ namespace BerichtManager.Forms
 		/// <param name="text">Text to b set in input</param>
 		/// <param name="isCreate"><see cref="bool"/> If form is in creation mode which changes button texts, enabled status and tool tips</param>
 		/// <param name="defaultValue">The default value <see cref="Result"/> should have if Input is left empty</param>
-		public EditForm(string title = "", string text = "", bool isCreate = false, string defaultValue = "")
+		public EditForm(string title = "", string? text = null, bool isCreate = false, string defaultValue = "")
 		{
 			InitializeComponent();
 			ThemeSetter.SetThemes(this);
@@ -57,6 +53,7 @@ namespace BerichtManager.Forms
 				nudFontSize.Value = (decimal)ConfigHandler.EditorFontSize;
 				cbFontFamily.Text = ConfigHandler.EditorFont;
 				rtInput.Font = new Font(ConfigHandler.EditorFont, (float)nudFontSize.Value);
+				rtInput.WordWrap = ConfigHandler.UseWordWrap;
 				for (int i = 1; tabstops.Count < 32; i++)
 				{
 					tabstops.Add(i * ConfigHandler.TabStops);
@@ -68,8 +65,7 @@ namespace BerichtManager.Forms
 			}
 			cbFontFamily.Enabled = false;
 			rtInput.SelectionTabs = tabstops.ToArray();
-			rtInput.Text = text;
-			rtInput.WordWrap = ConfigHandler.UseWordWrap;
+			rtInput.Text = text ?? "";
 			if (isCreate)
 			{
 				btSaveAndQuit.Enabled = false;

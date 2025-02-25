@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.IHKClient
+﻿namespace BerichtManager.IHKClient
 {
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 	internal class IHKFormDataNameAttribute : Attribute

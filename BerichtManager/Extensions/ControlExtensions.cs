@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace BerichtManager.Extensions
+﻿namespace BerichtManager.Extensions
 {
 	/// <summary>
 	/// Holds extensions for <see cref="Control"/>

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
+﻿namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 {
 	/// <summary>
 	/// Class for CSS selectors following a " "
@@ -11,7 +9,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 		/// Creates a new <see cref="Selector"/> object
 		/// </summary>
 		/// <inheritdoc cref="BaseSelector(string, BaseSelector, HtmlElement)" path="/param"/>
-		public Selector(string selector, BaseSelector next, HtmlElement root) : base(selector, next, root)
+		public Selector(string selector, BaseSelector? next, HtmlElement? root) : base(selector, next, root)
 		{
 
 		}

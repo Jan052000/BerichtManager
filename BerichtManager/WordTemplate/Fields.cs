@@ -1,35 +1,33 @@
-﻿using System;
-
-namespace BerichtManager.WordTemplate
+﻿namespace BerichtManager.WordTemplate
 {
 	/// <summary>
 	/// Supported auto fill fields
 	/// </summary>
 	public enum Fields
 	{
-		[FieldsType(FieldType = typeof(string))]
+		[FieldsType(typeof(string))]
 		Name,
-		[FieldsType(FieldType = typeof(int))]
+		[FieldsType(typeof(int))]
 		Number,
 		[Field("Start date")]
-		[FieldsType(FieldType = typeof(DateTime))]
+		[FieldsType(typeof(DateTime))]
 		StartDate,
 		[Field("End date")]
-		[FieldsType(FieldType = typeof(DateTime))]
+		[FieldsType(typeof(DateTime))]
 		EndDate,
-		[FieldsType(FieldType = typeof(int))]
+		[FieldsType(typeof(int))]
 		Year,
-		[FieldsType(FieldType = typeof(string))]
+		[FieldsType(typeof(string))]
 		Work,
-		[FieldsType(FieldType = typeof(string))]
+		[FieldsType(typeof(string))]
 		Seminars,
-		[FieldsType(FieldType = typeof(string))]
+		[FieldsType(typeof(string))]
 		School,
 		[Field("Sign date (you)")]
-		[FieldsType(FieldType = typeof(DateTime))]
+		[FieldsType(typeof(DateTime))]
 		SignDateYou,
 		[Field("Sign date (supervisor)")]
-		[FieldsType(FieldType = typeof(DateTime))]
+		[FieldsType(typeof(DateTime))]
 		SignDateSupervisor
 	}
 }

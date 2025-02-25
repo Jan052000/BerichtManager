@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using System.Collections;
 
 namespace BerichtManager.OwnControls.OwnTreeView
 {
@@ -28,7 +25,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		#endregion
 
 		#region IList
-		object IList.this[int index]
+		object? IList.this[int index]
 		{
 			get => this[index];
 			set
@@ -47,11 +44,17 @@ namespace BerichtManager.OwnControls.OwnTreeView
 
 		bool IList.IsFixedSize => ((IList)Collection).IsFixedSize;
 
-		int IList.Add(object value)
+		int IList.Add(object? value)
 		{
-			if (value is CustomTreeNode ctn)
-				return Add(ctn);
-			return Add(value.ToString()).Index;
+			switch (value)
+			{
+				case CustomTreeNode ctn:
+					return Add(ctn);
+				case string str:
+					return Add(str).Index;
+				default:
+					return Add("").Index;
+			}
 		}
 
 		public void Clear()
@@ -59,27 +62,27 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			Collection.Clear();
 		}
 
-		bool IList.Contains(object value)
+		bool IList.Contains(object? value)
 		{
 			if (value is CustomTreeNode ctn)
 				return Contains(ctn);
 			return false;
 		}
 
-		int IList.IndexOf(object value)
+		int IList.IndexOf(object? value)
 		{
 			if (value is CustomTreeNode ctn)
 				return IndexOf(ctn);
 			return -1;
 		}
 
-		void IList.Insert(int index, object value)
+		void IList.Insert(int index, object? value)
 		{
 			if (value is CustomTreeNode ctn)
 				Insert(index, ctn);
 		}
 
-		void IList.Remove(object value)
+		void IList.Remove(object? value)
 		{
 			if (value is CustomTreeNode ctn)
 				Remove(ctn);
@@ -96,7 +99,7 @@ namespace BerichtManager.OwnControls.OwnTreeView
 		private CustomTreeNode Owner { get; }
 
 		public CustomTreeNode this[int index] { get => (CustomTreeNode)Collection[index]; set => Collection[index] = value; }
-		public CustomTreeNode this[string key] { get => (CustomTreeNode)Collection[key]; }
+		public CustomTreeNode? this[string? key] { get => (CustomTreeNode?)Collection[key]; }
 
 		internal NodeCollectionWrapper(TreeNodeCollection nodeCollection, CustomTreeNode owner)
 		{

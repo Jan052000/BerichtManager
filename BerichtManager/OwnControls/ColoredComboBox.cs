@@ -1,6 +1,4 @@
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace BerichtManager.OwnControls
 {
@@ -282,7 +280,7 @@ namespace BerichtManager.OwnControls
 				{
 					e.Graphics.FillRectangle(b, e.Bounds);
 				}
-				TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), Font, new Point(e.Bounds.X, e.Bounds.Y), textColor);
+				TextRenderer.DrawText(e.Graphics, Items[e.Index]!.ToString(), Font, new Point(e.Bounds.X, e.Bounds.Y), textColor);
 			}
 			e.DrawFocusRectangle();
 		}

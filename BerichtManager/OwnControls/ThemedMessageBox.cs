@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using BerichtManager.HelperClasses;
+﻿using BerichtManager.HelperClasses;
 using BerichtManager.ThemeManagement;
 using Newtonsoft.Json.Linq;
 
@@ -64,7 +61,7 @@ namespace BerichtManager.OwnControls
 		/// <param name="createLogFile">Wether or not a file containing the <see cref="Exception"/> should be created</param>
 		/// <param name="additionalData">Additional data to display</param>
 		/// <param name="errorWhileActivity">Description of process that threw the error ("while" is added if not contained in string) e.g. "while editing file..."</param>
-		public static void Error(Exception ex, string title = "", bool blockExecution = true, bool allowMessageHighlight = false, bool createLogFile = true, JObject additionalData = null, string errorWhileActivity = "")
+		public static void Error(Exception ex, string title = "", bool blockExecution = true, bool allowMessageHighlight = false, bool createLogFile = true, JObject? additionalData = null, string errorWhileActivity = "")
 		{
 			string errorMessage = "An unexpected exception has occurred";
 			if (!string.IsNullOrEmpty(errorWhileActivity))
@@ -91,9 +88,9 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		/// <param name="sender">Sender of event</param>
 		/// <param name="e">Event arguments</param>
-		private void UnfocusOnEnter(object sender, EventArgs e)
+		private void UnfocusOnEnter(object? sender, EventArgs e)
 		{
-			((Control)sender).Parent.Focus();
+			(sender as Control)?.Parent?.Focus();
 		}
 
 		/// <summary>
@@ -126,7 +123,7 @@ namespace BerichtManager.OwnControls
 		/// <returns><see cref="Button"/> in <see cref="paButtons"/> with largest x location</returns>
 		private Button FindLastButton()
 		{
-			return FindButtonFromLocation((result, bt) => result?.Location.X < bt.Location.X);
+			return FindButtonFromLocation((result, bt) => result?.Location.X < bt.Location.X)!;
 		}
 
 		/// <summary>
@@ -135,7 +132,7 @@ namespace BerichtManager.OwnControls
 		/// <returns><see cref="Button"/> in <see cref="paButtons"/> with smallest x location</returns>
 		private Button FindFirstButton()
 		{
-			return FindButtonFromLocation((result, bt) => result?.Location.X > bt.Location.X);
+			return FindButtonFromLocation((result, bt) => result?.Location.X > bt.Location.X)!;
 		}
 
 		/// <summary>
@@ -143,9 +140,9 @@ namespace BerichtManager.OwnControls
 		/// </summary>
 		/// <param name="predicate"><see cref="ButtonLocationDelegate"/> to use in determining returned button</param>
 		/// <returns>Found button <see cref="Button"/> or <see langword="null"/> if no button was found</returns>
-		private Button FindButtonFromLocation(ButtonLocationDelegate predicate)
+		private Button? FindButtonFromLocation(ButtonLocationDelegate predicate)
 		{
-			Button result = null;
+			Button? result = null;
 			foreach (Control control in paButtons.Controls)
 			{
 				if (control is Button bt)
@@ -247,7 +244,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Sets dialogresult
 		/// </summary>
-		private void OkClicked(object sender, EventArgs e)
+		private void OkClicked(object? sender, EventArgs e)
 		{
 			DialogResult = DialogResult.OK;
 			Close();
@@ -256,7 +253,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Sets dialogresult
 		/// </summary>
-		private void CancelClicked(object sender, EventArgs e)
+		private void CancelClicked(object? sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Cancel;
 			Close();
@@ -265,7 +262,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Sets dialogresult
 		/// </summary>
-		private void AbortClicked(object sender, EventArgs e)
+		private void AbortClicked(object? sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Abort;
 			Close();
@@ -274,7 +271,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Sets dialogresult
 		/// </summary>
-		private void RetryClicked(object sender, EventArgs e)
+		private void RetryClicked(object? sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Retry;
 			Close();
@@ -283,7 +280,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Sets dialogresult
 		/// </summary>
-		private void IgnoreClicked(object sender, EventArgs e)
+		private void IgnoreClicked(object? sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Ignore;
 			Close();
@@ -292,7 +289,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Sets dialogresult
 		/// </summary>
-		private void YesClicked(object sender, EventArgs e)
+		private void YesClicked(object? sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Yes;
 			Close();
@@ -301,7 +298,7 @@ namespace BerichtManager.OwnControls
 		/// <summary>
 		/// Sets dialogresult
 		/// </summary>
-		private void NoClicked(object sender, EventArgs e)
+		private void NoClicked(object? sender, EventArgs e)
 		{
 			DialogResult = DialogResult.No;
 			Close();

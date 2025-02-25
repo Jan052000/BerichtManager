@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BerichtManager.ReportChecking.Discrepancies
+﻿namespace BerichtManager.ReportChecking.Discrepancies
 {
 	/// <summary>
 	/// Class for discrepancies affecting multiple reports

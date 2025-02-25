@@ -1,8 +1,5 @@
 using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.ThemeManagement;
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace BerichtManager.HelperClasses
 {
@@ -11,15 +8,7 @@ namespace BerichtManager.HelperClasses
 		/// <summary>
 		/// <see cref="CustomTreeNode"/> containing only selected nodes and the nodes leading to them
 		/// </summary>
-		public CustomTreeNode FilteredNode { get; private set; }
-		/// <summary>
-		/// Instance of <see cref="ThemeManagement.CustomNodeDrawer"/>
-		/// </summary>
-		private CustomNodeDrawer CustomNodeDrawer { get; } = new CustomNodeDrawer();
-		/// <summary>
-		/// Flag to stop <see cref="CheckChildNodes(CustomTreeNode)"/> from cascading endlessly
-		/// </summary>
-		private bool UpdatingChecks { get; set; } = false;
+		public CustomTreeNode? FilteredNode { get; private set; }
 		/// <summary>
 		/// Delegate for a node filter
 		/// </summary>
@@ -65,7 +54,7 @@ namespace BerichtManager.HelperClasses
 			if (node.TreeView == null)
 				index = tvFolders.Nodes.Add(node);
 			else
-				index = tvFolders.Nodes.Add((CustomTreeNode)node?.Clone());
+				index = tvFolders.Nodes.Add((CustomTreeNode)node.Clone());
 			return tvFolders.Nodes[index];
 		}
 
@@ -75,7 +64,7 @@ namespace BerichtManager.HelperClasses
 		/// <param name="node"><see cref="CustomTreeNode"/> to check</param>
 		/// <param name="filter">Filter function</param>
 		/// <returns>Filtered <see cref="CustomTreeNode"/> or <see langword="null"/> if <paramref name="node"/> was filtered</returns>
-		private CustomTreeNode FilterNode(CustomTreeNode node, NodeFilter filter)
+		private CustomTreeNode? FilterNode(CustomTreeNode node, NodeFilter filter)
 		{
 			if (filter(node))
 				return null;
@@ -134,7 +123,7 @@ namespace BerichtManager.HelperClasses
 		/// </summary>
 		/// <param name="node"><see cref="CustomTreeNode"/> to filter</param>
 		/// <returns>A new <see cref="CustomTreeNode"/> object, which is a filtered clone of <paramref name="node"/> or <see langword="null"/> if no nodes remain</returns>
-		private CustomTreeNode FilterUncheckedNodes(CustomTreeNode node)
+		private CustomTreeNode? FilterUncheckedNodes(CustomTreeNode node)
 		{
 			if (!node.Checked && !NodeHasCheckedChild(node))
 				return null;
@@ -149,7 +138,8 @@ namespace BerichtManager.HelperClasses
 			result.Nodes.Clear();
 			foreach (CustomTreeNode add in passed)
 			{
-				result.Nodes.Add(FilterUncheckedNodes(add));
+				if (FilterUncheckedNodes(add) is CustomTreeNode ctn)
+					result.Nodes.Add(ctn);
 			}
 
 			return result;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
+﻿namespace BerichtManager.HelperClasses.HtmlClasses.CSSSelectors
 {
 	/// <summary>
 	/// <see cref="Exception"/> for unhandled types

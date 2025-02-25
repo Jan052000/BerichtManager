@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace BerichtManager.OwnControls.OwnTreeView
+﻿namespace BerichtManager.OwnControls.OwnTreeView
 {
 	public interface ICustomNodeDrawer
 	{

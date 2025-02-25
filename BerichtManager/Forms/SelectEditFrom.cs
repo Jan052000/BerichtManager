@@ -1,8 +1,5 @@
 ﻿using BerichtManager.ThemeManagement;
 using BerichtManager.WordTemplate;
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace BerichtManager.Forms
 {
@@ -59,9 +56,9 @@ namespace BerichtManager.Forms
 			Close();
 		}
 
-		private void CbCheckedChanged(object sender, EventArgs e)
+		private void CbCheckedChanged(object? sender, EventArgs e)
 		{
-			if (((CheckBox)sender).Checked)
+			if (((CheckBox)sender!).Checked)
 			{
 				Count++;
 			}

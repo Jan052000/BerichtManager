@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BerichtManager.UploadChecking
+﻿namespace BerichtManager.UploadChecking
 {
 	/// <summary>
 	/// Class to map status messages from IHK to <see cref="ReportNode.UploadStatuses"/>

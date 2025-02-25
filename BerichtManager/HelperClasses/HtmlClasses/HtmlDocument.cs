@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+﻿using System.Diagnostics;
 
 namespace BerichtManager.HelperClasses.HtmlClasses
 {
@@ -13,15 +11,15 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// <summary>
 		/// <see cref="HtmlElement"/> representation of <see cref="System.Windows.Forms.HtmlDocument.Body"/>
 		/// </summary>
-		public HtmlElement Body { get; set; }
+		public HtmlElement? Body { get; set; }
 		/// <summary>
 		/// Count of children copies from <see cref="System.Windows.Forms.HtmlDocument"/>
 		/// </summary>
-		private int ElementCount { get => Body.All.Count; }
+		private int ElementCount { get => Body?.All?.Count ?? 0; }
 		/// <summary>
 		/// Title of <see cref="System.Windows.Forms.HtmlDocument"/>
 		/// </summary>
-		private string Title { get; set; }
+		private string? Title { get; set; }
 		/// <summary>
 		/// List of forms in <see cref="Body"/>
 		/// </summary>
@@ -39,15 +37,19 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 			Init(doc);
 		}
 
+		/// <summary>
+		/// Creates a new <see cref="HtmlDocument"/>
+		/// </summary>
+		/// <param name="html">HTML text of page</param>
 		public HtmlDocument(string html)
 		{
 			Thread browserThread = new Thread(() =>
 			{
-				System.Windows.Forms.WebBrowser browser = new System.Windows.Forms.WebBrowser();
+				WebBrowser browser = new WebBrowser();
 				browser.ScriptErrorsSuppressed = true;
 				browser.DocumentText = html;
-				browser.Document.OpenNew(true);
-				browser.Document.Write(html);
+				browser.Document!.OpenNew(true);
+				browser.Document!.Write(html);
 				browser.Refresh();
 				Init(browser.Document);
 			});
@@ -62,7 +64,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// <param name="doc"><see cref="System.Windows.Forms.HtmlDocument"/> to copy</param>
 		private void Init(System.Windows.Forms.HtmlDocument doc)
 		{
-			Body = new HtmlElement(doc.Body);
+			Body = new HtmlElement(doc.Body!);
 			Title = doc.Title;
 		}
 
@@ -71,9 +73,12 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// </summary>
 		/// <param name="root"><see cref="HtmlElement"/> to search for forms</param>
 		/// <returns><see cref="List{T}"/> containing all form tags in <paramref name="root"/></returns>
-		private List<HtmlElement> GetForms(HtmlElement root)
+		private List<HtmlElement> GetForms(HtmlElement? root)
 		{
 			List<HtmlElement> forms = new List<HtmlElement>();
+
+			if (root == null)
+				return forms;
 
 			if (root.Tag.ToLower() == "form")
 				forms.Add(root);

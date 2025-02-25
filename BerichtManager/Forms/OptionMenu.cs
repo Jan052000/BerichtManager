@@ -3,10 +3,6 @@ using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
 using BerichtManager.WordTemplate;
-using System;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace BerichtManager.Forms
 {
@@ -19,7 +15,7 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// Internal cache for last tool tip of <see cref="tbNamingPattern"/> on <see cref="toolTip1"/>
 		/// </summary>
-		private string NamingPatternToolTip { get; set; }
+		private string? NamingPatternToolTip { get; set; }
 		/// <summary>
 		/// Cache object to reduce number of .Instance in code
 		/// </summary>
@@ -28,42 +24,42 @@ namespace BerichtManager.Forms
 		/// <summary>
 		/// Name of the active theme
 		/// </summary>
-		private string ThemeName { get => ThemeManager.Instance.ActiveTheme.Name; }
+		private string ThemeName { get => ThemeManager.ActiveTheme.Name; }
 
 		/// <summary>
 		/// Emits when the active theme changes
 		/// </summary>
-		public event ActiveThemeChangedDelegate ActiveThemeChanged;
+		public event ActiveThemeChangedDelegate? ActiveThemeChanged;
 
 		/// <summary>
 		/// Emits when the report folder path changes
 		/// </summary>
-		public event reportFolderChanged ReportFolderChanged;
+		public event reportFolderChanged? ReportFolderChanged;
 
 		/// <summary>
 		/// Emits when tab stops change
 		/// </summary>
-		public event tabStopsChanged TabStopsChanged;
+		public event tabStopsChanged? TabStopsChanged;
 
 		/// <summary>
 		/// Emits when font size setting is changed
 		/// </summary>
-		public event fontSizeChanged FontSizeChanged;
+		public event fontSizeChanged? FontSizeChanged;
 
 		/// <summary>
 		/// Emits when ihk base address has been changed
 		/// </summary>
-		public event IHKBaseAddressChangedDelegate IHKBaseAddressChanged;
+		public event IHKBaseAddressChangedDelegate? IHKBaseAddressChanged;
 
 		/// <summary>
 		/// Emits when use word wrap changes
 		/// </summary>
-		public event UseWordWrapDelegate UseWordWrapChanged;
+		public event UseWordWrapDelegate? UseWordWrapChanged;
 
 		/// <summary>
 		/// Emits when status of show report tool tip changes
 		/// </summary>
-		public event GenericOptionChangeDelegate<bool> ShowReportToolTipChanged;
+		public event GenericOptionChangeDelegate<bool>? ShowReportToolTipChanged;
 
 		public OptionMenu()
 		{
@@ -346,7 +342,7 @@ namespace BerichtManager.Forms
 		/// Validates the text of <see cref="tbNamingPattern"/>
 		/// </summary>
 		/// <returns><see cref="string"/> containing error message or <see langword="null"/> if naming pattern is valid</returns>
-		private string ValidateNamingPattern()
+		private string? ValidateNamingPattern()
 		{
 			if (tbNamingPattern.Text.Length == 0)
 				return "An empty naming pattern is not allowed!";
@@ -367,7 +363,7 @@ namespace BerichtManager.Forms
 			MarkAsDirty(sender, e);
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
-			ITheme theme = ThemeManager.Instance.GetTheme(ThemeName);
+			ITheme? theme = ThemeManager.Instance.GetTheme(ThemeName);
 			if (theme == null)
 				return;
 			ThemeSetter.SetThemes(tbSchool);
@@ -440,8 +436,8 @@ namespace BerichtManager.Forms
 
 		private void toolTip1_Draw(object sender, DrawToolTipEventArgs e)
 		{
-			e.Graphics.Clear(ThemeManager.Instance.ActiveTheme.BackColor);
-			TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, ThemeManager.Instance.ActiveTheme.ForeColor);
+			e.Graphics.Clear(ThemeManager.ActiveTheme.BackColor);
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, e.Font, e.Bounds, ThemeManager.ActiveTheme.ForeColor);
 		}
 
 		private void UpdateThemesList()

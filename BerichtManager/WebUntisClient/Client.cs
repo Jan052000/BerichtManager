@@ -2,11 +2,7 @@ using BerichtManager.Config;
 using BerichtManager.OwnControls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 
 namespace BerichtManager.WebUntisClient
@@ -78,7 +74,7 @@ namespace BerichtManager.WebUntisClient
 
 			//Set cookie data
 			string newCookie = "schoolname=\"_" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
-			if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
+			if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? setCookies))
 			{
 				List<string> cookieHeaders = new List<string>();
 				IEnumerator<string> cookieEnumerator = setCookies.GetEnumerator();
@@ -102,7 +98,7 @@ namespace BerichtManager.WebUntisClient
 
 			//Obtain Api Key
 			string apiKey = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
-			if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
+			if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue? authorize))
 			{
 				client.DefaultRequestHeaders.Authorization = authorize;
 			}
@@ -123,21 +119,21 @@ namespace BerichtManager.WebUntisClient
 				ThemedMessageBox.Show(text: "Your account is unauthorized", title: "Unauthorized");
 				return new List<string>();
 			}
-			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result);
+			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result)!;
 
 			//Request Timetable for the week
 			DateTime baseDate = DateTime.Today;
 			string date = baseDate.ToString("yyyy-MM-dd");
 
 			//Check account privilages
-			if (!Enum.TryParse<ElementTypes>(yearData.user.roles[0], out ElementTypes elementType))
+			if (!Enum.TryParse(yearData?.user?.roles?[0], out ElementTypes elementType))
 			{
 				ThemedMessageBox.Show(text: "Could not resolve the rights your account has\non the WebUntis server of your school", title: "Unknown account type");
 				return new List<string>();
 			}
 
 			//Stundenplan api https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=2022-09-28&formatId=2
-			if (yearData.user.roles.Count > 0)
+			if (yearData.user.roles.Count > 0 && yearData?.user?.person?.id != null)
 			{
 				responseMessage = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=" + (int)elementType + "&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=1"/* + pageConfigData.data.selectedFormatId*/).Result;
 			}
@@ -150,9 +146,9 @@ namespace BerichtManager.WebUntisClient
 			string jsonResponse = responseMessage.Content.ReadAsStringAsync().Result;
 
 			//Deserialize Root from response
-			JObject responseObject = JsonConvert.DeserializeObject<JObject>(jsonResponse);
-			Root rootObject = JsonConvert.DeserializeObject<Root>(responseObject.First.First.ToString());
-			List<string> classkeys = rootObject.result.data.elementPeriods.Keys.ToList();
+			JObject responseObject = JsonConvert.DeserializeObject<JObject>(jsonResponse)!;
+			Root rootObject = JsonConvert.DeserializeObject<Root>(responseObject.First!.First!.ToString())!;
+			List<string> classkeys = rootObject!.result!.data!.elementPeriods!.Keys.ToList();
 
 			//Register ClassIds to be had that week
 			List<int> classids = new List<int>();
@@ -161,29 +157,31 @@ namespace BerichtManager.WebUntisClient
 			{
 				rootObject.result.data.elementPeriods[k].ForEach((en) =>
 				{
-					en.elements.ForEach((id) =>
+					en?.elements!.ForEach((id) =>
 					{
+						if (id == null || id.id == null)
+							return;
 						if (id.type == 3)
 						{
-							classids.Add(id.id);
+							classids.Add((int)id.id);
 
 							//Check for cancellation
-							if (en.@is.cancelled == true)// || en.@is.substitution)
+							if (en!.@is!.cancelled == true)// || en.@is.substitution)
 							{
-								if (!cancelled.Keys.Contains(id.id))
+								if (!cancelled.Keys.Contains((int)id.id))
 								{
-									cancelled.Add(id.id, true);
+									cancelled.Add((int)id.id, true);
 								}
 							}
 							else
 							{
-								if (cancelled.Keys.Contains(id.id))
+								if (cancelled.Keys.Contains((int)id.id))
 								{
-									cancelled[id.id] = false;
+									cancelled[(int)id.id] = false;
 								}
 								else
 								{
-									cancelled.Add(id.id, false);
+									cancelled.Add((int)id.id, false);
 								}
 							}
 						}
@@ -193,13 +191,15 @@ namespace BerichtManager.WebUntisClient
 
 			//Crosscheck ClassIds to Coursenames
 			bool useUserPrefix = ConfigHandler.UseCustomPrefix;
-			rootObject.result.data.elements.ForEach((element) =>
+			rootObject?.result?.data?.elements?.ForEach((element) =>
 			{
-				if (element.type == 3 && classids.Contains(element.id))
+				if (element?.id is not int id)
+					return;
+				if (element.type == 3 && classids.Contains(id))
 				{
 					if (useUserPrefix)
 					{
-						if (cancelled[element.id])
+						if (cancelled[id])
 						{
 							if (!classes.Contains(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n"))
 							{
@@ -221,7 +221,7 @@ namespace BerichtManager.WebUntisClient
 					}
 					else
 					{
-						if (cancelled[element.id])
+						if (cancelled[id])
 						{
 							if (!classes.Contains("-" + element.name + "\n\t-\n"))
 							{
@@ -252,8 +252,8 @@ namespace BerichtManager.WebUntisClient
 				if (int.TryParse(thisWeekStart.ToString("yyyyMMdd"), out int weekStart)) { }
 				if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
 
-				Holidays holidays = GetHolidays(client);
-				if (holidays.result == null)
+				Holidays? holidays = GetHolidays(client);
+				if (holidays?.result == null)
 				{
 					ThemedMessageBox.Show(text: "An error has occurred on the web untis server", title: "Server did not respond");
 					return new List<string>();
@@ -285,7 +285,7 @@ namespace BerichtManager.WebUntisClient
 		/// </summary>
 		/// <param name="useClient"><see cref="HttpClient"/> to be used for requests assumes client is logged in and has cookies and api key set</param>
 		/// <returns><see cref="Holidays"/> object if request was successful or null if not</returns>
-		private Holidays GetHolidays(HttpClient useClient = null)
+		private Holidays? GetHolidays(HttpClient? useClient = null)
 		{
 			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
 			HttpClient client;
@@ -334,7 +334,7 @@ namespace BerichtManager.WebUntisClient
 
 				//Set cookie data
 				string newCookie = "schoolname=\"_" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
-				if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
+				if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? setCookies))
 				{
 					List<string> cookieHeaders = new List<string>();
 					IEnumerator<string> cookieEnumerator = setCookies.GetEnumerator();
@@ -358,7 +358,7 @@ namespace BerichtManager.WebUntisClient
 
 				//Obtain Api Key
 				string apiKey = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
-				if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue authorize))
+				if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue? authorize))
 				{
 					client.DefaultRequestHeaders.Authorization = authorize;
 				}
@@ -395,7 +395,7 @@ namespace BerichtManager.WebUntisClient
 			if (int.TryParse(thisWeekStart.ToString("yyyyMMdd"), out int weekStart)) { }
 			if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
 
-			Holidays holidays = GetHolidays();
+			Holidays? holidays = GetHolidays();
 
 			holidays?.result?.ForEach((holiday) =>
 			{
