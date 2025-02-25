@@ -345,6 +345,11 @@ namespace BerichtManager.Config
 			get => GenericGet<string>("IHKSupervisorEMail");
 			set
 			{
+				if(value == "")
+				{
+					GenericSet("IHKSupervisorEMail", value);
+					return;
+				}
 				try
 				{
 					MailAddress mailAddress = new MailAddress(value);
