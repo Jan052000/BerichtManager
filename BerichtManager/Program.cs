@@ -1,4 +1,4 @@
-namespace BerichtManager
+﻿namespace BerichtManager
 {
 	internal static class Program
 	{
@@ -8,8 +8,7 @@ namespace BerichtManager
 		[STAThread]
 		static void Main()
 		{
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
+			ApplicationConfiguration.Initialize();
 			try
 			{
 				Application.Run(new MainForm());
