@@ -54,7 +54,6 @@ namespace BerichtManager.Forms
 				cbFontFamily.Text = ConfigHandler.EditorFont;
 				rtInput.Font = new Font(ConfigHandler.EditorFont, (float)nudFontSize.Value);
 				rtInput.WordWrap = ConfigHandler.UseWordWrap;
-				rtInput.ReadOnly = isReadonly;
 				for (int i = 1; tabstops.Count < 32; i++)
 				{
 					tabstops.Add(i * ConfigHandler.TabStops);
@@ -72,6 +71,16 @@ namespace BerichtManager.Forms
 				btSaveAndQuit.Enabled = false;
 				btQuit.Text = "Cancel";
 				ttTips.SetToolTip(btQuit, "Cancels the creation process");
+			}
+
+
+			rtInput.ReadOnly = isReadonly;
+			if (isReadonly)
+			{
+				btSkip.Text = "Close";
+				btConfirm.Visible = false;
+				btQuit.Visible = false;
+				btSaveAndQuit.Visible = false;
 			}
 		}
 
