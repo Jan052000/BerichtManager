@@ -5,6 +5,8 @@ using BerichtManager.HelperClasses;
 using BerichtManager.Extensions;
 using BerichtManager.OwnControls;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
+using BerichtManager.WordTemplate.Exceptions;
 
 namespace BerichtManager.WordTemplate
 {
@@ -115,7 +117,7 @@ namespace BerichtManager.WordTemplate
 		/// <param name="field"><see cref="Fields"/> field to get info of</param>
 		/// <param name="info"><see cref="FormField"/> object containing field index and type or <see langword="null"/> if <paramref name="field"/> was not found</param>
 		/// <returns><see langword="true"/> if <paramref name="field"/> is key of <see cref="FormFieldHandler"/></returns>
-		public static bool TryGetFormField(Fields field, out FormField? info)
+		public static bool TryGetFormField(Fields field, [NotNullWhen(true)] out FormField? info)
 		{
 			info = null;
 			if (!Instance.FormFields.TryGetValue(field, out FormField? _info))
@@ -131,10 +133,13 @@ namespace BerichtManager.WordTemplate
 		/// <param name="field"><see cref="Fields"/> field to get from <paramref name="doc"/></param>
 		/// <param name="doc"><see cref="Word.Document"/> to get value of <paramref name="field"/> from</param>
 		/// <returns>Value of <paramref name="field"/> converted to <typeparamref name="T"/> or <see langword="null"/> if no conversion is possible</returns>
+		/// <exception cref="UnknownFieldTypeException">Thrown if the <see cref="Type"/> of value for <paramref name="field"/> is not in <see cref="TypeSwitchDict"/></exception>
 		public static T? GetValueFromDoc<T>(Fields field, Word.Document doc) where T : class
 		{
-			if (!TryGetFormField(field, out FormField? info) || !Instance.TypeSwitchDict.TryGetValue(info!.FieldType, out Func<string, object>? convert))
+			if (!TryGetFormField(field, out FormField? info))
 				return null;
+			if (!Instance.TypeSwitchDict.TryGetValue(info.FieldType, out Func<string, object>? convert))
+				throw new UnknownFieldTypeException(info.FieldType);
 			if (typeof(T) == typeof(string))
 				return (T)Instance.TypeSwitchDict[typeof(string)](doc.FormFields[info.Index].Result);
 			return (T)convert(doc.FormFields[info.Index].Result);

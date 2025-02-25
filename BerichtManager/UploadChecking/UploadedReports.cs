@@ -125,7 +125,7 @@ namespace BerichtManager.UploadChecking
 		/// <param name="lfdnr">New lfdnr</param>
 		/// <param name="wasEdited">New edited status</param>
 		/// <param name="wasUpdated">New was updated status</param>
-		public static void UpdateReport(string path, ReportNode.UploadStatuses? status = null, int? lfdnr = null, bool? wasEdited = null, bool? wasUpdated = null)
+		public static void UpdateReport(string? path, ReportNode.UploadStatuses? status = null, int? lfdnr = null, bool? wasEdited = null, bool? wasUpdated = null)
 		{
 			bool save = false;
 			if (!GetUploadedReport(path, out UploadedReport? report))
