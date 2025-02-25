@@ -1678,6 +1678,9 @@ namespace BerichtManager
 			WordApp = new Word.Application();
 			((Word.ApplicationEvents4_Event)WordApp).Quit += OnWordClose;
 			WordIsOpen = true;
+			internalWordVisibleCheckedChange = true;
+			miWordVisible.Checked = WordApp.Visible;
+			internalWordVisibleCheckedChange = false;
 		}
 
 		/// <summary>
