@@ -264,13 +264,7 @@ namespace BerichtManager
 				tvReports.Sort();
 			}
 
-			if (InvokeRequired)
-				BeginInvoke(new MethodInvoker(() =>
-				{
-					update();
-				}));
-			else
-				update();
+			this.ExecuteWithInvoke(update);
 		}
 
 		/// <summary>

@@ -1,4 +1,5 @@
-﻿using BerichtManager.ThemeManagement;
+﻿using BerichtManager.Extensions;
+using BerichtManager.ThemeManagement;
 
 namespace BerichtManager.Forms
 {
@@ -22,10 +23,7 @@ namespace BerichtManager.Forms
 					eventsText = value;
 					if (wasEmpty)
 						eventsText = eventsText.Trim();
-					if (rtbEvents.InvokeRequired)
-						rtbEvents.Invoke(new Action(() => rtbEvents.Text = eventsText));
-					else
-						rtbEvents.Text = eventsText;
+					rtbEvents.ExecuteWithInvoke(() => rtbEvents.Text = eventsText);
 				}
 			}
 		}
@@ -46,10 +44,7 @@ namespace BerichtManager.Forms
 				{
 					EventsText += "\n" + status;
 					status = value;
-					if (rtbStatus.InvokeRequired)
-						rtbStatus.Invoke(new Action(() => rtbStatus.Text = value.Trim()));
-					else
-						rtbStatus.Text = value.Trim();
+					rtbStatus.ExecuteWithInvoke(() => rtbStatus.Text = value.Trim());
 				}
 			}
 		}
@@ -103,14 +98,7 @@ namespace BerichtManager.Forms
 			}
 			ShouldClose = true;
 			if (btStop.InvokeRequired)
-				btStop.BeginInvoke(new MethodInvoker(() =>
-				{
-					done();
-				}));
-			else
-			{
-				done();
-			}
+				btStop.ExecuteWithInvoke(done);
 			DialogResult = DialogResult.OK;
 		}
 
