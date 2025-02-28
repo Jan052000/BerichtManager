@@ -1356,10 +1356,8 @@ namespace BerichtManager
 			foreach (KeyValuePair<Fields, FormField> kvp in FormFieldHandler.GetCurrentFields())
 			{
 				Fields field = kvp.Key;
-				//if (DefaultQuickEditActions.Contains(field))
-				//	continue;
 				string displayName = kvp.Value.DisplayText;
-				toAdd.Add((field, new ToolStripMenuItem($"Edit {displayName}", null, (s, e) => QuickEdit(field, $"Edit {displayName}"))));
+				toAdd.Add((field, new ToolStripMenuItem($"Edit {displayName}", null, (s, e) => QuickEdit(field, $"Edit {displayName}")) { Name = $"miQuickEdit{field}" }));
 			}
 			toAdd.Sort(new Comparison<(Fields Field, ToolStripItem Item)>((i1, i2) =>
 			{
