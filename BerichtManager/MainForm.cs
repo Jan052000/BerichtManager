@@ -498,19 +498,22 @@ namespace BerichtManager
 					}
 				}
 
-				StartWaitCursor();
 				//Shool stuff
 				if (isSingle)
 				{
 					string classes = "";
 					try
 					{
+						StartWaitCursor();
 						Client.GetClassesFromWebUntis().ForEach(c => classes += c);
 					}
-					catch (AggregateException e)
+					catch (Exception ex)
 					{
-						ThemedMessageBox.Show(text: "Unable to process classes from web\n(try to cancel the creation process and start again)");
-						Logger.LogError(e);
+						ThemedMessageBox.Error(ex);
+					}
+					finally
+					{
+						EndWaitCursor();
 					}
 					form = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", isCreate: true, text: classes);
 				}
@@ -518,7 +521,6 @@ namespace BerichtManager
 				{
 					form = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", text: Client.GetHolidaysForDate(baseDate), isCreate: true);
 				}
-				EndWaitCursor();
 				form.RefreshConfigs += RefreshConfig;
 				form.ShowDialog();
 				form.RefreshConfigs -= RefreshConfig;

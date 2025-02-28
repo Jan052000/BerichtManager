@@ -60,11 +60,11 @@
 		/// <param name="propagateDown">Wether or not changes should be applied to children</param>
 		private void ChainChangeCheckStatus(CheckStatuses childStatus, bool propagateUp = false, bool propagateDown = false)
 		{
-			CustomTreeNode parent = Parent as CustomTreeNode;
 			if (CheckStatus == childStatus)
 				return;
 			if (!propagateUp && !propagateDown)
 				checkStatus = childStatus;
+			CustomTreeNode? parent = Parent as CustomTreeNode;
 			switch (childStatus)
 			{
 				case CheckStatuses.Unchecked:
