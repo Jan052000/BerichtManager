@@ -63,6 +63,7 @@ namespace BerichtManager.ThemeManagement
 				case Form form:
 					form.BackColor = Theme.BackColor;
 					form.Icon = Resources.AppIcon;
+					form.AutoScaleMode = AutoScaleMode.Inherit;
 					break;
 				case FocusColoredFlatButton flatButton:
 					flatButton.BackColor = Theme.ButtonColor;
