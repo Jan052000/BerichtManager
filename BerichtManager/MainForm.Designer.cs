@@ -534,6 +534,7 @@ namespace BerichtManager
 			tvReports.Margin = new Padding(0);
 			tvReports.Name = "tvReports";
 			tvReports.Size = new Size(274, 495);
+			tvReports.SuppressWindowsWarnOnKeyDown = true;
 			tvReports.TabIndex = 0;
 			tvReports.Click += tvReports_Click;
 			tvReports.DoubleClick += tvReports_DoubleClick;

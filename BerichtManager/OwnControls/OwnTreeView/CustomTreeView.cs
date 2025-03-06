@@ -56,6 +56,24 @@ namespace BerichtManager.OwnControls.OwnTreeView
 			}
 		}
 
+		/// <inheritdoc cref="SuppressWindowsWarnOnKeyDown" path=""/>
+		private bool suppressWindowsWarnOnKeyDown { get; set; } = false;
+		/// <summary>
+		/// Wether or not windows warn sound should be suppressed when pressing enter
+		/// </summary>
+		[DefaultValue(false)]
+		[Category("Advanced")]
+		public bool SuppressWindowsWarnOnKeyDown
+		{
+			get => suppressWindowsWarnOnKeyDown;
+			set
+			{
+				if (suppressWindowsWarnOnKeyDown == value)
+					return;
+				suppressWindowsWarnOnKeyDown = value;
+			}
+		}
+
 		/// <summary>
 		/// Internal <see cref="ToolTip"/> to display node tool tips
 		/// </summary>
@@ -182,6 +200,16 @@ namespace BerichtManager.OwnControls.OwnTreeView
 				NodeToolTip = null;
 			}
 			base.Dispose(disposing);
+		}
+
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+			if (SuppressWindowsWarnOnKeyDown && (keyData == Keys.Enter || keyData == Keys.Escape))
+			{
+				OnKeyDown(new KeyEventArgs(keyData));
+				return true;
+			}
+			return base.ProcessCmdKey(ref msg, keyData);
 		}
 	}
 }
