@@ -9,6 +9,11 @@ namespace BerichtManager.OwnControls.CustomToolTipControls
 
 		}
 
+		public CustomToolTipStripMenuItem(string? text = null, Image? image = null, EventHandler? onClick = null) : base(text, image, onClick)
+		{
+
+		}
+
 		private string? toolTipText { get; set; } = null;
 		/// <inheritdoc cref="ToolStripItem.ToolTipText" path=""/>
 		[DefaultValue(null)]

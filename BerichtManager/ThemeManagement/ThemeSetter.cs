@@ -1,4 +1,5 @@
 ﻿using BerichtManager.OwnControls;
+using BerichtManager.OwnControls.CustomToolTipControls;
 using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.Properties;
 
@@ -91,11 +92,15 @@ namespace BerichtManager.ThemeManagement
 					menuStrip.BackColor = Theme.MenuStripBackColor;
 					menuStrip.ForeColor = Theme.ForeColor;
 					menuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(Theme), Theme);
+					if (menuStrip is CustomToolTipMenuStrip cms)
+						SetThemes(cms.ToolTip);
 					break;
 				case ContextMenuStrip contextMenuStrip:
 					contextMenuStrip.BackColor = Theme.MenuStripBackColor;
 					contextMenuStrip.Renderer = new ThemeRenderer(new ThemeColorTable(Theme), Theme);
 					contextMenuStrip.ForeColor = Theme.ForeColor;
+					if (contextMenuStrip is CustomToolTipContextMenuStrip cctxms)
+						SetThemes(cctxms.ToolTip);
 					break;
 				case ColoredGroupBox coloredGroupBox:
 					coloredGroupBox.BackColor = Theme.BackColor;

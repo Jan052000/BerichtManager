@@ -17,6 +17,7 @@ using BerichtManager.IHKClient.ReportContents;
 using BerichtManager.WordTemplate;
 using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.Extensions;
+using BerichtManager.OwnControls.CustomToolTipControls;
 
 namespace BerichtManager
 {
@@ -1357,7 +1358,7 @@ namespace BerichtManager
 			{
 				Fields field = kvp.Key;
 				string displayName = kvp.Value.DisplayText;
-				toAdd.Add((field, new ToolStripMenuItem($"Edit {displayName}", null, (s, e) => QuickEdit(field, $"Edit {displayName}")) { Name = $"miQuickEdit{field}" }));
+				toAdd.Add((field, new CustomToolTipStripMenuItem($"Edit {displayName}", null, (s, e) => QuickEdit(field, $"Edit {displayName}")) { Name = $"miQuickEdit{field}" }));
 			}
 			toAdd.Sort(new Comparison<(Fields Field, ToolStripItem Item)>((i1, i2) =>
 			{
