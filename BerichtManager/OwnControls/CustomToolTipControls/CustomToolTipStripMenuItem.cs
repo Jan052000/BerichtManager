@@ -14,6 +14,11 @@ namespace BerichtManager.OwnControls.CustomToolTipControls
 
 		}
 
+		/// <summary>
+		/// Indicates that the mouse is in the item
+		/// </summary>
+		private bool MouseIsIn { get; set; } = false;
+
 		private string? toolTipText { get; set; } = null;
 		/// <inheritdoc cref="ToolStripItem.ToolTipText" path=""/>
 		[DefaultValue(null)]
@@ -44,12 +49,15 @@ namespace BerichtManager.OwnControls.CustomToolTipControls
 		protected override void OnMouseLeave(EventArgs e)
 		{
 			base.OnMouseLeave(e);
+			MouseIsIn = false;
 			GetMenuStrip()?.ItemMouseLeave();
 		}
 
 		protected override void OnDropDownOpened(EventArgs e)
 		{
 			base.OnDropDownOpened(e);
+			if (!MouseIsIn)
+				return;
 			GetMenuStrip()?.ItemDropDownOpened(this);
 		}
 
@@ -57,6 +65,12 @@ namespace BerichtManager.OwnControls.CustomToolTipControls
 		{
 			base.OnMouseHover(e);
 			GetMenuStrip()?.ItemMouseHover(this);
+		}
+
+		protected override void OnMouseEnter(EventArgs e)
+		{
+			base.OnMouseEnter(e);
+			MouseIsIn = true;
 		}
 	}
 }
