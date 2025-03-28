@@ -1220,7 +1220,7 @@ namespace BerichtManager
 				{
 					string oldRelPath = path.Substring(ActivePath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 					List<string> splitPath = oldRelPath.Split(Path.DirectorySeparatorChar).ToList();
-					splitPath.Insert(splitPath.Count - 2, PRINTEDFOLDERNAME);
+					splitPath.Insert(splitPath.Count - 1, PRINTEDFOLDERNAME);
 					var newRelPath = Path.Combine(splitPath.ToArray());
 					File.Move(path, Path.Combine(path.Substring(0, path.Length - Path.GetFileName(path).Length), PRINTEDFOLDERNAME, Path.GetFileName(path)));
 					UploadedReports.MoveReport(oldRelPath, newRelPath);
