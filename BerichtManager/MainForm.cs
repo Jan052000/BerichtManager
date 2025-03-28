@@ -1251,7 +1251,7 @@ namespace BerichtManager
 			}
 			if (Path.GetExtension(path) != ".docx" && !path.Contains("\\Logs") && !Path.GetFileName(path).StartsWith("~$"))
 			{
-				ThemedMessageBox.Show(text: "You may only delete Word documents (*.docx) or their temporary files");
+				ThemedMessageBox.Show(text: "You may only delete Word documents (*.docx), their temporary files or logs");
 				return;
 			}
 			if (ThemedMessageBox.Show(text: $"Are you sure you want to {path}?", title: "Delete?", buttons: MessageBoxButtons.YesNo) != DialogResult.Yes)
