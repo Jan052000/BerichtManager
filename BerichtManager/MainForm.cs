@@ -1171,7 +1171,7 @@ namespace BerichtManager
 				return false;
 			try
 			{
-				return FullSelectedPath == Doc.Path + "\\" + Doc.Name;
+				return FullSelectedPath == Doc.FullName;
 			}
 			catch
 			{
