@@ -675,7 +675,7 @@ namespace BerichtManager
 		{
 			//Check if report for this week was already created
 			string docName = NamingPatternResolver.ResolveNameWithExtension(DateTime.Today, ConfigHandler.ReportNumber - 1);
-			if (File.Exists(ActivePath + "\\" + DateTime.Today.Year + "\\ " + docName) || File.Exists(ActivePath + "\\" + DateTime.Today.Year + PRINTEDFOLDERNAME + docName))
+			if (File.Exists(Path.Combine(ActivePath, DateTime.Today.Year.ToString(), docName)) || File.Exists(Path.Combine(ActivePath, DateTime.Today.Year.ToString(), PRINTEDFOLDERNAME, docName)))
 			{
 				ThemedMessageBox.Show(text: "A report has already been created for this week");
 				return;
