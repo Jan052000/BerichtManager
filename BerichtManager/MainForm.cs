@@ -1378,16 +1378,9 @@ namespace BerichtManager
 
 		private void toRightClickMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			bool isInLogs = false;
-			if (tvReports.SelectedNode.Parent != null)
-			{
-				if (tvReports.SelectedNode.Parent.Text == "Logs")
-				{
-					isInLogs = true;
-				}
-			}
-			bool isNameValid = ReportUtils.IsNameValid(tvReports.SelectedNode.Text);
-			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode.FullPath, out UploadedReport? report);
+			bool isInLogs = tvReports.SelectedNode?.Parent?.Text == "Logs";
+			bool isNameValid = ReportUtils.IsNameValid(tvReports.SelectedNode?.Text);
+			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode?.FullPath, out UploadedReport? report);
 			bool uploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
 			bool rejected = report?.Status == ReportNode.UploadStatuses.Rejected;
 			bool wasEdited = report?.WasEditedLocally == true;
@@ -1397,7 +1390,7 @@ namespace BerichtManager
 			//miEdit.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miPrint.Enabled = !isInLogs && isNameValid;
 			//miPrint.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
-			miDelete.Enabled = isInLogs || tvReports.SelectedNode.Text.EndsWith(".docx") || tvReports.SelectedNode.Text.StartsWith("~$");
+			miDelete.Enabled = isInLogs || isNameValid;
 			//miDelete.Visible = isInLogs || tvReports.SelectedNode.Text.EndsWith(".docx") || tvReports.SelectedNode.Text.StartsWith("~$");
 			miQuickEditOptions.Enabled = !isInLogs && isNameValid;
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
