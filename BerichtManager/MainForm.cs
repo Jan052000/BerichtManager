@@ -1495,14 +1495,8 @@ namespace BerichtManager
 			WasEdited = true;
 		}
 
-		private bool internalWordVisibleCheckedChange = false;
 		private void miWordVisible_Click(object sender, EventArgs e)
 		{
-			if (internalWordVisibleCheckedChange)
-			{
-				internalWordVisibleCheckedChange = false;
-				return;
-			}
 			if (CheckIfWordRunning())
 			{
 				WordApp!.Visible = miWordVisible.Checked;
@@ -1510,7 +1504,6 @@ namespace BerichtManager
 			}
 			else
 			{
-				internalWordVisibleCheckedChange = true;
 				miWordVisible.Checked = false;
 				WordVisible = false;
 			}
@@ -1678,9 +1671,7 @@ namespace BerichtManager
 			EndWaitCursor();
 			((Word.ApplicationEvents4_Event)WordApp).Quit += OnWordClose;
 			WordIsOpen = true;
-			internalWordVisibleCheckedChange = true;
 			miWordVisible.Checked = WordApp.Visible;
-			internalWordVisibleCheckedChange = false;
 		}
 
 		/// <summary>
