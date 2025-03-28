@@ -1301,10 +1301,9 @@ namespace BerichtManager
 
 		private void tvReports_Click(object sender, EventArgs e)
 		{
-			if (((MouseEventArgs)e).Button == MouseButtons.Right)
-			{
-				tvReports.SelectedNode = tvReports.GetNodeAt(((MouseEventArgs)e).X, ((MouseEventArgs)e).Y);
-			}
+			if (e is not MouseEventArgs mea || mea.Button != MouseButtons.Right)
+				return;
+			tvReports.SelectedNode = tvReports.GetNodeAt(mea.X, mea.Y);
 		}
 
 		private void miDelete_Click(object sender, EventArgs e)
