@@ -10,7 +10,7 @@
 		/// </summary>
 		/// <param name="suggestedStartDate">Start date as suggested by IHK report creation</param>
 		/// <param name="actualStartDate">Start date of actual report</param>
-		public StartDateMismatchException(string suggestedStartDate, string actualStartDate) : base($"StartDate {actualStartDate} does not match IHK StartDate {suggestedStartDate}")
+		public StartDateMismatchException(string suggestedStartDate, string? actualStartDate) : base($"StartDate {actualStartDate} does not match IHK StartDate {suggestedStartDate}")
 		{
 			
 		}

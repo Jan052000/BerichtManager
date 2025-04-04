@@ -18,9 +18,9 @@ namespace BerichtManager.HelperClasses
 		public static Report WordToIHK(Word.Document doc, bool throwMismatchStartDate = false)
 		{
 			Report report = new Report();
-			WordToIHK(doc, report, throwMismatchStartDate);
 			report.ReportContent.StartDate = FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc);
 			report.ReportContent.EndDate = ReportUtils.TransformTextToIHK(FormFieldHandler.GetValueFromDoc<string>(Fields.EndDate, doc));
+			WordToIHK(doc, report, throwMismatchStartDate);
 			return report;
 		}
 
