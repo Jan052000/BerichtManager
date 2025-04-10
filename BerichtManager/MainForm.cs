@@ -3269,21 +3269,30 @@ namespace BerichtManager
 
 		private void ShoIHKReportStatusStatistics(object? sender, EventArgs e)
 		{
-			var stats = UploadedReports.CountStatuses();
-			string message = "Values are loaded from disc, IHK status count may vary.\n";
-			if (stats.Count == 0)
-				message += "No reports were uploaded yet\n";
-			foreach (var folder in stats)
+			static void countStatuses(TreeNode root, Dictionary<ReportNode.UploadStatuses, int> input)
 			{
-				message += folder.Key + "\n";
-				if (folder.Value.Count == 0)
-					message += "\tNo reports were uploaded yet\n";
-				foreach (var status in folder.Value)
+				if (root is ReportNode reportNode)
+					if (!input.TryAdd(reportNode.UploadStatus, 1))
+						input[reportNode.UploadStatus]++;
+
+				Dictionary<ReportNode.UploadStatuses, int> result = new();
+
+				foreach (TreeNode child in root.Nodes)
 				{
-					message += $"\t{status.Key}: {status.Value}\n";
+					countStatuses(child, input);
 				}
 			}
-			ThemedMessageBox.Show(text: message, title: "IHK report status statistics");
+
+			var counts = new Dictionary<ReportNode.UploadStatuses, int>();
+			countStatuses(tvReports.Nodes[0], counts);
+
+			StringBuilder message = new StringBuilder();
+			message.AppendLine("Values are loaded from disc, IHK status count may vary.");
+			foreach (var status in counts)
+			{
+				message.AppendLine($"{status.Key}: {status.Value}");
+			}
+			ThemedMessageBox.Show(text: message.ToString(), title: "IHK report status statistics");
 		}
 	}
 }
