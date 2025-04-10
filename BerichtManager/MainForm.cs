@@ -3266,5 +3266,24 @@ namespace BerichtManager
 			progressForm.Status = "Finished";
 			progressForm.Done();
 		}
+
+		private void ShoIHKReportStatusStatistics(object? sender, EventArgs e)
+		{
+			var stats = UploadedReports.CountStatuses();
+			string message = "Values are loaded from disc, IHK status count may vary.\n";
+			if (stats.Count == 0)
+				message += "No reports were uploaded yet\n";
+			foreach (var folder in stats)
+			{
+				message += folder.Key + "\n";
+				if (folder.Value.Count == 0)
+					message += "\tNo reports were uploaded yet\n";
+				foreach (var status in folder.Value)
+				{
+					message += $"\t{status.Key}: {status.Value}\n";
+				}
+			}
+			ThemedMessageBox.Show(text: message, title: "IHK report status statistics");
+		}
 	}
 }

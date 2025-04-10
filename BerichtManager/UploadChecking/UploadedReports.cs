@@ -428,6 +428,15 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Group upload statuses of reports by the <see cref="ConfigHandler.ReportPath"/> they were uploaded from
+		/// </summary>
+		/// <returns><see cref="Dictionary{TKey, TValue}"/> of report paths with their groupings of report statuses and their status counts</returns>
+		public static Dictionary<string, Dictionary<ReportNode.UploadStatuses, int>> CountStatuses()
+		{
+			return Instance.Select(outerDict => (outerDict.Key, Value: outerDict.Value.GroupBy(innerDict => innerDict.Value.Status).ToDictionary(kvp => kvp.Key, kvp => kvp.Count()))).ToDictionary(KeyValuePair => KeyValuePair.Key, KeyValuePair => KeyValuePair.Value);
+		}
+
+		/// <summary>
 		/// Loads the uploaded repor dictionary from file
 		/// </summary>
 		private void Load()

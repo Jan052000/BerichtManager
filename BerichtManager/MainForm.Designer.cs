@@ -58,6 +58,7 @@ namespace BerichtManager
 			miRCUpdateSelection = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			miRcShowComment = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			miRcCheckFormat = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
+			miRcUploadStatistics = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			miRcDownloadReports = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			miRefresh = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			ttTips = new ToolTip(components);
@@ -78,6 +79,7 @@ namespace BerichtManager
 			miHandInSelection = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			miUpdateSelection = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			miCheckFormat = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
+			miUploadStatistics = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			miDownloadReports = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			miCloseReport = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
 			miRevealInExplorer = new OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem();
@@ -108,20 +110,20 @@ namespace BerichtManager
 			// 
 			toRightClickMenu.Items.AddRange(new ToolStripItem[] { miDelete, miEdit, miQuickEditOptions, miPrint, miIHKOptions, miRefresh });
 			toRightClickMenu.Name = "contextMenuStrip1";
-			toRightClickMenu.Size = new Size(147, 136);
+			toRightClickMenu.Size = new Size(181, 158);
 			toRightClickMenu.Opening += toRightClickMenu_Opening;
 			// 
 			// miDelete
 			// 
 			miDelete.Name = "miDelete";
-			miDelete.Size = new Size(146, 22);
+			miDelete.Size = new Size(180, 22);
 			miDelete.Text = "Delete";
 			miDelete.Click += miDelete_Click;
 			// 
 			// miEdit
 			// 
 			miEdit.Name = "miEdit";
-			miEdit.Size = new Size(146, 22);
+			miEdit.Size = new Size(180, 22);
 			miEdit.Text = "Edit";
 			miEdit.Click += miEdit_Click;
 			// 
@@ -129,7 +131,7 @@ namespace BerichtManager
 			// 
 			miQuickEditOptions.DropDownItems.AddRange(new ToolStripItem[] { tiQuickEditWork, miQuickEditSchool, miQuickEditNumber });
 			miQuickEditOptions.Name = "miQuickEditOptions";
-			miQuickEditOptions.Size = new Size(146, 22);
+			miQuickEditOptions.Size = new Size(180, 22);
 			miQuickEditOptions.Text = "Quick actions";
 			// 
 			// tiQuickEditWork
@@ -156,22 +158,22 @@ namespace BerichtManager
 			// miPrint
 			// 
 			miPrint.Name = "miPrint";
-			miPrint.Size = new Size(146, 22);
+			miPrint.Size = new Size(180, 22);
 			miPrint.Text = "Print";
 			miPrint.Click += miPrint_Click;
 			// 
 			// miIHKOptions
 			// 
-			miIHKOptions.DropDownItems.AddRange(new ToolStripItem[] { miRcUpdateStatuses, miUploadAsNext, miUploadAllSelected, miHandInSingle, miRcHandInSelection, miUpdateReport, miRCUpdateSelection, miRcShowComment, miRcCheckFormat, miRcDownloadReports });
+			miIHKOptions.DropDownItems.AddRange(new ToolStripItem[] { miRcUpdateStatuses, miUploadAsNext, miUploadAllSelected, miHandInSingle, miRcHandInSelection, miUpdateReport, miRCUpdateSelection, miRcShowComment, miRcCheckFormat, miRcUploadStatistics, miRcDownloadReports });
 			miIHKOptions.Name = "miIHKOptions";
-			miIHKOptions.Size = new Size(146, 22);
+			miIHKOptions.Size = new Size(180, 22);
 			miIHKOptions.Text = "IHK";
 			miIHKOptions.ToolTipText = "All options for interactions with IHK";
 			// 
 			// miRcUpdateStatuses
 			// 
 			miRcUpdateStatuses.Name = "miRcUpdateStatuses";
-			miRcUpdateStatuses.Size = new Size(168, 22);
+			miRcUpdateStatuses.Size = new Size(191, 22);
 			miRcUpdateStatuses.Text = "Update statuses";
 			miRcUpdateStatuses.ToolTipText = "Update statuses of reports";
 			miRcUpdateStatuses.Click += miUpdateStatuses_Click;
@@ -179,7 +181,7 @@ namespace BerichtManager
 			// miUploadAsNext
 			// 
 			miUploadAsNext.Name = "miUploadAsNext";
-			miUploadAsNext.Size = new Size(168, 22);
+			miUploadAsNext.Size = new Size(191, 22);
 			miUploadAsNext.Text = "Upload";
 			miUploadAsNext.ToolTipText = "Upload the selected report as next report";
 			miUploadAsNext.Click += miUploadAsNext_Click;
@@ -187,7 +189,7 @@ namespace BerichtManager
 			// miUploadAllSelected
 			// 
 			miUploadAllSelected.Name = "miUploadAllSelected";
-			miUploadAllSelected.Size = new Size(168, 22);
+			miUploadAllSelected.Size = new Size(191, 22);
 			miUploadAllSelected.Text = "Upload selection";
 			miUploadAllSelected.ToolTipText = "Upload all reports selected in following form";
 			miUploadAllSelected.Click += UploadSelectionClick;
@@ -195,7 +197,7 @@ namespace BerichtManager
 			// miHandInSingle
 			// 
 			miHandInSingle.Name = "miHandInSingle";
-			miHandInSingle.Size = new Size(168, 22);
+			miHandInSingle.Size = new Size(191, 22);
 			miHandInSingle.Text = "Hand in";
 			miHandInSingle.ToolTipText = "Hand in this report";
 			miHandInSingle.Click += miHandInSingle_Click;
@@ -203,7 +205,7 @@ namespace BerichtManager
 			// miRcHandInSelection
 			// 
 			miRcHandInSelection.Name = "miRcHandInSelection";
-			miRcHandInSelection.Size = new Size(168, 22);
+			miRcHandInSelection.Size = new Size(191, 22);
 			miRcHandInSelection.Text = "Hand in selection";
 			miRcHandInSelection.ToolTipText = "Hand in all reports selected in following form";
 			miRcHandInSelection.Click += HandInSelectionClick;
@@ -211,7 +213,7 @@ namespace BerichtManager
 			// miUpdateReport
 			// 
 			miUpdateReport.Name = "miUpdateReport";
-			miUpdateReport.Size = new Size(168, 22);
+			miUpdateReport.Size = new Size(191, 22);
 			miUpdateReport.Text = "Update report";
 			miUpdateReport.ToolTipText = "Upload local changes to IHK";
 			miUpdateReport.Click += SendReportToIHK;
@@ -219,35 +221,46 @@ namespace BerichtManager
 			// miRCUpdateSelection
 			// 
 			miRCUpdateSelection.Name = "miRCUpdateSelection";
-			miRCUpdateSelection.Size = new Size(168, 22);
+			miRCUpdateSelection.Size = new Size(191, 22);
 			miRCUpdateSelection.Text = "Update selection";
+			miRCUpdateSelection.ToolTipText = "Upload all changes of reports selected in following form to IHK servers";
 			miRCUpdateSelection.Click += SendSelectionToIHK;
 			// 
 			// miRcShowComment
 			// 
 			miRcShowComment.Name = "miRcShowComment";
-			miRcShowComment.Size = new Size(168, 22);
+			miRcShowComment.Size = new Size(191, 22);
 			miRcShowComment.Text = "Show comment";
+			miRcShowComment.ToolTipText = "Show comment for report";
 			miRcShowComment.Click += miRcShowComment_Click;
 			// 
 			// miRcCheckFormat
 			// 
 			miRcCheckFormat.Name = "miRcCheckFormat";
-			miRcCheckFormat.Size = new Size(168, 22);
+			miRcCheckFormat.Size = new Size(191, 22);
 			miRcCheckFormat.Text = "Check format";
+			miRcCheckFormat.ToolTipText = "Check if selected reports have unsupported line breaks";
 			miRcCheckFormat.Click += CheckFormat;
+			// 
+			// miRcUploadStatistics
+			// 
+			miRcUploadStatistics.Name = "miRcUploadStatistics";
+			miRcUploadStatistics.Size = new Size(191, 22);
+			miRcUploadStatistics.Text = "Show upload statistics";
+			miRcUploadStatistics.ToolTipText = "Show count of report status";
+			miRcUploadStatistics.Click += ShoIHKReportStatusStatistics;
 			// 
 			// miRcDownloadReports
 			// 
 			miRcDownloadReports.Name = "miRcDownloadReports";
-			miRcDownloadReports.Size = new Size(168, 22);
+			miRcDownloadReports.Size = new Size(191, 22);
 			miRcDownloadReports.Text = "Download reports";
 			miRcDownloadReports.Click += DownloadIHKReports;
 			// 
 			// miRefresh
 			// 
 			miRefresh.Name = "miRefresh";
-			miRefresh.Size = new Size(146, 22);
+			miRefresh.Size = new Size(180, 22);
 			miRefresh.Text = "Refresh";
 			miRefresh.Click += MiRefresh_Click;
 			// 
@@ -353,7 +366,7 @@ namespace BerichtManager
 			// 
 			// miIHK
 			// 
-			miIHK.DropDownItems.AddRange(new ToolStripItem[] { miUpdateStatuses, miUploadSelection, miHandInSelection, miUpdateSelection, miCheckFormat, miDownloadReports });
+			miIHK.DropDownItems.AddRange(new ToolStripItem[] { miUpdateStatuses, miUploadSelection, miHandInSelection, miUpdateSelection, miCheckFormat, miUploadStatistics, miDownloadReports });
 			miIHK.Name = "miIHK";
 			miIHK.Size = new Size(191, 22);
 			miIHK.Text = "IHK";
@@ -362,7 +375,7 @@ namespace BerichtManager
 			// miUpdateStatuses
 			// 
 			miUpdateStatuses.Name = "miUpdateStatuses";
-			miUpdateStatuses.Size = new Size(168, 22);
+			miUpdateStatuses.Size = new Size(191, 22);
 			miUpdateStatuses.Text = "Update statuses";
 			miUpdateStatuses.ToolTipText = "Update statuses of reports";
 			miUpdateStatuses.Click += miUpdateStatuses_Click;
@@ -370,7 +383,7 @@ namespace BerichtManager
 			// miUploadSelection
 			// 
 			miUploadSelection.Name = "miUploadSelection";
-			miUploadSelection.Size = new Size(168, 22);
+			miUploadSelection.Size = new Size(191, 22);
 			miUploadSelection.Text = "Upload selection";
 			miUploadSelection.ToolTipText = "Upload all reports selected in following form";
 			miUploadSelection.Click += UploadSelectionClick;
@@ -378,7 +391,7 @@ namespace BerichtManager
 			// miHandInSelection
 			// 
 			miHandInSelection.Name = "miHandInSelection";
-			miHandInSelection.Size = new Size(168, 22);
+			miHandInSelection.Size = new Size(191, 22);
 			miHandInSelection.Text = "Hand in selection";
 			miHandInSelection.ToolTipText = "Hand in all reports selected in following form";
 			miHandInSelection.Click += HandInSelectionClick;
@@ -386,21 +399,31 @@ namespace BerichtManager
 			// miUpdateSelection
 			// 
 			miUpdateSelection.Name = "miUpdateSelection";
-			miUpdateSelection.Size = new Size(168, 22);
+			miUpdateSelection.Size = new Size(191, 22);
 			miUpdateSelection.Text = "Update selection";
+			miUpdateSelection.ToolTipText = "Upload all changes of reports selected in following form to IHK servers";
 			miUpdateSelection.Click += SendSelectionToIHK;
 			// 
 			// miCheckFormat
 			// 
 			miCheckFormat.Name = "miCheckFormat";
-			miCheckFormat.Size = new Size(168, 22);
+			miCheckFormat.Size = new Size(191, 22);
 			miCheckFormat.Text = "Check format";
+			miCheckFormat.ToolTipText = "Check if selected reports have unsupported line breaks\r\n";
 			miCheckFormat.Click += CheckFormat;
+			// 
+			// miUploadStatistics
+			// 
+			miUploadStatistics.Name = "miUploadStatistics";
+			miUploadStatistics.Size = new Size(191, 22);
+			miUploadStatistics.Text = "Show upload statistics";
+			miUploadStatistics.ToolTipText = "Show count of report status";
+			miUploadStatistics.Click += ShoIHKReportStatusStatistics;
 			// 
 			// miDownloadReports
 			// 
 			miDownloadReports.Name = "miDownloadReports";
-			miDownloadReports.Size = new Size(168, 22);
+			miDownloadReports.Size = new Size(191, 22);
 			miDownloadReports.Text = "Download reports";
 			miDownloadReports.Click += DownloadIHKReports;
 			// 
@@ -625,6 +648,8 @@ namespace BerichtManager
 		private Splitter splitterTreeBoxes;
 		private Panel paFileTree;
 		private OwnControls.OwnTreeView.CustomTreeView tvReports;
+		private OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem miUploadStatistics;
+		private OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem miRcUploadStatistics;
 	}
 }
 
