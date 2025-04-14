@@ -1,4 +1,5 @@
 ﻿using BerichtManager.OwnControls;
+using BerichtManager.OwnControls.CustomTabControl;
 using BerichtManager.OwnControls.CustomToolTipControls;
 using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.Properties;
@@ -84,8 +85,8 @@ namespace BerichtManager.ThemeManagement
 					button.FlatStyle = FlatStyle.Flat;
 					button.FlatAppearance.BorderSize = 0;
 					break;
-				case SplitContainer splitContainer:
-				case Splitter splitter:
+				case SplitContainer:
+				case Splitter:
 					control.BackColor = Theme.SplitterColor;
 					break;
 				case MenuStrip menuStrip:
@@ -106,6 +107,17 @@ namespace BerichtManager.ThemeManagement
 					coloredGroupBox.BackColor = Theme.BackColor;
 					coloredGroupBox.TitleColor = Theme.ForeColor;
 					coloredGroupBox.BorderColor = Theme.SplitterColor;
+					break;
+				case ColoredTabControl coloredTabControl:
+					coloredTabControl.TabFocusBorderColor = Theme.ButtonFocusedBorderColor;
+					coloredTabControl.TabFocusBorderWidth = Theme.ButtonFocusBorderWidth;
+					coloredTabControl.BorderColor = Theme.TextBoxBorderColor;
+					SetThemes(coloredTabControl.ToolTip);
+					break;
+				case ColoredTabPage coloredTabPage:
+					coloredTabPage.TabHeadTextColor = Theme.ForeColor;
+					coloredTabPage.TabHeadBackColor = Theme.TextBoxBorderColor;
+					control.BackColor = Theme.BackColor;
 					break;
 				default:
 					control.BackColor = Theme.BackColor;

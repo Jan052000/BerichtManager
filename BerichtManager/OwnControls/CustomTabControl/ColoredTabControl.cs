@@ -1,0 +1,234 @@
+using BerichtManager.OwnControls.Native;
+using System.ComponentModel;
+
+namespace BerichtManager.OwnControls.CustomTabControl
+{
+	/// <summary>
+	/// Extends <see cref="TabControl"/> to improve styling options
+	/// </summary>
+	public class ColoredTabControl : TabControl
+	{
+		private Color tabFocusBorderColor;
+		/// <summary>
+		/// <see cref="Color"/> the border of the selected tabs' head should be drawn in
+		/// </summary>
+		[Category("Theme")]
+		[DefaultValue(typeof(Color), "ActiveBorder")]
+		public Color TabFocusBorderColor
+		{
+			get => tabFocusBorderColor;
+			set
+			{
+				if (value != tabFocusBorderColor)
+				{
+					tabFocusBorderColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		private float tabFocusBorderWidth;
+		/// <summary>
+		/// Width the border of the selected tab should have
+		/// </summary>
+		[Category("Theme")]
+		[DefaultValue(2)]
+		public float TabFocusBorderWidth
+		{
+			get => tabFocusBorderWidth;
+			set
+			{
+				if (value != tabFocusBorderWidth)
+				{
+					tabFocusBorderWidth = value;
+					Invalidate();
+				}
+			}
+		}
+
+		private Color borderColor;
+		/// <summary>
+		/// <see cref="Color"/> of the border surrounding the tab page content and the item heads
+		/// </summary>
+		[Category("Theme")]
+		[DefaultValue(typeof(Color), "ControlLight")]
+		public Color BorderColor
+		{
+			get => borderColor;
+			set
+			{
+				if (value != borderColor)
+				{
+					borderColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public ToolTip ToolTip { get; set; } = new ToolTip();
+
+		/// <summary>
+		/// Override to hide from designer
+		/// </summary>
+		[Browsable(false)]
+		public new TabDrawMode DrawMode
+		{
+			get => TabDrawMode.OwnerDrawFixed;
+		}
+
+		private int? LastHovered { get; set; }
+
+		/// <summary>
+		/// Handles drawing the item heads inside the <see cref="WndProc(ref Message)"/>
+		/// </summary>
+		/// <param name="graphics"><see cref="Graphics"/> to draw on</param>
+		/// <param name="drawItem"><see cref="DrawItemStruct"/> that contains detailed information about how to draw the item head</param>
+		protected virtual void OCM_DRAWITEM(Graphics graphics, DrawItemStruct drawItem)
+		{
+			TabPage page = TabPages[drawItem.ItemID];
+			DrawItemEventArgs args = new DrawItemEventArgs(graphics, Font, drawItem.RcItem.ToRectangle(), drawItem.ItemID, drawItem.ItemState, page.ForeColor, page.BackColor);
+			OnDrawItem(args);
+			args.Dispose();
+		}
+
+		protected override void OnDrawItem(DrawItemEventArgs e)
+		{
+			DrawItemHead(e.Graphics, e.Index);
+			base.OnDrawItem(e);
+		}
+
+		/// <summary>
+		/// Draws the item head
+		/// </summary>
+		/// <param name="g"><see cref="Graphics"/> to draw item head on</param>
+		/// <param name="pageIndex">Index of <see cref="TabPage"/> to draw item head of</param>
+		protected virtual void DrawItemHead(Graphics g, int pageIndex)
+		{
+			var page = TabPages[pageIndex];
+			var tabRect = GetTabRect(pageIndex);
+			using Brush tb = new SolidBrush(GetTabItemBackColor(page));
+			g.FillRectangle(tb, tabRect);
+			TextRenderer.DrawText(g, page.Text, page.Font, tabRect, GetTabItemTextColor(page));
+		}
+
+		/// <summary>
+		/// Gets the item head back color of <paramref name="page"/>
+		/// </summary>
+		/// <param name="page"><see cref="TabPage"/> to get colors from</param>
+		/// <returns>Back color of item head</returns>
+		private Color GetTabItemBackColor(TabPage page)
+		{
+			if (page is ColoredTabPage cPage)
+				return cPage.TabHeadBackColor;
+			return BorderColor;
+		}
+
+		/// <summary>
+		/// Gets the item fore color of <paramref name="page"/>
+		/// </summary>
+		/// <param name="page"><see cref="TabPage"/> to get colors from</param>
+		/// <returns>Fore color of item head</returns>
+		private Color GetTabItemTextColor(TabPage page)
+		{
+			if (page is ColoredTabPage cPage)
+				return cPage.TabHeadTextColor;
+			return DefaultForeColor;
+		}
+
+		protected override void OnMouseLeave(EventArgs e)
+		{
+			ToolTip.Hide(this);
+			ToolTip.RemoveAll();
+			LastHovered = null;
+			base.OnMouseLeave(e);
+		}
+
+		protected override void OnMouseMove(MouseEventArgs e)
+		{
+			Point mousePos = e.Location;
+			if (LastHovered is int lastIndex && LastHovered > -1 && LastHovered < TabPages.Count && !GetTabRect(lastIndex).Contains(mousePos))
+			{
+				ToolTip.Hide(this);
+				ToolTip.RemoveAll();
+			}
+			base.OnMouseMove(e);
+		}
+
+		protected override void WndProc(ref Message m)
+		{
+			switch ((WindowsMessageCodes)m.Msg)
+			{
+				case WindowsMessageCodes.WM_NOTIFY:
+				case WindowsMessageCodes.OCM_NOTIFY:
+					if (m.GetLParam(typeof(NMHDR)) is not NMHDR nMHDR)
+					{
+						base.WndProc(ref m);
+						break;
+					}
+					switch (nMHDR.code)
+					{
+						case -520:
+						case -530:
+							if (!ShowToolTips)
+								break;
+							ToolTip.Hide(this);
+							ToolTip.RemoveAll();
+							Point toolTipPos = PointToClient(MousePosition);
+							toolTipPos.Offset(0, 5);
+							int hovering = nMHDR.idFrom.ToInt32();
+							ToolTip.Show(GetToolTipText(TabPages[hovering]), this, toolTipPos);
+							LastHovered = hovering;
+							break;
+						default:
+							base.WndProc(ref m);
+							return;
+					}
+					m.Result = 1;
+					break;
+				case WindowsMessageCodes.OCM_DRAWITEM:
+					if (m.GetLParam(typeof(DrawItemStruct)) is not DrawItemStruct str)
+					{
+						base.WndProc(ref m);
+						break;
+					}
+					using (Graphics g = Graphics.FromHdc(str.HDC))
+					{
+						OCM_DRAWITEM(g, str);
+					}
+					m.Result = 1;
+					break;
+				default:
+					base.WndProc(ref m);
+					break;
+			}
+		}
+
+		protected override void DefWndProc(ref Message m)
+		{
+			switch ((WindowsMessageCodes)m.Msg)
+			{
+				case WindowsMessageCodes.WM_PAINT:
+					base.DefWndProc(ref m);
+					using (Graphics g = Graphics.FromHwnd(m.HWnd))
+					{
+						using Brush b = new SolidBrush(BorderColor);
+						g.FillRectangle(b, g.ClipBounds);
+						for (int i = 0; i < TabPages.Count; i++)
+						{
+							g.IntersectClip(GetTabRect(i));
+							DrawItemHead(g, i);
+							g.ResetClip();
+						}
+						if (SelectedIndex == -1)
+							return;
+						using Pen line = new Pen(TabFocusBorderColor, TabFocusBorderWidth) { Alignment = System.Drawing.Drawing2D.PenAlignment.Inset };
+						g.DrawRectangle(line, GetTabRect(SelectedIndex));
+					}
+					break;
+				default:
+					base.DefWndProc(ref m);
+					break;
+			}
+		}
+	}
+}
