@@ -89,6 +89,9 @@ namespace BerichtManager.OwnControls.CustomTabControl
 			get => TabDrawMode.OwnerDrawFixed;
 		}
 
+		/// <summary>
+		/// Index of the <see cref="TabPage"/> that was hovered last
+		/// </summary>
 		private int? LastHovered { get; set; }
 
 		/// <summary>
