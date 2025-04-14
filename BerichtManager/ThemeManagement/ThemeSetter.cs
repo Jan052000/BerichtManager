@@ -112,7 +112,7 @@ namespace BerichtManager.ThemeManagement
 					coloredTabControl.TabFocusBorderColor = Theme.ButtonFocusedBorderColor;
 					coloredTabControl.TabFocusBorderWidth = Theme.ButtonFocusBorderWidth;
 					coloredTabControl.BorderColor = Theme.TextBoxBorderColor;
-					SetThemes(coloredTabControl.ToolTip);
+					SetThemes(coloredTabControl.ToolTipTabs);
 					break;
 				case ColoredTabPage coloredTabPage:
 					coloredTabPage.TabHeadTextColor = Theme.ForeColor;

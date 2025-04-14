@@ -7,7 +7,7 @@ namespace BerichtManager.OwnControls.CustomTabControl
 	/// </summary>
 	public class ColoredTabPage : TabPage
 	{
-		private Color tabHeadBackColor;
+		private Color tabHeadBackColor = SystemColors.Control;
 		/// <summary>
 		/// <see cref="Color"/> that should be used for drawing the background of item head
 		/// </summary>
@@ -26,7 +26,7 @@ namespace BerichtManager.OwnControls.CustomTabControl
 			}
 		}
 
-		private Color tabHeadTextColor;
+		private Color tabHeadTextColor = SystemColors.ControlText;
 		/// <summary>
 		/// <see cref="Color"/> that should be used for drawing the item head text
 		/// </summary>

@@ -8,7 +8,7 @@ namespace BerichtManager.OwnControls.CustomTabControl
 	/// </summary>
 	public class ColoredTabControl : TabControl
 	{
-		private Color tabFocusBorderColor;
+		private Color tabFocusBorderColor = SystemColors.ActiveBorder;
 		/// <summary>
 		/// <see cref="Color"/> the border of the selected tabs' head should be drawn in
 		/// </summary>
@@ -27,12 +27,12 @@ namespace BerichtManager.OwnControls.CustomTabControl
 			}
 		}
 
-		private float tabFocusBorderWidth;
+		private float tabFocusBorderWidth = 1f;
 		/// <summary>
 		/// Width the border of the selected tab should have
 		/// </summary>
 		[Category("Theme")]
-		[DefaultValue(2)]
+		[DefaultValue(1f)]
 		public float TabFocusBorderWidth
 		{
 			get => tabFocusBorderWidth;
@@ -46,9 +46,9 @@ namespace BerichtManager.OwnControls.CustomTabControl
 			}
 		}
 
-		private Color borderColor;
+		private Color borderColor = SystemColors.ControlLight;
 		/// <summary>
-		/// <see cref="Color"/> of the border surrounding the tab page content and the item heads
+		/// <see cref="Color"/> of the border surrounding the tab page content and the tab heads
 		/// </summary>
 		[Category("Theme")]
 		[DefaultValue(typeof(Color), "ControlLight")]
@@ -65,12 +65,25 @@ namespace BerichtManager.OwnControls.CustomTabControl
 			}
 		}
 
-		public ToolTip ToolTip { get; set; } = new ToolTip();
+		/// <summary>
+		/// Duration in milliseconds that the tool tip of the tab head should last<br/>
+		/// Set to <c>0</c> to deactivate
+		/// </summary>
+		[Category("ToolTips")]
+		[DefaultValue(0)]
+		public int ItemHeadToolTipDuration { get; set; }
+
+		/// <summary>
+		/// <see cref="ToolTip"/> that the tool tips for the tab head are displayed with
+		/// </summary>
+		[Category("ToolTips")]
+		public ToolTip ToolTipTabs { get; set; } = new ToolTip();
 
 		/// <summary>
 		/// Override to hide from designer
 		/// </summary>
 		[Browsable(false)]
+		[DefaultValue(typeof(TabDrawMode), "OwnerDrawFixed")]
 		public new TabDrawMode DrawMode
 		{
 			get => TabDrawMode.OwnerDrawFixed;
@@ -79,10 +92,10 @@ namespace BerichtManager.OwnControls.CustomTabControl
 		private int? LastHovered { get; set; }
 
 		/// <summary>
-		/// Handles drawing the item heads inside the <see cref="WndProc(ref Message)"/>
+		/// Handles drawing the tab heads inside the <see cref="WndProc(ref Message)"/>
 		/// </summary>
 		/// <param name="graphics"><see cref="Graphics"/> to draw on</param>
-		/// <param name="drawItem"><see cref="DrawItemStruct"/> that contains detailed information about how to draw the item head</param>
+		/// <param name="drawItem"><see cref="DrawItemStruct"/> that contains detailed information about how to draw the tab head</param>
 		protected virtual void OCM_DRAWITEM(Graphics graphics, DrawItemStruct drawItem)
 		{
 			TabPage page = TabPages[drawItem.ItemID];
@@ -98,10 +111,10 @@ namespace BerichtManager.OwnControls.CustomTabControl
 		}
 
 		/// <summary>
-		/// Draws the item head
+		/// Draws the tab head
 		/// </summary>
-		/// <param name="g"><see cref="Graphics"/> to draw item head on</param>
-		/// <param name="pageIndex">Index of <see cref="TabPage"/> to draw item head of</param>
+		/// <param name="g"><see cref="Graphics"/> to draw tab head on</param>
+		/// <param name="pageIndex">Index of <see cref="TabPage"/> to draw tab head of</param>
 		protected virtual void DrawItemHead(Graphics g, int pageIndex)
 		{
 			var page = TabPages[pageIndex];
@@ -112,10 +125,10 @@ namespace BerichtManager.OwnControls.CustomTabControl
 		}
 
 		/// <summary>
-		/// Gets the item head back color of <paramref name="page"/>
+		/// Gets the tab head back color of <paramref name="page"/>
 		/// </summary>
 		/// <param name="page"><see cref="TabPage"/> to get colors from</param>
-		/// <returns>Back color of item head</returns>
+		/// <returns>Back color of tab head</returns>
 		private Color GetTabItemBackColor(TabPage page)
 		{
 			if (page is ColoredTabPage cPage)
@@ -124,10 +137,10 @@ namespace BerichtManager.OwnControls.CustomTabControl
 		}
 
 		/// <summary>
-		/// Gets the item fore color of <paramref name="page"/>
+		/// Gets the tab fore color of <paramref name="page"/>
 		/// </summary>
 		/// <param name="page"><see cref="TabPage"/> to get colors from</param>
-		/// <returns>Fore color of item head</returns>
+		/// <returns>Fore color of tab head</returns>
 		private Color GetTabItemTextColor(TabPage page)
 		{
 			if (page is ColoredTabPage cPage)
@@ -137,8 +150,8 @@ namespace BerichtManager.OwnControls.CustomTabControl
 
 		protected override void OnMouseLeave(EventArgs e)
 		{
-			ToolTip.Hide(this);
-			ToolTip.RemoveAll();
+			ToolTipTabs.Hide(this);
+			ToolTipTabs.RemoveAll();
 			LastHovered = null;
 			base.OnMouseLeave(e);
 		}
@@ -148,8 +161,8 @@ namespace BerichtManager.OwnControls.CustomTabControl
 			Point mousePos = e.Location;
 			if (LastHovered is int lastIndex && LastHovered > -1 && LastHovered < TabPages.Count && !GetTabRect(lastIndex).Contains(mousePos))
 			{
-				ToolTip.Hide(this);
-				ToolTip.RemoveAll();
+				ToolTipTabs.Hide(this);
+				ToolTipTabs.RemoveAll();
 			}
 			base.OnMouseMove(e);
 		}
@@ -171,12 +184,15 @@ namespace BerichtManager.OwnControls.CustomTabControl
 						case -530:
 							if (!ShowToolTips)
 								break;
-							ToolTip.Hide(this);
-							ToolTip.RemoveAll();
+							ToolTipTabs.Hide(this);
+							ToolTipTabs.RemoveAll();
 							Point toolTipPos = PointToClient(MousePosition);
-							toolTipPos.Offset(0, 5);
+							toolTipPos.Offset(0, Cursor.Size.Height / 2);
 							int hovering = nMHDR.idFrom.ToInt32();
-							ToolTip.Show(GetToolTipText(TabPages[hovering]), this, toolTipPos);
+							if (ItemHeadToolTipDuration > 0)
+								ToolTipTabs.Show(GetToolTipText(TabPages[hovering]), this, toolTipPos, ItemHeadToolTipDuration);
+							else
+								ToolTipTabs.Show(GetToolTipText(TabPages[hovering]), this, toolTipPos);
 							LastHovered = hovering;
 							break;
 						default:
