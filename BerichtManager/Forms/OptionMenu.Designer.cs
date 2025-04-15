@@ -28,746 +28,968 @@ namespace BerichtManager.Forms
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.cbIHKCheckMatchingStartDates = new System.Windows.Forms.CheckBox();
-			this.tbSupervisorMail = new System.Windows.Forms.TextBox();
-			this.tbJobField = new System.Windows.Forms.TextBox();
-			this.btIHKLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.nudUploadDelay = new System.Windows.Forms.NumericUpDown();
-			this.nudTabStops = new System.Windows.Forms.NumericUpDown();
-			this.cbLegacyEdit = new System.Windows.Forms.CheckBox();
-			this.coTheme = new BerichtManager.OwnControls.ColoredComboBox();
-			this.btCreateTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.tbUpdate = new System.Windows.Forms.TextBox();
-			this.btEditTheme = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.tbFolder = new System.Windows.Forms.TextBox();
-			this.cbEndOfWeek = new System.Windows.Forms.CheckBox();
-			this.tbNamingPattern = new System.Windows.Forms.TextBox();
-			this.tbName = new System.Windows.Forms.TextBox();
-			this.nudNumber = new System.Windows.Forms.NumericUpDown();
-			this.tbTemplate = new System.Windows.Forms.TextBox();
-			this.cbShouldUseUntis = new System.Windows.Forms.CheckBox();
-			this.tbSchool = new System.Windows.Forms.TextBox();
-			this.btLogin = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.tbServer = new System.Windows.Forms.TextBox();
-			this.cbUseCustomPrefix = new System.Windows.Forms.CheckBox();
-			this.tbCustomPrefix = new System.Windows.Forms.TextBox();
-			this.ttErrors = new System.Windows.Forms.ToolTip(this.components);
-			this.gbIHK = new BerichtManager.OwnControls.ColoredGroupBox();
-			this.cbIHKAutoGetComment = new System.Windows.Forms.CheckBox();
-			this.laIHKBaseUrl = new System.Windows.Forms.Label();
-			this.tbIHKBaseUrl = new System.Windows.Forms.TextBox();
-			this.cbAutoSyncStatusesWithIHK = new System.Windows.Forms.CheckBox();
-			this.laSupervisorMail = new System.Windows.Forms.Label();
-			this.laJobField = new System.Windows.Forms.Label();
-			this.laUploadDelay = new System.Windows.Forms.Label();
-			this.gbManagerOptions = new BerichtManager.OwnControls.ColoredGroupBox();
-			this.cbUseWordWrap = new System.Windows.Forms.CheckBox();
-			this.laFontSize = new System.Windows.Forms.Label();
-			this.nudFontSize = new System.Windows.Forms.NumericUpDown();
-			this.laTabStop = new System.Windows.Forms.Label();
-			this.laFolder = new System.Windows.Forms.Label();
-			this.laTheme = new System.Windows.Forms.Label();
-			this.laUpdate = new System.Windows.Forms.Label();
-			this.gbConfig = new BerichtManager.OwnControls.ColoredGroupBox();
-			this.btFieldsConfig = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.laNumber = new System.Windows.Forms.Label();
-			this.laName = new System.Windows.Forms.Label();
-			this.laNamingPattern = new System.Windows.Forms.Label();
-			this.laTemplate = new System.Windows.Forms.Label();
-			this.gbWebUntis = new BerichtManager.OwnControls.ColoredGroupBox();
-			this.laSchool = new System.Windows.Forms.Label();
-			this.laServer = new System.Windows.Forms.Label();
-			this.gbPrefix = new BerichtManager.OwnControls.ColoredGroupBox();
-			this.btSave = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.btClose = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.cbShowReportToolTip = new System.Windows.Forms.CheckBox();
-			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).BeginInit();
-			this.gbIHK.SuspendLayout();
-			this.gbManagerOptions.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).BeginInit();
-			this.gbConfig.SuspendLayout();
-			this.gbWebUntis.SuspendLayout();
-			this.gbPrefix.SuspendLayout();
-			this.SuspendLayout();
+			components = new System.ComponentModel.Container();
+			toolTip1 = new ToolTip(components);
+			cbIHKCheckMatchingStartDates = new CheckBox();
+			tbSupervisorMail = new TextBox();
+			tbJobField = new TextBox();
+			btIHKLogin = new OwnControls.FocusColoredFlatButton();
+			nudUploadDelay = new NumericUpDown();
+			nudTabStops = new NumericUpDown();
+			coTheme = new OwnControls.ColoredComboBox();
+			btCreateTheme = new OwnControls.FocusColoredFlatButton();
+			tbUpdate = new TextBox();
+			btEditTheme = new OwnControls.FocusColoredFlatButton();
+			tbFolder = new TextBox();
+			cbEndOfWeek = new CheckBox();
+			tbNamingPattern = new TextBox();
+			tbName = new TextBox();
+			nudNumber = new NumericUpDown();
+			tbTemplate = new TextBox();
+			cbShouldUseUntis = new CheckBox();
+			tbSchool = new TextBox();
+			btLogin = new OwnControls.FocusColoredFlatButton();
+			tbServer = new TextBox();
+			cbUseCustomPrefix = new CheckBox();
+			tbCustomPrefix = new TextBox();
+			cbLegacyEdit = new CheckBox();
+			ttErrors = new ToolTip(components);
+			cbIHKAutoGetComment = new CheckBox();
+			laIHKBaseUrl = new Label();
+			tbIHKBaseUrl = new TextBox();
+			cbAutoSyncStatusesWithIHK = new CheckBox();
+			laSupervisorMail = new Label();
+			laUploadDelay = new Label();
+			laJobField = new Label();
+			cbShowReportToolTip = new CheckBox();
+			cbUseWordWrap = new CheckBox();
+			laFontSize = new Label();
+			nudFontSize = new NumericUpDown();
+			laTabSize = new Label();
+			laReportFolder = new Label();
+			laTheme = new Label();
+			laUpdate = new Label();
+			btFieldsConfig = new OwnControls.FocusColoredFlatButton();
+			laNumber = new Label();
+			laName = new Label();
+			laNamingPattern = new Label();
+			laTemplate = new Label();
+			gbWebUntisMisc = new OwnControls.ColoredGroupBox();
+			laSchool = new Label();
+			laServer = new Label();
+			gbReportPrefix = new OwnControls.ColoredGroupBox();
+			laCustomPrefix = new Label();
+			btSave = new OwnControls.FocusColoredFlatButton();
+			btClose = new OwnControls.FocusColoredFlatButton();
+			tcOptions = new OwnControls.CustomTabControl.ColoredTabControl();
+			tpGeneral = new OwnControls.CustomTabControl.ColoredTabPage();
+			cbGeneralOptional = new OwnControls.ColoredGroupBox();
+			gbGeneralEdit = new OwnControls.ColoredGroupBox();
+			gbGeneralMisc = new OwnControls.ColoredGroupBox();
+			gbGeneralAppearance = new OwnControls.ColoredGroupBox();
+			tpReport = new OwnControls.CustomTabControl.ColoredTabPage();
+			gbReportMisc = new OwnControls.ColoredGroupBox();
+			cbReportFormFields = new OwnControls.ColoredGroupBox();
+			tpWebUntis = new OwnControls.CustomTabControl.ColoredTabPage();
+			tpIHK = new OwnControls.CustomTabControl.ColoredTabPage();
+			gbIHKMiscellanious = new OwnControls.ColoredGroupBox();
+			gbIHKFields = new OwnControls.ColoredGroupBox();
+			gbIHKFailSaves = new OwnControls.ColoredGroupBox();
+			paButtons = new Panel();
+			paContent = new Panel();
+			((System.ComponentModel.ISupportInitialize)nudUploadDelay).BeginInit();
+			((System.ComponentModel.ISupportInitialize)nudTabStops).BeginInit();
+			((System.ComponentModel.ISupportInitialize)nudNumber).BeginInit();
+			((System.ComponentModel.ISupportInitialize)nudFontSize).BeginInit();
+			gbWebUntisMisc.SuspendLayout();
+			gbReportPrefix.SuspendLayout();
+			tcOptions.SuspendLayout();
+			tpGeneral.SuspendLayout();
+			cbGeneralOptional.SuspendLayout();
+			gbGeneralEdit.SuspendLayout();
+			gbGeneralMisc.SuspendLayout();
+			gbGeneralAppearance.SuspendLayout();
+			tpReport.SuspendLayout();
+			gbReportMisc.SuspendLayout();
+			cbReportFormFields.SuspendLayout();
+			tpWebUntis.SuspendLayout();
+			tpIHK.SuspendLayout();
+			gbIHKMiscellanious.SuspendLayout();
+			gbIHKFields.SuspendLayout();
+			gbIHKFailSaves.SuspendLayout();
+			paButtons.SuspendLayout();
+			paContent.SuspendLayout();
+			SuspendLayout();
 			// 
 			// toolTip1
 			// 
-			this.toolTip1.AutoPopDelay = 5000;
-			this.toolTip1.InitialDelay = 500;
-			this.toolTip1.OwnerDraw = true;
-			this.toolTip1.ReshowDelay = 100;
-			this.toolTip1.Draw += new System.Windows.Forms.DrawToolTipEventHandler(this.toolTip1_Draw);
+			toolTip1.AutoPopDelay = 5000;
+			toolTip1.InitialDelay = 500;
+			toolTip1.OwnerDraw = true;
+			toolTip1.ReshowDelay = 100;
+			toolTip1.Draw += toolTip1_Draw;
 			// 
 			// cbIHKCheckMatchingStartDates
 			// 
-			this.cbIHKCheckMatchingStartDates.AutoSize = true;
-			this.cbIHKCheckMatchingStartDates.Location = new System.Drawing.Point(276, 118);
-			this.cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
-			this.cbIHKCheckMatchingStartDates.Size = new System.Drawing.Size(205, 17);
-			this.cbIHKCheckMatchingStartDates.TabIndex = 10;
-			this.cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
-			this.toolTip1.SetToolTip(this.cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is" +
-        " the same as the report");
-			this.cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
-			this.cbIHKCheckMatchingStartDates.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			cbIHKCheckMatchingStartDates.AutoSize = true;
+			cbIHKCheckMatchingStartDates.Location = new Point(118, 22);
+			cbIHKCheckMatchingStartDates.Margin = new Padding(4, 3, 4, 3);
+			cbIHKCheckMatchingStartDates.Name = "cbIHKCheckMatchingStartDates";
+			cbIHKCheckMatchingStartDates.Size = new Size(227, 19);
+			cbIHKCheckMatchingStartDates.TabIndex = 0;
+			cbIHKCheckMatchingStartDates.Text = "Check matching start dates on upload";
+			toolTip1.SetToolTip(cbIHKCheckMatchingStartDates, "Wether or not the report manager should check that start date suggested by IHK is the same as the report");
+			cbIHKCheckMatchingStartDates.UseVisualStyleBackColor = true;
+			cbIHKCheckMatchingStartDates.CheckedChanged += MarkAsDirty;
 			// 
 			// tbSupervisorMail
 			// 
-			this.tbSupervisorMail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSupervisorMail.Location = new System.Drawing.Point(98, 66);
-			this.tbSupervisorMail.Name = "tbSupervisorMail";
-			this.tbSupervisorMail.Size = new System.Drawing.Size(696, 20);
-			this.tbSupervisorMail.TabIndex = 6;
-			this.toolTip1.SetToolTip(this.tbSupervisorMail, "E-mail of supervisor");
-			this.tbSupervisorMail.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			tbSupervisorMail.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbSupervisorMail.Location = new Point(118, 22);
+			tbSupervisorMail.Margin = new Padding(4, 3, 4, 3);
+			tbSupervisorMail.Name = "tbSupervisorMail";
+			tbSupervisorMail.Size = new Size(651, 23);
+			tbSupervisorMail.TabIndex = 1;
+			toolTip1.SetToolTip(tbSupervisorMail, "E-mail of supervisor");
+			tbSupervisorMail.TextChanged += MarkAsDirty;
 			// 
 			// tbJobField
 			// 
-			this.tbJobField.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbJobField.Location = new System.Drawing.Point(98, 40);
-			this.tbJobField.Name = "tbJobField";
-			this.tbJobField.Size = new System.Drawing.Size(696, 20);
-			this.tbJobField.TabIndex = 4;
-			this.toolTip1.SetToolTip(this.tbJobField, "Name of job field");
-			this.tbJobField.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			tbJobField.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbJobField.Location = new Point(107, 80);
+			tbJobField.Margin = new Padding(4, 3, 4, 3);
+			tbJobField.Name = "tbJobField";
+			tbJobField.Size = new Size(655, 23);
+			tbJobField.TabIndex = 5;
+			toolTip1.SetToolTip(tbJobField, "Name of job field");
+			tbJobField.TextChanged += MarkAsDirty;
 			// 
 			// btIHKLogin
 			// 
-			this.btIHKLogin.Location = new System.Drawing.Point(224, 14);
-			this.btIHKLogin.Name = "btIHKLogin";
-			this.btIHKLogin.Size = new System.Drawing.Size(75, 21);
-			this.btIHKLogin.TabIndex = 2;
-			this.btIHKLogin.Text = "Login";
-			this.toolTip1.SetToolTip(this.btIHKLogin, "Log in to IHK");
-			this.btIHKLogin.UseVisualStyleBackColor = true;
-			this.btIHKLogin.Click += new System.EventHandler(this.btIHKLogin_Click);
+			btIHKLogin.Location = new Point(110, 101);
+			btIHKLogin.Margin = new Padding(4, 3, 4, 3);
+			btIHKLogin.Name = "btIHKLogin";
+			btIHKLogin.Size = new Size(140, 24);
+			btIHKLogin.TabIndex = 4;
+			btIHKLogin.Text = "Login";
+			toolTip1.SetToolTip(btIHKLogin, "Log in to IHK");
+			btIHKLogin.UseVisualStyleBackColor = true;
+			btIHKLogin.Click += btIHKLogin_Click;
 			// 
 			// nudUploadDelay
 			// 
-			this.nudUploadDelay.Increment = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-			this.nudUploadDelay.Location = new System.Drawing.Point(98, 14);
-			this.nudUploadDelay.Maximum = new decimal(new int[] {
-            3600000,
-            0,
-            0,
-            0});
-			this.nudUploadDelay.Name = "nudUploadDelay";
-			this.nudUploadDelay.Size = new System.Drawing.Size(120, 20);
-			this.nudUploadDelay.TabIndex = 1;
-			this.toolTip1.SetToolTip(this.nudUploadDelay, "Time in ms between report uploads");
-			this.nudUploadDelay.ValueChanged += new System.EventHandler(this.MarkAsDirty);
+			nudUploadDelay.Increment = new decimal(new int[] { 50, 0, 0, 0 });
+			nudUploadDelay.Location = new Point(118, 47);
+			nudUploadDelay.Margin = new Padding(4, 3, 4, 3);
+			nudUploadDelay.Maximum = new decimal(new int[] { 3600000, 0, 0, 0 });
+			nudUploadDelay.Name = "nudUploadDelay";
+			nudUploadDelay.Size = new Size(140, 23);
+			nudUploadDelay.TabIndex = 1;
+			toolTip1.SetToolTip(nudUploadDelay, "Time in ms between report uploads");
+			nudUploadDelay.ValueChanged += MarkAsDirty;
 			// 
 			// nudTabStops
 			// 
-			this.nudTabStops.Location = new System.Drawing.Point(98, 12);
-			this.nudTabStops.Name = "nudTabStops";
-			this.nudTabStops.Size = new System.Drawing.Size(120, 20);
-			this.nudTabStops.TabIndex = 1;
-			this.toolTip1.SetToolTip(this.nudTabStops, "Number of units in each tab");
-			this.nudTabStops.ValueChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// cbLegacyEdit
-			// 
-			this.cbLegacyEdit.AutoSize = true;
-			this.cbLegacyEdit.Location = new System.Drawing.Point(257, 14);
-			this.cbLegacyEdit.Name = "cbLegacyEdit";
-			this.cbLegacyEdit.Size = new System.Drawing.Size(99, 17);
-			this.cbLegacyEdit.TabIndex = 2;
-			this.cbLegacyEdit.Text = "Use legacy edit";
-			this.toolTip1.SetToolTip(this.cbLegacyEdit, "Should seperate forms be used to edit?");
-			this.cbLegacyEdit.UseVisualStyleBackColor = true;
-			this.cbLegacyEdit.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			nudTabStops.Location = new Point(91, 22);
+			nudTabStops.Margin = new Padding(4, 3, 4, 3);
+			nudTabStops.Name = "nudTabStops";
+			nudTabStops.Size = new Size(178, 23);
+			nudTabStops.TabIndex = 1;
+			toolTip1.SetToolTip(nudTabStops, "Number of units in each tab");
+			nudTabStops.ValueChanged += MarkAsDirty;
 			// 
 			// coTheme
 			// 
-			this.coTheme.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.coTheme.ArrowColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.BorderColor = System.Drawing.SystemColors.Window;
-			this.coTheme.DisabledColor = System.Drawing.SystemColors.Control;
-			this.coTheme.DisabledTextColor = System.Drawing.SystemColors.GrayText;
-			this.coTheme.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.coTheme.DropDownButtonColor = System.Drawing.SystemColors.Menu;
-			this.coTheme.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.coTheme.FormattingEnabled = true;
-			this.coTheme.HighlightColor = System.Drawing.SystemColors.Highlight;
-			this.coTheme.Location = new System.Drawing.Point(98, 38);
-			this.coTheme.Name = "coTheme";
-			this.coTheme.OutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-			this.coTheme.Size = new System.Drawing.Size(529, 21);
-			this.coTheme.TabIndex = 6;
-			this.coTheme.TextColor = System.Drawing.SystemColors.WindowText;
-			this.toolTip1.SetToolTip(this.coTheme, "Selected theme");
-			this.coTheme.SelectedIndexChanged += new System.EventHandler(this.MarkAsDirty);
+			coTheme.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			coTheme.ArrowColor = Color.FromArgb(100, 100, 100);
+			coTheme.BorderColor = SystemColors.Window;
+			coTheme.DisabledColor = SystemColors.Control;
+			coTheme.DisabledTextColor = SystemColors.GrayText;
+			coTheme.DrawMode = DrawMode.OwnerDrawFixed;
+			coTheme.DropDownButtonColor = SystemColors.Menu;
+			coTheme.DropDownStyle = ComboBoxStyle.DropDownList;
+			coTheme.FormattingEnabled = true;
+			coTheme.HighlightColor = SystemColors.Highlight;
+			coTheme.Location = new Point(91, 80);
+			coTheme.Margin = new Padding(4, 3, 4, 3);
+			coTheme.Name = "coTheme";
+			coTheme.OutlineColor = Color.FromArgb(100, 100, 100);
+			coTheme.Size = new Size(475, 24);
+			coTheme.TabIndex = 5;
+			coTheme.TextColor = SystemColors.WindowText;
+			toolTip1.SetToolTip(coTheme, "Selected theme");
+			coTheme.SelectedIndexChanged += MarkAsDirty;
 			// 
 			// btCreateTheme
 			// 
-			this.btCreateTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btCreateTheme.Location = new System.Drawing.Point(714, 38);
-			this.btCreateTheme.Name = "btCreateTheme";
-			this.btCreateTheme.Size = new System.Drawing.Size(80, 21);
-			this.btCreateTheme.TabIndex = 8;
-			this.btCreateTheme.Text = "Create theme";
-			this.toolTip1.SetToolTip(this.btCreateTheme, "Create a new theme");
-			this.btCreateTheme.UseVisualStyleBackColor = true;
-			this.btCreateTheme.Click += new System.EventHandler(this.btCreateTheme_Click);
+			btCreateTheme.Anchor = AnchorStyles.Right;
+			btCreateTheme.Location = new Point(670, 80);
+			btCreateTheme.Margin = new Padding(4, 3, 4, 3);
+			btCreateTheme.Name = "btCreateTheme";
+			btCreateTheme.Size = new Size(93, 24);
+			btCreateTheme.TabIndex = 7;
+			btCreateTheme.Text = "Create theme";
+			toolTip1.SetToolTip(btCreateTheme, "Create a new theme");
+			btCreateTheme.UseVisualStyleBackColor = true;
+			btCreateTheme.Click += btCreateTheme_Click;
 			// 
 			// tbUpdate
 			// 
-			this.tbUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbUpdate.Location = new System.Drawing.Point(98, 91);
-			this.tbUpdate.Name = "tbUpdate";
-			this.tbUpdate.ReadOnly = true;
-			this.tbUpdate.Size = new System.Drawing.Size(696, 20);
-			this.tbUpdate.TabIndex = 12;
-			this.toolTip1.SetToolTip(this.tbUpdate, "Path to check if an update is available");
-			this.tbUpdate.Click += new System.EventHandler(this.tbUpdate_Click);
+			tbUpdate.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbUpdate.Location = new Point(91, 51);
+			tbUpdate.Margin = new Padding(4, 3, 4, 3);
+			tbUpdate.Name = "tbUpdate";
+			tbUpdate.ReadOnly = true;
+			tbUpdate.Size = new Size(672, 23);
+			tbUpdate.TabIndex = 3;
+			toolTip1.SetToolTip(tbUpdate, "Path to check if an update is available");
+			tbUpdate.Click += tbUpdate_Click;
 			// 
 			// btEditTheme
 			// 
-			this.btEditTheme.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btEditTheme.Location = new System.Drawing.Point(633, 38);
-			this.btEditTheme.Name = "btEditTheme";
-			this.btEditTheme.Size = new System.Drawing.Size(75, 21);
-			this.btEditTheme.TabIndex = 7;
-			this.btEditTheme.Text = "Edit theme";
-			this.toolTip1.SetToolTip(this.btEditTheme, "Choose a theme to edit");
-			this.btEditTheme.UseVisualStyleBackColor = true;
-			this.btEditTheme.Click += new System.EventHandler(this.btEditTheme_Click);
+			btEditTheme.Anchor = AnchorStyles.Right;
+			btEditTheme.Location = new Point(574, 80);
+			btEditTheme.Margin = new Padding(4, 3, 4, 3);
+			btEditTheme.Name = "btEditTheme";
+			btEditTheme.Size = new Size(88, 24);
+			btEditTheme.TabIndex = 6;
+			btEditTheme.Text = "Edit theme";
+			toolTip1.SetToolTip(btEditTheme, "Choose a theme to edit");
+			btEditTheme.UseVisualStyleBackColor = true;
+			btEditTheme.Click += btEditTheme_Click;
 			// 
 			// tbFolder
 			// 
-			this.tbFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbFolder.Location = new System.Drawing.Point(98, 65);
-			this.tbFolder.Name = "tbFolder";
-			this.tbFolder.ReadOnly = true;
-			this.tbFolder.Size = new System.Drawing.Size(696, 20);
-			this.tbFolder.TabIndex = 10;
-			this.toolTip1.SetToolTip(this.tbFolder, "Path to folder containing reports");
-			this.tbFolder.Click += new System.EventHandler(this.tbFolder_Click);
+			tbFolder.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbFolder.Location = new Point(91, 22);
+			tbFolder.Margin = new Padding(4, 3, 4, 3);
+			tbFolder.Name = "tbFolder";
+			tbFolder.ReadOnly = true;
+			tbFolder.Size = new Size(672, 23);
+			tbFolder.TabIndex = 1;
+			toolTip1.SetToolTip(tbFolder, "Path to folder containing reports");
+			tbFolder.Click += tbFolder_Click;
 			// 
 			// cbEndOfWeek
 			// 
-			this.cbEndOfWeek.AutoSize = true;
-			this.cbEndOfWeek.Location = new System.Drawing.Point(257, 73);
-			this.cbEndOfWeek.Name = "cbEndOfWeek";
-			this.cbEndOfWeek.Size = new System.Drawing.Size(117, 17);
-			this.cbEndOfWeek.TabIndex = 7;
-			this.cbEndOfWeek.Text = "End week on friday";
-			this.toolTip1.SetToolTip(this.cbEndOfWeek, "Should week end date be set to fridays?");
-			this.cbEndOfWeek.UseVisualStyleBackColor = true;
-			this.cbEndOfWeek.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			cbEndOfWeek.AutoSize = true;
+			cbEndOfWeek.Location = new Point(107, 109);
+			cbEndOfWeek.Margin = new Padding(4, 3, 4, 3);
+			cbEndOfWeek.Name = "cbEndOfWeek";
+			cbEndOfWeek.Size = new Size(130, 19);
+			cbEndOfWeek.TabIndex = 6;
+			cbEndOfWeek.Text = "Sign dates on friday";
+			toolTip1.SetToolTip(cbEndOfWeek, "Should week end date be set to fridays?");
+			cbEndOfWeek.UseVisualStyleBackColor = true;
+			cbEndOfWeek.CheckedChanged += MarkAsDirty;
 			// 
 			// tbNamingPattern
 			// 
-			this.tbNamingPattern.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbNamingPattern.Location = new System.Drawing.Point(98, 96);
-			this.tbNamingPattern.Name = "tbNamingPattern";
-			this.tbNamingPattern.Size = new System.Drawing.Size(696, 20);
-			this.tbNamingPattern.TabIndex = 9;
-			this.toolTip1.SetToolTip(this.tbNamingPattern, "~+CW+~ = Calendar week\r\n~+RN+~ = Report number");
-			this.tbNamingPattern.TextChanged += new System.EventHandler(this.NamingPatternChanged);
+			tbNamingPattern.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbNamingPattern.Location = new Point(107, 51);
+			tbNamingPattern.Margin = new Padding(4, 3, 4, 3);
+			tbNamingPattern.Name = "tbNamingPattern";
+			tbNamingPattern.Size = new Size(656, 23);
+			tbNamingPattern.TabIndex = 3;
+			toolTip1.SetToolTip(tbNamingPattern, "~+CW+~ = Calendar week\r\n~+RN+~ = Report number");
+			tbNamingPattern.TextChanged += NamingPatternChanged;
 			// 
 			// tbName
 			// 
-			this.tbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbName.Location = new System.Drawing.Point(98, 19);
-			this.tbName.Name = "tbName";
-			this.tbName.Size = new System.Drawing.Size(696, 20);
-			this.tbName.TabIndex = 1;
-			this.toolTip1.SetToolTip(this.tbName, "Your name (Last name, First name)");
-			this.tbName.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			tbName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbName.Location = new Point(107, 22);
+			tbName.Margin = new Padding(4, 3, 4, 3);
+			tbName.Name = "tbName";
+			tbName.Size = new Size(655, 23);
+			tbName.TabIndex = 1;
+			toolTip1.SetToolTip(tbName, "Your name (Last name, First name)");
+			tbName.TextChanged += MarkAsDirty;
 			// 
 			// nudNumber
 			// 
-			this.nudNumber.Location = new System.Drawing.Point(98, 70);
-			this.nudNumber.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-			this.nudNumber.Name = "nudNumber";
-			this.nudNumber.Size = new System.Drawing.Size(120, 20);
-			this.nudNumber.TabIndex = 6;
-			this.toolTip1.SetToolTip(this.nudNumber, "Number of the next report that will be created");
-			this.nudNumber.ValueChanged += new System.EventHandler(this.MarkAsDirty);
+			nudNumber.Location = new Point(107, 51);
+			nudNumber.Margin = new Padding(4, 3, 4, 3);
+			nudNumber.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+			nudNumber.Name = "nudNumber";
+			nudNumber.Size = new Size(140, 23);
+			nudNumber.TabIndex = 3;
+			toolTip1.SetToolTip(nudNumber, "Number of the next report that will be created");
+			nudNumber.ValueChanged += MarkAsDirty;
 			// 
 			// tbTemplate
 			// 
-			this.tbTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbTemplate.Location = new System.Drawing.Point(98, 44);
-			this.tbTemplate.Name = "tbTemplate";
-			this.tbTemplate.ReadOnly = true;
-			this.tbTemplate.Size = new System.Drawing.Size(609, 20);
-			this.tbTemplate.TabIndex = 3;
-			this.toolTip1.SetToolTip(this.tbTemplate, "Path to word template");
-			this.tbTemplate.Click += new System.EventHandler(this.tbTemplate_Click);
+			tbTemplate.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbTemplate.Location = new Point(107, 22);
+			tbTemplate.Margin = new Padding(4, 3, 4, 3);
+			tbTemplate.Name = "tbTemplate";
+			tbTemplate.ReadOnly = true;
+			tbTemplate.Size = new Size(656, 23);
+			tbTemplate.TabIndex = 1;
+			toolTip1.SetToolTip(tbTemplate, "Path to word template");
+			tbTemplate.Click += tbTemplate_Click;
 			// 
 			// cbShouldUseUntis
 			// 
-			this.cbShouldUseUntis.AutoSize = true;
-			this.cbShouldUseUntis.Location = new System.Drawing.Point(98, 19);
-			this.cbShouldUseUntis.Name = "cbShouldUseUntis";
-			this.cbShouldUseUntis.Size = new System.Drawing.Size(95, 17);
-			this.cbShouldUseUntis.TabIndex = 0;
-			this.cbShouldUseUntis.Text = "Use WebUntis";
-			this.toolTip1.SetToolTip(this.cbShouldUseUntis, "Should classes be fetched from WebUntis?");
-			this.cbShouldUseUntis.UseVisualStyleBackColor = true;
-			this.cbShouldUseUntis.CheckedChanged += new System.EventHandler(this.cbShouldUseUntis_CheckedChanged);
+			cbShouldUseUntis.AutoSize = true;
+			cbShouldUseUntis.Location = new Point(91, 22);
+			cbShouldUseUntis.Margin = new Padding(4, 3, 4, 3);
+			cbShouldUseUntis.Name = "cbShouldUseUntis";
+			cbShouldUseUntis.Size = new Size(99, 19);
+			cbShouldUseUntis.TabIndex = 0;
+			cbShouldUseUntis.Text = "Use WebUntis";
+			toolTip1.SetToolTip(cbShouldUseUntis, "Should classes be fetched from WebUntis?");
+			cbShouldUseUntis.UseVisualStyleBackColor = true;
+			cbShouldUseUntis.CheckedChanged += cbShouldUseUntis_CheckedChanged;
 			// 
 			// tbSchool
 			// 
-			this.tbSchool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSchool.Location = new System.Drawing.Point(98, 68);
-			this.tbSchool.Name = "tbSchool";
-			this.tbSchool.Size = new System.Drawing.Size(696, 20);
-			this.tbSchool.TabIndex = 5;
-			this.toolTip1.SetToolTip(this.tbSchool, "WebUntis name of your school");
-			this.tbSchool.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			tbSchool.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbSchool.Location = new Point(114, 51);
+			tbSchool.Margin = new Padding(4, 3, 4, 3);
+			tbSchool.Name = "tbSchool";
+			tbSchool.Size = new Size(654, 23);
+			tbSchool.TabIndex = 3;
+			toolTip1.SetToolTip(tbSchool, "WebUntis name of your school");
+			tbSchool.TextChanged += MarkAsDirty;
 			// 
 			// btLogin
 			// 
-			this.btLogin.Location = new System.Drawing.Point(199, 16);
-			this.btLogin.Name = "btLogin";
-			this.btLogin.Size = new System.Drawing.Size(75, 21);
-			this.btLogin.TabIndex = 1;
-			this.btLogin.Text = "Login";
-			this.toolTip1.SetToolTip(this.btLogin, "Log in to WebUntis");
-			this.btLogin.UseVisualStyleBackColor = true;
-			this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
+			btLogin.Location = new Point(114, 80);
+			btLogin.Margin = new Padding(4, 3, 4, 3);
+			btLogin.Name = "btLogin";
+			btLogin.Size = new Size(140, 24);
+			btLogin.TabIndex = 4;
+			btLogin.Text = "Login";
+			toolTip1.SetToolTip(btLogin, "Log in to WebUntis");
+			btLogin.UseVisualStyleBackColor = true;
+			btLogin.Click += btLogin_Click;
 			// 
 			// tbServer
 			// 
-			this.tbServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbServer.Location = new System.Drawing.Point(98, 42);
-			this.tbServer.Name = "tbServer";
-			this.tbServer.Size = new System.Drawing.Size(696, 20);
-			this.tbServer.TabIndex = 3;
-			this.toolTip1.SetToolTip(this.tbServer, "Name of the WebUntis server of your school");
-			this.tbServer.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			tbServer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbServer.Location = new Point(114, 22);
+			tbServer.Margin = new Padding(4, 3, 4, 3);
+			tbServer.Name = "tbServer";
+			tbServer.Size = new Size(654, 23);
+			tbServer.TabIndex = 1;
+			toolTip1.SetToolTip(tbServer, "Name of the WebUntis server of your school");
+			tbServer.TextChanged += MarkAsDirty;
 			// 
 			// cbUseCustomPrefix
 			// 
-			this.cbUseCustomPrefix.AutoSize = true;
-			this.cbUseCustomPrefix.Location = new System.Drawing.Point(6, 23);
-			this.cbUseCustomPrefix.Name = "cbUseCustomPrefix";
-			this.cbUseCustomPrefix.Size = new System.Drawing.Size(183, 17);
-			this.cbUseCustomPrefix.TabIndex = 0;
-			this.cbUseCustomPrefix.Text = "Use custom prefix in school field?";
-			this.toolTip1.SetToolTip(this.cbUseCustomPrefix, "Should custom prefix be used?");
-			this.cbUseCustomPrefix.UseVisualStyleBackColor = true;
-			this.cbUseCustomPrefix.CheckedChanged += new System.EventHandler(this.cbUseCustomPrefix_CheckedChanged);
+			cbUseCustomPrefix.AutoSize = true;
+			cbUseCustomPrefix.Location = new Point(107, 22);
+			cbUseCustomPrefix.Margin = new Padding(4, 3, 4, 3);
+			cbUseCustomPrefix.Name = "cbUseCustomPrefix";
+			cbUseCustomPrefix.Size = new Size(203, 19);
+			cbUseCustomPrefix.TabIndex = 0;
+			cbUseCustomPrefix.Text = "Use custom prefix in school field?";
+			toolTip1.SetToolTip(cbUseCustomPrefix, "Should custom prefix be used?");
+			cbUseCustomPrefix.UseVisualStyleBackColor = true;
+			cbUseCustomPrefix.CheckedChanged += cbUseCustomPrefix_CheckedChanged;
 			// 
 			// tbCustomPrefix
 			// 
-			this.tbCustomPrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbCustomPrefix.Enabled = false;
-			this.tbCustomPrefix.Location = new System.Drawing.Point(6, 46);
-			this.tbCustomPrefix.Name = "tbCustomPrefix";
-			this.tbCustomPrefix.Size = new System.Drawing.Size(788, 20);
-			this.tbCustomPrefix.TabIndex = 1;
-			this.toolTip1.SetToolTip(this.tbCustomPrefix, "Prefix to be used in school field");
-			this.tbCustomPrefix.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			tbCustomPrefix.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbCustomPrefix.Enabled = false;
+			tbCustomPrefix.Location = new Point(107, 47);
+			tbCustomPrefix.Margin = new Padding(4, 3, 4, 3);
+			tbCustomPrefix.Name = "tbCustomPrefix";
+			tbCustomPrefix.Size = new Size(655, 23);
+			tbCustomPrefix.TabIndex = 2;
+			toolTip1.SetToolTip(tbCustomPrefix, "Prefix to be used in school field");
+			tbCustomPrefix.TextChanged += MarkAsDirty;
 			// 
-			// gbIHK
+			// cbLegacyEdit
 			// 
-			this.gbIHK.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbIHK.Controls.Add(this.cbIHKAutoGetComment);
-			this.gbIHK.Controls.Add(this.cbIHKCheckMatchingStartDates);
-			this.gbIHK.Controls.Add(this.laIHKBaseUrl);
-			this.gbIHK.Controls.Add(this.tbIHKBaseUrl);
-			this.gbIHK.Controls.Add(this.cbAutoSyncStatusesWithIHK);
-			this.gbIHK.Controls.Add(this.laSupervisorMail);
-			this.gbIHK.Controls.Add(this.tbSupervisorMail);
-			this.gbIHK.Controls.Add(this.laJobField);
-			this.gbIHK.Controls.Add(this.tbJobField);
-			this.gbIHK.Controls.Add(this.btIHKLogin);
-			this.gbIHK.Controls.Add(this.nudUploadDelay);
-			this.gbIHK.Controls.Add(this.laUploadDelay);
-			this.gbIHK.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbIHK.Location = new System.Drawing.Point(0, 428);
-			this.gbIHK.Name = "gbIHK";
-			this.gbIHK.Size = new System.Drawing.Size(800, 141);
-			this.gbIHK.TabIndex = 6;
-			this.gbIHK.TabStop = false;
-			this.gbIHK.Text = "IHK";
+			cbLegacyEdit.AutoSize = true;
+			cbLegacyEdit.Location = new Point(91, 22);
+			cbLegacyEdit.Margin = new Padding(4, 3, 4, 3);
+			cbLegacyEdit.Name = "cbLegacyEdit";
+			cbLegacyEdit.Size = new Size(105, 19);
+			cbLegacyEdit.TabIndex = 0;
+			cbLegacyEdit.Text = "Use legacy edit";
+			toolTip1.SetToolTip(cbLegacyEdit, "Should seperate forms be used to edit?");
+			cbLegacyEdit.UseVisualStyleBackColor = true;
 			// 
 			// cbIHKAutoGetComment
 			// 
-			this.cbIHKAutoGetComment.AutoSize = true;
-			this.cbIHKAutoGetComment.Location = new System.Drawing.Point(487, 118);
-			this.cbIHKAutoGetComment.Name = "cbIHKAutoGetComment";
-			this.cbIHKAutoGetComment.Size = new System.Drawing.Size(194, 17);
-			this.cbIHKAutoGetComment.TabIndex = 11;
-			this.cbIHKAutoGetComment.Text = "Get comment on edit when possible";
-			this.cbIHKAutoGetComment.UseVisualStyleBackColor = true;
-			this.cbIHKAutoGetComment.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			cbIHKAutoGetComment.AutoSize = true;
+			cbIHKAutoGetComment.Location = new Point(110, 76);
+			cbIHKAutoGetComment.Margin = new Padding(4, 3, 4, 3);
+			cbIHKAutoGetComment.Name = "cbIHKAutoGetComment";
+			cbIHKAutoGetComment.Size = new Size(217, 19);
+			cbIHKAutoGetComment.TabIndex = 3;
+			cbIHKAutoGetComment.Text = "Get comment on edit when possible";
+			cbIHKAutoGetComment.UseVisualStyleBackColor = true;
+			cbIHKAutoGetComment.CheckedChanged += MarkAsDirty;
 			// 
 			// laIHKBaseUrl
 			// 
-			this.laIHKBaseUrl.AutoSize = true;
-			this.laIHKBaseUrl.Location = new System.Drawing.Point(51, 95);
-			this.laIHKBaseUrl.Name = "laIHKBaseUrl";
-			this.laIHKBaseUrl.Size = new System.Drawing.Size(41, 13);
-			this.laIHKBaseUrl.TabIndex = 7;
-			this.laIHKBaseUrl.Text = "IHK Url";
+			laIHKBaseUrl.AutoSize = true;
+			laIHKBaseUrl.Location = new Point(55, 26);
+			laIHKBaseUrl.Margin = new Padding(4, 0, 4, 0);
+			laIHKBaseUrl.Name = "laIHKBaseUrl";
+			laIHKBaseUrl.Size = new Size(44, 15);
+			laIHKBaseUrl.TabIndex = 0;
+			laIHKBaseUrl.Text = "IHK Url";
 			// 
 			// tbIHKBaseUrl
 			// 
-			this.tbIHKBaseUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbIHKBaseUrl.Location = new System.Drawing.Point(98, 92);
-			this.tbIHKBaseUrl.Name = "tbIHKBaseUrl";
-			this.tbIHKBaseUrl.Size = new System.Drawing.Size(696, 20);
-			this.tbIHKBaseUrl.TabIndex = 8;
-			this.tbIHKBaseUrl.TextChanged += new System.EventHandler(this.MarkAsDirty);
+			tbIHKBaseUrl.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbIHKBaseUrl.Location = new Point(110, 22);
+			tbIHKBaseUrl.Margin = new Padding(4, 3, 4, 3);
+			tbIHKBaseUrl.Name = "tbIHKBaseUrl";
+			tbIHKBaseUrl.Size = new Size(659, 23);
+			tbIHKBaseUrl.TabIndex = 1;
+			tbIHKBaseUrl.TextChanged += MarkAsDirty;
 			// 
 			// cbAutoSyncStatusesWithIHK
 			// 
-			this.cbAutoSyncStatusesWithIHK.AutoSize = true;
-			this.cbAutoSyncStatusesWithIHK.Location = new System.Drawing.Point(98, 118);
-			this.cbAutoSyncStatusesWithIHK.Name = "cbAutoSyncStatusesWithIHK";
-			this.cbAutoSyncStatusesWithIHK.Size = new System.Drawing.Size(172, 17);
-			this.cbAutoSyncStatusesWithIHK.TabIndex = 9;
-			this.cbAutoSyncStatusesWithIHK.Text = "Sync report statuses on startup";
-			this.cbAutoSyncStatusesWithIHK.UseVisualStyleBackColor = true;
-			this.cbAutoSyncStatusesWithIHK.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			cbAutoSyncStatusesWithIHK.AutoSize = true;
+			cbAutoSyncStatusesWithIHK.Location = new Point(110, 51);
+			cbAutoSyncStatusesWithIHK.Margin = new Padding(4, 3, 4, 3);
+			cbAutoSyncStatusesWithIHK.Name = "cbAutoSyncStatusesWithIHK";
+			cbAutoSyncStatusesWithIHK.Size = new Size(188, 19);
+			cbAutoSyncStatusesWithIHK.TabIndex = 2;
+			cbAutoSyncStatusesWithIHK.Text = "Sync report statuses on startup";
+			cbAutoSyncStatusesWithIHK.UseVisualStyleBackColor = true;
+			cbAutoSyncStatusesWithIHK.CheckedChanged += MarkAsDirty;
 			// 
 			// laSupervisorMail
 			// 
-			this.laSupervisorMail.AutoSize = true;
-			this.laSupervisorMail.Location = new System.Drawing.Point(5, 69);
-			this.laSupervisorMail.Name = "laSupervisorMail";
-			this.laSupervisorMail.Size = new System.Drawing.Size(87, 13);
-			this.laSupervisorMail.TabIndex = 5;
-			this.laSupervisorMail.Text = "Supervisor e-mail";
-			// 
-			// laJobField
-			// 
-			this.laJobField.AutoSize = true;
-			this.laJobField.Location = new System.Drawing.Point(46, 43);
-			this.laJobField.Name = "laJobField";
-			this.laJobField.Size = new System.Drawing.Size(46, 13);
-			this.laJobField.TabIndex = 3;
-			this.laJobField.Text = "Job field";
+			laSupervisorMail.AutoSize = true;
+			laSupervisorMail.Location = new Point(11, 25);
+			laSupervisorMail.Margin = new Padding(4, 0, 4, 0);
+			laSupervisorMail.Name = "laSupervisorMail";
+			laSupervisorMail.Size = new Size(99, 15);
+			laSupervisorMail.TabIndex = 0;
+			laSupervisorMail.Text = "Supervisor e-mail";
 			// 
 			// laUploadDelay
 			// 
-			this.laUploadDelay.AutoSize = true;
-			this.laUploadDelay.Location = new System.Drawing.Point(1, 16);
-			this.laUploadDelay.Name = "laUploadDelay";
-			this.laUploadDelay.Size = new System.Drawing.Size(91, 13);
-			this.laUploadDelay.TabIndex = 0;
-			this.laUploadDelay.Text = "Upload delay (ms)";
+			laUploadDelay.AutoSize = true;
+			laUploadDelay.Location = new Point(7, 49);
+			laUploadDelay.Margin = new Padding(4, 0, 4, 0);
+			laUploadDelay.Name = "laUploadDelay";
+			laUploadDelay.Size = new Size(103, 15);
+			laUploadDelay.TabIndex = 0;
+			laUploadDelay.Text = "Upload delay (ms)";
 			// 
-			// gbManagerOptions
+			// laJobField
 			// 
-			this.gbManagerOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.gbManagerOptions.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbManagerOptions.Controls.Add(this.cbShowReportToolTip);
-			this.gbManagerOptions.Controls.Add(this.cbUseWordWrap);
-			this.gbManagerOptions.Controls.Add(this.laFontSize);
-			this.gbManagerOptions.Controls.Add(this.nudFontSize);
-			this.gbManagerOptions.Controls.Add(this.laTabStop);
-			this.gbManagerOptions.Controls.Add(this.nudTabStops);
-			this.gbManagerOptions.Controls.Add(this.laFolder);
-			this.gbManagerOptions.Controls.Add(this.cbLegacyEdit);
-			this.gbManagerOptions.Controls.Add(this.coTheme);
-			this.gbManagerOptions.Controls.Add(this.btCreateTheme);
-			this.gbManagerOptions.Controls.Add(this.tbUpdate);
-			this.gbManagerOptions.Controls.Add(this.laTheme);
-			this.gbManagerOptions.Controls.Add(this.laUpdate);
-			this.gbManagerOptions.Controls.Add(this.btEditTheme);
-			this.gbManagerOptions.Controls.Add(this.tbFolder);
-			this.gbManagerOptions.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbManagerOptions.Location = new System.Drawing.Point(0, 288);
-			this.gbManagerOptions.Name = "gbManagerOptions";
-			this.gbManagerOptions.Size = new System.Drawing.Size(800, 140);
-			this.gbManagerOptions.TabIndex = 5;
-			this.gbManagerOptions.TabStop = false;
-			this.gbManagerOptions.Text = "Manager";
-			// 
-			// cbUseWordWrap
-			// 
-			this.cbUseWordWrap.AutoSize = true;
-			this.cbUseWordWrap.Location = new System.Drawing.Point(98, 117);
-			this.cbUseWordWrap.Name = "cbUseWordWrap";
-			this.cbUseWordWrap.Size = new System.Drawing.Size(160, 17);
-			this.cbUseWordWrap.TabIndex = 13;
-			this.cbUseWordWrap.Text = "Use word wrap on textboxes";
-			this.cbUseWordWrap.UseVisualStyleBackColor = true;
-			this.cbUseWordWrap.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// laFontSize
-			// 
-			this.laFontSize.AutoSize = true;
-			this.laFontSize.Location = new System.Drawing.Point(391, 15);
-			this.laFontSize.Name = "laFontSize";
-			this.laFontSize.Size = new System.Drawing.Size(49, 13);
-			this.laFontSize.TabIndex = 3;
-			this.laFontSize.Text = "Font size";
-			// 
-			// nudFontSize
-			// 
-			this.nudFontSize.DecimalPlaces = 2;
-			this.nudFontSize.Location = new System.Drawing.Point(446, 12);
-			this.nudFontSize.Name = "nudFontSize";
-			this.nudFontSize.Size = new System.Drawing.Size(120, 20);
-			this.nudFontSize.TabIndex = 4;
-			this.nudFontSize.ValueChanged += new System.EventHandler(this.MarkAsDirty);
-			// 
-			// laTabStop
-			// 
-			this.laTabStop.AutoSize = true;
-			this.laTabStop.Location = new System.Drawing.Point(38, 15);
-			this.laTabStop.Name = "laTabStop";
-			this.laTabStop.Size = new System.Drawing.Size(54, 13);
-			this.laTabStop.TabIndex = 0;
-			this.laTabStop.Text = "Tab stops";
-			// 
-			// laFolder
-			// 
-			this.laFolder.AutoSize = true;
-			this.laFolder.Location = new System.Drawing.Point(56, 68);
-			this.laFolder.Name = "laFolder";
-			this.laFolder.Size = new System.Drawing.Size(36, 13);
-			this.laFolder.TabIndex = 9;
-			this.laFolder.Text = "Folder";
-			// 
-			// laTheme
-			// 
-			this.laTheme.AutoSize = true;
-			this.laTheme.Location = new System.Drawing.Point(52, 41);
-			this.laTheme.Name = "laTheme";
-			this.laTheme.Size = new System.Drawing.Size(40, 13);
-			this.laTheme.TabIndex = 5;
-			this.laTheme.Text = "Theme";
-			// 
-			// laUpdate
-			// 
-			this.laUpdate.AutoSize = true;
-			this.laUpdate.Location = new System.Drawing.Point(26, 94);
-			this.laUpdate.Name = "laUpdate";
-			this.laUpdate.Size = new System.Drawing.Size(66, 13);
-			this.laUpdate.TabIndex = 11;
-			this.laUpdate.Text = "Update path";
-			// 
-			// gbConfig
-			// 
-			this.gbConfig.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.gbConfig.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbConfig.Controls.Add(this.btFieldsConfig);
-			this.gbConfig.Controls.Add(this.cbEndOfWeek);
-			this.gbConfig.Controls.Add(this.tbNamingPattern);
-			this.gbConfig.Controls.Add(this.tbName);
-			this.gbConfig.Controls.Add(this.laNumber);
-			this.gbConfig.Controls.Add(this.laName);
-			this.gbConfig.Controls.Add(this.nudNumber);
-			this.gbConfig.Controls.Add(this.laNamingPattern);
-			this.gbConfig.Controls.Add(this.tbTemplate);
-			this.gbConfig.Controls.Add(this.laTemplate);
-			this.gbConfig.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbConfig.Location = new System.Drawing.Point(0, 166);
-			this.gbConfig.Name = "gbConfig";
-			this.gbConfig.Size = new System.Drawing.Size(800, 122);
-			this.gbConfig.TabIndex = 4;
-			this.gbConfig.TabStop = false;
-			this.gbConfig.Text = "Report";
-			// 
-			// btFieldsConfig
-			// 
-			this.btFieldsConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btFieldsConfig.Location = new System.Drawing.Point(713, 41);
-			this.btFieldsConfig.Name = "btFieldsConfig";
-			this.btFieldsConfig.Size = new System.Drawing.Size(75, 23);
-			this.btFieldsConfig.TabIndex = 4;
-			this.btFieldsConfig.Text = "Fields config";
-			this.btFieldsConfig.UseVisualStyleBackColor = true;
-			this.btFieldsConfig.Click += new System.EventHandler(this.btFieldsConfig_Click);
-			// 
-			// laNumber
-			// 
-			this.laNumber.AutoSize = true;
-			this.laNumber.Location = new System.Drawing.Point(13, 73);
-			this.laNumber.Name = "laNumber";
-			this.laNumber.Size = new System.Drawing.Size(79, 13);
-			this.laNumber.TabIndex = 5;
-			this.laNumber.Text = "Report Number";
-			// 
-			// laName
-			// 
-			this.laName.AutoSize = true;
-			this.laName.Location = new System.Drawing.Point(57, 19);
-			this.laName.Name = "laName";
-			this.laName.Size = new System.Drawing.Size(35, 13);
-			this.laName.TabIndex = 0;
-			this.laName.Text = "Name";
-			// 
-			// laNamingPattern
-			// 
-			this.laNamingPattern.AutoSize = true;
-			this.laNamingPattern.Location = new System.Drawing.Point(13, 99);
-			this.laNamingPattern.Name = "laNamingPattern";
-			this.laNamingPattern.Size = new System.Drawing.Size(79, 13);
-			this.laNamingPattern.TabIndex = 8;
-			this.laNamingPattern.Text = "Naming pattern";
-			// 
-			// laTemplate
-			// 
-			this.laTemplate.AutoSize = true;
-			this.laTemplate.Location = new System.Drawing.Point(41, 47);
-			this.laTemplate.Name = "laTemplate";
-			this.laTemplate.Size = new System.Drawing.Size(51, 13);
-			this.laTemplate.TabIndex = 2;
-			this.laTemplate.Text = "Template";
-			// 
-			// gbWebUntis
-			// 
-			this.gbWebUntis.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.gbWebUntis.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbWebUntis.Controls.Add(this.cbShouldUseUntis);
-			this.gbWebUntis.Controls.Add(this.tbSchool);
-			this.gbWebUntis.Controls.Add(this.btLogin);
-			this.gbWebUntis.Controls.Add(this.laSchool);
-			this.gbWebUntis.Controls.Add(this.tbServer);
-			this.gbWebUntis.Controls.Add(this.laServer);
-			this.gbWebUntis.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbWebUntis.Location = new System.Drawing.Point(0, 72);
-			this.gbWebUntis.Name = "gbWebUntis";
-			this.gbWebUntis.Size = new System.Drawing.Size(800, 94);
-			this.gbWebUntis.TabIndex = 3;
-			this.gbWebUntis.TabStop = false;
-			this.gbWebUntis.Text = "WebUntis";
-			// 
-			// laSchool
-			// 
-			this.laSchool.AutoSize = true;
-			this.laSchool.Location = new System.Drawing.Point(23, 71);
-			this.laSchool.Name = "laSchool";
-			this.laSchool.Size = new System.Drawing.Size(69, 13);
-			this.laSchool.TabIndex = 4;
-			this.laSchool.Text = "School name";
-			// 
-			// laServer
-			// 
-			this.laServer.AutoSize = true;
-			this.laServer.Location = new System.Drawing.Point(6, 45);
-			this.laServer.Name = "laServer";
-			this.laServer.Size = new System.Drawing.Size(86, 13);
-			this.laServer.TabIndex = 2;
-			this.laServer.Text = "Webuntis Server";
-			// 
-			// gbPrefix
-			// 
-			this.gbPrefix.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.gbPrefix.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-			this.gbPrefix.Controls.Add(this.cbUseCustomPrefix);
-			this.gbPrefix.Controls.Add(this.tbCustomPrefix);
-			this.gbPrefix.Dock = System.Windows.Forms.DockStyle.Top;
-			this.gbPrefix.Location = new System.Drawing.Point(0, 0);
-			this.gbPrefix.Name = "gbPrefix";
-			this.gbPrefix.Size = new System.Drawing.Size(800, 72);
-			this.gbPrefix.TabIndex = 2;
-			this.gbPrefix.TabStop = false;
-			this.gbPrefix.Text = "Prefix";
-			// 
-			// btSave
-			// 
-			this.btSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btSave.Location = new System.Drawing.Point(633, 572);
-			this.btSave.Name = "btSave";
-			this.btSave.Size = new System.Drawing.Size(75, 23);
-			this.btSave.TabIndex = 1;
-			this.btSave.Text = "Save";
-			this.btSave.UseVisualStyleBackColor = true;
-			this.btSave.Click += new System.EventHandler(this.btSave_Click);
-			// 
-			// btClose
-			// 
-			this.btClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btClose.Location = new System.Drawing.Point(713, 572);
-			this.btClose.Name = "btClose";
-			this.btClose.Size = new System.Drawing.Size(75, 23);
-			this.btClose.TabIndex = 0;
-			this.btClose.Text = "Close";
-			this.btClose.UseVisualStyleBackColor = true;
-			this.btClose.Click += new System.EventHandler(this.btClose_Click);
+			laJobField.AutoSize = true;
+			laJobField.Location = new Point(48, 83);
+			laJobField.Margin = new Padding(4, 0, 4, 0);
+			laJobField.Name = "laJobField";
+			laJobField.Size = new Size(51, 15);
+			laJobField.TabIndex = 4;
+			laJobField.Text = "Job field";
 			// 
 			// cbShowReportToolTip
 			// 
-			this.cbShowReportToolTip.AutoSize = true;
-			this.cbShowReportToolTip.Location = new System.Drawing.Point(276, 117);
-			this.cbShowReportToolTip.Name = "cbShowReportToolTip";
-			this.cbShowReportToolTip.Size = new System.Drawing.Size(122, 17);
-			this.cbShowReportToolTip.TabIndex = 14;
-			this.cbShowReportToolTip.Text = "Show report tool tips";
-			this.cbShowReportToolTip.UseVisualStyleBackColor = true;
-			this.cbShowReportToolTip.CheckedChanged += new System.EventHandler(this.MarkAsDirty);
+			cbShowReportToolTip.AutoSize = true;
+			cbShowReportToolTip.Location = new Point(91, 135);
+			cbShowReportToolTip.Margin = new Padding(4, 3, 4, 3);
+			cbShowReportToolTip.Name = "cbShowReportToolTip";
+			cbShowReportToolTip.Size = new Size(136, 19);
+			cbShowReportToolTip.TabIndex = 9;
+			cbShowReportToolTip.Text = "Show report tool tips";
+			cbShowReportToolTip.UseVisualStyleBackColor = true;
+			cbShowReportToolTip.CheckedChanged += MarkAsDirty;
+			// 
+			// cbUseWordWrap
+			// 
+			cbUseWordWrap.AutoSize = true;
+			cbUseWordWrap.Location = new Point(91, 110);
+			cbUseWordWrap.Margin = new Padding(4, 3, 4, 3);
+			cbUseWordWrap.Name = "cbUseWordWrap";
+			cbUseWordWrap.Size = new Size(175, 19);
+			cbUseWordWrap.TabIndex = 8;
+			cbUseWordWrap.Text = "Use word wrap on textboxes";
+			cbUseWordWrap.UseVisualStyleBackColor = true;
+			cbUseWordWrap.CheckedChanged += MarkAsDirty;
+			// 
+			// laFontSize
+			// 
+			laFontSize.AutoSize = true;
+			laFontSize.Location = new Point(30, 53);
+			laFontSize.Margin = new Padding(4, 0, 4, 0);
+			laFontSize.Name = "laFontSize";
+			laFontSize.Size = new Size(53, 15);
+			laFontSize.TabIndex = 2;
+			laFontSize.Text = "Font size";
+			// 
+			// nudFontSize
+			// 
+			nudFontSize.DecimalPlaces = 2;
+			nudFontSize.Location = new Point(91, 51);
+			nudFontSize.Margin = new Padding(4, 3, 4, 3);
+			nudFontSize.Name = "nudFontSize";
+			nudFontSize.Size = new Size(178, 23);
+			nudFontSize.TabIndex = 3;
+			nudFontSize.ValueChanged += MarkAsDirty;
+			// 
+			// laTabSize
+			// 
+			laTabSize.AutoSize = true;
+			laTabSize.Location = new Point(36, 24);
+			laTabSize.Margin = new Padding(4, 0, 4, 0);
+			laTabSize.Name = "laTabSize";
+			laTabSize.Size = new Size(47, 15);
+			laTabSize.TabIndex = 0;
+			laTabSize.Text = "Tab size";
+			// 
+			// laReportFolder
+			// 
+			laReportFolder.AutoSize = true;
+			laReportFolder.Location = new Point(7, 25);
+			laReportFolder.Margin = new Padding(4, 0, 4, 0);
+			laReportFolder.Name = "laReportFolder";
+			laReportFolder.Size = new Size(76, 15);
+			laReportFolder.TabIndex = 0;
+			laReportFolder.Text = "Report folder";
+			// 
+			// laTheme
+			// 
+			laTheme.AutoSize = true;
+			laTheme.Location = new Point(40, 85);
+			laTheme.Margin = new Padding(4, 0, 4, 0);
+			laTheme.Name = "laTheme";
+			laTheme.Size = new Size(43, 15);
+			laTheme.TabIndex = 4;
+			laTheme.Text = "Theme";
+			// 
+			// laUpdate
+			// 
+			laUpdate.AutoSize = true;
+			laUpdate.Location = new Point(7, 54);
+			laUpdate.Margin = new Padding(4, 0, 4, 0);
+			laUpdate.Name = "laUpdate";
+			laUpdate.Size = new Size(72, 15);
+			laUpdate.TabIndex = 2;
+			laUpdate.Text = "Update path";
+			// 
+			// btFieldsConfig
+			// 
+			btFieldsConfig.Location = new Point(107, 80);
+			btFieldsConfig.Margin = new Padding(4, 3, 4, 3);
+			btFieldsConfig.Name = "btFieldsConfig";
+			btFieldsConfig.Size = new Size(140, 27);
+			btFieldsConfig.TabIndex = 4;
+			btFieldsConfig.Text = "Edit fields config";
+			btFieldsConfig.UseVisualStyleBackColor = true;
+			btFieldsConfig.Click += btFieldsConfig_Click;
+			// 
+			// laNumber
+			// 
+			laNumber.AutoSize = true;
+			laNumber.Location = new Point(10, 53);
+			laNumber.Margin = new Padding(4, 0, 4, 0);
+			laNumber.Name = "laNumber";
+			laNumber.Size = new Size(89, 15);
+			laNumber.TabIndex = 2;
+			laNumber.Text = "Report Number";
+			// 
+			// laName
+			// 
+			laName.AutoSize = true;
+			laName.Location = new Point(35, 25);
+			laName.Margin = new Padding(4, 0, 4, 0);
+			laName.Name = "laName";
+			laName.Size = new Size(64, 15);
+			laName.TabIndex = 0;
+			laName.Text = "Your name";
+			// 
+			// laNamingPattern
+			// 
+			laNamingPattern.AutoSize = true;
+			laNamingPattern.Location = new Point(8, 54);
+			laNamingPattern.Margin = new Padding(4, 0, 4, 0);
+			laNamingPattern.Name = "laNamingPattern";
+			laNamingPattern.Size = new Size(91, 15);
+			laNamingPattern.TabIndex = 2;
+			laNamingPattern.Text = "Naming pattern";
+			// 
+			// laTemplate
+			// 
+			laTemplate.AutoSize = true;
+			laTemplate.Location = new Point(7, 25);
+			laTemplate.Margin = new Padding(4, 0, 4, 0);
+			laTemplate.Name = "laTemplate";
+			laTemplate.Size = new Size(92, 15);
+			laTemplate.TabIndex = 0;
+			laTemplate.Text = "Report template";
+			// 
+			// gbWebUntisMisc
+			// 
+			gbWebUntisMisc.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+			gbWebUntisMisc.BorderColor = Color.FromArgb(220, 220, 220);
+			gbWebUntisMisc.Controls.Add(tbSchool);
+			gbWebUntisMisc.Controls.Add(btLogin);
+			gbWebUntisMisc.Controls.Add(laSchool);
+			gbWebUntisMisc.Controls.Add(tbServer);
+			gbWebUntisMisc.Controls.Add(laServer);
+			gbWebUntisMisc.Dock = DockStyle.Top;
+			gbWebUntisMisc.Location = new Point(0, 0);
+			gbWebUntisMisc.Margin = new Padding(4, 3, 4, 3);
+			gbWebUntisMisc.Name = "gbWebUntisMisc";
+			gbWebUntisMisc.Padding = new Padding(4, 3, 4, 3);
+			gbWebUntisMisc.Size = new Size(776, 110);
+			gbWebUntisMisc.TabIndex = 0;
+			gbWebUntisMisc.TabStop = false;
+			gbWebUntisMisc.Text = "Miscellanious";
+			// 
+			// laSchool
+			// 
+			laSchool.AutoSize = true;
+			laSchool.Location = new Point(27, 55);
+			laSchool.Margin = new Padding(4, 0, 4, 0);
+			laSchool.Name = "laSchool";
+			laSchool.Size = new Size(76, 15);
+			laSchool.TabIndex = 2;
+			laSchool.Text = "School name";
+			// 
+			// laServer
+			// 
+			laServer.AutoSize = true;
+			laServer.Location = new Point(7, 26);
+			laServer.Margin = new Padding(4, 0, 4, 0);
+			laServer.Name = "laServer";
+			laServer.Size = new Size(92, 15);
+			laServer.TabIndex = 0;
+			laServer.Text = "Webuntis Server";
+			// 
+			// gbReportPrefix
+			// 
+			gbReportPrefix.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+			gbReportPrefix.BorderColor = Color.FromArgb(220, 220, 220);
+			gbReportPrefix.Controls.Add(laCustomPrefix);
+			gbReportPrefix.Controls.Add(cbUseCustomPrefix);
+			gbReportPrefix.Controls.Add(tbCustomPrefix);
+			gbReportPrefix.Dock = DockStyle.Top;
+			gbReportPrefix.Location = new Point(3, 3);
+			gbReportPrefix.Margin = new Padding(4, 3, 4, 3);
+			gbReportPrefix.Name = "gbReportPrefix";
+			gbReportPrefix.Padding = new Padding(4, 3, 4, 3);
+			gbReportPrefix.Size = new Size(770, 76);
+			gbReportPrefix.TabIndex = 0;
+			gbReportPrefix.TabStop = false;
+			gbReportPrefix.Text = "Prefix";
+			// 
+			// laCustomPrefix
+			// 
+			laCustomPrefix.AutoSize = true;
+			laCustomPrefix.Location = new Point(18, 50);
+			laCustomPrefix.Name = "laCustomPrefix";
+			laCustomPrefix.Size = new Size(82, 15);
+			laCustomPrefix.TabIndex = 1;
+			laCustomPrefix.Text = "Custom prefix";
+			// 
+			// btSave
+			// 
+			btSave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			btSave.Location = new Point(596, 3);
+			btSave.Margin = new Padding(4, 3, 4, 3);
+			btSave.Name = "btSave";
+			btSave.Size = new Size(88, 27);
+			btSave.TabIndex = 0;
+			btSave.Text = "Save";
+			btSave.UseVisualStyleBackColor = true;
+			btSave.Click += btSave_Click;
+			// 
+			// btClose
+			// 
+			btClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			btClose.Location = new Point(692, 3);
+			btClose.Margin = new Padding(4, 3, 4, 3);
+			btClose.Name = "btClose";
+			btClose.Size = new Size(88, 27);
+			btClose.TabIndex = 1;
+			btClose.Text = "Close";
+			btClose.UseVisualStyleBackColor = true;
+			btClose.Click += btClose_Click;
+			// 
+			// tcOptions
+			// 
+			tcOptions.Controls.Add(tpGeneral);
+			tcOptions.Controls.Add(tpReport);
+			tcOptions.Controls.Add(tpWebUntis);
+			tcOptions.Controls.Add(tpIHK);
+			tcOptions.Dock = DockStyle.Fill;
+			tcOptions.Location = new Point(0, 0);
+			tcOptions.Name = "tcOptions";
+			tcOptions.SelectedIndex = 0;
+			tcOptions.Size = new Size(784, 368);
+			tcOptions.TabIndex = 0;
+			// 
+			// tpGeneral
+			// 
+			tpGeneral.Controls.Add(cbGeneralOptional);
+			tpGeneral.Controls.Add(gbGeneralEdit);
+			tpGeneral.Controls.Add(gbGeneralMisc);
+			tpGeneral.Controls.Add(gbGeneralAppearance);
+			tpGeneral.Location = new Point(4, 24);
+			tpGeneral.Name = "tpGeneral";
+			tpGeneral.Padding = new Padding(3);
+			tpGeneral.Size = new Size(776, 340);
+			tpGeneral.TabIndex = 0;
+			tpGeneral.Text = "General";
+			tpGeneral.UseVisualStyleBackColor = true;
+			// 
+			// cbGeneralOptional
+			// 
+			cbGeneralOptional.BorderColor = Color.FromArgb(220, 220, 220);
+			cbGeneralOptional.Controls.Add(cbShouldUseUntis);
+			cbGeneralOptional.Dock = DockStyle.Top;
+			cbGeneralOptional.Location = new Point(3, 290);
+			cbGeneralOptional.Name = "cbGeneralOptional";
+			cbGeneralOptional.Size = new Size(770, 47);
+			cbGeneralOptional.TabIndex = 3;
+			cbGeneralOptional.TabStop = false;
+			cbGeneralOptional.Text = "Optional";
+			// 
+			// gbGeneralEdit
+			// 
+			gbGeneralEdit.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+			gbGeneralEdit.BorderColor = Color.FromArgb(220, 220, 220);
+			gbGeneralEdit.Controls.Add(cbLegacyEdit);
+			gbGeneralEdit.Dock = DockStyle.Top;
+			gbGeneralEdit.Location = new Point(3, 243);
+			gbGeneralEdit.Margin = new Padding(4, 3, 4, 3);
+			gbGeneralEdit.Name = "gbGeneralEdit";
+			gbGeneralEdit.Padding = new Padding(4, 3, 4, 3);
+			gbGeneralEdit.Size = new Size(770, 47);
+			gbGeneralEdit.TabIndex = 2;
+			gbGeneralEdit.TabStop = false;
+			gbGeneralEdit.Text = "Edit";
+			// 
+			// gbGeneralMisc
+			// 
+			gbGeneralMisc.BorderColor = Color.FromArgb(220, 220, 220);
+			gbGeneralMisc.Controls.Add(laReportFolder);
+			gbGeneralMisc.Controls.Add(laUpdate);
+			gbGeneralMisc.Controls.Add(tbFolder);
+			gbGeneralMisc.Controls.Add(tbUpdate);
+			gbGeneralMisc.Dock = DockStyle.Top;
+			gbGeneralMisc.Location = new Point(3, 163);
+			gbGeneralMisc.Name = "gbGeneralMisc";
+			gbGeneralMisc.Size = new Size(770, 80);
+			gbGeneralMisc.TabIndex = 1;
+			gbGeneralMisc.TabStop = false;
+			gbGeneralMisc.Text = "Miscellanious";
+			// 
+			// gbGeneralAppearance
+			// 
+			gbGeneralAppearance.BorderColor = Color.FromArgb(220, 220, 220);
+			gbGeneralAppearance.Controls.Add(cbShowReportToolTip);
+			gbGeneralAppearance.Controls.Add(nudTabStops);
+			gbGeneralAppearance.Controls.Add(cbUseWordWrap);
+			gbGeneralAppearance.Controls.Add(laTabSize);
+			gbGeneralAppearance.Controls.Add(laFontSize);
+			gbGeneralAppearance.Controls.Add(nudFontSize);
+			gbGeneralAppearance.Controls.Add(btCreateTheme);
+			gbGeneralAppearance.Controls.Add(coTheme);
+			gbGeneralAppearance.Controls.Add(laTheme);
+			gbGeneralAppearance.Controls.Add(btEditTheme);
+			gbGeneralAppearance.Dock = DockStyle.Top;
+			gbGeneralAppearance.Location = new Point(3, 3);
+			gbGeneralAppearance.Name = "gbGeneralAppearance";
+			gbGeneralAppearance.Size = new Size(770, 160);
+			gbGeneralAppearance.TabIndex = 0;
+			gbGeneralAppearance.TabStop = false;
+			gbGeneralAppearance.Text = "Appearance";
+			// 
+			// tpReport
+			// 
+			tpReport.Controls.Add(gbReportMisc);
+			tpReport.Controls.Add(cbReportFormFields);
+			tpReport.Controls.Add(gbReportPrefix);
+			tpReport.Location = new Point(4, 24);
+			tpReport.Name = "tpReport";
+			tpReport.Padding = new Padding(3);
+			tpReport.Size = new Size(776, 370);
+			tpReport.TabIndex = 1;
+			tpReport.Text = "Report";
+			tpReport.UseVisualStyleBackColor = true;
+			// 
+			// gbReportMisc
+			// 
+			gbReportMisc.BorderColor = Color.FromArgb(220, 220, 220);
+			gbReportMisc.Controls.Add(btFieldsConfig);
+			gbReportMisc.Controls.Add(laTemplate);
+			gbReportMisc.Controls.Add(laNamingPattern);
+			gbReportMisc.Controls.Add(tbNamingPattern);
+			gbReportMisc.Controls.Add(tbTemplate);
+			gbReportMisc.Dock = DockStyle.Top;
+			gbReportMisc.Location = new Point(3, 213);
+			gbReportMisc.Name = "gbReportMisc";
+			gbReportMisc.Size = new Size(770, 113);
+			gbReportMisc.TabIndex = 2;
+			gbReportMisc.TabStop = false;
+			gbReportMisc.Text = "Miscellanious";
+			// 
+			// cbReportFormFields
+			// 
+			cbReportFormFields.BorderColor = Color.FromArgb(220, 220, 220);
+			cbReportFormFields.Controls.Add(tbName);
+			cbReportFormFields.Controls.Add(cbEndOfWeek);
+			cbReportFormFields.Controls.Add(laName);
+			cbReportFormFields.Controls.Add(laNumber);
+			cbReportFormFields.Controls.Add(nudNumber);
+			cbReportFormFields.Controls.Add(tbJobField);
+			cbReportFormFields.Controls.Add(laJobField);
+			cbReportFormFields.Dock = DockStyle.Top;
+			cbReportFormFields.Location = new Point(3, 79);
+			cbReportFormFields.Name = "cbReportFormFields";
+			cbReportFormFields.Size = new Size(770, 134);
+			cbReportFormFields.TabIndex = 1;
+			cbReportFormFields.TabStop = false;
+			cbReportFormFields.Text = "Form fields";
+			// 
+			// tpWebUntis
+			// 
+			tpWebUntis.Controls.Add(gbWebUntisMisc);
+			tpWebUntis.Location = new Point(4, 24);
+			tpWebUntis.Name = "tpWebUntis";
+			tpWebUntis.Size = new Size(776, 370);
+			tpWebUntis.TabIndex = 2;
+			tpWebUntis.Text = "WebUntis";
+			tpWebUntis.UseVisualStyleBackColor = true;
+			// 
+			// tpIHK
+			// 
+			tpIHK.Controls.Add(gbIHKMiscellanious);
+			tpIHK.Controls.Add(gbIHKFields);
+			tpIHK.Controls.Add(gbIHKFailSaves);
+			tpIHK.Location = new Point(4, 24);
+			tpIHK.Name = "tpIHK";
+			tpIHK.Size = new Size(776, 370);
+			tpIHK.TabIndex = 3;
+			tpIHK.Text = "IHK";
+			tpIHK.UseVisualStyleBackColor = true;
+			// 
+			// gbIHKMiscellanious
+			// 
+			gbIHKMiscellanious.BorderColor = Color.FromArgb(220, 220, 220);
+			gbIHKMiscellanious.Controls.Add(btIHKLogin);
+			gbIHKMiscellanious.Controls.Add(cbIHKAutoGetComment);
+			gbIHKMiscellanious.Controls.Add(tbIHKBaseUrl);
+			gbIHKMiscellanious.Controls.Add(cbAutoSyncStatusesWithIHK);
+			gbIHKMiscellanious.Controls.Add(laIHKBaseUrl);
+			gbIHKMiscellanious.Dock = DockStyle.Top;
+			gbIHKMiscellanious.Location = new Point(0, 127);
+			gbIHKMiscellanious.Name = "gbIHKMiscellanious";
+			gbIHKMiscellanious.Size = new Size(776, 131);
+			gbIHKMiscellanious.TabIndex = 2;
+			gbIHKMiscellanious.TabStop = false;
+			gbIHKMiscellanious.Text = "Miscellanious";
+			// 
+			// gbIHKFields
+			// 
+			gbIHKFields.BorderColor = Color.FromArgb(220, 220, 220);
+			gbIHKFields.Controls.Add(tbSupervisorMail);
+			gbIHKFields.Controls.Add(laSupervisorMail);
+			gbIHKFields.Dock = DockStyle.Top;
+			gbIHKFields.Location = new Point(0, 76);
+			gbIHKFields.Name = "gbIHKFields";
+			gbIHKFields.Size = new Size(776, 51);
+			gbIHKFields.TabIndex = 1;
+			gbIHKFields.TabStop = false;
+			gbIHKFields.Text = "Fields";
+			// 
+			// gbIHKFailSaves
+			// 
+			gbIHKFailSaves.BorderColor = Color.FromArgb(220, 220, 220);
+			gbIHKFailSaves.Controls.Add(cbIHKCheckMatchingStartDates);
+			gbIHKFailSaves.Controls.Add(nudUploadDelay);
+			gbIHKFailSaves.Controls.Add(laUploadDelay);
+			gbIHKFailSaves.Dock = DockStyle.Top;
+			gbIHKFailSaves.Location = new Point(0, 0);
+			gbIHKFailSaves.Name = "gbIHKFailSaves";
+			gbIHKFailSaves.Size = new Size(776, 76);
+			gbIHKFailSaves.TabIndex = 0;
+			gbIHKFailSaves.TabStop = false;
+			gbIHKFailSaves.Text = "Fail saves";
+			// 
+			// paButtons
+			// 
+			paButtons.Controls.Add(btClose);
+			paButtons.Controls.Add(btSave);
+			paButtons.Dock = DockStyle.Bottom;
+			paButtons.Location = new Point(0, 368);
+			paButtons.Name = "paButtons";
+			paButtons.Size = new Size(784, 33);
+			paButtons.TabIndex = 0;
+			// 
+			// paContent
+			// 
+			paContent.Controls.Add(tcOptions);
+			paContent.Dock = DockStyle.Fill;
+			paContent.Location = new Point(0, 0);
+			paContent.Name = "paContent";
+			paContent.Size = new Size(784, 368);
+			paContent.TabIndex = 1;
 			// 
 			// OptionMenu
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 607);
-			this.Controls.Add(this.gbIHK);
-			this.Controls.Add(this.gbManagerOptions);
-			this.Controls.Add(this.gbConfig);
-			this.Controls.Add(this.gbWebUntis);
-			this.Controls.Add(this.gbPrefix);
-			this.Controls.Add(this.btSave);
-			this.Controls.Add(this.btClose);
-			this.MinimumSize = new System.Drawing.Size(816, 626);
-			this.Name = "OptionMenu";
-			this.Text = "OptionMenu";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionMenu_FormClosing);
-			((System.ComponentModel.ISupportInitialize)(this.nudUploadDelay)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudTabStops)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.nudNumber)).EndInit();
-			this.gbIHK.ResumeLayout(false);
-			this.gbIHK.PerformLayout();
-			this.gbManagerOptions.ResumeLayout(false);
-			this.gbManagerOptions.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.nudFontSize)).EndInit();
-			this.gbConfig.ResumeLayout(false);
-			this.gbConfig.PerformLayout();
-			this.gbWebUntis.ResumeLayout(false);
-			this.gbWebUntis.PerformLayout();
-			this.gbPrefix.ResumeLayout(false);
-			this.gbPrefix.PerformLayout();
-			this.ResumeLayout(false);
-
+			AutoScaleDimensions = new SizeF(7F, 15F);
+			AutoScaleMode = AutoScaleMode.Font;
+			ClientSize = new Size(784, 401);
+			Controls.Add(paContent);
+			Controls.Add(paButtons);
+			Margin = new Padding(4, 3, 4, 3);
+			MinimumSize = new Size(550, 440);
+			Name = "OptionMenu";
+			Text = "OptionMenu";
+			FormClosing += OptionMenu_FormClosing;
+			((System.ComponentModel.ISupportInitialize)nudUploadDelay).EndInit();
+			((System.ComponentModel.ISupportInitialize)nudTabStops).EndInit();
+			((System.ComponentModel.ISupportInitialize)nudNumber).EndInit();
+			((System.ComponentModel.ISupportInitialize)nudFontSize).EndInit();
+			gbWebUntisMisc.ResumeLayout(false);
+			gbWebUntisMisc.PerformLayout();
+			gbReportPrefix.ResumeLayout(false);
+			gbReportPrefix.PerformLayout();
+			tcOptions.ResumeLayout(false);
+			tpGeneral.ResumeLayout(false);
+			cbGeneralOptional.ResumeLayout(false);
+			cbGeneralOptional.PerformLayout();
+			gbGeneralEdit.ResumeLayout(false);
+			gbGeneralEdit.PerformLayout();
+			gbGeneralMisc.ResumeLayout(false);
+			gbGeneralMisc.PerformLayout();
+			gbGeneralAppearance.ResumeLayout(false);
+			gbGeneralAppearance.PerformLayout();
+			tpReport.ResumeLayout(false);
+			gbReportMisc.ResumeLayout(false);
+			gbReportMisc.PerformLayout();
+			cbReportFormFields.ResumeLayout(false);
+			cbReportFormFields.PerformLayout();
+			tpWebUntis.ResumeLayout(false);
+			tpIHK.ResumeLayout(false);
+			gbIHKMiscellanious.ResumeLayout(false);
+			gbIHKMiscellanious.PerformLayout();
+			gbIHKFields.ResumeLayout(false);
+			gbIHKFields.PerformLayout();
+			gbIHKFailSaves.ResumeLayout(false);
+			gbIHKFailSaves.PerformLayout();
+			paButtons.ResumeLayout(false);
+			paContent.ResumeLayout(false);
+			ResumeLayout(false);
 		}
 
 		#endregion
 		private System.Windows.Forms.ToolTip toolTip1;
-		private OwnControls.ColoredGroupBox gbPrefix;
+		private OwnControls.ColoredGroupBox gbReportPrefix;
 		private System.Windows.Forms.CheckBox cbUseCustomPrefix;
 		private System.Windows.Forms.TextBox tbCustomPrefix;
-		private OwnControls.ColoredGroupBox gbWebUntis;
+		private OwnControls.ColoredGroupBox gbWebUntisMisc;
 		private System.Windows.Forms.CheckBox cbShouldUseUntis;
 		private System.Windows.Forms.TextBox tbSchool;
 		private System.Windows.Forms.Label laSchool;
 		private System.Windows.Forms.TextBox tbServer;
 		private System.Windows.Forms.Label laServer;
-		private OwnControls.ColoredGroupBox gbConfig;
 		private System.Windows.Forms.CheckBox cbEndOfWeek;
 		private System.Windows.Forms.TextBox tbNamingPattern;
 		private System.Windows.Forms.TextBox tbName;
@@ -779,17 +1001,14 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.Label laTheme;
 		private System.Windows.Forms.Label laTemplate;
 		private OwnControls.ColoredComboBox coTheme;
-		private OwnControls.ColoredGroupBox gbManagerOptions;
-		private System.Windows.Forms.Label laTabStop;
+		private System.Windows.Forms.Label laTabSize;
 		private System.Windows.Forms.NumericUpDown nudTabStops;
-		private System.Windows.Forms.Label laFolder;
-		private System.Windows.Forms.CheckBox cbLegacyEdit;
+		private System.Windows.Forms.Label laReportFolder;
 		private System.Windows.Forms.TextBox tbUpdate;
 		private System.Windows.Forms.TextBox tbFolder;
 		private System.Windows.Forms.Label laUpdate;
 		private System.Windows.Forms.Label laFontSize;
 		private System.Windows.Forms.NumericUpDown nudFontSize;
-		private OwnControls.ColoredGroupBox gbIHK;
 		private OwnControls.FocusColoredFlatButton btClose;
 		private OwnControls.FocusColoredFlatButton btSave;
 		private OwnControls.FocusColoredFlatButton btLogin;
@@ -811,5 +1030,23 @@ namespace BerichtManager.Forms
 		private System.Windows.Forms.ToolTip ttErrors;
 		private System.Windows.Forms.CheckBox cbUseWordWrap;
 		private System.Windows.Forms.CheckBox cbShowReportToolTip;
+		private OwnControls.CustomTabControl.ColoredTabControl tcOptions;
+		private OwnControls.CustomTabControl.ColoredTabPage tpGeneral;
+		private OwnControls.CustomTabControl.ColoredTabPage tpReport;
+		private OwnControls.CustomTabControl.ColoredTabPage tpWebUntis;
+		private OwnControls.CustomTabControl.ColoredTabPage tpIHK;
+		private Panel paButtons;
+		private OwnControls.ColoredGroupBox gbGeneralAppearance;
+		private OwnControls.ColoredGroupBox gbGeneralMisc;
+		private OwnControls.ColoredGroupBox gbGeneralEdit;
+		private CheckBox cbLegacyEdit;
+		private Label laCustomPrefix;
+		private OwnControls.ColoredGroupBox cbReportFormFields;
+		private OwnControls.ColoredGroupBox gbReportMisc;
+		private OwnControls.ColoredGroupBox cbGeneralOptional;
+		private OwnControls.ColoredGroupBox gbIHKFields;
+		private OwnControls.ColoredGroupBox gbIHKFailSaves;
+		private OwnControls.ColoredGroupBox gbIHKMiscellanious;
+		private Panel paContent;
 	}
 }
