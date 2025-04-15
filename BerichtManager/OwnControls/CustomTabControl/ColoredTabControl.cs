@@ -109,7 +109,6 @@ namespace BerichtManager.OwnControls.CustomTabControl
 
 		protected override void OnDrawItem(DrawItemEventArgs e)
 		{
-			DrawItemHead(e.Graphics, e.Index);
 			base.OnDrawItem(e);
 		}
 
