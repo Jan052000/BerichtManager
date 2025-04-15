@@ -170,6 +170,16 @@ namespace BerichtManager.OwnControls.CustomTabControl
 			base.OnMouseMove(e);
 		}
 
+		protected override void OnSelecting(TabControlCancelEventArgs e)
+		{
+			if (LastHovered != e.TabPageIndex)
+			{
+				ToolTipTabs.Hide(this);
+				ToolTipTabs.RemoveAll();
+			}
+			base.OnSelecting(e);
+		}
+
 		protected override void WndProc(ref Message m)
 		{
 			switch ((WindowsMessageCodes)m.Msg)
