@@ -288,6 +288,8 @@ namespace BerichtManager.WebUntisClient
 		private Holidays? GetHolidays(HttpClient? useClient = null)
 		{
 			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
+			if (!ConfigHandler.UseWebUntis)
+				return null;
 			HttpClient client;
 			IEnumerable<string> id;
 			if (useClient != null) client = useClient;
