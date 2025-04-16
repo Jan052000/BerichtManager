@@ -94,6 +94,29 @@ namespace BerichtManager.OwnControls.CustomTabControl
 		/// </summary>
 		private int? LastHovered { get; set; }
 
+		/// <inheritdoc cref="TabPages"/>
+		private readonly CustomTabPageCollection tabPages;
+		/// <summary>
+		/// Collection of contained <see cref="TabPage"/>s
+		/// </summary>
+		public new CustomTabPageCollection TabPages { get => tabPages; }
+
+		/// <inheritdoc cref="Controls"/>
+		private readonly ControlCollectionWrapper controls;
+		/// <summary>
+		/// Collection of contained <see cref="Control"/>s
+		/// </summary>
+		public new ControlCollectionWrapper Controls { get => controls; }
+
+		/// <summary>
+		/// Creates a new <see cref="ColoredTabControl"/> instance
+		/// </summary>
+		public ColoredTabControl()
+		{
+			tabPages = new CustomTabPageCollection(this);
+			controls = new ControlCollectionWrapper(this);
+		}
+
 		/// <summary>
 		/// Handles drawing the tab heads inside the <see cref="WndProc(ref Message)"/>
 		/// </summary>
@@ -148,6 +171,26 @@ namespace BerichtManager.OwnControls.CustomTabControl
 			if (page is ColoredTabPage cPage)
 				return cPage.TabHeadTextColor;
 			return DefaultForeColor;
+		}
+
+		/// <summary>
+		/// Hides <paramref name="page"/> from user
+		/// </summary>
+		/// <param name="page"><see cref="TabPage"/> to hide</param>
+		public void HidePage(TabPage page)
+		{
+			TabPages.Hide(page);
+			Invalidate();
+		}
+
+		/// <summary>
+		/// Shows a hidden <paramref name="page"/> to user
+		/// </summary>
+		/// <param name="page"><see cref="TabPage"/> to show</param>
+		public void ShowPage(TabPage page)
+		{
+			TabPages.Show(page);
+			Invalidate();
 		}
 
 		protected override void OnMouseLeave(EventArgs e)
