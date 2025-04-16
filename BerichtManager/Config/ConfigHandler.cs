@@ -82,6 +82,7 @@ namespace BerichtManager.Config
 			{"TabStops", (IntType, 20)},
 			{"NamingPattern", (StringType, "WochenberichtKW~+CW+~")},
 			{"AutoSyncStatusesWithIHK", (BoolType, false)},
+			{"UseIHK", (BoolType, true)},
 			{"IHKUserName", (StringType, "")},
 			{"IHKPassword", (StringType, "")},
 			{"IHKStayLoggedIn", (BoolType, false)},
@@ -303,6 +304,15 @@ namespace BerichtManager.Config
 		}
 
 		/// <summary>
+		/// Wether or not to enable functions to interact with IHK
+		/// </summary>
+		public bool UseIHK
+		{
+			get => GenericGet<bool>("UseIHK");
+			set => GenericSet("UseIHK", value);
+		}
+
+		/// <summary>
 		/// Username for IHK login
 		/// </summary>
 		public string IHKUserName
@@ -346,7 +356,7 @@ namespace BerichtManager.Config
 			get => GenericGet<string>("IHKSupervisorEMail");
 			set
 			{
-				if(value == "")
+				if (value == "")
 				{
 					GenericSet("IHKSupervisorEMail", value);
 					return;

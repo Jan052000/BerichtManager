@@ -143,6 +143,8 @@ namespace BerichtManager
 			{
 				miEditLatest.Enabled = false;
 			}
+			miIHK.Visible = ConfigHandler.UseIHK;
+			miIHKOptions.Visible = ConfigHandler.UseIHK;
 			SetComponentPositions();
 			UpdateTabStops(this, ConfigHandler.TabStops);
 			if (File.Exists(ConfigHandler.PublishPath) && CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(ConfigHandler.PublishPath).FileVersion) > 0)
@@ -1008,7 +1010,7 @@ namespace BerichtManager
 				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 					return;
 
-				if (ConfigHandler.IHKAutoGetComment && UploadedReports.GetUploadedReport(path, out UploadedReport? report) && report.LfdNR.HasValue && report.LfdNR > 0)
+				if (ConfigHandler.IHKAutoGetComment && ConfigHandler.UseIHK && UploadedReports.GetUploadedReport(path, out UploadedReport? report) && report.LfdNR.HasValue && report.LfdNR > 0)
 				{
 					Task<CommentResult> commentTask = Task.Run(async () =>
 					{
@@ -1410,6 +1412,7 @@ namespace BerichtManager
 			optionMenu.IHKBaseAddressChanged += IHKBaseAddressChanged;
 			optionMenu.UseWordWrapChanged += UseWordWrapChanged;
 			optionMenu.ShowReportToolTipChanged += ShowReportToolTipChanged;
+			optionMenu.UseIHKChanged += UseIHKChanged;
 			optionMenu.ShowDialog();
 			optionMenu.ActiveThemeChanged -= ActiveThemeChanged;
 			optionMenu.ReportFolderChanged -= ReportFolderChanged;
@@ -1418,6 +1421,13 @@ namespace BerichtManager
 			optionMenu.IHKBaseAddressChanged -= IHKBaseAddressChanged;
 			optionMenu.UseWordWrapChanged -= UseWordWrapChanged;
 			optionMenu.ShowReportToolTipChanged -= ShowReportToolTipChanged;
+			optionMenu.UseIHKChanged -= UseIHKChanged;
+		}
+
+		private void UseIHKChanged(bool status)
+		{
+			miIHK.Visible = status;
+			miIHKOptions.Visible = status;
 		}
 
 		private void ShowReportToolTipChanged(bool status)
@@ -2210,7 +2220,7 @@ namespace BerichtManager
 
 		private async void MainForm_Load(object sender, EventArgs e)
 		{
-			if (ConfigHandler.AutoSyncStatusesWithIHK && await UpdateStatuses())
+			if (ConfigHandler.AutoSyncStatusesWithIHK && ConfigHandler.UseIHK && await UpdateStatuses())
 				UpdateTree();
 		}
 

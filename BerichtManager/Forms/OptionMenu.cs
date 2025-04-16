@@ -61,6 +61,11 @@ namespace BerichtManager.Forms
 		/// </summary>
 		public event GenericOptionChangeDelegate<bool>? ShowReportToolTipChanged;
 
+		/// <summary>
+		/// Emits when use status of IHK functionality has changed
+		/// </summary>
+		public event GenericOptionChangeDelegate<bool>? UseIHKChanged;
+
 		private bool Initializing = true;
 
 		public OptionMenu()
@@ -99,6 +104,9 @@ namespace BerichtManager.Forms
 			cbShowReportToolTip.Checked = ConfigHandler.ShowReportToolTip;
 
 			//IHK
+			cbUseIHK.Checked = ConfigHandler.UseIHK;
+			if (!ConfigHandler.UseIHK)
+				tcOptions.HidePage(tpIHK);
 			nudUploadDelay.Value = ConfigHandler.IHKUploadDelay;
 			tbJobField.Text = ConfigHandler.IHKJobField;
 			tbSupervisorMail.Text = ConfigHandler.IHKSupervisorEMail;
@@ -225,6 +233,7 @@ namespace BerichtManager.Forms
 			bool ihkBaseAddressChanged = false;
 			bool reportFolderChanged = false;
 			bool showReportToolTipChanged = false;
+			bool useIHKChanged = false;
 
 			//Prefix
 			ConfigHandler.UseCustomPrefix = cbUseCustomPrefix.Checked;
@@ -281,6 +290,8 @@ namespace BerichtManager.Forms
 				showReportToolTipChanged = true;
 			}
 			//IHK
+			useIHKChanged = ConfigHandler.UseIHK != cbUseIHK.Checked;
+			ConfigHandler.UseIHK = cbUseIHK.Checked;
 			ConfigHandler.IHKUploadDelay = (int)nudUploadDelay.Value;
 			ConfigHandler.IHKJobField = tbJobField.Text;
 			ConfigHandler.IHKSupervisorEMail = tbSupervisorMail.Text;
@@ -307,6 +318,8 @@ namespace BerichtManager.Forms
 				ShowReportToolTipChanged?.Invoke(cbShowReportToolTip.Checked);
 			if (reportFolderChanged)
 				ReportFolderChanged?.Invoke(this, tbFolder.Text);
+			if (useIHKChanged)
+				UseIHKChanged?.Invoke(cbUseIHK.Checked);
 		}
 
 		/// <summary>
@@ -328,18 +341,18 @@ namespace BerichtManager.Forms
 		private void NamingPatternChanged(object sender, EventArgs e)
 		{
 			MarkAsDirty(sender, e);
-			if (!(sender is TextBox tb))
+			if (sender is not TextBox tb)
 				return;
 			if (ValidateNamingPattern() is string message)
 			{
-				ttErrors.SetToolTip(tbNamingPattern, message);
-				NamingPatternToolTip = toolTip1.GetToolTip(tbNamingPattern);
-				toolTip1.SetToolTip(tbNamingPattern, null);
+				ttErrors.SetToolTip(tb, message);
+				NamingPatternToolTip = toolTip1.GetToolTip(tb);
+				toolTip1.SetToolTip(tb, null);
 			}
 			else
 			{
-				ttErrors.SetToolTip(tbNamingPattern, null);
-				toolTip1.SetToolTip(tbNamingPattern, NamingPatternToolTip);
+				ttErrors.SetToolTip(tb, null);
+				toolTip1.SetToolTip(tb, NamingPatternToolTip);
 			}
 		}
 
@@ -376,6 +389,12 @@ namespace BerichtManager.Forms
 				tcOptions.ShowPage(tabPage);
 			else
 				tcOptions.HidePage(tabPage);
+		}
+
+		private void cbUseIHK_CheckedChanged(object sender, EventArgs e)
+		{
+			SwitchTabPageVisibility(((CheckBox)sender).Checked, tpIHK);
+			MarkAsDirty(sender, e);
 		}
 
 		private void cbShouldUseUntis_CheckedChanged(object sender, EventArgs e)

@@ -84,6 +84,7 @@ namespace BerichtManager.Forms
 			tcOptions = new OwnControls.CustomTabControl.ColoredTabControl();
 			tpGeneral = new OwnControls.CustomTabControl.ColoredTabPage();
 			cbGeneralOptional = new OwnControls.ColoredGroupBox();
+			cbUseIHK = new CheckBox();
 			gbGeneralEdit = new OwnControls.ColoredGroupBox();
 			gbGeneralMisc = new OwnControls.ColoredGroupBox();
 			gbGeneralAppearance = new OwnControls.ColoredGroupBox();
@@ -720,7 +721,7 @@ namespace BerichtManager.Forms
 			tcOptions.Location = new Point(0, 0);
 			tcOptions.Name = "tcOptions";
 			tcOptions.SelectedIndex = 0;
-			tcOptions.Size = new Size(784, 368);
+			tcOptions.Size = new Size(784, 393);
 			tcOptions.TabIndex = 0;
 			// 
 			// tpGeneral
@@ -732,7 +733,7 @@ namespace BerichtManager.Forms
 			tpGeneral.Location = new Point(4, 24);
 			tpGeneral.Name = "tpGeneral";
 			tpGeneral.Padding = new Padding(3);
-			tpGeneral.Size = new Size(776, 340);
+			tpGeneral.Size = new Size(776, 365);
 			tpGeneral.TabIndex = 0;
 			tpGeneral.Text = "General";
 			tpGeneral.UseVisualStyleBackColor = true;
@@ -740,14 +741,26 @@ namespace BerichtManager.Forms
 			// cbGeneralOptional
 			// 
 			cbGeneralOptional.BorderColor = Color.FromArgb(220, 220, 220);
+			cbGeneralOptional.Controls.Add(cbUseIHK);
 			cbGeneralOptional.Controls.Add(cbShouldUseUntis);
 			cbGeneralOptional.Dock = DockStyle.Top;
 			cbGeneralOptional.Location = new Point(3, 290);
 			cbGeneralOptional.Name = "cbGeneralOptional";
-			cbGeneralOptional.Size = new Size(770, 47);
+			cbGeneralOptional.Size = new Size(770, 72);
 			cbGeneralOptional.TabIndex = 3;
 			cbGeneralOptional.TabStop = false;
 			cbGeneralOptional.Text = "Optional";
+			// 
+			// cbUseIHK
+			// 
+			cbUseIHK.AutoSize = true;
+			cbUseIHK.Location = new Point(91, 47);
+			cbUseIHK.Name = "cbUseIHK";
+			cbUseIHK.Size = new Size(67, 19);
+			cbUseIHK.TabIndex = 1;
+			cbUseIHK.Text = "Use IHK";
+			cbUseIHK.UseVisualStyleBackColor = true;
+			cbUseIHK.CheckedChanged += cbUseIHK_CheckedChanged;
 			// 
 			// gbGeneralEdit
 			// 
@@ -808,7 +821,7 @@ namespace BerichtManager.Forms
 			tpReport.Location = new Point(4, 24);
 			tpReport.Name = "tpReport";
 			tpReport.Padding = new Padding(3);
-			tpReport.Size = new Size(776, 370);
+			tpReport.Size = new Size(776, 365);
 			tpReport.TabIndex = 1;
 			tpReport.Text = "Report";
 			tpReport.UseVisualStyleBackColor = true;
@@ -852,7 +865,7 @@ namespace BerichtManager.Forms
 			tpWebUntis.Controls.Add(gbWebUntisMisc);
 			tpWebUntis.Location = new Point(4, 24);
 			tpWebUntis.Name = "tpWebUntis";
-			tpWebUntis.Size = new Size(776, 370);
+			tpWebUntis.Size = new Size(776, 365);
 			tpWebUntis.TabIndex = 2;
 			tpWebUntis.Text = "WebUntis";
 			tpWebUntis.UseVisualStyleBackColor = true;
@@ -864,7 +877,7 @@ namespace BerichtManager.Forms
 			tpIHK.Controls.Add(gbIHKFailSaves);
 			tpIHK.Location = new Point(4, 24);
 			tpIHK.Name = "tpIHK";
-			tpIHK.Size = new Size(776, 370);
+			tpIHK.Size = new Size(776, 365);
 			tpIHK.TabIndex = 3;
 			tpIHK.Text = "IHK";
 			tpIHK.UseVisualStyleBackColor = true;
@@ -917,7 +930,7 @@ namespace BerichtManager.Forms
 			paButtons.Controls.Add(btClose);
 			paButtons.Controls.Add(btSave);
 			paButtons.Dock = DockStyle.Bottom;
-			paButtons.Location = new Point(0, 368);
+			paButtons.Location = new Point(0, 393);
 			paButtons.Name = "paButtons";
 			paButtons.Size = new Size(784, 33);
 			paButtons.TabIndex = 0;
@@ -928,18 +941,18 @@ namespace BerichtManager.Forms
 			paContent.Dock = DockStyle.Fill;
 			paContent.Location = new Point(0, 0);
 			paContent.Name = "paContent";
-			paContent.Size = new Size(784, 368);
+			paContent.Size = new Size(784, 393);
 			paContent.TabIndex = 1;
 			// 
 			// OptionMenu
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(784, 401);
+			ClientSize = new Size(784, 426);
 			Controls.Add(paContent);
 			Controls.Add(paButtons);
 			Margin = new Padding(4, 3, 4, 3);
-			MinimumSize = new Size(550, 440);
+			MinimumSize = new Size(550, 465);
 			Name = "OptionMenu";
 			Text = "OptionMenu";
 			FormClosing += OptionMenu_FormClosing;
@@ -1048,5 +1061,6 @@ namespace BerichtManager.Forms
 		private OwnControls.ColoredGroupBox gbIHKFailSaves;
 		private OwnControls.ColoredGroupBox gbIHKMiscellanious;
 		private Panel paContent;
+		private CheckBox cbUseIHK;
 	}
 }
