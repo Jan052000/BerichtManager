@@ -1,4 +1,4 @@
-﻿using BerichtManager.Config;
+using BerichtManager.Config;
 using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls;
 using BerichtManager.ThemeManagement;
@@ -61,6 +61,8 @@ namespace BerichtManager.Forms
 		/// </summary>
 		public event GenericOptionChangeDelegate<bool>? ShowReportToolTipChanged;
 
+		private bool Initializing = true;
+
 		public OptionMenu()
 		{
 			InitializeComponent();
@@ -72,6 +74,8 @@ namespace BerichtManager.Forms
 			//Set values of fields to values in config
 			cbUseCustomPrefix.Checked = ConfigHandler.UseCustomPrefix;
 			cbShouldUseUntis.Checked = ConfigHandler.UseWebUntis;
+			if (!ConfigHandler.UseWebUntis)
+				tcOptions.HidePage(tpWebUntis);
 			cbEndOfWeek.Checked = ConfigHandler.EndWeekOnFriday;
 			tbCustomPrefix.Text = ConfigHandler.CustomPrefix;
 			tbServer.Text = ConfigHandler.WebUntisServer;
@@ -108,6 +112,7 @@ namespace BerichtManager.Forms
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
+			Initializing = false;
 		}
 
 		/// <summary>
@@ -358,16 +363,25 @@ namespace BerichtManager.Forms
 			return null;
 		}
 
+		/// <summary>
+		/// Switches visibility of <paramref name="tabPage"/> to <paramref name="show"/>
+		/// </summary>
+		/// <param name="show">Wether or not <paramref name="tabPage"/> should be visible</param>
+		/// <param name="tabPage"><see cref="TabPage"/> to swap visibility of</param>
+		private void SwitchTabPageVisibility(bool show, TabPage tabPage)
+		{
+			if (Initializing)
+				return;
+			if (show)
+				tcOptions.ShowPage(tabPage);
+			else
+				tcOptions.HidePage(tabPage);
+		}
+
 		private void cbShouldUseUntis_CheckedChanged(object sender, EventArgs e)
 		{
+			SwitchTabPageVisibility(((CheckBox)sender).Checked, tpWebUntis);
 			MarkAsDirty(sender, e);
-			tbSchool.Enabled = cbShouldUseUntis.Checked;
-			tbServer.Enabled = cbShouldUseUntis.Checked;
-			ITheme? theme = ThemeManager.Instance.GetTheme(ThemeName);
-			if (theme == null)
-				return;
-			ThemeSetter.SetThemes(tbSchool);
-			ThemeSetter.SetThemes(tbServer);
 		}
 
 		private void btLogin_Click(object sender, EventArgs e)
