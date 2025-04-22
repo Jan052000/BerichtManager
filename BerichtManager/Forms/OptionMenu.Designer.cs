@@ -167,7 +167,7 @@ namespace BerichtManager.Forms
 			// 
 			// btIHKLogin
 			// 
-			btIHKLogin.Location = new Point(110, 101);
+			btIHKLogin.Location = new Point(118, 101);
 			btIHKLogin.Margin = new Padding(4, 3, 4, 3);
 			btIHKLogin.Name = "btIHKLogin";
 			btIHKLogin.Size = new Size(140, 24);
@@ -416,7 +416,7 @@ namespace BerichtManager.Forms
 			// cbIHKAutoGetComment
 			// 
 			cbIHKAutoGetComment.AutoSize = true;
-			cbIHKAutoGetComment.Location = new Point(110, 76);
+			cbIHKAutoGetComment.Location = new Point(118, 76);
 			cbIHKAutoGetComment.Margin = new Padding(4, 3, 4, 3);
 			cbIHKAutoGetComment.Name = "cbIHKAutoGetComment";
 			cbIHKAutoGetComment.Size = new Size(217, 19);
@@ -428,7 +428,7 @@ namespace BerichtManager.Forms
 			// laIHKBaseUrl
 			// 
 			laIHKBaseUrl.AutoSize = true;
-			laIHKBaseUrl.Location = new Point(55, 26);
+			laIHKBaseUrl.Location = new Point(66, 25);
 			laIHKBaseUrl.Margin = new Padding(4, 0, 4, 0);
 			laIHKBaseUrl.Name = "laIHKBaseUrl";
 			laIHKBaseUrl.Size = new Size(44, 15);
@@ -438,17 +438,17 @@ namespace BerichtManager.Forms
 			// tbIHKBaseUrl
 			// 
 			tbIHKBaseUrl.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			tbIHKBaseUrl.Location = new Point(110, 22);
+			tbIHKBaseUrl.Location = new Point(118, 22);
 			tbIHKBaseUrl.Margin = new Padding(4, 3, 4, 3);
 			tbIHKBaseUrl.Name = "tbIHKBaseUrl";
-			tbIHKBaseUrl.Size = new Size(659, 23);
+			tbIHKBaseUrl.Size = new Size(651, 23);
 			tbIHKBaseUrl.TabIndex = 1;
 			tbIHKBaseUrl.TextChanged += MarkAsDirty;
 			// 
 			// cbAutoSyncStatusesWithIHK
 			// 
 			cbAutoSyncStatusesWithIHK.AutoSize = true;
-			cbAutoSyncStatusesWithIHK.Location = new Point(110, 51);
+			cbAutoSyncStatusesWithIHK.Location = new Point(118, 51);
 			cbAutoSyncStatusesWithIHK.Margin = new Padding(4, 3, 4, 3);
 			cbAutoSyncStatusesWithIHK.Name = "cbAutoSyncStatusesWithIHK";
 			cbAutoSyncStatusesWithIHK.Size = new Size(188, 19);
