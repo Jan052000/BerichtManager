@@ -79,6 +79,7 @@ namespace BerichtManager.Config
 			{"PublishPath", (StringType, "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
 			{"UseWordWrap", (BoolType, false)},
 			{"ShowReportToolTip", (BoolType, false)},
+			{"MaxReportToolTipWidth", (IntType, 200)},
 			{"TabStops", (IntType, 20)},
 			{"NamingPattern", (StringType, "WochenberichtKW~+CW+~")},
 			{"AutoSyncStatusesWithIHK", (BoolType, false)},
@@ -430,6 +431,15 @@ namespace BerichtManager.Config
 		{
 			get => GenericGet<bool>("ShowReportToolTip");
 			set => GenericSet("ShowReportToolTip", value);
+		}
+
+		/// <summary>
+		/// Width a report tool tip can have
+		/// </summary>
+		public int MaxReportToolTipWidth
+		{
+			get => GenericGet<int>("MaxReportToolTipWidth");
+			set => GenericSet("MaxReportToolTipWidth", value);
 		}
 		#endregion
 

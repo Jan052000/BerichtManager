@@ -127,9 +127,9 @@ namespace BerichtManager.UploadChecking
 		/// <param name="wasUpdated">New was updated status</param>
 		public static void UpdateReport(string? path, ReportNode.UploadStatuses? status = null, int? lfdnr = null, bool? wasEdited = null, bool? wasUpdated = null)
 		{
-			bool save = false;
 			if (!GetUploadedReport(path, out UploadedReport? report))
 				return;
+			bool save = false;
 			if (status.HasValue && report.Status != status)
 			{
 				save = true;
@@ -225,6 +225,16 @@ namespace BerichtManager.UploadChecking
 			if (foundReport is not UploadedReport result)
 				return false;
 			report = result;
+			return true;
+		}
+
+		/// <inheritdoc cref="GetUploadedReport(int, out UploadedReport?)"/>
+		public static bool GetUploadedReport(int? lfdnr, [NotNullWhen(true)] out UploadedReport? report)
+		{
+			report = null;
+			if (lfdnr == null || !GetUploadedReport((int)lfdnr, out UploadedReport? foundReport))
+				return false;
+			report = foundReport;
 			return true;
 		}
 
@@ -424,7 +434,82 @@ namespace BerichtManager.UploadChecking
 		/// <inheritdoc cref="CanBeEdited(string)" path="/returns"/>
 		public static bool CanBeEdited(ReportNode.UploadStatuses status)
 		{
-			return status != ReportNode.UploadStatuses.HandedIn && status != ReportNode.UploadStatuses.Accepted; ;
+			return status != ReportNode.UploadStatuses.HandedIn && status != ReportNode.UploadStatuses.Accepted;
+		}
+
+		/// <summary>
+		/// Sets the last cached comment for a report
+		/// </summary>
+		/// <param name="comment">Comment to cache</param>
+		/// <inheritdoc cref="GetUploadedReport(int?, out UploadedReport?)" path="/param"/>
+		public static void SetLastComment(int? lfdnr, string? comment)
+		{
+			if (lfdnr == null || !GetUploadedReport(lfdnr, out UploadedReport? toEdit))
+				return;
+			toEdit.LastComment = comment;
+			Instance.Save();
+		}
+
+		/// <summary>
+		/// <inheritdoc cref="SetLastComment(int?, string?)" path="/summary"/>
+		/// </summary>
+		/// <inheritdoc cref="GetUploadedReport(DateTime, out UploadedReport?)" path="/param"/>
+		/// <inheritdoc cref="SetLastComment(int?, string?)" path="/param"/>
+		public static void SetLastComment(DateTime startDate, string? comment)
+		{
+			if (!GetUploadedReport(startDate, out UploadedReport? toEdit))
+				return;
+			toEdit.LastComment = comment;
+			Instance.Save();
+		}
+
+		/// <summary>
+		/// <inheritdoc cref="SetLastComment(int?, string?)" path="/summary"/>
+		/// </summary>
+		/// <inheritdoc cref="GetUploadedReport(string?, out UploadedReport?)" path="/param"/>
+		/// <inheritdoc cref="SetLastComment(int?, string?)" path="/param"/>
+		public static void SetLastComment(string? path, string? comment)
+		{
+			if (!GetUploadedReport(path, out UploadedReport? toEdit))
+				return;
+			toEdit.LastComment = comment;
+			Instance.Save();
+		}
+
+		/// <summary>
+		/// Gets the last cached comment if set
+		/// </summary>
+		/// <inheritdoc cref="GetUploadedReport(int?, out UploadedReport?)" path="/param"/>
+		/// <returns>Comment if cached or <see langword="null"/> otherwise</returns>
+		public static string? GetLastComment(int? lfdnr)
+		{
+			if (lfdnr == null || !GetUploadedReport(lfdnr, out UploadedReport? report))
+				return null;
+			return report.LastComment;
+		}
+
+		/// <summary>
+		/// <inheritdoc cref="GetLastComment(int?)" path="/summary"/>
+		/// </summary>
+		/// <inheritdoc cref="GetUploadedReport(DateTime, out UploadedReport?)" path="/param"/>
+		/// <returns><inheritdoc cref="GetLastComment(int?)" path="/returns"/></returns>
+		public static string? GetLastComment(DateTime startDate)
+		{
+			if (!GetUploadedReport(startDate, out UploadedReport? report))
+				return null;
+			return report.LastComment;
+		}
+
+		/// <summary>
+		/// <inheritdoc cref="GetLastComment(int?)" path="/summary"/>
+		/// </summary>
+		/// <inheritdoc cref="GetUploadedReport(string?, out UploadedReport?)" path="/param"/>
+		/// <returns><inheritdoc cref="GetLastComment(int?)" path="/returns"/></returns>
+		public static string? GetLastComment(string? path)
+		{
+			if (!GetUploadedReport(path, out UploadedReport? report))
+				return null;
+			return report.LastComment;
 		}
 
 		/// <summary>

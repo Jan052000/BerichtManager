@@ -98,6 +98,8 @@ namespace BerichtManager.Forms
 			gbIHKFailSaves = new OwnControls.ColoredGroupBox();
 			paButtons = new Panel();
 			paContent = new Panel();
+			nudMaxReportToolTipWidth = new NumericUpDown();
+			laMaxReportToolTipWidth = new Label();
 			((System.ComponentModel.ISupportInitialize)nudUploadDelay).BeginInit();
 			((System.ComponentModel.ISupportInitialize)nudTabStops).BeginInit();
 			((System.ComponentModel.ISupportInitialize)nudNumber).BeginInit();
@@ -120,6 +122,7 @@ namespace BerichtManager.Forms
 			gbIHKFailSaves.SuspendLayout();
 			paButtons.SuspendLayout();
 			paContent.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)nudMaxReportToolTipWidth).BeginInit();
 			SuspendLayout();
 			// 
 			// toolTip1
@@ -224,7 +227,7 @@ namespace BerichtManager.Forms
 			// btCreateTheme
 			// 
 			btCreateTheme.Anchor = AnchorStyles.Right;
-			btCreateTheme.Location = new Point(670, 80);
+			btCreateTheme.Location = new Point(670, 94);
 			btCreateTheme.Margin = new Padding(4, 3, 4, 3);
 			btCreateTheme.Name = "btCreateTheme";
 			btCreateTheme.Size = new Size(93, 24);
@@ -249,7 +252,7 @@ namespace BerichtManager.Forms
 			// btEditTheme
 			// 
 			btEditTheme.Anchor = AnchorStyles.Right;
-			btEditTheme.Location = new Point(574, 80);
+			btEditTheme.Location = new Point(574, 94);
 			btEditTheme.Margin = new Padding(4, 3, 4, 3);
 			btEditTheme.Name = "btEditTheme";
 			btEditTheme.Size = new Size(88, 24);
@@ -721,7 +724,7 @@ namespace BerichtManager.Forms
 			tcOptions.Location = new Point(0, 0);
 			tcOptions.Name = "tcOptions";
 			tcOptions.SelectedIndex = 0;
-			tcOptions.Size = new Size(784, 393);
+			tcOptions.Size = new Size(784, 421);
 			tcOptions.TabIndex = 0;
 			// 
 			// tpGeneral
@@ -733,7 +736,7 @@ namespace BerichtManager.Forms
 			tpGeneral.Location = new Point(4, 24);
 			tpGeneral.Name = "tpGeneral";
 			tpGeneral.Padding = new Padding(3);
-			tpGeneral.Size = new Size(776, 365);
+			tpGeneral.Size = new Size(776, 393);
 			tpGeneral.TabIndex = 0;
 			tpGeneral.Text = "General";
 			tpGeneral.UseVisualStyleBackColor = true;
@@ -744,7 +747,7 @@ namespace BerichtManager.Forms
 			cbGeneralOptional.Controls.Add(cbUseIHK);
 			cbGeneralOptional.Controls.Add(cbShouldUseUntis);
 			cbGeneralOptional.Dock = DockStyle.Top;
-			cbGeneralOptional.Location = new Point(3, 290);
+			cbGeneralOptional.Location = new Point(3, 319);
 			cbGeneralOptional.Name = "cbGeneralOptional";
 			cbGeneralOptional.Size = new Size(770, 72);
 			cbGeneralOptional.TabIndex = 3;
@@ -768,7 +771,7 @@ namespace BerichtManager.Forms
 			gbGeneralEdit.BorderColor = Color.FromArgb(220, 220, 220);
 			gbGeneralEdit.Controls.Add(cbLegacyEdit);
 			gbGeneralEdit.Dock = DockStyle.Top;
-			gbGeneralEdit.Location = new Point(3, 243);
+			gbGeneralEdit.Location = new Point(3, 272);
 			gbGeneralEdit.Margin = new Padding(4, 3, 4, 3);
 			gbGeneralEdit.Name = "gbGeneralEdit";
 			gbGeneralEdit.Padding = new Padding(4, 3, 4, 3);
@@ -785,7 +788,7 @@ namespace BerichtManager.Forms
 			gbGeneralMisc.Controls.Add(tbFolder);
 			gbGeneralMisc.Controls.Add(tbUpdate);
 			gbGeneralMisc.Dock = DockStyle.Top;
-			gbGeneralMisc.Location = new Point(3, 163);
+			gbGeneralMisc.Location = new Point(3, 192);
 			gbGeneralMisc.Name = "gbGeneralMisc";
 			gbGeneralMisc.Size = new Size(770, 80);
 			gbGeneralMisc.TabIndex = 1;
@@ -795,6 +798,8 @@ namespace BerichtManager.Forms
 			// gbGeneralAppearance
 			// 
 			gbGeneralAppearance.BorderColor = Color.FromArgb(220, 220, 220);
+			gbGeneralAppearance.Controls.Add(laMaxReportToolTipWidth);
+			gbGeneralAppearance.Controls.Add(nudMaxReportToolTipWidth);
 			gbGeneralAppearance.Controls.Add(cbShowReportToolTip);
 			gbGeneralAppearance.Controls.Add(nudTabStops);
 			gbGeneralAppearance.Controls.Add(cbUseWordWrap);
@@ -808,7 +813,7 @@ namespace BerichtManager.Forms
 			gbGeneralAppearance.Dock = DockStyle.Top;
 			gbGeneralAppearance.Location = new Point(3, 3);
 			gbGeneralAppearance.Name = "gbGeneralAppearance";
-			gbGeneralAppearance.Size = new Size(770, 160);
+			gbGeneralAppearance.Size = new Size(770, 189);
 			gbGeneralAppearance.TabIndex = 0;
 			gbGeneralAppearance.TabStop = false;
 			gbGeneralAppearance.Text = "Appearance";
@@ -930,7 +935,7 @@ namespace BerichtManager.Forms
 			paButtons.Controls.Add(btClose);
 			paButtons.Controls.Add(btSave);
 			paButtons.Dock = DockStyle.Bottom;
-			paButtons.Location = new Point(0, 393);
+			paButtons.Location = new Point(0, 421);
 			paButtons.Name = "paButtons";
 			paButtons.Size = new Size(784, 33);
 			paButtons.TabIndex = 0;
@@ -941,14 +946,32 @@ namespace BerichtManager.Forms
 			paContent.Dock = DockStyle.Fill;
 			paContent.Location = new Point(0, 0);
 			paContent.Name = "paContent";
-			paContent.Size = new Size(784, 393);
+			paContent.Size = new Size(784, 421);
 			paContent.TabIndex = 1;
+			// 
+			// nudMaxReportToolTipWidth
+			// 
+			nudMaxReportToolTipWidth.Location = new Point(91, 160);
+			nudMaxReportToolTipWidth.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+			nudMaxReportToolTipWidth.Name = "nudMaxReportToolTipWidth";
+			nudMaxReportToolTipWidth.Size = new Size(178, 23);
+			nudMaxReportToolTipWidth.TabIndex = 11;
+			nudMaxReportToolTipWidth.ValueChanged += MarkAsDirty;
+			// 
+			// laMaxReportToolTipWidth
+			// 
+			laMaxReportToolTipWidth.AutoSize = true;
+			laMaxReportToolTipWidth.Location = new Point(18, 165);
+			laMaxReportToolTipWidth.Name = "laMaxReportToolTipWidth";
+			laMaxReportToolTipWidth.Size = new Size(67, 15);
+			laMaxReportToolTipWidth.TabIndex = 12;
+			laMaxReportToolTipWidth.Text = "Max length";
 			// 
 			// OptionMenu
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(784, 426);
+			ClientSize = new Size(784, 454);
 			Controls.Add(paContent);
 			Controls.Add(paButtons);
 			Margin = new Padding(4, 3, 4, 3);
@@ -989,6 +1012,7 @@ namespace BerichtManager.Forms
 			gbIHKFailSaves.PerformLayout();
 			paButtons.ResumeLayout(false);
 			paContent.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)nudMaxReportToolTipWidth).EndInit();
 			ResumeLayout(false);
 		}
 
@@ -1062,5 +1086,7 @@ namespace BerichtManager.Forms
 		private OwnControls.ColoredGroupBox gbIHKMiscellanious;
 		private Panel paContent;
 		private CheckBox cbUseIHK;
+		private Label laMaxReportToolTipWidth;
+		private NumericUpDown nudMaxReportToolTipWidth;
 	}
 }

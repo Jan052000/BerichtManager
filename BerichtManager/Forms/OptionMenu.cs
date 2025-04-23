@@ -102,6 +102,7 @@ namespace BerichtManager.Forms
 			tbNamingPattern.Text = ConfigHandler.NamingPattern;
 			cbUseWordWrap.Checked = ConfigHandler.UseWordWrap;
 			cbShowReportToolTip.Checked = ConfigHandler.ShowReportToolTip;
+			nudMaxReportToolTipWidth.Value = ConfigHandler.MaxReportToolTipWidth;
 
 			//IHK
 			cbUseIHK.Checked = ConfigHandler.UseIHK;
@@ -289,6 +290,7 @@ namespace BerichtManager.Forms
 				ConfigHandler.ShowReportToolTip = cbShowReportToolTip.Checked;
 				showReportToolTipChanged = true;
 			}
+			ConfigHandler.MaxReportToolTipWidth = (int)nudMaxReportToolTipWidth.Value;
 			//IHK
 			useIHKChanged = ConfigHandler.UseIHK != cbUseIHK.Checked;
 			ConfigHandler.UseIHK = cbUseIHK.Checked;

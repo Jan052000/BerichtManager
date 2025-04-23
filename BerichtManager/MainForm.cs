@@ -1016,7 +1016,7 @@ namespace BerichtManager
 					{
 						try
 						{
-							return await IHKClient.GetCommentFromReport(report.LfdNR);
+							return await GetCommentResult(report.LfdNR);
 						}
 						catch (Exception ex)
 						{
@@ -1596,7 +1596,7 @@ namespace BerichtManager
 						return;
 					}
 					StartWaitCursor();
-					HandleCommentResult(await IHKClient.GetCommentFromReport(lfdnr));
+					HandleCommentResult(await GetCommentResult(lfdnr));
 					EndWaitCursor();
 					break;
 			}
@@ -2200,7 +2200,12 @@ namespace BerichtManager
 					ThemedMessageBox.Show(text: "Unable to fetch statuses from IHK.", title: "Status update failed");
 					return false;
 				}
-				reportList.ForEach(report => result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status, lfdnr: report.LfdNR));
+
+				foreach (UploadedReport report in reportList)
+				{
+					result |= UploadedReports.UpdateReportStatus(report.StartDate, report.Status, lfdnr: report.LfdNR);
+				}
+
 				if (result)
 				{
 					UpdateTree();
@@ -2324,6 +2329,8 @@ namespace BerichtManager
 			}
 
 			UploadedReports.UpdateReport(FullSelectedPath, status: ReportNode.UploadStatuses.HandedIn, wasEdited: false, wasUpdated: false);
+			//When report is handed in, a new comment should be generated should it be rejected again
+			UploadedReports.SetLastComment(FullSelectedPath, null);
 			UpdateTree();
 			EndWaitCursor();
 			ThemedMessageBox.Show(text: "Hand in successful", title: "Report handed in");
@@ -2510,6 +2517,8 @@ namespace BerichtManager
 					handedIn++;
 					progressForm.Status = "\t- Updating status";
 					UploadedReports.UpdateReport(nodePath, status: ReportNode.UploadStatuses.HandedIn, wasEdited: false, wasUpdated: false);
+					//When report is handed in, a new comment should be generated should it be rejected again
+					UploadedReports.SetLastComment(nodePath, null);
 
 					if (shouldStop)
 					{
@@ -3017,9 +3026,22 @@ namespace BerichtManager
 			}
 
 			StartWaitCursor();
-			CommentResult result = await IHKClient.GetCommentFromReport(report.LfdNR);
+			CommentResult result = await GetCommentResult(report.LfdNR);
 			HandleCommentResult(result);
 			EndWaitCursor();
+		}
+
+		private async Task<CommentResult> GetCommentResult(int? lfdnr)
+		{
+			if (UploadedReports.GetLastComment(lfdnr) is string comment)
+				return new CommentResult(CommentResult.ResultStatus.Success, comment: comment);
+			CommentResult result = await IHKClient.GetCommentFromReport(lfdnr);
+			if (result.Comment is string comment1)
+			{
+				UploadedReports.SetLastComment(lfdnr, comment1);
+				UpdateTree();
+			}
+			return result;
 		}
 
 		private void HandleCommentResult(CommentResult result)

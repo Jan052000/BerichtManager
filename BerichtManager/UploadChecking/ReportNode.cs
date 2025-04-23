@@ -1,5 +1,7 @@
-﻿using BerichtManager.HelperClasses;
+﻿using BerichtManager.Config;
+using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls.OwnTreeView;
+using System.Text;
 
 namespace BerichtManager.UploadChecking
 {
@@ -33,6 +35,10 @@ namespace BerichtManager.UploadChecking
 		/// Start date of report
 		/// </summary>
 		public DateTime? StartDate { get; set; } = null;
+		/// <summary>
+		/// Last cached comment
+		/// </summary>
+		public string? LastComment { get; set; }
 
 		/// <summary>
 		/// Statuses of report on IHK servers
@@ -78,6 +84,7 @@ namespace BerichtManager.UploadChecking
 			_this.WasUpdated = WasUpdated;
 			_this.FileLastWriteTime = FileLastWriteTime;
 			_this.StartDate = StartDate;
+			_this.LastComment = LastComment;
 			return _this;
 		}
 
@@ -92,6 +99,7 @@ namespace BerichtManager.UploadChecking
 			LfdNr = report.LfdNR;
 			WasUpdated = report.WasUpdated;
 			StartDate = report.StartDate;
+			LastComment = report.LastComment;
 		}
 
 		/// <summary>
@@ -100,15 +108,64 @@ namespace BerichtManager.UploadChecking
 		public void SetToolTip()
 		{
 			string ttip = $"Status: {UploadStatus}";
-			if (WasEditedLocally)
-				ttip += "\nHas local changes";
 			if (StartDate is DateTime dtStart)
 				ttip += $"\nStart date: {dtStart.ToString(DateTimeUtils.DATEFORMAT)}";
 			if (LfdNr.HasValue)
 				ttip += $"\nLfdnr: {LfdNr}";
 			if (FileLastWriteTime is DateTime dt)
 				ttip += $"\nLast write: {dt.ToString(DateTimeUtils.DATEFORMAT)}";
+			if (WasEditedLocally)
+				ttip += "\nHas local changes";
+			if (WasUpdated)
+				ttip += "\nChanges were uploaded to IHK";
+			if (!string.IsNullOrWhiteSpace(LastComment))
+				ttip += $"\nComment:\n{SplitToolTip(LastComment, ConfigHandler.Instance.MaxReportToolTipWidth)}";
 			ToolTipText = ttip;
+		}
+
+		/// <summary>
+		/// Splits the provided <paramref name="text"/> into lines with width <paramref name="maxLineWidth"/>
+		/// </summary>
+		/// <param name="text">Text to split</param>
+		/// <param name="maxLineWidth">Width of individual lines</param>
+		/// <returns>Formatted tool tip</returns>
+		public string SplitToolTip(string text, int maxLineWidth)
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+
+			Font font = TreeView?.Font ?? new Font(FontFamily.GenericMonospace, 12f);
+			int spaceWidth = TextRenderer.MeasureText(" ", font).Width;
+
+			List<string> currentLine = new List<string>();
+			int width = 0;
+			foreach (string snippet in text.Split(' '))
+			{
+				Size snippetDims = TextRenderer.MeasureText(snippet, font);
+				if (snippetDims.Width >= maxLineWidth)
+				{
+					stringBuilder.AppendLine(string.Join(' ', currentLine));
+					stringBuilder.AppendLine(snippet);
+					width = 0;
+					currentLine.Clear();
+				}
+				else if (width + snippetDims.Width >= maxLineWidth)
+				{
+					stringBuilder.AppendLine(string.Join(' ', currentLine));
+					width = 0;
+					currentLine.Clear();
+					currentLine.Add(snippet);
+					width = snippetDims.Width + spaceWidth;
+				}
+				else
+				{
+					currentLine.Add(snippet);
+					width += snippetDims.Width + spaceWidth;
+				}
+			}
+			if (currentLine.Count > 0)
+				stringBuilder.AppendLine(string.Join(' ', currentLine));
+
+			return stringBuilder.ToString();
 		}
 	}
 }
