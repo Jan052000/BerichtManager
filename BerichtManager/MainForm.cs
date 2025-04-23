@@ -1626,7 +1626,7 @@ namespace BerichtManager
 		private void miRevealInExplorer_Click(object sender, EventArgs e)
 		{
 			if (Directory.Exists(ActivePath))
-				Process.Start(ActivePath);
+				Process.Start("explorer.exe", ActivePath);
 			else
 				ThemedMessageBox.Show(text: "The working directory has been deleted from an external source", title: "You may have a problem");
 		}
