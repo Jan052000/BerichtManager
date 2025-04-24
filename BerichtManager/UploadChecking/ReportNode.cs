@@ -1,6 +1,7 @@
 ﻿using BerichtManager.Config;
 using BerichtManager.HelperClasses;
 using BerichtManager.OwnControls.OwnTreeView;
+using BerichtManager.ReportQuickInfo;
 using System.Text;
 
 namespace BerichtManager.UploadChecking
@@ -10,15 +11,15 @@ namespace BerichtManager.UploadChecking
 		/// <summary>
 		/// Status of report on IHK servers
 		/// </summary>
-		public UploadStatuses UploadStatus { get; set; } = UploadStatuses.None;
+		public UploadStatuses UploadStatus { get; private set; } = UploadStatuses.None;
 		/// <summary>
 		/// lfdnr of report on IHK servers
 		/// </summary>
-		public int? LfdNr { get; set; }
+		public int? LfdNr { get; private set; }
 		/// <summary>
 		/// Marks report as edited only locally
 		/// </summary>
-		public bool WasEditedLocally { get; set; } = false;
+		public bool WasEditedLocally { get; private set; } = false;
 		/// <summary>
 		/// Marks the report behind this node as opened
 		/// </summary>
@@ -26,19 +27,28 @@ namespace BerichtManager.UploadChecking
 		/// <summary>
 		/// Marks the report as updated
 		/// </summary>
-		public bool WasUpdated { get; set; } = false;
+		public bool WasUpdated { get; private set; } = false;
 		/// <summary>
 		/// Last edit time of file represented by node
 		/// </summary>
 		public DateTime? FileLastWriteTime { get; private set; } = null;
 		/// <summary>
-		/// Start date of report
+		/// Start date of report from IHK
 		/// </summary>
-		public DateTime? StartDate { get; set; } = null;
+		public DateTime? StartDateIHK { get; private set; } = null;
 		/// <summary>
 		/// Last cached comment
 		/// </summary>
-		public string? LastComment { get; set; }
+		public string? LastComment { get; private set; }
+
+		/// <summary>
+		/// Report number of report if not uploaded
+		/// </summary>
+		public int? ReportNumber { get; private set; }
+		/// <summary>
+		/// Start date of report from file
+		/// </summary>
+		public string? StartDateReport { get; private set; } = null;
 
 		/// <summary>
 		/// Statuses of report on IHK servers
@@ -83,8 +93,10 @@ namespace BerichtManager.UploadChecking
 			_this.LfdNr = LfdNr;
 			_this.WasUpdated = WasUpdated;
 			_this.FileLastWriteTime = FileLastWriteTime;
-			_this.StartDate = StartDate;
+			_this.StartDateIHK = StartDateIHK;
 			_this.LastComment = LastComment;
+			_this.StartDateReport = StartDateReport;
+			_this.ReportNumber = ReportNumber;
 			return _this;
 		}
 
@@ -98,8 +110,18 @@ namespace BerichtManager.UploadChecking
 			UploadStatus = report.Status;
 			LfdNr = report.LfdNR;
 			WasUpdated = report.WasUpdated;
-			StartDate = report.StartDate;
+			StartDateIHK = report.StartDate;
 			LastComment = report.LastComment;
+		}
+
+		/// <summary>
+		/// Copies the properties from <paramref name="info"/> to <see langword="this"/>
+		/// </summary>
+		/// <param name="info"><see cref="QuickInfo"/> to copy values from</param>
+		public void SetReportProperties(QuickInfo info)
+		{
+			StartDateReport = info.StartDate;
+			ReportNumber = info.ReportNumber;
 		}
 
 		/// <summary>
@@ -108,7 +130,13 @@ namespace BerichtManager.UploadChecking
 		public void SetToolTip()
 		{
 			string ttip = $"Status: {UploadStatus}";
-			if (StartDate is DateTime dtStart)
+			if (StartDateReport is string dtStartReport)
+				ttip += $"\nStart date report: {dtStartReport}";
+			if (ReportNumber is int number)
+				ttip += $"\nReport number: {number}";
+			if (UploadStatus != UploadStatuses.None)
+				ttip += "\nIHK:";
+			if (StartDateIHK is DateTime dtStart)
 				ttip += $"\nStart date: {dtStart.ToString(DateTimeUtils.DATEFORMAT)}";
 			if (LfdNr.HasValue)
 				ttip += $"\nLfdnr: {LfdNr}";

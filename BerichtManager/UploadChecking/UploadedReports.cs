@@ -1,4 +1,5 @@
 using BerichtManager.Config;
+using BerichtManager.HelperClasses;
 using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 
@@ -41,28 +42,6 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
-		/// Extracts the relative part of a report path anchored to report path of <see cref="ConfigHandler.ReportPath"/>
-		/// </summary>
-		/// <param name="path">Path to extrace relative path from</param>
-		/// <returns>Relative path including base directory or <see langword="null"/> if <paramref name="path"/> is not in <see cref="ConfigHandler.ReportPath"/></returns>
-		private static string? ExtractRelativePath(string? path)
-		{
-			if (string.IsNullOrEmpty(path))
-				return null;
-			if (path.StartsWith("/") || path.StartsWith("\\"))
-				path = path.Substring(1);
-			if (Path.IsPathRooted(path) && !path.StartsWith(ConfigHandler.Instance.ReportPath))
-				return null;
-			string toSplit = path.Replace('/', '\\');
-			List<string> splitPath = toSplit.Split('\\').ToList();
-			string reportRoot = ConfigHandler.Instance.ReportPath.Replace('/', '\\').Split('\\').Last();
-			if (!splitPath.Contains(reportRoot))
-				return null;
-			splitPath.RemoveRange(0, splitPath.IndexOf(reportRoot));
-			return String.Join('\\'.ToString(), splitPath);
-		}
-
-		/// <summary>
 		/// Adds <paramref name="report"/> to the <see cref="UploadedReports"/>
 		/// </summary>
 		/// <param name="path">Path of report</param>
@@ -71,7 +50,7 @@ namespace BerichtManager.UploadChecking
 		/// <inheritdoc cref="Dictionary{TKey, TValue}.Add(TKey, TValue)" path="/exception"/>
 		public static bool AddReport(string? path, UploadedReport report)
 		{
-			path = ExtractRelativePath(path);
+			path = PathHelper.ExtractRelativeReportPath(path);
 			if (path == null)
 				return false;
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport>? paths))
@@ -181,7 +160,7 @@ namespace BerichtManager.UploadChecking
 		public static bool GetUploadedReport(string? path, [NotNullWhen(true)] out UploadedReport? report)
 		{
 			report = null;
-			path = ExtractRelativePath(path);
+			path = PathHelper.ExtractRelativeReportPath(path);
 			if (path == null)
 				return false;
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport>? paths))
@@ -246,8 +225,8 @@ namespace BerichtManager.UploadChecking
 		/// <param name="newPath">New path relative to <see cref="ConfigHandler.Instance"/>s report path</param>
 		public static bool MoveReport(string? oldPath, string? newPath)
 		{
-			oldPath = ExtractRelativePath(oldPath);
-			newPath = ExtractRelativePath(newPath);
+			oldPath = PathHelper.ExtractRelativeReportPath(oldPath);
+			newPath = PathHelper.ExtractRelativeReportPath(newPath);
 			if (oldPath == null || newPath == null)
 				return false;
 			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out Dictionary<string, UploadedReport>? reports))
@@ -513,7 +492,7 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
-		/// Loads the uploaded repor dictionary from file
+		/// Loads the uploaded report dictionary from file
 		/// </summary>
 		private void Load()
 		{

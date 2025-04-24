@@ -94,6 +94,7 @@ namespace BerichtManager
 			splitterTreeBoxes = new Splitter();
 			paFileTree = new Panel();
 			tvReports = new OwnControls.OwnTreeView.CustomTreeView();
+			miUpdateQuickInfos = new ToolStripMenuItem();
 			toRightClickMenu.SuspendLayout();
 			menuStrip1.SuspendLayout();
 			paMainView.SuspendLayout();
@@ -110,20 +111,20 @@ namespace BerichtManager
 			// 
 			toRightClickMenu.Items.AddRange(new ToolStripItem[] { miDelete, miEdit, miQuickEditOptions, miPrint, miIHKOptions, miRefresh });
 			toRightClickMenu.Name = "contextMenuStrip1";
-			toRightClickMenu.Size = new Size(181, 158);
+			toRightClickMenu.Size = new Size(147, 136);
 			toRightClickMenu.Opening += toRightClickMenu_Opening;
 			// 
 			// miDelete
 			// 
 			miDelete.Name = "miDelete";
-			miDelete.Size = new Size(180, 22);
+			miDelete.Size = new Size(146, 22);
 			miDelete.Text = "Delete";
 			miDelete.Click += miDelete_Click;
 			// 
 			// miEdit
 			// 
 			miEdit.Name = "miEdit";
-			miEdit.Size = new Size(180, 22);
+			miEdit.Size = new Size(146, 22);
 			miEdit.Text = "Edit";
 			miEdit.Click += miEdit_Click;
 			// 
@@ -131,7 +132,7 @@ namespace BerichtManager
 			// 
 			miQuickEditOptions.DropDownItems.AddRange(new ToolStripItem[] { tiQuickEditWork, miQuickEditSchool, miQuickEditNumber });
 			miQuickEditOptions.Name = "miQuickEditOptions";
-			miQuickEditOptions.Size = new Size(180, 22);
+			miQuickEditOptions.Size = new Size(146, 22);
 			miQuickEditOptions.Text = "Quick actions";
 			// 
 			// tiQuickEditWork
@@ -158,7 +159,7 @@ namespace BerichtManager
 			// miPrint
 			// 
 			miPrint.Name = "miPrint";
-			miPrint.Size = new Size(180, 22);
+			miPrint.Size = new Size(146, 22);
 			miPrint.Text = "Print";
 			miPrint.Click += miPrint_Click;
 			// 
@@ -166,7 +167,7 @@ namespace BerichtManager
 			// 
 			miIHKOptions.DropDownItems.AddRange(new ToolStripItem[] { miRcUpdateStatuses, miUploadAsNext, miUploadAllSelected, miHandInSingle, miRcHandInSelection, miUpdateReport, miRCUpdateSelection, miRcShowComment, miRcCheckFormat, miRcUploadStatistics, miRcDownloadReports });
 			miIHKOptions.Name = "miIHKOptions";
-			miIHKOptions.Size = new Size(180, 22);
+			miIHKOptions.Size = new Size(146, 22);
 			miIHKOptions.Text = "IHK";
 			miIHKOptions.ToolTipText = "All options for interactions with IHK";
 			// 
@@ -260,7 +261,7 @@ namespace BerichtManager
 			// miRefresh
 			// 
 			miRefresh.Name = "miRefresh";
-			miRefresh.Size = new Size(180, 22);
+			miRefresh.Size = new Size(146, 22);
 			miRefresh.Text = "Refresh";
 			miRefresh.Click += MiRefresh_Click;
 			// 
@@ -309,7 +310,7 @@ namespace BerichtManager
 			// 
 			// miFile
 			// 
-			miFile.DropDownItems.AddRange(new ToolStripItem[] { miCreate, miEditLatest, miPrintAll, miCheckDiscrepancy, miIHK, miCloseReport, miRevealInExplorer });
+			miFile.DropDownItems.AddRange(new ToolStripItem[] { miCreate, miEditLatest, miPrintAll, miCheckDiscrepancy, miIHK, miUpdateQuickInfos, miCloseReport, miRevealInExplorer });
 			miFile.Name = "miFile";
 			miFile.Size = new Size(37, 20);
 			miFile.Text = "File";
@@ -564,6 +565,14 @@ namespace BerichtManager
 			tvReports.KeyDown += OnKeyDownDefault;
 			tvReports.KeyUp += tvReports_KeyUp;
 			// 
+			// miUpdateQuickInfos
+			// 
+			miUpdateQuickInfos.Name = "miUpdateQuickInfos";
+			miUpdateQuickInfos.Size = new Size(191, 22);
+			miUpdateQuickInfos.Text = "Update quick infos";
+			miUpdateQuickInfos.ToolTipText = "Updates the quick information gathered when a new report is created.";
+			miUpdateQuickInfos.Click += miUpdateQuickInfos_Click;
+			// 
 			// MainForm
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
@@ -650,6 +659,7 @@ namespace BerichtManager
 		private OwnControls.OwnTreeView.CustomTreeView tvReports;
 		private OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem miUploadStatistics;
 		private OwnControls.CustomToolTipControls.CustomToolTipStripMenuItem miRcUploadStatistics;
+		private ToolStripMenuItem miUpdateQuickInfos;
 	}
 }
 

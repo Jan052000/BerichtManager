@@ -18,6 +18,7 @@ using BerichtManager.WordTemplate;
 using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.Extensions;
 using BerichtManager.OwnControls.CustomToolTipControls;
+using BerichtManager.ReportQuickInfo;
 
 namespace BerichtManager
 {
@@ -320,7 +321,10 @@ namespace BerichtManager
 			{
 				if (UploadedReports.GetUploadedReport(GetFullNodePath(reportNode), out UploadedReport? report))
 					reportNode.SetReportProperties(report);
-				reportNode.SetToolTip();
+				if (QuickInfos.GetQuickInfo(GetFullNodePath(reportNode), out QuickInfo? info))
+					reportNode.SetReportProperties(info);
+				if (ConfigHandler.ShowReportToolTip)
+					reportNode.SetToolTip();
 			}
 			foreach (TreeNode child in node.Nodes)
 				FillReportNodes(child);
@@ -428,7 +432,8 @@ namespace BerichtManager
 				}
 
 				//Enter report nr.
-				FormFieldHandler.SetValueInDoc(Fields.Number, ldoc, (ConfigHandler.ReportNumber - reportDifference).ToString());
+				int reportNr = ConfigHandler.ReportNumber - reportDifference;
+				FormFieldHandler.SetValueInDoc(Fields.Number, ldoc, reportNr.ToString());
 
 				//Enter week start and end
 				DateTime today = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day);
@@ -560,6 +565,7 @@ namespace BerichtManager
 				ConfigHandler.LastCreated = path;
 				ConfigHandler.SaveConfig();
 				miEditLatest.Enabled = true;
+				QuickInfos.AddOrUpdateQuickInfo(path, new QuickInfo(thisWeekStart.ToString(DateTimeUtils.DATEFORMAT), reportNr));
 				ThemedMessageBox.Show(text: "Created Document at: " + path, title: "Document saved", allowMessageHighlight: true);
 				ldocWasSaved = true;
 
@@ -1794,7 +1800,7 @@ namespace BerichtManager
 			foreach (string path in paths)
 			{
 				if (string.IsNullOrWhiteSpace(path))
-					return;
+					continue;
 				if (path == activePath)
 					this.ExecuteWithInvoke(() => EditInTb(path));
 				else
@@ -3325,6 +3331,25 @@ namespace BerichtManager
 				message.AppendLine($"{status.Key}: {status.Value}");
 			}
 			ThemedMessageBox.Show(text: message.ToString(), title: "IHK report status statistics");
+		}
+
+		private void miUpdateQuickInfos_Click(object sender, EventArgs e)
+		{
+			RestartWordIfNeeded();
+			string activePath = Doc?.FullName ?? "";
+			List<string> openReports = CloseAllReports();
+			ReportFinder.FindReports(tvReports.Nodes[0], out List<TreeNode> reports);
+			foreach (var report in reports)
+			{
+				Word.Document doc = WordApp!.Documents.Open(FileName: GetFullPath(report), ReadOnly: true);
+				string? startDate = FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc);
+				int? reportNr = null;
+				if (int.TryParse(FormFieldHandler.GetValueFromDoc<string>(Fields.Number, doc), out int nr))
+					reportNr = nr;
+				QuickInfos.AddOrUpdateQuickInfo(doc.FullName, new QuickInfo(startDate, reportNr));
+				doc.Close(SaveChanges: false);
+			}
+			OpenAllDocuments(openReports, activePath);
 		}
 	}
 }
