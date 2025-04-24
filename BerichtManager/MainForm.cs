@@ -3342,10 +3342,8 @@ namespace BerichtManager
 			foreach (var report in reports)
 			{
 				Word.Document doc = WordApp!.Documents.Open(FileName: GetFullPath(report), ReadOnly: true);
-				string? startDate = FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc);
-				int? reportNr = null;
-				if (int.TryParse(FormFieldHandler.GetValueFromDoc<string>(Fields.Number, doc), out int nr))
-					reportNr = nr;
+				string? startDate = FormFieldHandler.GetValueFromDoc<string?>(Fields.StartDate, doc);
+				int? reportNr = FormFieldHandler.GetValueFromDoc<int?>(Fields.Number, doc);
 				QuickInfos.AddOrUpdateQuickInfo(doc.FullName, new QuickInfo(startDate, reportNr));
 				doc.Close(SaveChanges: false);
 			}

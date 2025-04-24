@@ -1,4 +1,4 @@
-﻿using Word = Microsoft.Office.Interop.Word;
+using Word = Microsoft.Office.Interop.Word;
 using Newtonsoft.Json;
 using System.Globalization;
 using BerichtManager.HelperClasses;
@@ -34,13 +34,19 @@ namespace BerichtManager.WordTemplate
 		/// <summary>
 		/// <see cref="Dictionary{TKey, TValue}"/> to switch an <see cref="object"/> to a respective <see cref="Type"/>
 		/// </summary>
-		private Dictionary<Type, Func<string, object>> TypeSwitchDict { get; } = new Dictionary<Type, Func<string, object>>()
+		private Dictionary<Type, Func<string, object?>> TypeSwitchDict { get; } = new Dictionary<Type, Func<string, object?>>()
 		{
 			{typeof(int), (o) => int.Parse(o)},
+			{typeof(int?), (o) => int.TryParse(o, out var val) ? val : null},
 			{typeof(string), (o) => o},
 			{typeof(DateTime), (o) => DateTime.ParseExact(o, "dd.MM.yyyy", new CultureInfo("de-DE"))},
-			{typeof(bool), (o) => bool.Parse(o)}
+			{typeof(DateTime?), (o) => DateTime.TryParseExact(o, DateTimeUtils.DATEFORMAT, MainForm.Culture, DateTimeStyles.None, out var val) ? val : null},
+			{typeof(bool), (o) => bool.Parse(o)},
+			{typeof(bool?), (o) => bool.TryParse(o, out var val) ? val : null},
+			{typeof(Null), (o) => null}
 		};
+
+		private class Null { }
 
 		#region Singleton
 		private static FormFieldHandler? Singleton { get; set; }
@@ -134,15 +140,25 @@ namespace BerichtManager.WordTemplate
 		/// <param name="doc"><see cref="Word.Document"/> to get value of <paramref name="field"/> from</param>
 		/// <returns>Value of <paramref name="field"/> converted to <typeparamref name="T"/> or <see langword="null"/> if no conversion is possible</returns>
 		/// <exception cref="UnknownFieldTypeException">Thrown if the <see cref="Type"/> of value for <paramref name="field"/> is not in <see cref="TypeSwitchDict"/></exception>
-		public static T? GetValueFromDoc<T>(Fields field, Word.Document doc) where T : class
+		/// <exception cref="NullReferenceException">Thrown if <see langword="null"/> would be assigned to a non nullable <see cref="Type"/></exception>
+		public static T? GetValueFromDoc<T>(Fields field, Word.Document doc)
 		{
 			if (!TryGetFormField(field, out FormField? info))
-				return null;
-			if (!Instance.TypeSwitchDict.TryGetValue(info.FieldType, out Func<string, object>? convert))
-				throw new UnknownFieldTypeException(info.FieldType);
+			{
+				try
+				{
+					return (T?)Instance.TypeSwitchDict[typeof(Null)]("");
+				}
+				catch (NullReferenceException)
+				{
+					throw new NullReferenceException($"Can not set value of type {typeof(T).Name} to null");
+				}
+			}
 			if (typeof(T) == typeof(string))
-				return (T)Instance.TypeSwitchDict[typeof(string)](doc.FormFields[info.Index].Result);
-			return (T)convert(doc.FormFields[info.Index].Result);
+				return (T?)Instance.TypeSwitchDict[typeof(string)](doc.FormFields[info.Index].Result);
+			if (!Instance.TypeSwitchDict.TryGetValue(info.FieldType, out Func<string, object?>? convert))
+				throw new UnknownFieldTypeException(info.FieldType);
+			return (T?)convert(doc.FormFields[info.Index].Result);
 		}
 
 		/// <summary>
