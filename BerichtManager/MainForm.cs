@@ -1403,6 +1403,9 @@ namespace BerichtManager
 		{
 			bool isInLogs = tvReports.SelectedNode?.Parent?.Text == "Logs";
 			bool isNameValid = ReportUtils.IsNameValid(tvReports.SelectedNode?.Text);
+			bool isTempFile = tvReports.SelectedNode?.Text.StartsWith("~$") == true;
+			bool isReportFile = tvReports.SelectedNode?.Text.EndsWith(".docx") == true;
+			bool isTempTemplateFile = tvReports.SelectedNode?.Text.EndsWith(".dotx") == true && isTempFile;
 			bool isUploaded = UploadedReports.GetUploadedReport(tvReports.SelectedNode?.FullPath, out UploadedReport? report);
 			bool uploaded = report?.Status == ReportNode.UploadStatuses.Uploaded;
 			bool rejected = report?.Status == ReportNode.UploadStatuses.Rejected;
@@ -1413,7 +1416,7 @@ namespace BerichtManager
 			//miEdit.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
 			miPrint.Enabled = !isInLogs && isNameValid;
 			//miPrint.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
-			miDelete.Enabled = isInLogs || isNameValid;
+			miDelete.Enabled = isInLogs || isReportFile || isTempTemplateFile || isNameValid;
 			//miDelete.Visible = isInLogs || tvReports.SelectedNode.Text.EndsWith(".docx") || tvReports.SelectedNode.Text.StartsWith("~$");
 			miQuickEditOptions.Enabled = !isInLogs && isNameValid;
 			//miQuickEditOptions.Visible = !isInLogs && tvReports.SelectedNode.Text.EndsWith(".docx") && !tvReports.SelectedNode.Text.StartsWith("~$");
