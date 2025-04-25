@@ -97,8 +97,7 @@ namespace BerichtManager.Forms
 				btStop.Click += (s, e) => Close();
 			}
 			ShouldClose = true;
-			if (btStop.InvokeRequired)
-				btStop.ExecuteWithInvoke(done);
+			btStop.ExecuteWithInvoke(done);
 			DialogResult = DialogResult.OK;
 		}
 
