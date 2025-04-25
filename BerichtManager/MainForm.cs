@@ -126,6 +126,22 @@ namespace BerichtManager
 			}
 		}
 
+		private CustomTreeNode? rootNode;
+		private CustomTreeNode RootNode
+		{
+			get
+			{
+				if (rootNode == null)
+					rootNode = CreateDirectoryNode(Info);
+				return rootNode;
+			}
+			set
+			{
+				if (rootNode != value)
+					rootNode = value;
+			}
+		}
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -249,11 +265,11 @@ namespace BerichtManager
 				string? openedNodePath = GetFullNodePath(OpenedReportNode);
 				List<TreeNode> expanded = new List<TreeNode>();
 				if (tvReports.Nodes.Count > 0)
-					expanded = GetExpandedNodes(tvReports.Nodes[0]);
+					expanded = GetExpandedNodes(RootNode);
 
 				tvReports.Nodes.Clear();
-				CustomTreeNode root = CreateDirectoryNode(Info);
-				tvReports.Nodes.Add(root);
+				RootNode = CreateDirectoryNode(Info);
+				tvReports.Nodes.Add(RootNode);
 
 				expanded.ForEach(node =>
 				{
@@ -261,7 +277,7 @@ namespace BerichtManager
 					GetNodeFromPath(path)?.Expand();
 				});
 
-				FillReportNodes(root);
+				FillReportNodes(RootNode);
 
 				if (openedNodePath is string)
 					OpenedReportNode = GetNodeFromPath(openedNodePath) as ReportNode;
@@ -756,7 +772,7 @@ namespace BerichtManager
 				progressForm.Stop += () => stop = true;
 				progressForm.Show();
 
-				FolderSelect select = new FolderSelect(tvReports.Nodes[0], node =>
+				FolderSelect select = new FolderSelect(RootNode, node =>
 				{
 					bool isReport = (node is ReportNode reportNode);
 					bool emptyNonReportNode = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
@@ -977,8 +993,8 @@ namespace BerichtManager
 			if (path == null)
 				return null;
 			List<string> segments = path.Replace("/", "\\").Split('\\').ToList();
-			segments.RemoveRange(0, segments.IndexOf(tvReports.Nodes[0].Text) + 1);
-			TreeNode result = tvReports.Nodes[0];
+			segments.RemoveRange(0, segments.IndexOf(RootNode.Text) + 1);
+			TreeNode result = RootNode;
 
 			foreach (string segment in segments)
 			{
@@ -991,7 +1007,7 @@ namespace BerichtManager
 					}
 				}
 			}
-			if (path != tvReports.Nodes[0].Text && result == tvReports.Nodes[0])
+			if (path != RootNode.Text && result == RootNode)
 				return null;
 			return result;
 		}
@@ -1739,7 +1755,7 @@ namespace BerichtManager
 		/// <param name="check">Kind of check to execute</param>
 		private void CheckDiscrepancies(ReportChecker.CheckKinds check)
 		{
-			FolderSelect select = new FolderSelect(tvReports.Nodes[0], node => !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0);
+			FolderSelect select = new FolderSelect(RootNode, node => !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0);
 			if (select.ShowDialog() != DialogResult.OK)
 				return;
 			if (select.FilteredNode == null)
@@ -1938,7 +1954,7 @@ namespace BerichtManager
 				int uploaded = 0;
 				progressForm.Stop += () => shouldStop = true;
 
-				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
+				FolderSelect fs = new FolderSelect(RootNode, node =>
 				{
 					bool isReport = node is ReportNode reportNode;
 					bool wasUploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport? report);
@@ -2390,7 +2406,7 @@ namespace BerichtManager
 					return;
 				}
 
-				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
+				FolderSelect fs = new FolderSelect(RootNode, node =>
 				{
 					bool isReport = (node is ReportNode reportNode);
 					bool isUploaded = UploadedReports.GetUploadedReport(GetFullNodePath(node), out UploadedReport? report);
@@ -2699,7 +2715,7 @@ namespace BerichtManager
 			progressForm.Show();
 			progressForm.Status = "Selecting reports";
 
-			FolderSelect select = new FolderSelect(tvReports.Nodes[0], (node) =>
+			FolderSelect select = new FolderSelect(RootNode, (node) =>
 			{
 				bool isReport = node is ReportNode;
 				bool emptyNonReport = !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
@@ -2837,7 +2853,7 @@ namespace BerichtManager
 				progressForm.Stop += HandleStop;
 				bool newLineError = false;
 				List<ReportNode> result = new List<ReportNode>();
-				FolderSelect fs = new FolderSelect(tvReports.Nodes[0], node =>
+				FolderSelect fs = new FolderSelect(RootNode, node =>
 				{
 					return !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
 				});
@@ -3084,7 +3100,7 @@ namespace BerichtManager
 				progressForm.Done();
 			}
 
-			FolderSelect select = new FolderSelect(tvReports.Nodes[0], (node) =>
+			FolderSelect select = new FolderSelect(RootNode, (node) =>
 			{
 				return !ReportUtils.IsNameValid(node.Text) && node.Nodes.Count == 0;
 			}, "Select reports to keep");
@@ -3322,7 +3338,7 @@ namespace BerichtManager
 			}
 
 			var counts = new Dictionary<ReportNode.UploadStatuses, int>();
-			countStatuses(tvReports.Nodes[0], counts);
+			countStatuses(RootNode, counts);
 
 			StringBuilder message = new StringBuilder();
 			message.AppendLine("Values are loaded from disc, IHK status count may vary.");
@@ -3345,7 +3361,7 @@ namespace BerichtManager
 			progress.Status = "Closong opened reports";
 			string activePath = Doc?.FullName ?? "";
 			List<string> openReports = CloseAllReports();
-			ReportFinder.FindReports(tvReports.Nodes[0], out List<TreeNode> reports);
+			ReportFinder.FindReports(RootNode, out List<TreeNode> reports);
 			foreach (var report in reports)
 			{
 				if (stop)
