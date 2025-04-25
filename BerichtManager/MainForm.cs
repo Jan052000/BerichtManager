@@ -3374,7 +3374,8 @@ namespace BerichtManager
 				progress.Status = $"Reading {doc.FullName}: ";
 				string? startDate = FormFieldHandler.GetValueFromDoc<string?>(Fields.StartDate, doc);
 				int? reportNr = FormFieldHandler.GetValueFromDoc<int?>(Fields.Number, doc);
-				progress.Status = $"\t-StartDate: {startDate}\n\t-ReportNumber: {reportNr}";
+				progress.Status = $"\t-StartDate: {startDate}";
+				progress.Status = $"\t-ReportNumber: {reportNr}";
 				QuickInfos.AddOrUpdateQuickInfo(doc.FullName, new QuickInfo(startDate, reportNr));
 				doc.Close(SaveChanges: false);
 			}
