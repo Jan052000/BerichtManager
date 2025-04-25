@@ -3335,19 +3335,37 @@ namespace BerichtManager
 
 		private void miUpdateQuickInfos_Click(object sender, EventArgs e)
 		{
+			bool stop = false;
+			EventProgressForm progress = new EventProgressForm("Fetching report information...");
+			progress.Stop += () => stop = true;
+			progress.Show();
+			progress.Status = "Fetching report information:";
+
 			RestartWordIfNeeded();
+			progress.Status = "Closong opened reports";
 			string activePath = Doc?.FullName ?? "";
 			List<string> openReports = CloseAllReports();
 			ReportFinder.FindReports(tvReports.Nodes[0], out List<TreeNode> reports);
 			foreach (var report in reports)
 			{
+				if (stop)
+				{
+					progress.Status = "Aborting";
+					progress.Done();
+					break;
+				}
 				Word.Document doc = WordApp!.Documents.Open(FileName: GetFullPath(report), ReadOnly: true);
+				progress.Status = $"Reading {doc.FullName}: ";
 				string? startDate = FormFieldHandler.GetValueFromDoc<string?>(Fields.StartDate, doc);
 				int? reportNr = FormFieldHandler.GetValueFromDoc<int?>(Fields.Number, doc);
+				progress.Status = $"\t-StartDate: {startDate}\n\t-ReportNumber: {reportNr}";
 				QuickInfos.AddOrUpdateQuickInfo(doc.FullName, new QuickInfo(startDate, reportNr));
 				doc.Close(SaveChanges: false);
 			}
+			progress.Status = "Opening closed reports";
 			OpenAllDocuments(openReports, activePath);
+			progress.Status = "Finished fetching report information";
+			progress.Done();
 		}
 	}
 }
