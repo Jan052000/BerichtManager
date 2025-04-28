@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace BerichtManager.IHKClient.ReportContents
 {
-	internal class ReportContent
+	public class ReportContent
 	{
 		/// <summary>
 		/// Token of report sent by IHK

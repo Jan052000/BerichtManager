@@ -6,7 +6,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 	/// Copy of <see cref="System.Windows.Forms.HtmlDocument"/>
 	/// </summary>
 	[DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-	internal class HtmlDocument
+	public class HtmlDocument
 	{
 		/// <summary>
 		/// <see cref="HtmlElement"/> representation of <see cref="System.Windows.Forms.HtmlDocument.Body"/>
@@ -23,7 +23,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// <summary>
 		/// List of forms in <see cref="Body"/>
 		/// </summary>
-		public List<HtmlElement> Forms
+		public List<HtmlFormElement> Forms
 		{
 			get => GetForms(Body);
 		}
@@ -73,15 +73,15 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// </summary>
 		/// <param name="root"><see cref="HtmlElement"/> to search for forms</param>
 		/// <returns><see cref="List{T}"/> containing all form tags in <paramref name="root"/></returns>
-		private List<HtmlElement> GetForms(HtmlElement? root)
+		private List<HtmlFormElement> GetForms(HtmlElement? root)
 		{
-			List<HtmlElement> forms = new List<HtmlElement>();
+			List<HtmlFormElement> forms = new List<HtmlFormElement>();
 
 			if (root == null)
 				return forms;
 
-			if (root.Tag.ToLower() == "form")
-				forms.Add(root);
+			if (root is HtmlFormElement form)
+				forms.Add(form);
 			root.Children.ForEach(child => forms.AddRange(GetForms(child)));
 
 			return forms;
