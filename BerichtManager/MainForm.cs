@@ -1458,6 +1458,8 @@ namespace BerichtManager
 		private void ShowReportToolTipChanged(bool status)
 		{
 			tvReports.ShowNodeToolTips = status;
+			if (status)
+				ThemeSetter.SetThemes(tvReports.NodeToolTip);
 		}
 
 		private void UseWordWrapChanged(bool useWordWrap)
