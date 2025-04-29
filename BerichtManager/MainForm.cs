@@ -3382,7 +3382,13 @@ namespace BerichtManager
 				int? reportNr = FormFieldHandler.GetValueFromDoc<int?>(Fields.Number, doc);
 				progress.Status = $"\t-StartDate: {startDate}";
 				progress.Status = $"\t-ReportNumber: {reportNr}";
-				QuickInfos.AddOrUpdateQuickInfo(doc.FullName, new QuickInfo(startDate, reportNr));
+				if (reportNr == null || startDate == null)
+				{
+					ThemedMessageBox.Info(text: $"Could not read StartDate or ReportNumber of report {doc.FullName}!", title: "Unable to read data");
+					progress.Status = $"Skipped, could not read StartDare or ReportNumber";
+				}
+				else
+					QuickInfos.AddOrUpdateQuickInfo(doc.FullName, new QuickInfo(startDate, reportNr.Value));
 				doc.Close(SaveChanges: false);
 			}
 			progress.Status = "Opening closed reports";
