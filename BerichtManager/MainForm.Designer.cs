@@ -249,7 +249,7 @@ namespace BerichtManager
 			miRcUploadStatistics.Size = new Size(191, 22);
 			miRcUploadStatistics.Text = "Show upload statistics";
 			miRcUploadStatistics.ToolTipText = "Show count of report status";
-			miRcUploadStatistics.Click += ShoIHKReportStatusStatistics;
+			miRcUploadStatistics.Click += ShowIHKReportStatusStatistics;
 			// 
 			// miRcDownloadReports
 			// 
@@ -419,7 +419,7 @@ namespace BerichtManager
 			miUploadStatistics.Size = new Size(191, 22);
 			miUploadStatistics.Text = "Show upload statistics";
 			miUploadStatistics.ToolTipText = "Show count of report status";
-			miUploadStatistics.Click += ShoIHKReportStatusStatistics;
+			miUploadStatistics.Click += ShowIHKReportStatusStatistics;
 			// 
 			// miDownloadReports
 			// 

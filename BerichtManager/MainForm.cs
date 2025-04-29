@@ -3327,7 +3327,7 @@ namespace BerichtManager
 			progressForm.Done();
 		}
 
-		private void ShoIHKReportStatusStatistics(object? sender, EventArgs e)
+		private void ShowIHKReportStatusStatistics(object? sender, EventArgs e)
 		{
 			static void countStatuses(TreeNode root, Dictionary<ReportNode.UploadStatuses, int> input)
 			{
