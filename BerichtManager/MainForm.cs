@@ -404,7 +404,7 @@ namespace BerichtManager
 				app = WordApp;
 			}
 			Word.Document? ldoc = null;
-			bool ldocWasSaved = false;
+			bool createComplete = false;
 			if (!File.Exists(templatePath))
 			{
 				ThemedMessageBox.Show(text: ConfigHandler.TemplatePath + " was not found was it moved or deleted?", title: "Template not found");
@@ -574,16 +574,17 @@ namespace BerichtManager
 				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
 				FitToPage(ldoc);
 				ldoc.SaveAs2(FileName: path);
-				UpdateTree();
 
 				ConfigHandler.ReportNumber++;
 				ConfigHandler.LastReportWeekOfYear = weekOfYear;
 				ConfigHandler.LastCreated = path;
 				ConfigHandler.SaveConfig();
+				createComplete = true;
+
 				miEditLatest.Enabled = true;
 				QuickInfos.AddOrUpdateQuickInfo(path, new QuickInfo(thisWeekStart.ToString(DateTimeUtils.DATEFORMAT), reportNr));
-				ThemedMessageBox.Show(text: "Created Document at: " + path, title: "Document saved", allowMessageHighlight: true);
-				ldocWasSaved = true;
+				UpdateTree();
+				ThemedMessageBox.Info(text: "Created Document at: " + path, title: "Document saved", allowMessageHighlight: true);
 
 				SaveOrExit();
 				Doc = ldoc;
@@ -605,7 +606,7 @@ namespace BerichtManager
 					case -2147023170:
 						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please wait while it restarts");
 						RestartWordIfNeeded();
-						if (ldocWasSaved)
+						if (createComplete)
 						{
 							ThemedMessageBox.Show(text: "Unable to automatically open report, Word was closed unexpectedly", title: "Loading was cancelled because word closed");
 							return;
