@@ -28,71 +28,72 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.btStop = new BerichtManager.OwnControls.FocusColoredFlatButton();
-			this.paEvents = new System.Windows.Forms.Panel();
-			this.rtbEvents = new System.Windows.Forms.RichTextBox();
-			this.rtbStatus = new System.Windows.Forms.RichTextBox();
-			this.paEvents.SuspendLayout();
-			this.SuspendLayout();
+			btStop = new OwnControls.FocusColoredFlatButton();
+			paEvents = new Panel();
+			rtbEvents = new RichTextBox();
+			rtbStatus = new RichTextBox();
+			paEvents.SuspendLayout();
+			SuspendLayout();
 			// 
 			// btStop
 			// 
-			this.btStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btStop.Location = new System.Drawing.Point(713, 415);
-			this.btStop.Name = "btStop";
-			this.btStop.Size = new System.Drawing.Size(75, 23);
-			this.btStop.TabIndex = 0;
-			this.btStop.Text = "Stop";
-			this.btStop.UseVisualStyleBackColor = true;
-			this.btStop.Click += new System.EventHandler(this.btStop_Click);
+			btStop.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			btStop.Location = new Point(832, 479);
+			btStop.Margin = new Padding(4, 3, 4, 3);
+			btStop.Name = "btStop";
+			btStop.Size = new Size(88, 27);
+			btStop.TabIndex = 0;
+			btStop.Text = "Stop";
+			btStop.UseVisualStyleBackColor = true;
+			btStop.Click += btStop_Click;
 			// 
 			// paEvents
 			// 
-			this.paEvents.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.paEvents.Controls.Add(this.rtbEvents);
-			this.paEvents.Location = new System.Drawing.Point(12, 12);
-			this.paEvents.Name = "paEvents";
-			this.paEvents.Size = new System.Drawing.Size(776, 397);
-			this.paEvents.TabIndex = 1;
+			paEvents.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+			paEvents.Controls.Add(rtbEvents);
+			paEvents.Location = new Point(14, 14);
+			paEvents.Margin = new Padding(4, 3, 4, 3);
+			paEvents.Name = "paEvents";
+			paEvents.Size = new Size(905, 458);
+			paEvents.TabIndex = 1;
 			// 
 			// rtbEvents
 			// 
-			this.rtbEvents.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.rtbEvents.Location = new System.Drawing.Point(0, 0);
-			this.rtbEvents.Name = "rtbEvents";
-			this.rtbEvents.ReadOnly = true;
-			this.rtbEvents.Size = new System.Drawing.Size(776, 397);
-			this.rtbEvents.TabIndex = 0;
-			this.rtbEvents.Text = "";
+			rtbEvents.Dock = DockStyle.Fill;
+			rtbEvents.Location = new Point(0, 0);
+			rtbEvents.Margin = new Padding(4, 3, 4, 3);
+			rtbEvents.Name = "rtbEvents";
+			rtbEvents.ReadOnly = true;
+			rtbEvents.Size = new Size(905, 458);
+			rtbEvents.TabIndex = 0;
+			rtbEvents.Text = "";
 			// 
 			// rtbStatus
 			// 
-			this.rtbStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.rtbStatus.Location = new System.Drawing.Point(12, 415);
-			this.rtbStatus.Name = "rtbStatus";
-			this.rtbStatus.ReadOnly = true;
-			this.rtbStatus.Size = new System.Drawing.Size(695, 23);
-			this.rtbStatus.TabIndex = 2;
-			this.rtbStatus.TabStop = false;
-			this.rtbStatus.Text = "";
+			rtbStatus.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+			rtbStatus.Location = new Point(14, 479);
+			rtbStatus.Margin = new Padding(4, 3, 4, 3);
+			rtbStatus.Name = "rtbStatus";
+			rtbStatus.ReadOnly = true;
+			rtbStatus.Size = new Size(810, 27);
+			rtbStatus.TabIndex = 2;
+			rtbStatus.TabStop = false;
+			rtbStatus.Text = "";
 			// 
 			// EventProgressForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 450);
-			this.Controls.Add(this.rtbStatus);
-			this.Controls.Add(this.paEvents);
-			this.Controls.Add(this.btStop);
-			this.Name = "EventProgressForm";
-			this.Text = "UploadProgressForm";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UploadProgressForm_FormClosing);
-			this.paEvents.ResumeLayout(false);
-			this.ResumeLayout(false);
-
+			AutoScaleDimensions = new SizeF(7F, 15F);
+			AutoScaleMode = AutoScaleMode.Font;
+			ClientSize = new Size(933, 519);
+			Controls.Add(rtbStatus);
+			Controls.Add(paEvents);
+			Controls.Add(btStop);
+			Margin = new Padding(4, 3, 4, 3);
+			Name = "EventProgressForm";
+			Text = "UploadProgressForm";
+			FormClosing += UploadProgressForm_FormClosing;
+			paEvents.ResumeLayout(false);
+			ResumeLayout(false);
 		}
 
 		#endregion
