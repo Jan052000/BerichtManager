@@ -94,5 +94,45 @@ namespace BerichtManager.ReportQuickInfo
 				reportDir[relPath] = info;
 			Instance.Save();
 		}
+
+		/// <summary>
+		/// Gets the count of reports that had their quick info collected
+		/// </summary>
+		/// <returns>Number of reports that had their quick info collected</returns>
+		public static int CountInfosForCurrentDir()
+		{
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out var reportDir))
+				return 0;
+			return reportDir.Count;
+		}
+
+		/// <summary>
+		/// Gets data from <see cref="QuickInfos"/> and forms it to match <paramref name="predicate"/>
+		/// </summary>
+		/// <typeparam name="T"><see cref="Type"/> of return value</typeparam>
+		/// <param name="predicate"><see cref="Func{T, TResult}"/> to transform each <see cref="QuickInfo"/></param>
+		/// <returns><see cref="List{T}"/> containing values of <see cref="Type"/> <typeparamref name="T"/></returns>
+		public static List<T> GetData<T>(Func<QuickInfo, T> predicate)
+		{
+			List<T> data = new List<T>();
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out var reportDir))
+				return data;
+			foreach (var kvp in reportDir)
+			{
+				data.Add(predicate(kvp.Value));
+			}
+			return data;
+		}
+
+		/// <summary>
+		/// Gets all <see cref="QuickInfo"/>s
+		/// </summary>
+		/// <returns><see cref="List{T}"/> of all <see cref="QuickInfo"/>s</returns>
+		public static List<QuickInfo> GetQuickInfos()
+		{
+			if (!Instance.TryGetValue(ConfigHandler.Instance.ReportPath, out var reportDir))
+				return new List<QuickInfo>();
+			return [.. reportDir.Values];
+		}
 	}
 }

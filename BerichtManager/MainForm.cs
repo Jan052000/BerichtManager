@@ -3128,48 +3128,60 @@ namespace BerichtManager
 			List<string> skipped = new List<string>();
 			progressForm.Status = $"Indexing {reportNodes.Count} report{(reportNodes.Count == 1 ? "" : "s")}";
 
+			//Key is StartDate formatted as string
 			Dictionary<string, UploadedReport?> indexedReports = new Dictionary<string, UploadedReport?>();
-			foreach (TreeNode node in reportNodes)
+			if (reportNodes.Count == QuickInfos.CountInfosForCurrentDir())
 			{
-				if (stop)
+				progressForm.Status = "Indexing from quick infos";
+				foreach (var startDate in QuickInfos.GetData(info => info.StartDate))
 				{
-					DoStop();
-					OpenAllDocuments(openReports, activePath);
-					return;
+					indexedReports.Add(startDate, null);
 				}
-
-				string fullNodePath = GetFullPath(node);
-				Word.Document doc = WordApp!.Documents.Open(fullNodePath, ReadOnly: true);
-
-				progressForm.Status = $"\t- {doc.FullName}:";
-
-				if (!FormFieldHandler.ValidFormFieldCount(doc))
+			}
+			else
+			{
+				foreach (TreeNode node in reportNodes)
 				{
-					progressForm.Status = "\t\t- Skipped, invalid form field count";
-					skipped.Add(doc.FullName);
-					continue;
-				}
+					if (stop)
+					{
+						DoStop();
+						OpenAllDocuments(openReports, activePath);
+						return;
+					}
 
-				if (UploadedReports.GetUploadedReport(fullNodePath, out UploadedReport? report))
-					indexedReports.Add(report.StartDate.ToString("dd.MM.yyyy"), report);
-				else if (FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc) is not string startDate)
-				{
-					stop = true;
-					break;
-				}
-				else if (startDate == "")
-				{
-					stop = true;
-					break;
-				}
-				else if (!indexedReports.TryAdd(startDate, null))
-				{
-					stop = true;
-					break;
-				}
-				doc.Close(SaveChanges: false);
+					string fullNodePath = GetFullPath(node);
+					Word.Document doc = WordApp!.Documents.Open(fullNodePath, ReadOnly: true);
 
-				progressForm.Status = "\t\t- Success";
+					progressForm.Status = $"\t- {doc.FullName}:";
+
+					if (!FormFieldHandler.ValidFormFieldCount(doc))
+					{
+						progressForm.Status = "\t\t- Skipped, invalid form field count";
+						skipped.Add(doc.FullName);
+						continue;
+					}
+
+					if (UploadedReports.GetUploadedReport(fullNodePath, out UploadedReport? report))
+						indexedReports.Add(report.StartDate.ToString("dd.MM.yyyy"), report);
+					else if (FormFieldHandler.GetValueFromDoc<string>(Fields.StartDate, doc) is not string startDate)
+					{
+						stop = true;
+						break;
+					}
+					else if (startDate == "")
+					{
+						stop = true;
+						break;
+					}
+					else if (!indexedReports.TryAdd(startDate, null))
+					{
+						stop = true;
+						break;
+					}
+					doc.Close(SaveChanges: false);
+
+					progressForm.Status = "\t\t- Success";
+				}
 			}
 			progressForm.Status = "Finished indexing";
 
