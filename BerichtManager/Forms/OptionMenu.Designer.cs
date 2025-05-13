@@ -919,7 +919,7 @@ namespace BerichtManager.Forms
 			cbAskForSeminars.TabIndex = 0;
 			cbAskForSeminars.Text = "Ask for seminars";
 			cbAskForSeminars.UseVisualStyleBackColor = true;
-			cbAskForSeminars.CheckedChanged += MarkAsDirty;
+			cbAskForSeminars.CheckedChanged += cbAskForSeminars_CheckedChanged;
 			// 
 			// gbReportMisc
 			// 

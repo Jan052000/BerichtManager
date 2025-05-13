@@ -124,6 +124,7 @@ namespace BerichtManager.Forms
 			tbCustomPrefix.Enabled = cbUseCustomPrefix.Checked;
 			tbSchool.Enabled = cbShouldUseUntis.Checked;
 			tbServer.Enabled = cbShouldUseUntis.Checked;
+			tbAutoSeminarsValue.Enabled = !cbAskForSeminars.Checked;
 			Initializing = false;
 		}
 
@@ -501,6 +502,12 @@ namespace BerichtManager.Forms
 		{
 			if (new WordTemplateForm().ShowDialog() == DialogResult.Retry)
 				btFieldsConfig_Click(sender, e);
+		}
+
+		private void cbAskForSeminars_CheckedChanged(object sender, EventArgs e)
+		{
+			tbAutoSeminarsValue.Enabled = !cbAskForSeminars.Checked;
+			MarkAsDirty(sender, e);
 		}
 	}
 }
