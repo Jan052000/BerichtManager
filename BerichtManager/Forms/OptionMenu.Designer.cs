@@ -570,7 +570,7 @@ namespace BerichtManager.Forms
 			// laUpdate
 			// 
 			laUpdate.AutoSize = true;
-			laUpdate.Location = new Point(7, 54);
+			laUpdate.Location = new Point(11, 54);
 			laUpdate.Margin = new Padding(4, 0, 4, 0);
 			laUpdate.Name = "laUpdate";
 			laUpdate.Size = new Size(72, 15);
