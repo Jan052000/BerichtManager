@@ -436,7 +436,7 @@ namespace BerichtManager
 			}
 			try
 			{
-				int weekOfYear = Culture.Calendar.GetWeekOfYear(dayInReport, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
+				int weekOfYear = dayInReport.GetIsoWeekOfYear();
 				RestartWordIfNeeded();
 				doc = WordApp!.Documents.Add(Template: ConfigHandler.TemplatePath);
 				int reportNumber = ConfigHandler.ReportNumber;
@@ -596,47 +596,19 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Used for detecting missing reports and initiating their creation
+		/// Used for detecting missing reports and initiating their creation, only creates past reports
 		/// </summary>
 		/// <param name="vacation">Passed on to <see cref="CreateDocument(string, DateTime, Word.Application, bool, int, bool)"/> for if you were on vacation</param>
 		/// <param name="empty">Indicates that all reports should only contain automatically filled infos</param>
 		private void CreateMissing(bool vacation = false, bool empty = false)
 		{
-			int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
-			int reportNr = ConfigHandler.LastReportCreateDate?.GetWeekOfYear() ?? 0;
+			if (ConfigHandler.LastReportCreateDate is not DateTime lastCreateDate)
+				return;
+			int deltaWeeks = (DateTime.Today - lastCreateDate).Days / 7;
 
-			if (reportNr < weekOfYear)
+			for (int i = deltaWeeks - 1; i > 0; i--)
 			{
-				//Missing reports in current year
-				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
-				for (int i = 1; i < weekOfYear - reportNr; i++)
-				{
-					CreateDocument(today.AddDays(i * 7), wasOnVacation: vacation, onlyAutomaticFields: empty);
-				}
-			}
-			else
-			{
-				//Missing missing reports over multiple years
-				int nrOfWeeksLastYear = Culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
-				DateTime lastDecemberLastDay = new DateTime(DateTime.Today.Year - 1, 12, 31);
-				DateTime thisWeekStart = lastDecemberLastDay.AddDays(-(int)lastDecemberLastDay.DayOfWeek + 1);
-				DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-				if (ConfigHandler.EndWeekOnFriday)
-					thisWeekEnd = thisWeekEnd.AddDays(-2);
-
-				int weekOfCurrentYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
-
-				int repeats = nrOfWeeksLastYear - reportNr + weekOfCurrentYear;
-				if (Culture.Calendar.GetWeekOfYear(lastDecemberLastDay, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek) != Culture.Calendar.GetWeekOfYear(thisWeekEnd, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek))
-					repeats--;
-
-				DateTime today = DateTime.Today.AddDays(-(repeats * 7));
-
-				//Generate reports for missing reports over 2 years
-				for (int i = 1; i < repeats; i++)
-				{
-					CreateDocument(today.AddDays(i * 7), wasOnVacation: vacation, onlyAutomaticFields: empty);
-				}
+				CreateDocument(DateTime.Today.AddDays(-7 * i), wasOnVacation: vacation, onlyAutomaticFields: empty);
 			}
 		}
 
@@ -653,7 +625,7 @@ namespace BerichtManager
 			if (ConfigHandler.LastReportCreateDate != null)
 			{
 				//Check if report for last week was created
-				if (GetDistanceToToday() > 1)
+				if ((DateTime.Today - ConfigHandler.LastReportCreateDate.Value).Days / 7 > 1)
 				{
 					if (ThemedMessageBox.Show(text: "You missed some reports were you on vacation?", title: "Vacation?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
@@ -671,27 +643,6 @@ namespace BerichtManager
 			}
 
 			CreateDocument(DateTime.Today);
-		}
-
-		/// <summary>
-		/// Calculates the number of weeks since last report creation
-		/// </summary>
-		/// <returns>The number of weeks since last report creation</returns>
-		private int GetDistanceToToday()
-		{
-			int lastReportKW = ConfigHandler.LastReportCreateDate?.GetWeekOfYear() ?? 0;
-			int todaysWeek = Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
-			//Both weeks are in the same year
-			if (lastReportKW <= todaysWeek)
-			{
-				return todaysWeek - lastReportKW;
-			}
-			//Both weeks are in different years
-			else
-			{
-				int lastWeekOfLastYear = Culture.Calendar.GetWeekOfYear(new DateTime(DateTime.Today.Year - 1, 12, 31), DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
-				return lastWeekOfLastYear - lastReportKW + todaysWeek;
-			}
 		}
 
 		private void miEditLatest_Click(object sender, EventArgs e)

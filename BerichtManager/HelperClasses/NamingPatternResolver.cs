@@ -1,4 +1,5 @@
 using BerichtManager.Config;
+using BerichtManager.Extensions;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -45,7 +46,7 @@ namespace BerichtManager.HelperClasses
 		/// <returns>Resolved name according to pattern in <see cref="ConfigHandler"/></returns>
 		public static string ResolveName(DateTime baseDate, string reportNumber)
 		{
-			return ConfigHandler.Instance.NamingPattern.Replace(CalendarWeek, Culture.Calendar.GetWeekOfYear(baseDate, MainForm.DateTimeFormatInfo.CalendarWeekRule, MainForm.DateTimeFormatInfo.FirstDayOfWeek).ToString()).Replace(ReportNumber, reportNumber);
+			return ConfigHandler.Instance.NamingPattern.Replace(CalendarWeek, baseDate.GetIsoWeekOfYear().ToString()).Replace(ReportNumber, reportNumber);
 		}
 
 		/// <summary>
