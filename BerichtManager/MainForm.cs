@@ -386,8 +386,7 @@ namespace BerichtManager
 		/// <param name="app">The Wordapp that is used to create the document</param>
 		/// <param name="vacation">If you missed reports due to vacation</param>
 		/// <param name="reportDifference">The difference between the next report number and the one for the created report</param>
-		/// <param name="isSingle">Used to tell the method that this is a regular create job</param>
-		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application? app, bool vacation = false, int reportDifference = 0, bool isSingle = false)
+		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application? app, bool vacation = false, int reportDifference = 0)
 		{
 			if (app == null)
 			{
@@ -514,7 +513,7 @@ namespace BerichtManager
 				}
 
 				//Shool stuff
-				if (isSingle)
+				if (ConfigHandler.WebUntisMaxAllowedWeeksLookback <= (DateTime.Today - baseDate).Days / 7)
 				{
 					string classes = "";
 					try
@@ -602,7 +601,7 @@ namespace BerichtManager
 							ThemedMessageBox.Show(text: "Unable to automatically open report, Word was closed unexpectedly", title: "Loading was cancelled because word closed");
 							return;
 						}
-						CreateDocument(templatePath, baseDate, WordApp, vacation: vacation, reportDifference: reportDifference, isSingle: isSingle);
+						CreateDocument(templatePath, baseDate, WordApp, vacation: vacation, reportDifference: reportDifference);
 						break;
 					//case -2146822750:
 					//	//Document already fit on page
@@ -716,7 +715,7 @@ namespace BerichtManager
 				}
 			}
 
-			CreateDocument(ConfigHandler.TemplatePath, baseDate: DateTime.Today, WordApp, isSingle: true);
+			CreateDocument(ConfigHandler.TemplatePath, baseDate: DateTime.Today, WordApp);
 		}
 
 		/// <summary>

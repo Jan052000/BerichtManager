@@ -71,6 +71,7 @@ namespace BerichtManager.Config
 			{"CustomPrefix", (StringType, "-")},
 			{"WebUntisServer", (StringType, "borys")},
 			{"SchoolName", (StringType, "pictorus-bk")},
+			{"WebUntisMaxAllowedWeeksLookback", (IntType, 0)},
 			{"UseWebUntis", (BoolType, true)},
 			{"EndWeekOnFriday", (BoolType, false)},
 			{"UseLegacyEdit", (BoolType, false)},
@@ -140,6 +141,15 @@ namespace BerichtManager.Config
 		{
 			get => UserHandler.DecodePassword(GenericGet<string>("Password"));
 			private set => GenericSet("Password", UserHandler.EncodePassword(value));
+		}
+
+		/// <summary>
+		/// Number of weeks report manager can go back and still fetch classes from WebUntis
+		/// </summary>
+		public int WebUntisMaxAllowedWeeksLookback
+		{
+			get => GenericGet<int>("WebUntisMaxAllowedWeeksLookback");
+			set => GenericSet("WebUntisMaxAllowedWeeksLookback", value);
 		}
 
 		/// <summary>

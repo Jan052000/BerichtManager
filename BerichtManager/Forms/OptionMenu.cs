@@ -81,6 +81,7 @@ namespace BerichtManager.Forms
 			cbShouldUseUntis.Checked = ConfigHandler.UseWebUntis;
 			if (!ConfigHandler.UseWebUntis)
 				tcOptions.HidePage(tpWebUntis);
+			nudMaxReportToolTipWidth.Value = ConfigHandler.WebUntisMaxAllowedWeeksLookback;
 			cbEndOfWeek.Checked = ConfigHandler.EndWeekOnFriday;
 			tbCustomPrefix.Text = ConfigHandler.CustomPrefix;
 			tbServer.Text = ConfigHandler.WebUntisServer;
@@ -247,6 +248,7 @@ namespace BerichtManager.Forms
 				ConfigHandler.WebUntisServer = tbServer.Text;
 				ConfigHandler.SchoolName = tbSchool.Text;
 			}
+			ConfigHandler.WebUntisMaxAllowedWeeksLookback = (int)nudMaxReportToolTipWidth.Value;
 			//Report
 			ConfigHandler.ReportUserName = tbName.Text;
 			ConfigHandler.TemplatePath = tbTemplate.Text;

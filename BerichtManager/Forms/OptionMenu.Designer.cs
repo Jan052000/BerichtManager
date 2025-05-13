@@ -75,6 +75,8 @@ namespace BerichtManager.Forms
 			laNamingPattern = new Label();
 			laTemplate = new Label();
 			gbWebUntisMisc = new OwnControls.ColoredGroupBox();
+			laWebUntisMaxAllowedWeeksLookback = new Label();
+			nudWebUntisMaxAllowedWeeksLookback = new NumericUpDown();
 			laSchool = new Label();
 			laServer = new Label();
 			gbReportPrefix = new OwnControls.ColoredGroupBox();
@@ -88,6 +90,8 @@ namespace BerichtManager.Forms
 			gbGeneralEdit = new OwnControls.ColoredGroupBox();
 			gbGeneralMisc = new OwnControls.ColoredGroupBox();
 			gbGeneralAppearance = new OwnControls.ColoredGroupBox();
+			laMaxReportToolTipWidth = new Label();
+			nudMaxReportToolTipWidth = new NumericUpDown();
 			tpReport = new OwnControls.CustomTabControl.ColoredTabPage();
 			gbReportMisc = new OwnControls.ColoredGroupBox();
 			cbReportFormFields = new OwnControls.ColoredGroupBox();
@@ -98,13 +102,12 @@ namespace BerichtManager.Forms
 			gbIHKFailSaves = new OwnControls.ColoredGroupBox();
 			paButtons = new Panel();
 			paContent = new Panel();
-			nudMaxReportToolTipWidth = new NumericUpDown();
-			laMaxReportToolTipWidth = new Label();
 			((System.ComponentModel.ISupportInitialize)nudUploadDelay).BeginInit();
 			((System.ComponentModel.ISupportInitialize)nudTabStops).BeginInit();
 			((System.ComponentModel.ISupportInitialize)nudNumber).BeginInit();
 			((System.ComponentModel.ISupportInitialize)nudFontSize).BeginInit();
 			gbWebUntisMisc.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)nudWebUntisMaxAllowedWeeksLookback).BeginInit();
 			gbReportPrefix.SuspendLayout();
 			tcOptions.SuspendLayout();
 			tpGeneral.SuspendLayout();
@@ -112,6 +115,7 @@ namespace BerichtManager.Forms
 			gbGeneralEdit.SuspendLayout();
 			gbGeneralMisc.SuspendLayout();
 			gbGeneralAppearance.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)nudMaxReportToolTipWidth).BeginInit();
 			tpReport.SuspendLayout();
 			gbReportMisc.SuspendLayout();
 			cbReportFormFields.SuspendLayout();
@@ -122,7 +126,6 @@ namespace BerichtManager.Forms
 			gbIHKFailSaves.SuspendLayout();
 			paButtons.SuspendLayout();
 			paContent.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)nudMaxReportToolTipWidth).BeginInit();
 			SuspendLayout();
 			// 
 			// toolTip1
@@ -348,17 +351,17 @@ namespace BerichtManager.Forms
 			// tbSchool
 			// 
 			tbSchool.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			tbSchool.Location = new Point(114, 51);
+			tbSchool.Location = new Point(128, 51);
 			tbSchool.Margin = new Padding(4, 3, 4, 3);
 			tbSchool.Name = "tbSchool";
-			tbSchool.Size = new Size(654, 23);
+			tbSchool.Size = new Size(640, 23);
 			tbSchool.TabIndex = 3;
 			toolTip1.SetToolTip(tbSchool, "WebUntis name of your school");
 			tbSchool.TextChanged += MarkAsDirty;
 			// 
 			// btLogin
 			// 
-			btLogin.Location = new Point(114, 80);
+			btLogin.Location = new Point(128, 80);
 			btLogin.Margin = new Padding(4, 3, 4, 3);
 			btLogin.Name = "btLogin";
 			btLogin.Size = new Size(140, 24);
@@ -371,10 +374,10 @@ namespace BerichtManager.Forms
 			// tbServer
 			// 
 			tbServer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			tbServer.Location = new Point(114, 22);
+			tbServer.Location = new Point(128, 22);
 			tbServer.Margin = new Padding(4, 3, 4, 3);
 			tbServer.Name = "tbServer";
-			tbServer.Size = new Size(654, 23);
+			tbServer.Size = new Size(640, 23);
 			tbServer.TabIndex = 1;
 			toolTip1.SetToolTip(tbServer, "Name of the WebUntis server of your school");
 			tbServer.TextChanged += MarkAsDirty;
@@ -629,6 +632,8 @@ namespace BerichtManager.Forms
 			// 
 			gbWebUntisMisc.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			gbWebUntisMisc.BorderColor = Color.FromArgb(220, 220, 220);
+			gbWebUntisMisc.Controls.Add(laWebUntisMaxAllowedWeeksLookback);
+			gbWebUntisMisc.Controls.Add(nudWebUntisMaxAllowedWeeksLookback);
 			gbWebUntisMisc.Controls.Add(tbSchool);
 			gbWebUntisMisc.Controls.Add(btLogin);
 			gbWebUntisMisc.Controls.Add(laSchool);
@@ -639,15 +644,33 @@ namespace BerichtManager.Forms
 			gbWebUntisMisc.Margin = new Padding(4, 3, 4, 3);
 			gbWebUntisMisc.Name = "gbWebUntisMisc";
 			gbWebUntisMisc.Padding = new Padding(4, 3, 4, 3);
-			gbWebUntisMisc.Size = new Size(776, 110);
+			gbWebUntisMisc.Size = new Size(776, 139);
 			gbWebUntisMisc.TabIndex = 0;
 			gbWebUntisMisc.TabStop = false;
 			gbWebUntisMisc.Text = "Miscellanious";
 			// 
+			// laWebUntisMaxAllowedWeeksLookback
+			// 
+			laWebUntisMaxAllowedWeeksLookback.AutoSize = true;
+			laWebUntisMaxAllowedWeeksLookback.Location = new Point(8, 114);
+			laWebUntisMaxAllowedWeeksLookback.Name = "laWebUntisMaxAllowedWeeksLookback";
+			laWebUntisMaxAllowedWeeksLookback.Size = new Size(114, 15);
+			laWebUntisMaxAllowedWeeksLookback.TabIndex = 6;
+			laWebUntisMaxAllowedWeeksLookback.Text = "Max week look back";
+			// 
+			// nudWebUntisMaxAllowedWeeksLookback
+			// 
+			nudWebUntisMaxAllowedWeeksLookback.Location = new Point(128, 110);
+			nudWebUntisMaxAllowedWeeksLookback.Maximum = new decimal(new int[] { 300, 0, 0, 0 });
+			nudWebUntisMaxAllowedWeeksLookback.Name = "nudWebUntisMaxAllowedWeeksLookback";
+			nudWebUntisMaxAllowedWeeksLookback.Size = new Size(140, 23);
+			nudWebUntisMaxAllowedWeeksLookback.TabIndex = 5;
+			nudWebUntisMaxAllowedWeeksLookback.ValueChanged += MarkAsDirty;
+			// 
 			// laSchool
 			// 
 			laSchool.AutoSize = true;
-			laSchool.Location = new Point(27, 55);
+			laSchool.Location = new Point(44, 54);
 			laSchool.Margin = new Padding(4, 0, 4, 0);
 			laSchool.Name = "laSchool";
 			laSchool.Size = new Size(76, 15);
@@ -657,7 +680,7 @@ namespace BerichtManager.Forms
 			// laServer
 			// 
 			laServer.AutoSize = true;
-			laServer.Location = new Point(7, 26);
+			laServer.Location = new Point(28, 25);
 			laServer.Margin = new Padding(4, 0, 4, 0);
 			laServer.Name = "laServer";
 			laServer.Size = new Size(92, 15);
@@ -818,6 +841,24 @@ namespace BerichtManager.Forms
 			gbGeneralAppearance.TabStop = false;
 			gbGeneralAppearance.Text = "Appearance";
 			// 
+			// laMaxReportToolTipWidth
+			// 
+			laMaxReportToolTipWidth.AutoSize = true;
+			laMaxReportToolTipWidth.Location = new Point(18, 165);
+			laMaxReportToolTipWidth.Name = "laMaxReportToolTipWidth";
+			laMaxReportToolTipWidth.Size = new Size(67, 15);
+			laMaxReportToolTipWidth.TabIndex = 12;
+			laMaxReportToolTipWidth.Text = "Max length";
+			// 
+			// nudMaxReportToolTipWidth
+			// 
+			nudMaxReportToolTipWidth.Location = new Point(91, 160);
+			nudMaxReportToolTipWidth.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+			nudMaxReportToolTipWidth.Name = "nudMaxReportToolTipWidth";
+			nudMaxReportToolTipWidth.Size = new Size(178, 23);
+			nudMaxReportToolTipWidth.TabIndex = 11;
+			nudMaxReportToolTipWidth.ValueChanged += MarkAsDirty;
+			// 
 			// tpReport
 			// 
 			tpReport.Controls.Add(gbReportMisc);
@@ -826,7 +867,7 @@ namespace BerichtManager.Forms
 			tpReport.Location = new Point(4, 24);
 			tpReport.Name = "tpReport";
 			tpReport.Padding = new Padding(3);
-			tpReport.Size = new Size(776, 365);
+			tpReport.Size = new Size(776, 393);
 			tpReport.TabIndex = 1;
 			tpReport.Text = "Report";
 			tpReport.UseVisualStyleBackColor = true;
@@ -870,7 +911,7 @@ namespace BerichtManager.Forms
 			tpWebUntis.Controls.Add(gbWebUntisMisc);
 			tpWebUntis.Location = new Point(4, 24);
 			tpWebUntis.Name = "tpWebUntis";
-			tpWebUntis.Size = new Size(776, 365);
+			tpWebUntis.Size = new Size(776, 393);
 			tpWebUntis.TabIndex = 2;
 			tpWebUntis.Text = "WebUntis";
 			tpWebUntis.UseVisualStyleBackColor = true;
@@ -882,7 +923,7 @@ namespace BerichtManager.Forms
 			tpIHK.Controls.Add(gbIHKFailSaves);
 			tpIHK.Location = new Point(4, 24);
 			tpIHK.Name = "tpIHK";
-			tpIHK.Size = new Size(776, 365);
+			tpIHK.Size = new Size(776, 393);
 			tpIHK.TabIndex = 3;
 			tpIHK.Text = "IHK";
 			tpIHK.UseVisualStyleBackColor = true;
@@ -949,24 +990,6 @@ namespace BerichtManager.Forms
 			paContent.Size = new Size(784, 421);
 			paContent.TabIndex = 1;
 			// 
-			// nudMaxReportToolTipWidth
-			// 
-			nudMaxReportToolTipWidth.Location = new Point(91, 160);
-			nudMaxReportToolTipWidth.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
-			nudMaxReportToolTipWidth.Name = "nudMaxReportToolTipWidth";
-			nudMaxReportToolTipWidth.Size = new Size(178, 23);
-			nudMaxReportToolTipWidth.TabIndex = 11;
-			nudMaxReportToolTipWidth.ValueChanged += MarkAsDirty;
-			// 
-			// laMaxReportToolTipWidth
-			// 
-			laMaxReportToolTipWidth.AutoSize = true;
-			laMaxReportToolTipWidth.Location = new Point(18, 165);
-			laMaxReportToolTipWidth.Name = "laMaxReportToolTipWidth";
-			laMaxReportToolTipWidth.Size = new Size(67, 15);
-			laMaxReportToolTipWidth.TabIndex = 12;
-			laMaxReportToolTipWidth.Text = "Max length";
-			// 
 			// OptionMenu
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
@@ -985,6 +1008,7 @@ namespace BerichtManager.Forms
 			((System.ComponentModel.ISupportInitialize)nudFontSize).EndInit();
 			gbWebUntisMisc.ResumeLayout(false);
 			gbWebUntisMisc.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)nudWebUntisMaxAllowedWeeksLookback).EndInit();
 			gbReportPrefix.ResumeLayout(false);
 			gbReportPrefix.PerformLayout();
 			tcOptions.ResumeLayout(false);
@@ -997,6 +1021,7 @@ namespace BerichtManager.Forms
 			gbGeneralMisc.PerformLayout();
 			gbGeneralAppearance.ResumeLayout(false);
 			gbGeneralAppearance.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)nudMaxReportToolTipWidth).EndInit();
 			tpReport.ResumeLayout(false);
 			gbReportMisc.ResumeLayout(false);
 			gbReportMisc.PerformLayout();
@@ -1012,7 +1037,6 @@ namespace BerichtManager.Forms
 			gbIHKFailSaves.PerformLayout();
 			paButtons.ResumeLayout(false);
 			paContent.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)nudMaxReportToolTipWidth).EndInit();
 			ResumeLayout(false);
 		}
 
@@ -1088,5 +1112,7 @@ namespace BerichtManager.Forms
 		private CheckBox cbUseIHK;
 		private Label laMaxReportToolTipWidth;
 		private NumericUpDown nudMaxReportToolTipWidth;
+		private Label laWebUntisMaxAllowedWeeksLookback;
+		private NumericUpDown nudWebUntisMaxAllowedWeeksLookback;
 	}
 }
