@@ -28,7 +28,7 @@ namespace BerichtManager.Forms
 		/// Creates a new <see cref="EditForm"/> object
 		/// </summary>
 		/// <param name="title">Title displayed in title bar</param>
-		/// <param name="text">Text to b set in input</param>
+		/// <param name="text">Text to be set in input</param>
 		/// <param name="isCreate"><see cref="bool"/> If form is in creation mode which changes button texts, enabled status and tool tips</param>
 		/// <param name="defaultValue">The default value <see cref="Result"/> should have if Input is left empty</param>
 		public EditForm(string title = "", string? text = null, bool isCreate = false, string defaultValue = "", bool isReadonly = false)
