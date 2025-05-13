@@ -230,7 +230,7 @@ namespace BerichtManager.Forms
 			// btCreateTheme
 			// 
 			btCreateTheme.Anchor = AnchorStyles.Right;
-			btCreateTheme.Location = new Point(670, 94);
+			btCreateTheme.Location = new Point(670, 80);
 			btCreateTheme.Margin = new Padding(4, 3, 4, 3);
 			btCreateTheme.Name = "btCreateTheme";
 			btCreateTheme.Size = new Size(93, 24);
@@ -255,7 +255,7 @@ namespace BerichtManager.Forms
 			// btEditTheme
 			// 
 			btEditTheme.Anchor = AnchorStyles.Right;
-			btEditTheme.Location = new Point(574, 94);
+			btEditTheme.Location = new Point(574, 80);
 			btEditTheme.Margin = new Padding(4, 3, 4, 3);
 			btEditTheme.Name = "btEditTheme";
 			btEditTheme.Size = new Size(88, 24);
