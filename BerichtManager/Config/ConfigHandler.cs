@@ -307,12 +307,18 @@ namespace BerichtManager.Config
 			set => GenericSet("NamingPattern", value);
 		}
 
+		/// <summary>
+		/// Wether or not report manager should ask for seminars when creating reports
+		/// </summary>
 		public bool AskForSeminars
 		{
 			get => GenericGet<bool>("AskForSeminars");
 			set => GenericSet("AskForSeminars", value);
 		}
 
+		/// <summary>
+		/// Value to use for seminars field if <see cref="AskForSeminars"/> is <see langword="false"/>
+		/// </summary>
 		public string AutoSeminarsValue
 		{
 			get => GenericGet<string>("AutoSeminarsValue")!;
