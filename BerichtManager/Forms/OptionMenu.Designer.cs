@@ -486,7 +486,7 @@ namespace BerichtManager.Forms
 			// laJobField
 			// 
 			laJobField.AutoSize = true;
-			laJobField.Location = new Point(48, 83);
+			laJobField.Location = new Point(48, 82);
 			laJobField.Margin = new Padding(4, 0, 4, 0);
 			laJobField.Name = "laJobField";
 			laJobField.Size = new Size(51, 15);
@@ -611,7 +611,7 @@ namespace BerichtManager.Forms
 			// laNamingPattern
 			// 
 			laNamingPattern.AutoSize = true;
-			laNamingPattern.Location = new Point(8, 54);
+			laNamingPattern.Location = new Point(8, 53);
 			laNamingPattern.Margin = new Padding(4, 0, 4, 0);
 			laNamingPattern.Name = "laNamingPattern";
 			laNamingPattern.Size = new Size(91, 15);
@@ -621,7 +621,7 @@ namespace BerichtManager.Forms
 			// laTemplate
 			// 
 			laTemplate.AutoSize = true;
-			laTemplate.Location = new Point(7, 25);
+			laTemplate.Location = new Point(7, 24);
 			laTemplate.Margin = new Padding(4, 0, 4, 0);
 			laTemplate.Name = "laTemplate";
 			laTemplate.Size = new Size(92, 15);
