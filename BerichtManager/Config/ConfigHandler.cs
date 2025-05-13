@@ -4,6 +4,7 @@ using BerichtManager.Forms;
 using System.Globalization;
 using BerichtManager.OwnControls;
 using System.Net.Mail;
+using BerichtManager.Extensions;
 
 namespace BerichtManager.Config
 {
@@ -55,7 +56,7 @@ namespace BerichtManager.Config
 		/// <summary>
 		/// Holds all values for config with the keys as key and the type and default value as values
 		/// </summary>
-		private Dictionary<string, (Type Type, object DefaultValue)> DefaultConfig { get; } = new Dictionary<string, (Type, object)>()
+		private Dictionary<string, (Type Type, object? DefaultValue)> DefaultConfig { get; } = new Dictionary<string, (Type, object?)>()
 		{
 			{"TemplatePath", (StringType, "")},
 			{"ReportNR", (IntType, 1)},
@@ -65,7 +66,7 @@ namespace BerichtManager.Config
 			{"Name", (StringType, "")},
 			{"Font", (StringType, "Arial")},
 			{"EditorFontSize", (FloatType, 8.25f)},
-			{"LastReportWeekOfYear", (IntType, new CultureInfo("de-DE").Calendar.GetWeekOfYear(DateTime.Today, MainForm.DateTimeFormatInfo.CalendarWeekRule, MainForm.DateTimeFormatInfo.FirstDayOfWeek) - 1)},
+			{"LastReportCreateDate", (typeof(DateTime?), null)},
 			{"StayLoggedIn", (BoolType, false)},
 			{"UseCustomPrefix", (BoolType, false)},
 			{"CustomPrefix", (StringType, "-")},
@@ -103,7 +104,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string TemplatePath
 		{
-			get => GenericGet<string>("TemplatePath");
+			get => GenericGet<string>("TemplatePath")!;
 			set => GenericSet("TemplatePath", value);
 		}
 
@@ -121,7 +122,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string LastCreated
 		{
-			get => GenericGet<string>("LastCreated");
+			get => GenericGet<string>("LastCreated")!;
 			set => GenericSet("LastCreated", value);
 		}
 
@@ -130,7 +131,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string WebUntisUsername
 		{
-			get => GenericGet<string>("Username");
+			get => GenericGet<string>("Username")!;
 			set => GenericSet("Username", value);
 		}
 
@@ -139,7 +140,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string WebUntisPassword
 		{
-			get => UserHandler.DecodePassword(GenericGet<string>("Password"));
+			get => UserHandler.DecodePassword(GenericGet<string>("Password")!);
 			private set => GenericSet("Password", UserHandler.EncodePassword(value));
 		}
 
@@ -157,7 +158,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string ReportUserName
 		{
-			get => GenericGet<string>("Name");
+			get => GenericGet<string>("Name")!;
 			set => GenericSet("Name", value);
 		}
 
@@ -166,7 +167,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string EditorFont
 		{
-			get => GenericGet<string>("Font");
+			get => GenericGet<string>("Font")!;
 			set => GenericSet("Font", value);
 		}
 
@@ -180,12 +181,12 @@ namespace BerichtManager.Config
 		}
 
 		/// <summary>
-		/// Week of year the last report was created
+		/// Date the last report was created on
 		/// </summary>
-		public int LastReportWeekOfYear
+		public DateTime? LastReportCreateDate
 		{
-			get => GenericGet<int>("LastReportWeekOfYear");
-			set => GenericSet("LastReportWeekOfYear", value);
+			get => GenericGet<DateTime?>("LastReportCreateDate")!;
+			set => GenericSet("LastReportCreateDate", value);
 		}
 
 		/// <summary>
@@ -211,7 +212,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string CustomPrefix
 		{
-			get => GenericGet<string>("CustomPrefix");
+			get => GenericGet<string>("CustomPrefix")!;
 			set => GenericSet("CustomPrefix", value);
 		}
 
@@ -220,7 +221,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string WebUntisServer
 		{
-			get => GenericGet<string>("WebUntisServer");
+			get => GenericGet<string>("WebUntisServer")!;
 			set => GenericSet("WebUntisServer", value);
 		}
 
@@ -229,7 +230,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string SchoolName
 		{
-			get => GenericGet<string>("SchoolName");
+			get => GenericGet<string>("SchoolName")!;
 			set => GenericSet("SchoolName", value);
 		}
 
@@ -265,7 +266,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string ActiveTheme
 		{
-			get => GenericGet<string>("ActiveTheme");
+			get => GenericGet<string>("ActiveTheme")!;
 			set => GenericSet("ActiveTheme", value);
 		}
 
@@ -274,7 +275,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string ReportPath
 		{
-			get => GenericGet<string>("ReportPath");
+			get => GenericGet<string>("ReportPath")!;
 			set => GenericSet("ReportPath", value);
 		}
 
@@ -283,7 +284,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string PublishPath
 		{
-			get => GenericGet<string>("PublishPath");
+			get => GenericGet<string>("PublishPath")!;
 			set => GenericSet("PublishPath", value);
 		}
 
@@ -301,7 +302,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string NamingPattern
 		{
-			get => GenericGet<string>("NamingPattern");
+			get => GenericGet<string>("NamingPattern")!;
 			set => GenericSet("NamingPattern", value);
 		}
 
@@ -328,7 +329,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string IHKUserName
 		{
-			get => GenericGet<string>("IHKUserName");
+			get => GenericGet<string>("IHKUserName")!;
 			set => GenericSet("IHKUserName", value);
 		}
 
@@ -337,7 +338,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string IHKPassword
 		{
-			get => UserHandler.DecodePassword(GenericGet<string>("IHKPassword"));
+			get => UserHandler.DecodePassword(GenericGet<string>("IHKPassword")!);
 			private set => GenericSet("IHKPassword", UserHandler.EncodePassword(value));
 		}
 
@@ -355,7 +356,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string IHKJobField
 		{
-			get => GenericGet<string>("IHKJobField");
+			get => GenericGet<string>("IHKJobField")!;
 			set => GenericSet("IHKJobField", value);
 		}
 
@@ -364,7 +365,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string IHKSupervisorEMail
 		{
-			get => GenericGet<string>("IHKSupervisorEMail");
+			get => GenericGet<string>("IHKSupervisorEMail")!;
 			set
 			{
 				if (value == "")
@@ -394,7 +395,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string IHKBaseUrl
 		{
-			get => GenericGet<string>("IHKBaseUrl");
+			get => GenericGet<string>("IHKBaseUrl")!;
 			set => GenericSet("IHKBaseUrl", value);
 		}
 
@@ -461,7 +462,7 @@ namespace BerichtManager.Config
 				Directory.CreateDirectory(ConfigFolderPath);
 				File.Create(FullPath).Close();
 				ConfigObject = new JObject();
-				foreach (KeyValuePair<string, (Type Type, object DefaultValue)> kvp in DefaultConfig)
+				foreach (KeyValuePair<string, (Type Type, object? DefaultValue)> kvp in DefaultConfig)
 				{
 					ConfigObject.Add(new JProperty(kvp.Key, Convert.ChangeType(kvp.Value.DefaultValue, kvp.Value.Type)));
 				}
@@ -477,7 +478,7 @@ namespace BerichtManager.Config
 				{
 					ConfigObject = JObject.Parse(File.ReadAllText(FullPath));
 				}
-				foreach (KeyValuePair<string, (Type Type, object DefaultValue)> kvp in DefaultConfig)
+				foreach (KeyValuePair<string, (Type Type, object? DefaultValue)> kvp in DefaultConfig)
 				{
 					if (ConfigObject.ContainsKey(kvp.Key))
 						continue;
@@ -515,7 +516,12 @@ namespace BerichtManager.Config
 								ConfigObject.Add(new JProperty("Name", ""));
 							break;
 						default:
-							ConfigObject.Add(new JProperty(kvp.Key, Convert.ChangeType(kvp.Value.DefaultValue, kvp.Value.Type)));
+							JProperty toAdd;
+							if (kvp.Value.DefaultValue == null)
+								toAdd = new JProperty(kvp.Key, (object?)null);
+							else
+								toAdd = new JProperty(kvp.Key, Convert.ChangeType(kvp.Value.DefaultValue, kvp.Value.Type));
+							ConfigObject.Add(toAdd);
 							break;
 					}
 				}
@@ -528,11 +534,48 @@ namespace BerichtManager.Config
 				if (!DefaultConfig.ContainsKey(kvp.Key))
 					removeFields.Add(kvp.Key);
 			}
+			Migrate(removeFields);
 			removeFields.ForEach(field => ConfigObject.Remove(field));
 
 			if (!isComplete || removeFields.Count > 0)
 				File.WriteAllText(FullPath, JsonConvert.SerializeObject(ConfigObject, Formatting.Indented));
 			IsInitializing = false;
+		}
+
+		/// <summary>
+		/// Migrate old fields to new ones
+		/// </summary>
+		/// <param name="fieldsToRemove"></param>
+		public void Migrate(List<string> fieldsToRemove)
+		{
+			foreach (string field in fieldsToRemove)
+			{
+				switch (field)
+				{
+					// LastReportWeekOfYear => LastReportCreateDate 13.05.2025
+					case "LastReportWeekOfYear":
+						int lastWeekNr = GenericGet<int>(field);
+						DateTime today = DateTime.Today;
+						//In same year
+						if (today.GetWeekOfYear() >= lastWeekNr)
+						{
+							int weekDif = today.GetWeekOfYear() - lastWeekNr;
+							GenericSet("LastReportCreateDate", today.AddDays(-7 * weekDif));
+						}
+						//Last create was last year
+						else
+						{
+							int nrOfWeeksLastYear = new DateTime(today.Year - 1, 12, 31).GetWeekOfYear();
+							var realWeekNumberLastWeekLastYear = new DateTime(2024, 12, 31).GetIsoWeekOfYear();
+							//If not decremented, calculated week will be one lower than actual wanted week
+							if (realWeekNumberLastWeekLastYear == 1)
+								nrOfWeeksLastYear--;
+							int t = nrOfWeeksLastYear - lastWeekNr + today.GetWeekOfYear();
+							GenericSet("LastReportCreateDate", today.AddDays(-7 * t));
+						}
+						break;
+				}
+			}
 		}
 
 		/// <summary>
@@ -550,9 +593,9 @@ namespace BerichtManager.Config
 		/// <typeparam name="T">Type of the value to get</typeparam>
 		/// <param name="key">Key of the value to get</param>
 		/// <returns>Value of <paramref name="key"/> converted to type <typeparamref name="T"/></returns>
-		private T GenericGet<T>(string key)
+		private T? GenericGet<T>(string key)
 		{
-			return ConfigObject.Value<T>(key) ?? (T)DefaultConfig[key].DefaultValue;
+			return ConfigObject.Value<T>(key) ?? (T?)DefaultConfig[key].DefaultValue;
 		}
 
 		/// <summary>

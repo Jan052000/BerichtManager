@@ -505,7 +505,7 @@ namespace BerichtManager
 
 				QuickInfos.AddOrUpdateQuickInfo(path, new QuickInfo(startDate, reportNumber));
 				ConfigHandler.ReportNumber++;
-				ConfigHandler.LastReportWeekOfYear = weekOfYear;
+				ConfigHandler.LastReportCreateDate = dayInReport;
 				ConfigHandler.LastCreated = path;
 				ConfigHandler.SaveConfig();
 				createComplete = true;
@@ -603,9 +603,9 @@ namespace BerichtManager
 		private void CreateMissing(bool vacation = false, bool empty = false)
 		{
 			int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
-			int reportNr = ConfigHandler.LastReportWeekOfYear;
+			int reportNr = ConfigHandler.LastReportCreateDate?.GetWeekOfYear() ?? 0;
 
-			if (ConfigHandler.LastReportWeekOfYear < weekOfYear)
+			if (reportNr < weekOfYear)
 			{
 				//Missing reports in current year
 				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
@@ -650,7 +650,7 @@ namespace BerichtManager
 				return;
 			}
 			//Check if a report was created
-			if (ConfigHandler.LastReportWeekOfYear > 0)
+			if (ConfigHandler.LastReportCreateDate != null)
 			{
 				//Check if report for last week was created
 				if (GetDistanceToToday() > 1)
@@ -679,7 +679,7 @@ namespace BerichtManager
 		/// <returns>The number of weeks since last report creation</returns>
 		private int GetDistanceToToday()
 		{
-			int lastReportKW = ConfigHandler.LastReportWeekOfYear;
+			int lastReportKW = ConfigHandler.LastReportCreateDate?.GetWeekOfYear() ?? 0;
 			int todaysWeek = Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
 			//Both weeks are in the same year
 			if (lastReportKW <= todaysWeek)
@@ -1239,9 +1239,9 @@ namespace BerichtManager
 
 			//Roll back config if last created report is deleted
 			ResolvedValues values = NamingPatternResolver.GetValuesFromName(path);
-			if (values.CalendarWeek == ConfigHandler.LastReportWeekOfYear || values.ReportNumber == ConfigHandler.ReportNumber - 1)
+			if (values.CalendarWeek == ConfigHandler.LastReportCreateDate?.GetWeekOfYear() || values.ReportNumber == ConfigHandler.ReportNumber - 1)
 			{
-				ConfigHandler.LastReportWeekOfYear--;
+				ConfigHandler.LastReportCreateDate = ConfigHandler.LastReportCreateDate?.AddDays(-7);
 				ConfigHandler.ReportNumber--;
 				ConfigHandler.SaveConfig();
 			}
@@ -3272,7 +3272,7 @@ namespace BerichtManager
 			var last = downloadedContents.LastOrDefault();
 			if (downloadedContents.Count > 0 && ConfigHandler.ReportNumber < last.Value.Number)
 			{
-				ConfigHandler.LastReportWeekOfYear = Culture.Calendar.GetWeekOfYear(last.Key.StartDate, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
+				ConfigHandler.LastReportCreateDate = last.Key.StartDate;
 				ConfigHandler.ReportNumber = last.Value.Number;
 				ConfigHandler.LastCreated = newLatestPath;
 			}
