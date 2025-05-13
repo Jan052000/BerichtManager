@@ -5,7 +5,7 @@
 		public string Name => "Light Mode";
 		public Color TextBoxBackColor => Color.FromArgb(255, 255, 255);
 		public Color TextBoxDisabledBackColor => Color.FromArgb(235, 235, 228);
-		public Color TextBoxBorderColor => Color.FromArgb(255, 255, 255);
+		public Color TextBoxBorderColor => Color.FromArgb(0, 0, 0);
 		public Color TextBoxArrowColor => Color.Black;
 		public Color TextBoxReadOnlyColor => Color.FromArgb(240, 240, 240);
 		public Color ColoredComboBoxDropDownButtonBackColor => Color.FromArgb(255, 255, 255);
