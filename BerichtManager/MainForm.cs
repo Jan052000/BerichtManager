@@ -492,7 +492,7 @@ namespace BerichtManager
 						schoolText = Client.GetHolidaysForDate(dayInReport);
 					}
 					EditForm schoolForm = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", isCreate: true, text: schoolText);
-					if (ExitOnDialogResult(doc, seminarsForm, Fields.School))
+					if (ExitOnDialogResult(doc, schoolForm, Fields.School))
 						return;
 					autofillValues.Add(Fields.School, schoolForm.Result);
 				}
