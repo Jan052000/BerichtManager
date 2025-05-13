@@ -9,7 +9,6 @@
 		static void Main()
 		{
 			ApplicationConfiguration.Initialize();
-			Application.SetDefaultFont(new Font(new FontFamily("Segoe UI"), 8.25f));
 			try
 			{
 				Application.Run(new MainForm());
