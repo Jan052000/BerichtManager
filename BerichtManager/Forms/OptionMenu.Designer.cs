@@ -93,6 +93,10 @@ namespace BerichtManager.Forms
 			laMaxReportToolTipWidth = new Label();
 			nudMaxReportToolTipWidth = new NumericUpDown();
 			tpReport = new OwnControls.CustomTabControl.ColoredTabPage();
+			gbSeminars = new OwnControls.ColoredGroupBox();
+			tbAutoSeminarsValue = new TextBox();
+			laAutoSeminarsValue = new Label();
+			cbAskForSeminars = new CheckBox();
 			gbReportMisc = new OwnControls.ColoredGroupBox();
 			cbReportFormFields = new OwnControls.ColoredGroupBox();
 			tpWebUntis = new OwnControls.CustomTabControl.ColoredTabPage();
@@ -117,6 +121,7 @@ namespace BerichtManager.Forms
 			gbGeneralAppearance.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)nudMaxReportToolTipWidth).BeginInit();
 			tpReport.SuspendLayout();
+			gbSeminars.SuspendLayout();
 			gbReportMisc.SuspendLayout();
 			cbReportFormFields.SuspendLayout();
 			tpWebUntis.SuspendLayout();
@@ -747,7 +752,7 @@ namespace BerichtManager.Forms
 			tcOptions.Location = new Point(0, 0);
 			tcOptions.Name = "tcOptions";
 			tcOptions.SelectedIndex = 0;
-			tcOptions.Size = new Size(784, 421);
+			tcOptions.Size = new Size(784, 432);
 			tcOptions.TabIndex = 0;
 			// 
 			// tpGeneral
@@ -759,7 +764,7 @@ namespace BerichtManager.Forms
 			tpGeneral.Location = new Point(4, 24);
 			tpGeneral.Name = "tpGeneral";
 			tpGeneral.Padding = new Padding(3);
-			tpGeneral.Size = new Size(776, 393);
+			tpGeneral.Size = new Size(776, 404);
 			tpGeneral.TabIndex = 0;
 			tpGeneral.Text = "General";
 			tpGeneral.UseVisualStyleBackColor = true;
@@ -861,16 +866,60 @@ namespace BerichtManager.Forms
 			// 
 			// tpReport
 			// 
+			tpReport.Controls.Add(gbSeminars);
 			tpReport.Controls.Add(gbReportMisc);
 			tpReport.Controls.Add(cbReportFormFields);
 			tpReport.Controls.Add(gbReportPrefix);
 			tpReport.Location = new Point(4, 24);
 			tpReport.Name = "tpReport";
 			tpReport.Padding = new Padding(3);
-			tpReport.Size = new Size(776, 393);
+			tpReport.Size = new Size(776, 404);
 			tpReport.TabIndex = 1;
 			tpReport.Text = "Report";
 			tpReport.UseVisualStyleBackColor = true;
+			// 
+			// gbSeminars
+			// 
+			gbSeminars.BorderColor = Color.FromArgb(220, 220, 220);
+			gbSeminars.Controls.Add(tbAutoSeminarsValue);
+			gbSeminars.Controls.Add(laAutoSeminarsValue);
+			gbSeminars.Controls.Add(cbAskForSeminars);
+			gbSeminars.Dock = DockStyle.Top;
+			gbSeminars.Location = new Point(3, 326);
+			gbSeminars.Name = "gbSeminars";
+			gbSeminars.Size = new Size(770, 76);
+			gbSeminars.TabIndex = 3;
+			gbSeminars.TabStop = false;
+			gbSeminars.Text = "Seminars field";
+			// 
+			// tbAutoSeminarsValue
+			// 
+			tbAutoSeminarsValue.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbAutoSeminarsValue.Location = new Point(107, 47);
+			tbAutoSeminarsValue.Name = "tbAutoSeminarsValue";
+			tbAutoSeminarsValue.Size = new Size(655, 23);
+			tbAutoSeminarsValue.TabIndex = 2;
+			tbAutoSeminarsValue.TextChanged += MarkAsDirty;
+			// 
+			// laAutoSeminarsValue
+			// 
+			laAutoSeminarsValue.AutoSize = true;
+			laAutoSeminarsValue.Location = new Point(13, 49);
+			laAutoSeminarsValue.Name = "laAutoSeminarsValue";
+			laAutoSeminarsValue.Size = new Size(86, 15);
+			laAutoSeminarsValue.TabIndex = 1;
+			laAutoSeminarsValue.Text = "Seminars value";
+			// 
+			// cbAskForSeminars
+			// 
+			cbAskForSeminars.AutoSize = true;
+			cbAskForSeminars.Location = new Point(107, 22);
+			cbAskForSeminars.Name = "cbAskForSeminars";
+			cbAskForSeminars.Size = new Size(113, 19);
+			cbAskForSeminars.TabIndex = 0;
+			cbAskForSeminars.Text = "Ask for seminars";
+			cbAskForSeminars.UseVisualStyleBackColor = true;
+			cbAskForSeminars.CheckedChanged += MarkAsDirty;
 			// 
 			// gbReportMisc
 			// 
@@ -911,7 +960,7 @@ namespace BerichtManager.Forms
 			tpWebUntis.Controls.Add(gbWebUntisMisc);
 			tpWebUntis.Location = new Point(4, 24);
 			tpWebUntis.Name = "tpWebUntis";
-			tpWebUntis.Size = new Size(776, 393);
+			tpWebUntis.Size = new Size(776, 404);
 			tpWebUntis.TabIndex = 2;
 			tpWebUntis.Text = "WebUntis";
 			tpWebUntis.UseVisualStyleBackColor = true;
@@ -923,7 +972,7 @@ namespace BerichtManager.Forms
 			tpIHK.Controls.Add(gbIHKFailSaves);
 			tpIHK.Location = new Point(4, 24);
 			tpIHK.Name = "tpIHK";
-			tpIHK.Size = new Size(776, 393);
+			tpIHK.Size = new Size(776, 404);
 			tpIHK.TabIndex = 3;
 			tpIHK.Text = "IHK";
 			tpIHK.UseVisualStyleBackColor = true;
@@ -976,7 +1025,7 @@ namespace BerichtManager.Forms
 			paButtons.Controls.Add(btClose);
 			paButtons.Controls.Add(btSave);
 			paButtons.Dock = DockStyle.Bottom;
-			paButtons.Location = new Point(0, 421);
+			paButtons.Location = new Point(0, 432);
 			paButtons.Name = "paButtons";
 			paButtons.Size = new Size(784, 33);
 			paButtons.TabIndex = 0;
@@ -987,18 +1036,18 @@ namespace BerichtManager.Forms
 			paContent.Dock = DockStyle.Fill;
 			paContent.Location = new Point(0, 0);
 			paContent.Name = "paContent";
-			paContent.Size = new Size(784, 421);
+			paContent.Size = new Size(784, 432);
 			paContent.TabIndex = 1;
 			// 
 			// OptionMenu
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(784, 454);
+			ClientSize = new Size(784, 465);
 			Controls.Add(paContent);
 			Controls.Add(paButtons);
 			Margin = new Padding(4, 3, 4, 3);
-			MinimumSize = new Size(550, 465);
+			MinimumSize = new Size(550, 504);
 			Name = "OptionMenu";
 			Text = "OptionMenu";
 			FormClosing += OptionMenu_FormClosing;
@@ -1023,6 +1072,8 @@ namespace BerichtManager.Forms
 			gbGeneralAppearance.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)nudMaxReportToolTipWidth).EndInit();
 			tpReport.ResumeLayout(false);
+			gbSeminars.ResumeLayout(false);
+			gbSeminars.PerformLayout();
 			gbReportMisc.ResumeLayout(false);
 			gbReportMisc.PerformLayout();
 			cbReportFormFields.ResumeLayout(false);
@@ -1114,5 +1165,9 @@ namespace BerichtManager.Forms
 		private NumericUpDown nudMaxReportToolTipWidth;
 		private Label laWebUntisMaxAllowedWeeksLookback;
 		private NumericUpDown nudWebUntisMaxAllowedWeeksLookback;
+		private OwnControls.ColoredGroupBox gbSeminars;
+		private TextBox tbAutoSeminarsValue;
+		private Label laAutoSeminarsValue;
+		private CheckBox cbAskForSeminars;
 	}
 }

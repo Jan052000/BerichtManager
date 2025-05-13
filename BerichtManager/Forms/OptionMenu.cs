@@ -101,6 +101,8 @@ namespace BerichtManager.Forms
 			tbFolder.Text = ConfigHandler.ReportPath;
 			tbUpdate.Text = ConfigHandler.PublishPath;
 			tbNamingPattern.Text = ConfigHandler.NamingPattern;
+			cbAskForSeminars.Checked = ConfigHandler.AskForSeminars;
+			tbAutoSeminarsValue.Text = ConfigHandler.AutoSeminarsValue;
 			cbUseWordWrap.Checked = ConfigHandler.UseWordWrap;
 			cbShowReportToolTip.Checked = ConfigHandler.ShowReportToolTip;
 			nudMaxReportToolTipWidth.Value = ConfigHandler.MaxReportToolTipWidth;
@@ -255,6 +257,8 @@ namespace BerichtManager.Forms
 			ConfigHandler.ReportNumber = (int)nudNumber.Value;
 			ConfigHandler.EndWeekOnFriday = cbEndOfWeek.Checked;
 			ConfigHandler.NamingPattern = tbNamingPattern.Text;
+			ConfigHandler.AskForSeminars = cbAskForSeminars.Checked;
+			ConfigHandler.AutoSeminarsValue = tbAutoSeminarsValue.Text;
 			//Manager
 			if (ConfigHandler.TabStops != (int)nudTabStops.Value)
 			{

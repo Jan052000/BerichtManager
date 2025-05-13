@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using BerichtManager.Forms;
-using System.Globalization;
 using BerichtManager.OwnControls;
 using System.Net.Mail;
 using BerichtManager.Extensions;
@@ -84,6 +83,8 @@ namespace BerichtManager.Config
 			{"MaxReportToolTipWidth", (IntType, 200)},
 			{"TabStops", (IntType, 20)},
 			{"NamingPattern", (StringType, "WochenberichtKW~+CW+~")},
+			{"AskForSeminars", (BoolType, true)},
+			{"AutoSeminarsValue", (StringType, "-keine")},
 			{"AutoSyncStatusesWithIHK", (BoolType, false)},
 			{"UseIHK", (BoolType, true)},
 			{"IHKUserName", (StringType, "")},
@@ -304,6 +305,18 @@ namespace BerichtManager.Config
 		{
 			get => GenericGet<string>("NamingPattern")!;
 			set => GenericSet("NamingPattern", value);
+		}
+
+		public bool AskForSeminars
+		{
+			get => GenericGet<bool>("AskForSeminars");
+			set => GenericSet("AskForSeminars", value);
+		}
+
+		public string AutoSeminarsValue
+		{
+			get => GenericGet<string>("AutoSeminarsValue")!;
+			set => GenericSet("AutoSeminarsValue", value);
 		}
 
 		/// <summary>

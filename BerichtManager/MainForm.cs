@@ -461,12 +461,19 @@ namespace BerichtManager
 					if (autofillValues.TryGetValue(Fields.Seminars, out string? seminars) && !string.IsNullOrWhiteSpace(seminars))
 						seminarsText = seminars;
 					else
-						seminarsText = $"{(ConfigHandler.UseCustomPrefix ? ConfigHandler.CustomPrefix : "-")}keine";
+						seminarsText = $"{ConfigHandler.AutoSeminarsValue}";
 
-					EditForm seminarsForm = new EditForm(title: "Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: seminarsText, isCreate: true);
-					if (ExitOnDialogResult(doc, seminarsForm, Fields.Seminars))
-						return;
-					autofillValues.Add(Fields.Seminars, seminarsForm.Result);
+					if (ConfigHandler.AskForSeminars)
+					{
+						EditForm seminarsForm = new EditForm(title: "Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: seminarsText, isCreate: true);
+						if (ExitOnDialogResult(doc, seminarsForm, Fields.Seminars))
+							return;
+						autofillValues.Add(Fields.Seminars, seminarsForm.Result);
+					}
+					else
+					{
+						FormFieldHandler.SetValueInDoc(Fields.Seminars, doc, seminarsText);
+					}
 
 					string? schoolText;
 					if (autofillValues.TryGetValue(Fields.School, out string? school) && !string.IsNullOrWhiteSpace(school))
