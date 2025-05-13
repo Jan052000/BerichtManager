@@ -94,16 +94,18 @@ namespace BerichtManager.ThemeManagement
 
 			bool drawCheckBoxes = e.Node.TreeView.CheckBoxes;
 
-			TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.TreeView.Font, new Point(e.Node.Bounds.X, e.Node.Bounds.Y), e.Node.TreeView.ForeColor);
+			TextRenderer.DrawText(e.Graphics, e.Node.Text, e.Node.TreeView.Font, e.Node.Bounds, e.Node.TreeView.ForeColor);
 			int boxWidth = 13;
+			int nodeTextCenter = e.Node.Bounds.Y + e.Node.Bounds.Height / 2;
 
 			Rectangle iconBounds;
 			Rectangle? checkBoxBounds = null;
 
 			if (drawCheckBoxes)
 			{
-				checkBoxBounds = new Rectangle(e.Node.Bounds.X - 1 - boxWidth, e.Node.Bounds.Y + e.Node.Bounds.Height / 2 - boxWidth / 2, boxWidth, boxWidth);
-				iconBounds = new Rectangle(checkBoxBounds.Value.X - ExpandImageSize - 1, e.Node.Bounds.Y, ExpandImageSize, e.Node.Bounds.Height);
+				//y coords of center height of node bounds
+				checkBoxBounds = new Rectangle(e.Node.Bounds.X - 1 - boxWidth, nodeTextCenter - boxWidth / 2, boxWidth, boxWidth);
+				iconBounds = new Rectangle(checkBoxBounds.Value.X - ExpandImageSize - 1, nodeTextCenter - ExpandImageSize / 2, ExpandImageSize, ExpandImageSize);
 				if (e.Node is CustomTreeNode custom && e.Node.TreeView is CustomTreeView)
 					DrawCheckBox(e.Graphics, checkBoxBounds.Value, custom.CheckStatus);
 				else
@@ -112,9 +114,9 @@ namespace BerichtManager.ThemeManagement
 			else
 			{
 				if (e.Node.Parent == null)
-					iconBounds = new Rectangle(e.Node.Bounds.X - e.Node.Bounds.Height - 3, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height);
+					iconBounds = new Rectangle(e.Node.Bounds.X - ExpandImageSize - 1, nodeTextCenter - ExpandImageSize / 2, ExpandImageSize, ExpandImageSize);
 				else
-					iconBounds = new Rectangle(e.Node.Parent.Bounds.X + 7 - e.Node.Bounds.Height / 2, e.Node.Bounds.Y, e.Node.Bounds.Height, e.Node.Bounds.Height);
+					iconBounds = new Rectangle(e.Node.Parent.Bounds.X, nodeTextCenter - ExpandImageSize / 2, ExpandImageSize, ExpandImageSize);
 			}
 
 			if (e.Node.TreeView.ShowLines)
