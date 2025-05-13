@@ -359,14 +359,7 @@ namespace BerichtManager
 				app.Selection.Font.Name = ConfigHandler.EditorFont;
 				ThemedMessageBox.Show(text: "Changed report Font to: " + ConfigHandler.EditorFont, title: "Font changed!");
 			}
-			try
-			{
-				doc.FitToPages();
-			}
-			catch
-			{
-
-			}
+			FitToPage(doc);
 		}
 
 		/// <summary>
@@ -375,8 +368,6 @@ namespace BerichtManager
 		/// <param name="doc"></param>
 		private void FitToPage(Word.Document? doc = null)
 		{
-			if (doc == null)
-				doc = Doc;
 			try
 			{
 				doc?.FitToPages();
