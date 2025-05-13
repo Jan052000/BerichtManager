@@ -379,192 +379,131 @@ namespace BerichtManager
 		}
 
 		/// <summary>
-		/// Creates a new Word document from a given template for a given time.
+		/// Shows and handles the dialogresult of the passed <paramref name="form"/>
 		/// </summary>
-		/// <param name="templatePath">The full path of the template to be used</param>
-		/// <param name="baseDate">The date of the report to be created</param>
-		/// <param name="app">The Wordapp that is used to create the document</param>
-		/// <param name="vacation">If you missed reports due to vacation</param>
-		/// <param name="reportDifference">The difference between the next report number and the one for the created report</param>
-		private void CreateDocument(string templatePath, DateTime baseDate, Word.Application? app, bool vacation = false, int reportDifference = 0)
+		/// <param name="doc">Reference of the opened <see cref="Word.Document"/></param>
+		/// <param name="form"><see cref="EditForm"/> to show and handle</param>
+		/// <param name="field">Form field to set value for</param>
+		/// <returns><see langword="true"/> if document was closed and creation should be aborted, <see langword="false"/> otherwise</returns>
+		private static bool ExitOnDialogResult(Word.Document doc, EditForm form, Fields field)
 		{
-			if (app == null)
+			switch (form.ShowDialog())
 			{
-				RestartWordIfNeeded();
-				app = WordApp;
+				case DialogResult.Abort:
+					doc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
+					return true;
+				//Skip
+				case DialogResult.Cancel:
+					break;
+				default:
+					FormFieldHandler.SetValueInDoc(field, doc, form.Result);
+					break;
 			}
-			Word.Document? ldoc = null;
+			return false;
+		}
+
+		/// <summary>
+		/// Creates a single <see cref="Word.Document"/>
+		/// </summary>
+		/// <param name="dayInReport"><see cref="DateTime"/> in span of report</param>
+		/// <param name="wasOnVacation">Wether or not manual fields should be filled for vacation</param>
+		/// <param name="onlyAutomaticFields">Wether or not manual fields should be left blank</param>
+		/// <param name="autofillValues">Cache of values to autofill manual fields with (Used to cache entered values if word closes while creating document)</param>
+		private void CreateDocument(DateTime dayInReport, bool wasOnVacation = false, bool onlyAutomaticFields = false, Dictionary<Fields, string?>? autofillValues = null)
+		{
+			Word.Document? doc = null;
 			bool createComplete = false;
-			if (!File.Exists(templatePath))
+			if (string.IsNullOrEmpty(ConfigHandler.TemplatePath))
+			{
+				ThemedMessageBox.Show(text: "Please open the option menu and select a word template to use.", title: "Please select a word template to use");
+				return;
+			}
+			if (!File.Exists(ConfigHandler.TemplatePath))
 			{
 				ThemedMessageBox.Show(text: ConfigHandler.TemplatePath + " was not found was it moved or deleted?", title: "Template not found");
 				return;
 			}
-			try
+			if (string.IsNullOrEmpty(ConfigHandler.ReportUserName))
 			{
-				int weekOfYear = Culture.Calendar.GetWeekOfYear(baseDate, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
-				ldoc = app!.Documents.Add(Template: templatePath);
-
-				if (!FormFieldHandler.ValidFormFieldCount(ldoc))
+				EditForm nameForm = new EditForm(title: "Please enter the name to use in reports.");
+				if (nameForm.ShowDialog() != DialogResult.OK)
 				{
-					ThemedMessageBox.Show(text: "Invalid template");
-					ldoc.Close(SaveChanges: false);
-					ldoc = null;
+					ThemedMessageBox.Show(text: "Please provide a name in order to create reports!", title: "No name was provided.");
 					return;
 				}
+				ConfigHandler.ReportUserName = nameForm.Result!;
+				ConfigHandler.SaveConfig();
+			}
+			try
+			{
+				int weekOfYear = Culture.Calendar.GetWeekOfYear(dayInReport, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
+				RestartWordIfNeeded();
+				doc = WordApp!.Documents.Add(Template: ConfigHandler.TemplatePath);
+				int reportNumber = ConfigHandler.ReportNumber;
+				FillEssentials(doc, dayInReport, reportNumber, out string startDate);
 
-				EditForm form;
-				//Fill name
-				if (!string.IsNullOrEmpty(ConfigHandler.ReportUserName))
+				if (!onlyAutomaticFields)
 				{
-					FormFieldHandler.SetValueInDoc(Fields.Name, ldoc, ConfigHandler.ReportUserName);
-				}
-				else
-				{
-					form = new EditForm(title: "Enter your name", text: "Name Vorname");
-					form.RefreshConfigs += RefreshConfig;
-					if (form.ShowDialog() == DialogResult.OK)
-					{
-						ConfigHandler.ReportUserName = form.Result!;
-						ConfigHandler.SaveConfig();
-						FormFieldHandler.SetValueInDoc(Fields.Name, ldoc, ConfigHandler.ReportUserName);
-					}
+					autofillValues ??= new Dictionary<Fields, string?>();
+
+					string? workText;
+					if (autofillValues.TryGetValue(Fields.Work, out string? work) && !string.IsNullOrWhiteSpace(work))
+						workText = work;
 					else
-					{
-						ThemedMessageBox.Show(text: "Cannot proceed without a name!", title: "Name required!");
+						workText = wasOnVacation ? $"{(ConfigHandler.UseCustomPrefix ? ConfigHandler.CustomPrefix : "-")}Urlaub" : "";
+
+					EditForm workForm = new EditForm(title: "Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", isCreate: true, text: workText);
+					if (ExitOnDialogResult(doc, workForm, Fields.Work))
 						return;
-					}
-					form.RefreshConfigs -= RefreshConfig;
-				}
+					autofillValues.Add(Fields.Work, workForm.Result);
 
-				//Enter report nr.
-				int reportNr = ConfigHandler.ReportNumber - reportDifference;
-				FormFieldHandler.SetValueInDoc(Fields.Number, ldoc, reportNr.ToString());
-
-				//Enter week start and end
-				DateTime today = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day);
-				DateTime thisWeekStart = today.AddDays(-(int)baseDate.DayOfWeek + 1);
-				DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-				if (ConfigHandler.EndWeekOnFriday)
-					thisWeekEnd = thisWeekEnd.AddDays(-2);
-				FormFieldHandler.SetValueInDoc(Fields.StartDate, ldoc, thisWeekStart.ToString("dd.MM.yyyy"));
-				FormFieldHandler.SetValueInDoc(Fields.EndDate, ldoc, thisWeekEnd.ToString("dd.MM.yyyy"));
-
-				//Enter Year
-				FormFieldHandler.SetValueInDoc(Fields.Year, ldoc, today.Year.ToString());
-
-				//Enter work field
-				if (vacation)
-				{
-					if (ConfigHandler.UseCustomPrefix)
-						FormFieldHandler.SetValueInDoc(Fields.Work, ldoc, ConfigHandler.CustomPrefix + "Urlaub");
+					string? seminarsText;
+					if (autofillValues.TryGetValue(Fields.Seminars, out string? seminars) && !string.IsNullOrWhiteSpace(seminars))
+						seminarsText = seminars;
 					else
-						FormFieldHandler.SetValueInDoc(Fields.Work, ldoc, "-Urlaub");
-				}
-				else
-				{
-					form = new EditForm(title: "Betriebliche Tätigkeiten" + "(KW " + weekOfYear + ")", isCreate: true);
-					form.RefreshConfigs += RefreshConfig;
-					form.ShowDialog();
-					form.RefreshConfigs -= RefreshConfig;
-					switch (form.DialogResult)
-					{
-						case DialogResult.Abort:
-							ldoc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-							ldoc = null;
-							return;
-						//Skip
-						case DialogResult.Cancel:
-							break;
-						default:
-							FormFieldHandler.SetValueInDoc(Fields.Work, ldoc, form.Result);
-							break;
-					}
-				}
+						seminarsText = $"{(ConfigHandler.UseCustomPrefix ? ConfigHandler.CustomPrefix : "-")}keine";
 
-				//Enter work seminars
-				if (vacation)
-				{
-					if (ConfigHandler.UseCustomPrefix)
-						FormFieldHandler.SetValueInDoc(Fields.Seminars, ldoc, ConfigHandler.CustomPrefix + "Urlaub");
-					else
-						FormFieldHandler.SetValueInDoc(Fields.Seminars, ldoc, "-Urlaub");
-				}
-				else
-				{
-					string text = "Keine";
-					form = new EditForm(title: "Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: $"{(ConfigHandler.UseCustomPrefix ? ConfigHandler.CustomPrefix : "-")}{text}", isCreate: true);
-					form.RefreshConfigs += RefreshConfig;
-					form.ShowDialog();
-					form.RefreshConfigs -= RefreshConfig;
-					switch (form.DialogResult)
-					{
-						case DialogResult.Abort:
-							ldoc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-							ldoc = null;
-							return;
-						//Skip
-						case DialogResult.Cancel:
-							break;
-						default:
-							FormFieldHandler.SetValueInDoc(Fields.Seminars, ldoc, form.Result);
-							break;
-					}
-				}
-
-				//Shool stuff
-				if (ConfigHandler.WebUntisMaxAllowedWeeksLookback <= (DateTime.Today - baseDate).Days / 7)
-				{
-					string classes = "";
-					try
-					{
-						StartWaitCursor();
-						Client.GetClassesFromWebUntis().ForEach(c => classes += c);
-					}
-					catch (Exception ex)
-					{
-						ThemedMessageBox.Error(ex);
-					}
-					finally
-					{
-						EndWaitCursor();
-					}
-					form = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", isCreate: true, text: classes);
-				}
-				else
-				{
-					form = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", text: Client.GetHolidaysForDate(baseDate), isCreate: true);
-				}
-				form.RefreshConfigs += RefreshConfig;
-				form.ShowDialog();
-				form.RefreshConfigs -= RefreshConfig;
-				switch (form.DialogResult)
-				{
-					case DialogResult.Abort:
-						ldoc.Close(Word.WdSaveOptions.wdDoNotSaveChanges);
-						ldoc = null;
+					EditForm seminarsForm = new EditForm(title: "Unterweisungen, betrieblicher Unterricht, sonstige Schulungen" + "(KW " + weekOfYear + ")", text: seminarsText, isCreate: true);
+					if (ExitOnDialogResult(doc, seminarsForm, Fields.Seminars))
 						return;
-					//Skip
-					case DialogResult.Cancel:
-						break;
-					default:
-						FormFieldHandler.SetValueInDoc(Fields.School, ldoc, form.Result);
-						break;
+					autofillValues.Add(Fields.Seminars, seminarsForm.Result);
+
+					string? schoolText;
+					if (autofillValues.TryGetValue(Fields.School, out string? school) && !string.IsNullOrWhiteSpace(school))
+						schoolText = school;
+					else if (Culture.Calendar.GetWeekOfYear(dayInReport, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek)
+						- Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek) > ConfigHandler.WebUntisMaxAllowedWeeksLookback)
+					{
+						List<string> classes;
+						try
+						{
+							classes = Client.GetClassesFromWebUntis();
+						}
+						catch (Exception ex)
+						{
+							ThemedMessageBox.Info(text: $"{ex.GetType().Name} while fetching classes from WebUntis.", title: "Failed to fetch classes!");
+							Logger.LogError(ex);
+							classes = new List<string>();
+						}
+						schoolText = string.Join("", classes);
+					}
+					else
+					{
+						schoolText = Client.GetHolidaysForDate(dayInReport);
+					}
+					EditForm schoolForm = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", isCreate: true, text: schoolText);
+					if (ExitOnDialogResult(doc, seminarsForm, Fields.School))
+						return;
+					autofillValues.Add(Fields.School, schoolForm.Result);
 				}
 
-				//Fridy of week
-				FormFieldHandler.SetValueInDoc(Fields.SignDateYou, ldoc, thisWeekEnd.ToString("dd.MM.yyyy"));
-
-				//Sign date 2
-				FormFieldHandler.SetValueInDoc(Fields.SignDateSupervisor, ldoc, thisWeekEnd.ToString("dd.MM.yyyy"));
-
-
-				Directory.CreateDirectory(ActivePath + "\\" + today.Year);
+				Directory.CreateDirectory(Path.Combine(ActivePath, dayInReport.Year.ToString()));
 				string name = NamingPatternResolver.ResolveName(weekOfYear.ToString(), ConfigHandler.ReportNumber.ToString());
-				string path = ActivePath + "\\" + today.Year + "\\" + name + ".docx";
-				FitToPage(ldoc);
-				ldoc.SaveAs2(FileName: path);
+				string path = Path.Combine(ActivePath, dayInReport.Year.ToString(), name + ".docx");
+				FitToPage(doc);
+				doc.SaveAs2(FileName: path);
 
+				QuickInfos.AddOrUpdateQuickInfo(path, new QuickInfo(startDate, reportNumber));
 				ConfigHandler.ReportNumber++;
 				ConfigHandler.LastReportWeekOfYear = weekOfYear;
 				ConfigHandler.LastCreated = path;
@@ -572,12 +511,11 @@ namespace BerichtManager
 				createComplete = true;
 
 				miEditLatest.Enabled = true;
-				QuickInfos.AddOrUpdateQuickInfo(path, new QuickInfo(thisWeekStart.ToString(DateTimeUtils.DATEFORMAT), reportNr));
 				UpdateTree();
 				ThemedMessageBox.Info(text: "Created Document at: " + path, title: "Document saved", allowMessageHighlight: true);
 
 				SaveOrExit();
-				Doc = ldoc;
+				Doc = doc;
 				OpenedReportNode = GetNodeFromPath(path) as ReportNode;
 				rtbWork.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.Work, Doc);
 				rtbSchool.Text = FormFieldHandler.GetValueFromDoc<string>(Fields.School, Doc);
@@ -594,39 +532,28 @@ namespace BerichtManager
 					case -2147023179:
 					//{"Der Remoteprozeduraufruf ist fehlgeschlagen. (Ausnahme von HRESULT: 0x800706BE)"}
 					case -2147023170:
-						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please wait while it restarts");
-						RestartWordIfNeeded();
 						if (createComplete)
 						{
 							ThemedMessageBox.Show(text: "Unable to automatically open report, Word was closed unexpectedly", title: "Loading was cancelled because word closed");
 							return;
 						}
-						CreateDocument(templatePath, baseDate, WordApp, vacation: vacation, reportDifference: reportDifference);
+						ThemedMessageBox.Show(text: "Word closed unexpectedly and is restarting please wait while it restarts");
+						RestartWordIfNeeded();
+						CreateDocument(dayInReport, wasOnVacation: wasOnVacation, onlyAutomaticFields: onlyAutomaticFields, autofillValues: autofillValues);
 						break;
-					//case -2146822750:
-					//	//Document already fit on page
-					//	try
-					//	{
-					//		ldoc.Close(SaveChanges: true);
-					//	}
-					//	catch
-					//	{
-
-					//	}
-					//	break;
 					case -2146233088:
 						ThemedMessageBox.Show(text: "Connection refused by remotehost");
 						break;
 					//Default file format in word is not compatible with .docx
 					case -2146821994:
 						ThemedMessageBox.Show(text: "Please change default document format in your Word app under File>Options>Save>DefaultFileFormat, then try again.", title: "Please change Word settingd");
-						ldoc?.Close(SaveChanges: false);
+						doc?.Close(SaveChanges: false);
 						break;
 					default:
 						ThemedMessageBox.Error(ex);
 						try
 						{
-							ldoc?.Close(SaveChanges: false);
+							doc?.Close(SaveChanges: false);
 						}
 						catch
 						{
@@ -635,6 +562,32 @@ namespace BerichtManager
 						break;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Fills all automatic fields in <paramref name="doc"/>
+		/// </summary>
+		/// <param name="doc"><see cref="Word.Document"/> to fill with values</param>
+		/// <param name="dayInReport"><see cref="DateTime"/> in span of report</param>
+		/// <param name="reportNumber">Number of report</param>
+		/// <param name="reportStartDate"><see cref="DateTime"/> of start date formatted to <see cref="DateTimeUtils.DATEFORMAT"/></param>
+		private void FillEssentials(Word.Document doc, DateTime dayInReport, int reportNumber, out string reportStartDate)
+		{
+			FormFieldHandler.SetValueInDoc(Fields.Name, doc, ConfigHandler.ReportUserName);
+			FormFieldHandler.SetValueInDoc(Fields.Number, doc, reportNumber.ToString());
+			FormFieldHandler.SetValueInDoc(Fields.Year, doc, dayInReport.Year.ToString());
+			//Enter week start and end
+			DateTime today = new DateTime(dayInReport.Year, dayInReport.Month, dayInReport.Day);
+			DateTime thisWeekStart = today.AddDays(-(int)dayInReport.DayOfWeek + 1);
+			DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+			if (ConfigHandler.EndWeekOnFriday)
+				thisWeekEnd = thisWeekEnd.AddDays(-2);
+			reportStartDate = thisWeekStart.ToString(DateTimeUtils.DATEFORMAT);
+
+			FormFieldHandler.SetValueInDoc(Fields.StartDate, doc, reportStartDate);
+			FormFieldHandler.SetValueInDoc(Fields.EndDate, doc, thisWeekEnd.ToString(DateTimeUtils.DATEFORMAT));
+			FormFieldHandler.SetValueInDoc(Fields.SignDateYou, doc, thisWeekEnd.ToString(DateTimeUtils.DATEFORMAT));
+			FormFieldHandler.SetValueInDoc(Fields.SignDateSupervisor, doc, thisWeekEnd.ToString(DateTimeUtils.DATEFORMAT));
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -646,7 +599,8 @@ namespace BerichtManager
 		/// Used for detecting missing reports and initiating their creation
 		/// </summary>
 		/// <param name="vacation">Passed on to <see cref="CreateDocument(string, DateTime, Word.Application, bool, int, bool)"/> for if you were on vacation</param>
-		private void CreateMissing(bool vacation = false)
+		/// <param name="empty">Indicates that all reports should only contain automatically filled infos</param>
+		private void CreateMissing(bool vacation = false, bool empty = false)
 		{
 			int weekOfYear = Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek);
 			int reportNr = ConfigHandler.LastReportWeekOfYear;
@@ -657,7 +611,7 @@ namespace BerichtManager
 				DateTime today = DateTime.Today.AddDays(-(weekOfYear - reportNr) * 7);
 				for (int i = 1; i < weekOfYear - reportNr; i++)
 				{
-					CreateDocument(ConfigHandler.TemplatePath, today.AddDays(i * 7), WordApp, vacation: vacation);
+					CreateDocument(today.AddDays(i * 7), wasOnVacation: vacation, onlyAutomaticFields: empty);
 				}
 			}
 			else
@@ -681,7 +635,7 @@ namespace BerichtManager
 				//Generate reports for missing reports over 2 years
 				for (int i = 1; i < repeats; i++)
 				{
-					CreateDocument(ConfigHandler.TemplatePath, today.AddDays(i * 7), WordApp, vacation: vacation);
+					CreateDocument(today.AddDays(i * 7), wasOnVacation: vacation, onlyAutomaticFields: empty);
 				}
 			}
 		}
@@ -705,17 +659,18 @@ namespace BerichtManager
 					{
 						CreateMissing(vacation: true);
 					}
-					else
+					else if (ThemedMessageBox.Show(text: "Do you want to create all empty reports?", title: "Create all reports?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
-						if (ThemedMessageBox.Show(text: "Do you want to create empty reports then?", title: "Create?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
-						{
-							CreateMissing();
-						}
+						CreateMissing(empty: true);
+					}
+					else if (ThemedMessageBox.Show(text: "Do you want to write the missing empty reports then?", title: "Create?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+					{
+						CreateMissing();
 					}
 				}
 			}
 
-			CreateDocument(ConfigHandler.TemplatePath, baseDate: DateTime.Today, WordApp);
+			CreateDocument(DateTime.Today);
 		}
 
 		/// <summary>
