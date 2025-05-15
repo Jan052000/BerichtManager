@@ -64,7 +64,7 @@ namespace BerichtManager
 		/// Version number
 		/// Major.Minor.Build.Revision
 		/// </summary>
-		public const string VersionNumber = "1.23.2";
+		public const string VersionNumber = "1.24";
 
 		/// <summary>
 		/// String to be printed
