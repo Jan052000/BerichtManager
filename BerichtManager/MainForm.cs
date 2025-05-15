@@ -637,13 +637,13 @@ namespace BerichtManager
 					{
 						CreateMissing(vacation: true);
 					}
-					else if (ThemedMessageBox.Show(text: "Do you want to create all empty reports?", title: "Create all reports?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
-					{
-						CreateMissing(empty: true);
-					}
 					else if (ThemedMessageBox.Show(text: "Do you want to write the missing empty reports then?", title: "Create?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
 						CreateMissing();
+					}
+					else if (ThemedMessageBox.Show(text: "Do you want to create all empty reports?", title: "Create all reports?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+					{
+						CreateMissing(empty: true);
 					}
 				}
 			}
