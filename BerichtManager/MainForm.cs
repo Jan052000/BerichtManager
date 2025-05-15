@@ -478,8 +478,7 @@ namespace BerichtManager
 					string? schoolText;
 					if (autofillValues.TryGetValue(Fields.School, out string? school) && !string.IsNullOrWhiteSpace(school))
 						schoolText = school;
-					else if (Culture.Calendar.GetWeekOfYear(dayInReport, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek)
-						- Culture.Calendar.GetWeekOfYear(DateTime.Today, DateTimeFormatInfo.CalendarWeekRule, DateTimeFormatInfo.FirstDayOfWeek) > ConfigHandler.WebUntisMaxAllowedWeeksLookback)
+					else if (DateTime.Today.GetIsoWeekOfYear() - dayInReport.GetIsoWeekOfYear() <= ConfigHandler.WebUntisMaxAllowedWeeksLookback)
 					{
 						List<string> classes;
 						try
