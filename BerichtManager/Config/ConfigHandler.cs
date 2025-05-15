@@ -575,11 +575,11 @@ namespace BerichtManager.Config
 					case "LastReportWeekOfYear":
 						int lastWeekNr = GenericGet<int>(field);
 						DateTime today = DateTime.Today;
+						int weekDif;
 						//In same year
 						if (today.GetWeekOfYear() >= lastWeekNr)
 						{
-							int weekDif = today.GetWeekOfYear() - lastWeekNr;
-							GenericSet("LastReportCreateDate", today.AddDays(-7 * weekDif));
+							weekDif = today.GetWeekOfYear() - lastWeekNr;
 						}
 						//Last create was last year
 						else
@@ -589,9 +589,9 @@ namespace BerichtManager.Config
 							//If not decremented, calculated week will be one lower than actual wanted week
 							if (realWeekNumberLastWeekLastYear == 1)
 								nrOfWeeksLastYear--;
-							int t = nrOfWeeksLastYear - lastWeekNr + today.GetWeekOfYear();
-							GenericSet("LastReportCreateDate", today.AddDays(-7 * t));
+							weekDif = nrOfWeeksLastYear - lastWeekNr + today.GetWeekOfYear();
 						}
+						GenericSet("LastReportCreateDate", today.AddDays(-7 * weekDif));
 						break;
 				}
 			}
