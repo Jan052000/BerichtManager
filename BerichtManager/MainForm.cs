@@ -2712,6 +2712,8 @@ namespace BerichtManager
 				}
 
 				doc.Close(SaveChanges: false);
+
+				await Task.Delay(ConfigHandler.IHKUploadDelay);
 			}
 
 			if (stop)
@@ -3186,6 +3188,7 @@ namespace BerichtManager
 				progressForm.Status = "\t- Success";
 
 				downloadedContents.Add(report, (reportNumber, content));
+				await Task.Delay(ConfigHandler.IHKUploadDelay);
 			}
 
 			string newLatestPath = "";
