@@ -57,7 +57,7 @@ namespace BerichtManager.HelperClasses
 		/// <returns>Resolved name according to pattern in <see cref="ConfigHandler"/></returns>
 		public static string ResolveName(DateTime baseDate, int reportNumber)
 		{
-			return ConfigHandler.Instance.NamingPattern.Replace(CalendarWeek, Culture.Calendar.GetWeekOfYear(baseDate, MainForm.DateTimeFormatInfo.CalendarWeekRule, MainForm.DateTimeFormatInfo.FirstDayOfWeek).ToString()).Replace(ReportNumber, reportNumber.ToString());
+			return ResolveName(baseDate, reportNumber.ToString());
 		}
 
 		/// <summary>
