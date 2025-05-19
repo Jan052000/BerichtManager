@@ -3108,7 +3108,7 @@ namespace BerichtManager
 			}
 			catch (Exception ex)
 			{
-				ThemedMessageBox.Show(text: $"A(n) {ex.GetType().Name} occurred, report info could not be fetched");
+				ThemedMessageBox.Error(ex, allowMessageHighlight: true);
 				DoStop(ex.GetType().Name);
 				OpenAllDocuments(openReports, activePath);
 				return;
