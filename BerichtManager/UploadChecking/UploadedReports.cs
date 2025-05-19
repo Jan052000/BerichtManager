@@ -135,6 +135,24 @@ namespace BerichtManager.UploadChecking
 		}
 
 		/// <summary>
+		/// Overwrites <see cref="UploadedReport"/> contents with those of <paramref name="newReport"/> if a report was found
+		/// </summary>
+		/// <param name="path">Path of report to update</param>
+		/// <param name="newReport">New content of uploaded report</param>
+		public static void UpdateRerport(string path, UploadedReport newReport)
+		{
+			if (!GetUploadedReport(path, out UploadedReport? toUpdate))
+				return;
+			toUpdate.LastComment = newReport.LastComment;
+			toUpdate.LfdNR = newReport.LfdNR;
+			toUpdate.StartDate = newReport.StartDate;
+			toUpdate.Status = newReport.Status;
+			toUpdate.WasEditedLocally = newReport.WasEditedLocally;
+			toUpdate.WasUpdated = newReport.WasUpdated;
+			Instance.Save();
+		}
+
+		/// <summary>
 		/// Gets status of uploaded report if it was uploaded
 		/// </summary>
 		/// <param name="path">Path of report</param>
