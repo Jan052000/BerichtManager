@@ -3100,11 +3100,14 @@ namespace BerichtManager
 				return;
 			}
 
+			progressForm.Status = "Fetching reports";
+
 			//Get report infos from IHK
 			List<UploadedReport>? uploadedReports;
 			try
 			{
 				uploadedReports = await IHKClient.GetIHKReports();
+				progressForm.Status = "Done";
 			}
 			catch (Exception ex)
 			{
