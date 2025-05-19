@@ -25,7 +25,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		/// </summary>
 		public List<HtmlFormElement> Forms
 		{
-			get => GetForms(Body);
+			get => (Body?.All ?? new List<HtmlElement>()).Where(element => element is HtmlFormElement).Cast<HtmlFormElement>().ToList();
 		}
 
 		/// <summary>
@@ -66,25 +66,6 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 		{
 			Body = new HtmlElement(doc.Body!);
 			Title = doc.Title;
-		}
-
-		/// <summary>
-		/// Gets a <see cref="List{T}"/> of forms in <paramref name="root"/>
-		/// </summary>
-		/// <param name="root"><see cref="HtmlElement"/> to search for forms</param>
-		/// <returns><see cref="List{T}"/> containing all form tags in <paramref name="root"/></returns>
-		private List<HtmlFormElement> GetForms(HtmlElement? root)
-		{
-			List<HtmlFormElement> forms = new List<HtmlFormElement>();
-
-			if (root == null)
-				return forms;
-
-			if (root is HtmlFormElement form)
-				forms.Add(form);
-			root.Children.ForEach(child => forms.AddRange(GetForms(child)));
-
-			return forms;
 		}
 
 		/// <summary>
