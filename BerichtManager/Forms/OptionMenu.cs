@@ -119,6 +119,7 @@ namespace BerichtManager.Forms
 			tbIHKBaseUrl.Text = ConfigHandler.IHKBaseUrl;
 			cbIHKCheckMatchingStartDates.Checked = ConfigHandler.IHKCheckMatchingStartDates;
 			cbIHKAutoGetComment.Checked = ConfigHandler.IHKAutoGetComment;
+			cbReportDownloadUseQuickInfo.Checked = ConfigHandler.ReportDownloadUseQuickInfo;
 
 			IsDirty = false;
 			btSave.Enabled = false;
@@ -311,6 +312,7 @@ namespace BerichtManager.Forms
 			ConfigHandler.IHKBaseUrl = tbIHKBaseUrl.Text;
 			ConfigHandler.IHKCheckMatchingStartDates = cbIHKCheckMatchingStartDates.Checked;
 			ConfigHandler.IHKAutoGetComment = cbIHKAutoGetComment.Checked;
+			ConfigHandler.ReportDownloadUseQuickInfo = cbReportDownloadUseQuickInfo.Checked;
 
 			ConfigHandler.SaveConfig();
 

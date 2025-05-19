@@ -3065,7 +3065,7 @@ namespace BerichtManager
 				string fullNodePath = GetFullPath(node);
 				progressForm.Status = $"\t- {fullNodePath}:";
 				string? startDate;
-				if (QuickInfos.GetQuickInfo(fullNodePath, out QuickInfo? info))
+				if (ConfigHandler.ReportDownloadUseQuickInfo && QuickInfos.GetQuickInfo(fullNodePath, out QuickInfo? info))
 					startDate = info.StartDate;
 				else
 				{

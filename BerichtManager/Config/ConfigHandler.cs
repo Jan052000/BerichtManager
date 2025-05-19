@@ -95,7 +95,8 @@ namespace BerichtManager.Config
 			{"IHKBaseUrl", (StringType, "https://www.bildung-ihk-nordwestfalen.de/")},
 			{"IHKUploadDelay", (IntType, 500)},
 			{"IHKCheckMatchingStartDates", (BoolType, true)},
-			{"IHKAutoGetComment", (BoolType, false)}
+			{"IHKAutoGetComment", (BoolType, false)},
+			{"ReportDownloadUseQuickInfo", (BoolType, true)}
 		};
 		#endregion
 
@@ -470,6 +471,15 @@ namespace BerichtManager.Config
 		{
 			get => GenericGet<int>("MaxReportToolTipWidth");
 			set => GenericSet("MaxReportToolTipWidth", value);
+		}
+
+		/// <summary>
+		/// Wether or not to use <see cref="ReportQuickInfo.QuickInfos"/> to index start dates of reports to keep when downloading
+		/// </summary>
+		public bool ReportDownloadUseQuickInfo
+		{
+			get => GenericGet<bool>("ReportDownloadUseQuickInfo");
+			set => GenericSet("ReportDownloadUseQuickInfo", value);
 		}
 		#endregion
 

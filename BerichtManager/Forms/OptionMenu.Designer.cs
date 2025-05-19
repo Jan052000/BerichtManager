@@ -53,6 +53,7 @@ namespace BerichtManager.Forms
 			cbUseCustomPrefix = new CheckBox();
 			tbCustomPrefix = new TextBox();
 			cbLegacyEdit = new CheckBox();
+			tbIHKJobField = new TextBox();
 			ttErrors = new ToolTip(components);
 			cbIHKAutoGetComment = new CheckBox();
 			laIHKBaseUrl = new Label();
@@ -102,7 +103,7 @@ namespace BerichtManager.Forms
 			tpWebUntis = new OwnControls.CustomTabControl.ColoredTabPage();
 			tpIHK = new OwnControls.CustomTabControl.ColoredTabPage();
 			gbIHKMiscellanious = new OwnControls.ColoredGroupBox();
-			tbIHKJobField = new TextBox();
+			cbReportDownloadUseQuickInfo = new CheckBox();
 			laIHKJobField = new Label();
 			gbIHKFields = new OwnControls.ColoredGroupBox();
 			gbIHKFailSaves = new OwnControls.ColoredGroupBox();
@@ -180,11 +181,11 @@ namespace BerichtManager.Forms
 			// 
 			// btIHKLogin
 			// 
-			btIHKLogin.Location = new Point(118, 130);
+			btIHKLogin.Location = new Point(118, 155);
 			btIHKLogin.Margin = new Padding(4, 3, 4, 3);
 			btIHKLogin.Name = "btIHKLogin";
 			btIHKLogin.Size = new Size(140, 24);
-			btIHKLogin.TabIndex = 6;
+			btIHKLogin.TabIndex = 7;
 			btIHKLogin.Text = "Login";
 			toolTip1.SetToolTip(btIHKLogin, "Log in to IHK");
 			btIHKLogin.UseVisualStyleBackColor = true;
@@ -425,6 +426,15 @@ namespace BerichtManager.Forms
 			cbLegacyEdit.Text = "Use legacy edit";
 			toolTip1.SetToolTip(cbLegacyEdit, "Should seperate forms be used to edit?");
 			cbLegacyEdit.UseVisualStyleBackColor = true;
+			// 
+			// tbIHKJobField
+			// 
+			tbIHKJobField.Location = new Point(118, 101);
+			tbIHKJobField.Name = "tbIHKJobField";
+			tbIHKJobField.Size = new Size(651, 23);
+			tbIHKJobField.TabIndex = 5;
+			toolTip1.SetToolTip(tbIHKJobField, "Name of job field");
+			tbIHKJobField.TextChanged += JobFieldTextChanged;
 			// 
 			// cbIHKAutoGetComment
 			// 
@@ -982,6 +992,7 @@ namespace BerichtManager.Forms
 			// gbIHKMiscellanious
 			// 
 			gbIHKMiscellanious.BorderColor = Color.FromArgb(220, 220, 220);
+			gbIHKMiscellanious.Controls.Add(cbReportDownloadUseQuickInfo);
 			gbIHKMiscellanious.Controls.Add(tbIHKJobField);
 			gbIHKMiscellanious.Controls.Add(laIHKJobField);
 			gbIHKMiscellanious.Controls.Add(btIHKLogin);
@@ -992,19 +1003,22 @@ namespace BerichtManager.Forms
 			gbIHKMiscellanious.Dock = DockStyle.Top;
 			gbIHKMiscellanious.Location = new Point(0, 127);
 			gbIHKMiscellanious.Name = "gbIHKMiscellanious";
-			gbIHKMiscellanious.Size = new Size(776, 160);
+			gbIHKMiscellanious.Size = new Size(776, 185);
 			gbIHKMiscellanious.TabIndex = 2;
 			gbIHKMiscellanious.TabStop = false;
 			gbIHKMiscellanious.Text = "Miscellanious";
 			// 
-			// tbIHKJobField
+			// cbReportDownloadUseQuickInfo
 			// 
-			tbIHKJobField.Location = new Point(118, 101);
-			tbIHKJobField.Name = "tbIHKJobField";
-			tbIHKJobField.Size = new Size(651, 23);
-			tbIHKJobField.TabIndex = 5;
-			toolTip1.SetToolTip(tbIHKJobField, "Name of job field");
-			tbIHKJobField.TextChanged += JobFieldTextChanged;
+			cbReportDownloadUseQuickInfo.AutoSize = true;
+			cbReportDownloadUseQuickInfo.Location = new Point(118, 130);
+			cbReportDownloadUseQuickInfo.Name = "cbReportDownloadUseQuickInfo";
+			cbReportDownloadUseQuickInfo.Size = new Size(313, 19);
+			cbReportDownloadUseQuickInfo.TabIndex = 6;
+			cbReportDownloadUseQuickInfo.Text = "Use quick info when downloading reports (if available)";
+			toolTip1.SetToolTip(cbReportDownloadUseQuickInfo, "Use quick infos for idexing reports to keep when downloading from IHK");
+			cbReportDownloadUseQuickInfo.UseVisualStyleBackColor = true;
+			cbReportDownloadUseQuickInfo.CheckedChanged += MarkAsDirty;
 			// 
 			// laIHKJobField
 			// 
@@ -1193,5 +1207,6 @@ namespace BerichtManager.Forms
 		private CheckBox cbAskForSeminars;
 		private TextBox tbIHKJobField;
 		private Label laIHKJobField;
+		private CheckBox cbReportDownloadUseQuickInfo;
 	}
 }
