@@ -113,6 +113,7 @@ namespace BerichtManager.Forms
 				tcOptions.HidePage(tpIHK);
 			nudUploadDelay.Value = ConfigHandler.IHKUploadDelay;
 			tbJobField.Text = ConfigHandler.IHKJobField;
+			tbIHKJobField.Text = ConfigHandler.IHKJobField;
 			tbSupervisorMail.Text = ConfigHandler.IHKSupervisorEMail;
 			cbAutoSyncStatusesWithIHK.Checked = ConfigHandler.AutoSyncStatusesWithIHK;
 			tbIHKBaseUrl.Text = ConfigHandler.IHKBaseUrl;
@@ -508,6 +509,18 @@ namespace BerichtManager.Forms
 		{
 			tbAutoSeminarsValue.Enabled = !cbAskForSeminars.Checked;
 			MarkAsDirty(sender, e);
+		}
+
+		bool internalChange = false;
+		private void JobFieldTextChanged(object sender, EventArgs e)
+		{
+			if (Initializing || internalChange || sender is not TextBox tb)
+				return;
+			MarkAsDirty(sender, e);
+			internalChange = true;
+			tbJobField.Text = tb.Text;
+			tbIHKJobField.Text = tb.Text;
+			internalChange = false;
 		}
 	}
 }

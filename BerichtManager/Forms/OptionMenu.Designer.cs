@@ -102,6 +102,8 @@ namespace BerichtManager.Forms
 			tpWebUntis = new OwnControls.CustomTabControl.ColoredTabPage();
 			tpIHK = new OwnControls.CustomTabControl.ColoredTabPage();
 			gbIHKMiscellanious = new OwnControls.ColoredGroupBox();
+			tbIHKJobField = new TextBox();
+			laIHKJobField = new Label();
 			gbIHKFields = new OwnControls.ColoredGroupBox();
 			gbIHKFailSaves = new OwnControls.ColoredGroupBox();
 			paButtons = new Panel();
@@ -174,15 +176,15 @@ namespace BerichtManager.Forms
 			tbJobField.Size = new Size(655, 23);
 			tbJobField.TabIndex = 5;
 			toolTip1.SetToolTip(tbJobField, "Name of job field");
-			tbJobField.TextChanged += MarkAsDirty;
+			tbJobField.TextChanged += JobFieldTextChanged;
 			// 
 			// btIHKLogin
 			// 
-			btIHKLogin.Location = new Point(118, 101);
+			btIHKLogin.Location = new Point(118, 130);
 			btIHKLogin.Margin = new Padding(4, 3, 4, 3);
 			btIHKLogin.Name = "btIHKLogin";
 			btIHKLogin.Size = new Size(140, 24);
-			btIHKLogin.TabIndex = 4;
+			btIHKLogin.TabIndex = 6;
 			btIHKLogin.Text = "Login";
 			toolTip1.SetToolTip(btIHKLogin, "Log in to IHK");
 			btIHKLogin.UseVisualStyleBackColor = true;
@@ -980,6 +982,8 @@ namespace BerichtManager.Forms
 			// gbIHKMiscellanious
 			// 
 			gbIHKMiscellanious.BorderColor = Color.FromArgb(220, 220, 220);
+			gbIHKMiscellanious.Controls.Add(tbIHKJobField);
+			gbIHKMiscellanious.Controls.Add(laIHKJobField);
 			gbIHKMiscellanious.Controls.Add(btIHKLogin);
 			gbIHKMiscellanious.Controls.Add(cbIHKAutoGetComment);
 			gbIHKMiscellanious.Controls.Add(tbIHKBaseUrl);
@@ -988,10 +992,28 @@ namespace BerichtManager.Forms
 			gbIHKMiscellanious.Dock = DockStyle.Top;
 			gbIHKMiscellanious.Location = new Point(0, 127);
 			gbIHKMiscellanious.Name = "gbIHKMiscellanious";
-			gbIHKMiscellanious.Size = new Size(776, 131);
+			gbIHKMiscellanious.Size = new Size(776, 160);
 			gbIHKMiscellanious.TabIndex = 2;
 			gbIHKMiscellanious.TabStop = false;
 			gbIHKMiscellanious.Text = "Miscellanious";
+			// 
+			// tbIHKJobField
+			// 
+			tbIHKJobField.Location = new Point(118, 101);
+			tbIHKJobField.Name = "tbIHKJobField";
+			tbIHKJobField.Size = new Size(651, 23);
+			tbIHKJobField.TabIndex = 5;
+			toolTip1.SetToolTip(tbIHKJobField, "Name of job field");
+			tbIHKJobField.TextChanged += JobFieldTextChanged;
+			// 
+			// laIHKJobField
+			// 
+			laIHKJobField.AutoSize = true;
+			laIHKJobField.Location = new Point(59, 104);
+			laIHKJobField.Name = "laIHKJobField";
+			laIHKJobField.Size = new Size(51, 15);
+			laIHKJobField.TabIndex = 4;
+			laIHKJobField.Text = "Job field";
 			// 
 			// gbIHKFields
 			// 
@@ -1169,5 +1191,7 @@ namespace BerichtManager.Forms
 		private TextBox tbAutoSeminarsValue;
 		private Label laAutoSeminarsValue;
 		private CheckBox cbAskForSeminars;
+		private TextBox tbIHKJobField;
+		private Label laIHKJobField;
 	}
 }
