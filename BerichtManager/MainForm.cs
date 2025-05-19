@@ -505,7 +505,7 @@ namespace BerichtManager
 
 				Directory.CreateDirectory(Path.Combine(ActivePath, dayInReport.Year.ToString()));
 				string name = NamingPatternResolver.ResolveName(weekOfYear.ToString(), ConfigHandler.ReportNumber.ToString());
-				string path = Path.Combine(ActivePath, dayInReport.Year.ToString(), name + ".docx");
+				string path = Path.Combine(ActivePath, GetYearOfReport(dayInReport).ToString(), name + ".docx");
 				FitToPage(doc);
 				doc.SaveAs2(FileName: path);
 
@@ -581,19 +581,38 @@ namespace BerichtManager
 		{
 			FormFieldHandler.SetValueInDoc(Fields.Name, doc, ConfigHandler.ReportUserName);
 			FormFieldHandler.SetValueInDoc(Fields.Number, doc, reportNumber.ToString());
-			FormFieldHandler.SetValueInDoc(Fields.Year, doc, dayInReport.Year.ToString());
-			//Enter week start and end
+
 			DateTime today = new DateTime(dayInReport.Year, dayInReport.Month, dayInReport.Day);
 			DateTime thisWeekStart = today.AddDays(-(int)dayInReport.DayOfWeek + 1);
 			DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+
 			if (ConfigHandler.EndWeekOnFriday)
 				thisWeekEnd = thisWeekEnd.AddDays(-2);
 			reportStartDate = thisWeekStart.ToString(DateTimeUtils.DATEFORMAT);
 
+			FormFieldHandler.SetValueInDoc(Fields.Year, doc, GetYearOfReport(dayInReport).ToString());
 			FormFieldHandler.SetValueInDoc(Fields.StartDate, doc, reportStartDate);
 			FormFieldHandler.SetValueInDoc(Fields.EndDate, doc, thisWeekEnd.ToString(DateTimeUtils.DATEFORMAT));
 			FormFieldHandler.SetValueInDoc(Fields.SignDateYou, doc, thisWeekEnd.ToString(DateTimeUtils.DATEFORMAT));
 			FormFieldHandler.SetValueInDoc(Fields.SignDateSupervisor, doc, thisWeekEnd.ToString(DateTimeUtils.DATEFORMAT));
+		}
+
+		/// <summary>
+		/// Gets the correct year for the report
+		/// </summary>
+		/// <param name="dayInReport"><see cref="DateTime"/> of date in report span</param>
+		/// <returns>Year of report</returns>
+		private int GetYearOfReport(DateTime dayInReport)
+		{
+			DateTime today = new DateTime(dayInReport.Year, dayInReport.Month, dayInReport.Day);
+			DateTime thisWeekStart = today.AddDays(-(int)dayInReport.DayOfWeek + 1);
+			DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+			if (thisWeekStart.Year == thisWeekEnd.Year)
+				return dayInReport.Year;
+			else if (thisWeekStart.GetIsoWeekOfYear() == 1)
+				return thisWeekEnd.Year;
+			else
+				return thisWeekStart.Year;
 		}
 
 		private void btClose_Click(object sender, EventArgs e)
@@ -3206,7 +3225,7 @@ namespace BerichtManager
 				ReportTransformer.IHKToWord(doc, new Report(kvp.Value.Content) { ReportNr = reportNumber });
 
 				string newReportName = NamingPatternResolver.ResolveNameWithExtension(kvp.Key.StartDate, kvp.Value.Number);
-				string folder = Path.Combine(ActivePath, kvp.Key.StartDate.Year.ToString());
+				string folder = Path.Combine(ActivePath, GetYearOfReport(kvp.Key.StartDate).ToString());
 				string newPath = Path.Combine(folder, newReportName);
 				newLatestPath = newPath;
 				FitToPage(doc);
@@ -3214,7 +3233,10 @@ namespace BerichtManager
 					Directory.CreateDirectory(folder);
 				doc.SaveAs2(FileName: newPath);
 				doc.Close();
-				UploadedReports.AddReport(newPath, kvp.Key);
+				if (UploadedReports.GetUploadedReport(newPath, out UploadedReport? report))
+					UploadedReports.UpdateRerport(newPath, kvp.Key);
+				else
+					UploadedReports.AddReport(newPath, kvp.Key);
 				progressForm.Status = $"Saved {newPath}";
 			}
 
