@@ -3237,6 +3237,7 @@ namespace BerichtManager
 					UploadedReports.UpdateRerport(newPath, kvp.Key);
 				else
 					UploadedReports.AddReport(newPath, kvp.Key);
+				QuickInfos.AddOrUpdateQuickInfo(newPath, new QuickInfo(kvp.Key.StartDate.ToString(DateTimeUtils.DATEFORMAT), reportNumber));
 				progressForm.Status = $"Saved {newPath}";
 			}
 
