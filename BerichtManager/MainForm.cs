@@ -503,7 +503,7 @@ namespace BerichtManager
 					autofillValues.Add(Fields.School, schoolForm.Result);
 				}
 
-				Directory.CreateDirectory(Path.Combine(ActivePath, dayInReport.Year.ToString()));
+				Directory.CreateDirectory(Path.Combine(ActivePath, GetYearOfReport(dayInReport).ToString()));
 				string name = NamingPatternResolver.ResolveName(weekOfYear.ToString(), ConfigHandler.ReportNumber.ToString());
 				string path = Path.Combine(ActivePath, GetYearOfReport(dayInReport).ToString(), name + ".docx");
 				FitToPage(doc);
