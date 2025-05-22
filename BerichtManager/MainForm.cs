@@ -954,7 +954,7 @@ namespace BerichtManager
 				if (!ReportUtils.IsNameValid(Path.GetFileName(path)))
 					return;
 
-				if (ConfigHandler.IHKAutoGetComment && ConfigHandler.UseIHK && UploadedReports.GetUploadedReport(path, out UploadedReport? report) && report.LfdNR.HasValue && report.LfdNR > 0)
+				if (ConfigHandler.IHKAutoGetComment && ConfigHandler.UseIHK && UploadedReports.GetUploadedReport(path, out UploadedReport? report) && report.LfdNR.HasValue && report.LfdNR > 0 && report.Status == ReportNode.UploadStatuses.Rejected)
 				{
 					Task<CommentResult> commentTask = Task.Run(async () =>
 					{
