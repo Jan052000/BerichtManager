@@ -10,5 +10,13 @@
 		/// Default format for dates from IHK site
 		/// </summary>
 		public const string DATETIMEFORMATIHK = "dd.MM.yyyy";
+		/// <summary>
+		/// Format for getting time table from WebUntis
+		/// </summary>
+		public const string WEBUNTISTIMETABLE = "yyyy-MM-dd";
+		/// <summary>
+		/// Format used in old API to express holiday start and end dates
+		/// </summary>
+		public const string OLDWEBUNTISHOLIDAYDATEFORMAT = "yyyyMMdd";
 	}
 }
