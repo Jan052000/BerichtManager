@@ -3249,7 +3249,7 @@ namespace BerichtManager
 			if (downloadedContents.Count > 0 && ConfigHandler.ReportNumber < last.Value.Number)
 			{
 				ConfigHandler.LastReportCreateDate = last.Key.StartDate;
-				ConfigHandler.ReportNumber = last.Value.Number;
+				ConfigHandler.ReportNumber = last.Value.Number + 1;
 				ConfigHandler.LastCreated = newLatestPath;
 			}
 
