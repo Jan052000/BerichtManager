@@ -156,10 +156,7 @@ namespace BerichtManager
 			rtbSchool.WordWrap = ConfigHandler.UseWordWrap;
 			rtbWork.WordWrap = ConfigHandler.UseWordWrap;
 			UpdateTree();
-			if (ConfigHandler.LastCreated == "")
-			{
-				miEditLatest.Enabled = false;
-			}
+			miEditLatest.Enabled = !string.IsNullOrEmpty(ConfigHandler.LastCreated);
 			miIHK.Visible = ConfigHandler.UseIHK;
 			miIHKOptions.Visible = ConfigHandler.UseIHK;
 			SetComponentPositions();
