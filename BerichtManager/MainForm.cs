@@ -2995,6 +2995,10 @@ namespace BerichtManager
 			return result;
 		}
 
+		/// <summary>
+		/// Handles results of fetching comments
+		/// </summary>
+		/// <param name="result"><see cref="CommentResult"/> of fetch process</param>
 		private void HandleCommentResult(CommentResult result)
 		{
 			switch (result.UploadResult)
