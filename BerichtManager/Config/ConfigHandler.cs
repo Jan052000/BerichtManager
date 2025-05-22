@@ -53,6 +53,10 @@ namespace BerichtManager.Config
 
 		#region Default config properties
 		/// <summary>
+		/// Value of default prefix
+		/// </summary>
+		public const string DEFAULTCUSTOMPREFIX = "-";
+		/// <summary>
 		/// Holds all values for config with the keys as key and the type and default value as values
 		/// </summary>
 		private Dictionary<string, (Type Type, object? DefaultValue)> DefaultConfig { get; } = new Dictionary<string, (Type, object?)>()
@@ -68,7 +72,7 @@ namespace BerichtManager.Config
 			{"LastReportCreateDate", (typeof(DateTime?), null)},
 			{"StayLoggedIn", (BoolType, false)},
 			{"UseCustomPrefix", (BoolType, false)},
-			{"CustomPrefix", (StringType, "-")},
+			{"CustomPrefix", (StringType, DEFAULTCUSTOMPREFIX)},
 			{"WebUntisServer", (StringType, "borys")},
 			{"SchoolName", (StringType, "pictorus-bk")},
 			{"WebUntisMaxAllowedWeeksLookback", (IntType, 0)},
@@ -214,7 +218,7 @@ namespace BerichtManager.Config
 		/// </summary>
 		public string CustomPrefix
 		{
-			get => GenericGet<string>("CustomPrefix")!;
+			get => UseCustomPrefix ? GenericGet<string>("CustomPrefix") ?? DEFAULTCUSTOMPREFIX : DEFAULTCUSTOMPREFIX;
 			set => GenericSet("CustomPrefix", value);
 		}
 
