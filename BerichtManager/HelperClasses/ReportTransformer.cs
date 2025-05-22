@@ -65,7 +65,7 @@ namespace BerichtManager.HelperClasses
 			FormFieldHandler.SetValueInDoc(Fields.Number, doc, report.ReportNr.ToString());
 			FormFieldHandler.SetValueInDoc(Fields.StartDate, doc, report.ReportContent.StartDate);
 			FormFieldHandler.SetValueInDoc(Fields.EndDate, doc, report.ReportContent.EndDate);
-			FormFieldHandler.SetValueInDoc(Fields.Year, doc, DateTime.ParseExact(report.ReportContent.StartDate!, "dd.MM.yyyy", CultureInfo.CurrentCulture).Year.ToString());
+			FormFieldHandler.SetValueInDoc(Fields.Year, doc, MainForm.GetYearOfReport(DateTime.ParseExact(report.ReportContent.StartDate!, "dd.MM.yyyy", CultureInfo.CurrentCulture)).ToString());
 			FormFieldHandler.SetValueInDoc(Fields.Work, doc, report.ReportContent.JobFieldContent);
 			FormFieldHandler.SetValueInDoc(Fields.Seminars, doc, report.ReportContent.SeminarsField);
 			FormFieldHandler.SetValueInDoc(Fields.School, doc, report.ReportContent.SchoolField);

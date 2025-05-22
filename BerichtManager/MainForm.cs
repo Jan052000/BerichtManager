@@ -602,7 +602,7 @@ namespace BerichtManager
 		/// </summary>
 		/// <param name="dayInReport"><see cref="DateTime"/> of date in report span</param>
 		/// <returns>Year of report</returns>
-		private int GetYearOfReport(DateTime dayInReport)
+		public static int GetYearOfReport(DateTime dayInReport)
 		{
 			DateTime today = new DateTime(dayInReport.Year, dayInReport.Month, dayInReport.Day);
 			DateTime thisWeekStart = today.AddDays(-(int)dayInReport.DayOfWeek + 1);
