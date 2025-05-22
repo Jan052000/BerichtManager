@@ -87,4 +87,10 @@ namespace BerichtManager.WebUntisClient
 	{
 		public Result? result { get; set; }
 	}
+
+	[Serializable]
+	public class TimeTableResponse
+	{
+		public Root? data { get; set; }
+	}
 }

@@ -1,5 +1,5 @@
 using BerichtManager.Config;
-using BerichtManager.OwnControls;
+using BerichtManager.HelperClasses;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
@@ -21,399 +21,259 @@ namespace BerichtManager.WebUntisClient
 		/// Name of school in clear text
 		/// </summary>
 		private string SchoolName => ConfigHandler.SchoolName;
+		/// <summary>
+		/// <see cref="System.Net.Http.HttpClient"/> to send requests
+		/// </summary>
+		private HttpClient HttpClient { get; }
+		/// <summary>
+		/// <see cref="System.Net.CookieContainer"/> to hold cookies of <see cref="HttpClient"/>
+		/// </summary>
+		private CookieContainer CookieContainer { get; }
+		/// <summary>
+		/// <see cref="System.Timers.Timer"/> with an interval of 15m to end login session
+		/// </summary>
+		private System.Timers.Timer LoginSessionTimeout { get; } = new System.Timers.Timer
+		{
+			Interval = 900000,
+			Enabled = false,
+			AutoReset = false
+		};
+		/// <summary>
+		/// Wether or not <see cref="HttpClient"/> is logged in
+		/// </summary>
+		private bool LoggedIn { get; set; } = false;
+
+		public Client()
+		{
+			LoginSessionTimeout.Elapsed += LoginSessionTimeoutElapsed;
+			HttpClientHandler httpClientHandler = new HttpClientHandler();
+			CookieContainer = new CookieContainer();
+			httpClientHandler.CookieContainer = CookieContainer;
+			httpClientHandler.UseCookies = true;
+			httpClientHandler.AllowAutoRedirect = false;
+			HttpClient = new HttpClient(httpClientHandler);
+			HttpClient.BaseAddress = new Uri($"https://{Server}.webuntis.com");
+			ResetDefaultHeaders();
+		}
+
+		private void ResetDefaultHeaders()
+		{
+			HttpClient.DefaultRequestHeaders.Clear();
+			HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+			HttpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0");
+		}
+
+		private void LoginSessionTimeoutElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+		{
+			LoggedIn = false;
+		}
 
 		/// <summary>
-		/// Requests time table from WebUntis server
+		/// Loggs <see cref="HttpClient"/> in to WebUntis
 		/// </summary>
-		/// <returns>List containing names of classes in time table</returns>
-		public List<string> GetClassesFromWebUntis()
+		/// <returns>Error message or <see langword="null"/> if login was successfu</returns>
+		private async Task<string?> DoLogin()
 		{
-			if (!ConfigHandler.UseWebUntis)
-				return new List<string>();
-
-			List<string> classes = new List<string>();
-
-			//Enable cookies to get JSESSION token from WebUntis server
-			HttpClientHandler httpClientHandler = new HttpClientHandler();
-			httpClientHandler.CookieContainer = new CookieContainer();
-			httpClientHandler.UseCookies = true;
-			HttpClient client = new HttpClient(httpClientHandler);
-			HttpResponseMessage responseMessage;
-			string jSpringURL = "https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check";
-
-			Dictionary<string, string> content;
-			//Generate Headers and Login
+			if (LoggedIn)
+			{
+				LoginSessionTimeout.Stop();
+				LoginSessionTimeout.Start();
+				return null;
+			}
+			ResetDefaultHeaders();
+			string userName;
+			string password;
 			if (ConfigHandler.WebUntisStayLoggedIn)
 			{
-				content = new Dictionary<string, string>()
-				{
-					{ "school", SchoolName },
-					{ "j_username", ConfigHandler.WebUntisUsername },
-					{ "j_password", ConfigHandler.WebUntisPassword },
-					{ "token", "" }
-				};
+				userName = ConfigHandler.WebUntisUsername;
+				password = ConfigHandler.WebUntisPassword;
 			}
 			else
 			{
 				Config.User user = ConfigHandler.DoWebUntisLogin();
 				if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
-				{
-					ThemedMessageBox.Show(text: "You need to login to automatically enter classes");
-					return classes;
-				}
-				content = new Dictionary<string, string>()
-				{
-					{ "school", SchoolName },
-					{ "j_username", user.Username },
-					{ "j_password", user.Password },
-					{ "token", "" }
-				};
+					return "Not logged in";
+				userName = user.Username;
+				password = user.Password;
 			}
-			//Obtain JSessionId
-			responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(content)).Result;
-
-			//Set cookie data
-			string newCookie = "schoolname=\"_" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
-			if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? setCookies))
+			Dictionary<string, string> content = new()
 			{
-				List<string> cookieHeaders = new List<string>();
-				IEnumerator<string> cookieEnumerator = setCookies.GetEnumerator();
-				while (cookieEnumerator.MoveNext())
-				{
-					if (cookieEnumerator.Current.Contains("traceId"))
-						cookieHeaders = cookieEnumerator.Current.Split(';').ToList<string>();
-				}
-				cookieHeaders.ForEach(header =>
-				{
-					if (header.Trim().Contains("traceId"))
-						newCookie += header + "; ";
-				});
+				{ "school", SchoolName },
+				{ "j_username", userName },
+				{ "j_password", password },
+				{ "token", "" }
+			};
+			string jspring = "/WebUntis/j_spring_security_check";
+			HttpResponseMessage response = await HttpClient.PostAsync(jspring, new FormUrlEncodedContent(content));
+			if (!response.IsSuccessStatusCode)
+				return $"Login failed: {response.StatusCode}";
+			foreach (Cookie s in CookieContainer.GetCookies(new Uri(HttpClient.BaseAddress!, jspring)).Cast<Cookie>())
+			{
+				HttpClient.DefaultRequestHeaders.Add("Cookie", s.ToString());
 			}
-			foreach (Cookie cookie in httpClientHandler.CookieContainer.GetCookies(new Uri(jSpringURL)))
-			{
-				if (cookie.Name.Equals("JSESSIONID"))
-					newCookie += cookie.Name + "=" + cookie.Value;
-			}
-			client.DefaultRequestHeaders.Add("Cookie", newCookie);
-
-			//Obtain Api Key
-			string apiKey = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
-			if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue? authorize))
-			{
-				client.DefaultRequestHeaders.Authorization = authorize;
-			}
-			else
-			{
-				ThemedMessageBox.Show(text: "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
-				return new List<string>();
-			}
-
-			//Set accept to application/json
-			client.DefaultRequestHeaders.Accept.Clear();
-			client.DefaultRequestHeaders.Add("Accept", "application/json");
-
-			//Get account data
-			responseMessage = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/rest/view/v1/app/data").Result;
-			if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
-			{
-				ThemedMessageBox.Show(text: "Your account is unauthorized", title: "Unauthorized");
-				return new List<string>();
-			}
-			YearData yearData = JsonConvert.DeserializeObject<YearData>(responseMessage.Content.ReadAsStringAsync().Result)!;
-
-			//Request Timetable for the week
-			DateTime baseDate = DateTime.Today;
-			string date = baseDate.ToString("yyyy-MM-dd");
-
-			//Check account privilages
-			if (!Enum.TryParse(yearData?.user?.roles?[0], out ElementTypes elementType))
-			{
-				ThemedMessageBox.Show(text: "Could not resolve the rights your account has\non the WebUntis server of your school", title: "Unknown account type");
-				return new List<string>();
-			}
-
-			//Stundenplan api https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=2022-09-28&formatId=2
-			if (yearData.user.roles.Count > 0 && yearData?.user?.person?.id != null)
-			{
-				responseMessage = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=" + (int)elementType + "&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=1"/* + pageConfigData.data.selectedFormatId*/).Result;
-			}
-			else
-			{
-				ThemedMessageBox.Show(text: "Your account does not have the rights to view its timetable", title: "Insifficient permissions");
-				return new List<string>();
-			}
-			//responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=" + configHandler.TableElementType() + "&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
-			string jsonResponse = responseMessage.Content.ReadAsStringAsync().Result;
-
-			//Deserialize Root from response
-			JObject responseObject = JsonConvert.DeserializeObject<JObject>(jsonResponse)!;
-			Root rootObject = JsonConvert.DeserializeObject<Root>(responseObject.First!.First!.ToString())!;
-			List<string> classkeys = rootObject!.result!.data!.elementPeriods!.Keys.ToList();
-
-			//Register ClassIds to be had that week
-			List<int> classids = new List<int>();
-			Dictionary<int, bool> cancelled = new Dictionary<int, bool>();
-			classkeys.ForEach((k) =>
-			{
-				rootObject.result.data.elementPeriods[k].ForEach((en) =>
-				{
-					en?.elements!.ForEach((id) =>
-					{
-						if (id == null || id.id == null)
-							return;
-						if (id.type == 3)
-						{
-							classids.Add((int)id.id);
-
-							//Check for cancellation
-							if (en!.@is!.cancelled == true)// || en.@is.substitution)
-							{
-								if (!cancelled.Keys.Contains((int)id.id))
-								{
-									cancelled.Add((int)id.id, true);
-								}
-							}
-							else
-							{
-								if (cancelled.Keys.Contains((int)id.id))
-								{
-									cancelled[(int)id.id] = false;
-								}
-								else
-								{
-									cancelled.Add((int)id.id, false);
-								}
-							}
-						}
-					});
-				});
-			});
-
-			//Crosscheck ClassIds to Coursenames
-			bool useUserPrefix = ConfigHandler.UseCustomPrefix;
-			rootObject?.result?.data?.elements?.ForEach((element) =>
-			{
-				if (element?.id is not int id)
-					return;
-				if (element.type == 3 && classids.Contains(id))
-				{
-					if (useUserPrefix)
-					{
-						if (cancelled[id])
-						{
-							if (!classes.Contains(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n"))
-							{
-								classes.Add(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "Ausgefallen\n");
-							}
-						}
-						else
-						{
-							if (classes.Contains(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "Ausgefallen\n"))
-							{
-								classes.Remove(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "Ausgefallen\n");
-								classes.Add(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n");
-							}
-							else
-							{
-								classes.Add(ConfigHandler.CustomPrefix + element.name + "\n\t" + ConfigHandler.CustomPrefix + "\n");
-							}
-						}
-					}
-					else
-					{
-						if (cancelled[id])
-						{
-							if (!classes.Contains("-" + element.name + "\n\t-\n"))
-							{
-								classes.Add("-" + element.name + "\n\t-Ausgefallen\n");
-							}
-						}
-						else
-						{
-							if (classes.Contains("-" + element.name + "\n\t-Ausgefallen\n"))
-							{
-								classes.Remove("-" + element.name + "\n\t-Ausgefallen\n");
-								classes.Add("-" + element.name + "\n\t-\n");
-							}
-							else
-							{
-								classes.Add("-" + element.name + "\n\t-\n");
-							}
-						}
-					}
-				}
-			});
-
-			//Check for Holidays if list empty
-			if (classes.Count == 0)
-			{
-				DateTime thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek + 1);
-				DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-				if (int.TryParse(thisWeekStart.ToString("yyyyMMdd"), out int weekStart)) { }
-				if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
-
-				Holidays? holidays = GetHolidays(client);
-				if (holidays?.result == null)
-				{
-					ThemedMessageBox.Show(text: "An error has occurred on the web untis server", title: "Server did not respond");
-					return new List<string>();
-				}
-				holidays.result.ForEach((holiday) =>
-				{
-					bool isInWeek = (holiday.startDate >= weekStart && holiday.endDate <= weekEnd);
-					bool isStarting = (holiday.startDate >= weekStart && holiday.startDate <= weekEnd);
-					bool isEnding = (holiday.endDate >= weekStart && holiday.endDate <= weekEnd);
-					bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
-					if (isInWeek || isStarting || isEnding || weekInEvent)
-					{
-						if (ConfigHandler.UseCustomPrefix)
-							classes.Add(ConfigHandler.CustomPrefix + holiday.longName + "\n");
-						else
-							classes.Add("-" + holiday.longName + "\n");
-					}
-				});
-			}
-
-			classes.Sort();
-			client.Dispose();
-			return classes;
+			string? message = await GetAuthorization();
+			LoggedIn = true;
+			LoginSessionTimeout.Start();
+			return message;
 		}
 
 		/// <summary>
-		/// Requests public holidays and vacations from WebUntis jsonrpc server
-		/// if no client is provided a new client will be created for the method call
+		/// Gets and sets the authorization token from WebUntis
 		/// </summary>
-		/// <param name="useClient"><see cref="HttpClient"/> to be used for requests assumes client is logged in and has cookies and api key set</param>
-		/// <returns><see cref="Holidays"/> object if request was successful or null if not</returns>
-		private Holidays? GetHolidays(HttpClient? useClient = null)
+		/// <returns>Error message or <see langword="null"/> if authorization token was set</returns>
+		private async Task<string?> GetAuthorization()
 		{
-			//https://untis-sr.ch/wp-content/uploads/2019/11/2018-09-20-WebUntis_JSON_RPC_API.pdf
-			if (!ConfigHandler.UseWebUntis)
-				return null;
-			HttpClient client;
-			IEnumerable<string> id;
-			if (useClient != null) client = useClient;
-			else
+			//Obtain Api Key
+			string apiKey = await HttpClient.GetAsync("/WebUntis/api/token/new").Result.Content.ReadAsStringAsync();
+			if (!AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue? authorize))
+				return "Failed to get Authentorization token";
+			HttpClient.DefaultRequestHeaders.Authorization = authorize;
+			return null;
+		}
+
+		/// <summary>
+		/// Gets classes text from WebUntis
+		/// </summary>
+		/// <param name="date"><see cref="DateTime"/> to get classes for</param>
+		/// <returns>Result containing WebUntis classes and an error message if an error was encountered</returns>
+		public async Task<(List<string> Classes, string? Error)> GetClassesFromWebUntisAsync(DateTime date)
+		{
+			(List<string> Classes, string? Error) result = (new List<string>(), null);
+
+			if (await DoLogin() is string message)
 			{
-				//Enable cookies to get JSESSION token from WebUntis server
-				HttpClientHandler httpClientHandler = new HttpClientHandler();
-				httpClientHandler.CookieContainer = new CookieContainer();
-				httpClientHandler.UseCookies = true;
-				client = new HttpClient(httpClientHandler);
-				HttpResponseMessage responseMessage;
-				string jSpringURL = "https://" + Server + ".webuntis.com/WebUntis/j_spring_security_check";
-				Dictionary<string, string> loginContent;
-
-				//Generate Headers and Login
-				if (ConfigHandler.WebUntisStayLoggedIn)
-				{
-					//Obtain JSessionId
-					loginContent = new Dictionary<string, string>()
-					{
-						{ "school", SchoolName },
-						{ "j_username", ConfigHandler.WebUntisUsername },
-						{ "j_password", ConfigHandler.WebUntisPassword },
-						{ "token", "" }
-					};
-				}
-				else
-				{
-					Config.User user = ConfigHandler.DoWebUntisLogin();
-					if (string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
-					{
-						ThemedMessageBox.Show(text: "You need to login to automatically enter classes");
-						return null;
-					}
-					loginContent = new Dictionary<string, string>()
-					{
-						{ "school", SchoolName },
-						{ "j_username", user.Username },
-						{ "j_password", user.Password },
-						{ "token", "" }
-					};
-				}
-				responseMessage = client.PostAsync(jSpringURL, new FormUrlEncodedContent(loginContent)).Result;
-
-				//Set cookie data
-				string newCookie = "schoolname=\"_" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(SchoolName)) + "\"; ";
-				if (responseMessage.Headers.TryGetValues("Set-Cookie", out IEnumerable<string>? setCookies))
-				{
-					List<string> cookieHeaders = new List<string>();
-					IEnumerator<string> cookieEnumerator = setCookies.GetEnumerator();
-					while (cookieEnumerator.MoveNext())
-					{
-						if (cookieEnumerator.Current.Contains("traceId"))
-							cookieHeaders = cookieEnumerator.Current.Split(';').ToList<string>();
-					}
-					cookieHeaders.ForEach(header =>
-					{
-						if (header.Trim().Contains("traceId"))
-							newCookie += header + "; ";
-					});
-				}
-				foreach (Cookie cookie in httpClientHandler.CookieContainer.GetCookies(new Uri(jSpringURL)))
-				{
-					if (cookie.Name.Equals("JSESSIONID"))
-						newCookie += cookie.Name + "=" + cookie.Value;
-				}
-				client.DefaultRequestHeaders.Add("Cookie", newCookie);
-
-				//Obtain Api Key
-				string apiKey = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/api/token/new").Result.Content.ReadAsStringAsync().Result;
-				if (AuthenticationHeaderValue.TryParse("Bearer " + apiKey, out AuthenticationHeaderValue? authorize))
-				{
-					client.DefaultRequestHeaders.Authorization = authorize;
-				}
-				else
-				{
-					ThemedMessageBox.Show(text: "There was an error while logging in\n(if you just entered your login info you should check if they are correct)");
-					return null;
-				}
+				result.Error = message;
+				return result;
 			}
 
-			//https://borys.webuntis.com/WebUntis/jsonrpc.do
-			HttpResponseMessage response = client.GetAsync("https://" + Server + ".webuntis.com/WebUntis/jsonrpc.do").Result;
-			id = response.Headers.GetValues("requestId");
-			if (id.Count() == 0)
+			var accountData = await GetAccountData();
+
+			if (accountData.Message != null)
+			{
+				result.Error = accountData.Message;
+				return result;
+			}
+
+			var timeTable = await GetTimeTable(accountData.AccountType!.Value, accountData.UserId!.Value, date);
+			if (timeTable.Message != null)
+			{
+				result.Error = timeTable.Message;
+				return result;
+			}
+			if (timeTable.Classes.Count > 0)
+				result.Classes.AddRange(timeTable.Classes);
+			else if (accountData.Holidays?.Count > 0)
+			{
+				var holidays = accountData.Holidays.Where(hd => hd.HolidayIsRelevantForDate(date) && hd.name != null).Select(hd => $"{ConfigHandler.CustomPrefix}{hd.name}").Cast<string>();
+				result.Classes.AddRange(holidays);
+			}
+			else
+			{
+				if (await GetHolidaysAsync(date) is string holidays)
+					result.Classes.Add(holidays);
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Gets holidays from WebUntis
+		/// </summary>
+		/// <param name="date"><see cref="DateTime"/> to get holidays for</param>
+		/// <returns>Holidays for <paramref name="date"/></returns>
+		public async Task<string?> GetHolidaysAsync(DateTime date)
+		{
+			if (await DoLogin() is string message)
 				return null;
-			JObject cont = new JObject(new JProperty("id", id.ElementAt(0)), new JProperty("method", "getHolidays"), new JProperty("jsonrpc", "2.0"));
+			//https://borys.webuntis.com/WebUntis/jsonrpc.do
+			HttpResponseMessage response = await HttpClient.GetAsync("/WebUntis/jsonrpc.do");
+			string? id = response.Headers.GetValues("requestId").FirstOrDefault();
+			if (id == null)
+				return null;
+			JObject cont = new JObject(new JProperty("id", id), new JProperty("method", "getHolidays"), new JProperty("jsonrpc", "2.0"));
 
 			HttpContent content = new StringContent(cont.ToString());
-			client.DefaultRequestHeaders.Add("Accept", "application/json");
-			HttpResponseMessage response1 = client.PostAsync("https://" + Server + ".webuntis.com/WebUntis/jsonrpc.do", content).Result;
-			return JsonConvert.DeserializeObject<Holidays>(response1.Content.ReadAsStringAsync().Result);
+			response = await HttpClient.PostAsync("/WebUntis/jsonrpc.do", content);
+			Holidays? holidays = JsonConvert.DeserializeObject<Holidays>(await response.Content.ReadAsStringAsync());
+			if (holidays?.result == null)
+				return null;
+			return string.Join($"{ConfigHandler.CustomPrefix}\n", holidays.result.Where(hd => hd.HolidayIsRelevantForDate(date)).Select(hd => hd.longName));
 		}
 
 		/// <summary>
-		/// Requests holidays and vacations from WebUntis jsonrpc server and filters for a specific date
+		/// Gets time table data from WebUntis
 		/// </summary>
-		/// <param name="time">Date to filter for</param>
-		/// <returns>Contatinated string containing all holidays and vacations for the provided date</returns>
-		public string GetHolidaysForDate(DateTime time)
+		/// <param name="accountType">Type of account</param>
+		/// <param name="userId">Id of account</param>
+		/// <param name="date"><see cref="DateTime"/> to get week time table for</param>
+		/// <returns><see cref="List{T}"/> of classes and Error message if an error was encountered or <see langword="null"/> if successful</returns>
+		private async Task<(List<string> Classes, string? Message)> GetTimeTable(ElementTypes accountType, int userId, DateTime date)
 		{
-			string str = "";
-			DateTime thisWeekStart = time.AddDays(-(int)time.DayOfWeek + 1);
-			DateTime thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
-			if (int.TryParse(thisWeekStart.ToString("yyyyMMdd"), out int weekStart)) { }
-			if (int.TryParse(thisWeekEnd.ToString("yyyyMMdd"), out int weekEnd)) { }
+			(List<string> Classes, string? message) result = (new List<string>(), null);
+			//Stundenplan api https://borys.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=1414&date=2022-09-28&formatId=2
+			HttpResponseMessage responseMessage = await HttpClient.GetAsync($"/WebUntis/api/public/timetable/weekly/data?elementType={(int)accountType}&elementId={userId}&date={date.ToString(DateTimeUtils.WEBUNTISTIMETABLEFORMAT)}&formatId=1"/* + pageConfigData.data.selectedFormatId*/);
+			//responseMessage = client.GetAsync("https://" + server + ".webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=" + configHandler.TableElementType() + "&elementId=" + yearData.user.person.id.ToString() + "&date=" + date + "&formatId=2").Result;
+			string jsonResponse = await responseMessage.Content.ReadAsStringAsync();
 
-			Holidays? holidays = GetHolidays();
-
-			holidays?.result?.ForEach((holiday) =>
+			//Deserialize Root from response
+			TimeTableResponse? res = JsonConvert.DeserializeObject<TimeTableResponse>(jsonResponse);
+			if (res?.data?.result?.data?.elementPeriods?.Count == null)
 			{
-				bool isInWeek = (holiday.startDate >= weekStart && holiday.endDate <= weekEnd);
-				bool isStarting = (holiday.startDate >= weekStart && holiday.startDate <= weekEnd);
-				bool isEnding = (holiday.endDate >= weekStart && holiday.endDate <= weekEnd);
-				bool weekInEvent = (holiday.startDate <= weekStart && holiday.endDate >= weekEnd);
-				if (isInWeek || isStarting || isEnding || weekInEvent)
+				result.message = "Unable to get time table from WebUntis";
+				return result;
+			}
+			foreach (var kvp in res.data.result.data.elementPeriods)
+			{
+				foreach (Entry _class in kvp.Value)
 				{
-					if (ConfigHandler.UseCustomPrefix)
-						str += ConfigHandler.CustomPrefix + holiday.longName + "\n";
-					else
-						str += "-" + holiday.longName + "\n";
+					Classes? classes = _class.elements?.FirstOrDefault(en => en.type == 3);
+					if (classes?.id == null)
+						continue;
+					Courses? courses = res.data.result.data.elements?.FirstOrDefault(course => course.id == classes.id);
+					if (courses == null)
+						continue;
+					string classString = $"{ConfigHandler.CustomPrefix}{courses.displayname}\n\t{ConfigHandler.CustomPrefix}\n";
+					if (_class.@is?.cancelled == true)
+						classString += "Ausgefallen";
+					result.Classes.Add(classString);
 				}
-			});
-			return str;
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Gets account data from WebUntis
+		/// </summary>
+		/// <returns>Account data, list of holidays if new API and an error message or <see langword="null"/> if successful</returns>
+		private async Task<(ElementTypes? AccountType, int? UserId, List<NewDataHoliday>? Holidays, string? Message)> GetAccountData()
+		{
+			(ElementTypes? AccountType, int? UserId, List<NewDataHoliday>? Holidays, string? Message) result = (null, null, null, null);
+			HttpResponseMessage responseMessage = await HttpClient.GetAsync($"/WebUntis/api/rest/view/v1/app/data");
+			if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+			{
+				result.Message = "Your account is unauthorized";
+				return result;
+			}
+			YearData? yearData = JsonConvert.DeserializeObject<YearData>(await responseMessage.Content.ReadAsStringAsync());
+			if (yearData == null)
+			{
+				result.Message = "Could not parse year data";
+				return result;
+			}
+			if (yearData?.user?.roles?.Count <= 0 || !Enum.TryParse(yearData?.user?.roles?[0], out ElementTypes elementType))
+			{
+				result.Message = "Could not resolve the rights your account has on the WebUntis server of your school";
+				return result;
+			}
+			result.AccountType = elementType;
+			if (yearData?.user?.person?.id == null)
+			{
+				result.Message = "Could not read user id from recieved account data";
+				return result;
+			}
+			result.Holidays = yearData.holidays;
+			result.UserId = yearData.user.person.id;
+			return result;
 		}
 
 		/// <summary>

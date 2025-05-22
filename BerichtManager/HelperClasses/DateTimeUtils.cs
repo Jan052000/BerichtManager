@@ -13,7 +13,7 @@
 		/// <summary>
 		/// Format for getting time table from WebUntis
 		/// </summary>
-		public const string WEBUNTISTIMETABLE = "yyyy-MM-dd";
+		public const string WEBUNTISTIMETABLEFORMAT = "yyyy-MM-dd";
 		/// <summary>
 		/// Format used in old API to express holiday start and end dates
 		/// </summary>

@@ -483,7 +483,14 @@ namespace BerichtManager
 						List<string> classes;
 						try
 						{
-							classes = Client.GetClassesFromWebUntis();
+							var classesResult = Task.Run(async () => await Client.GetClassesFromWebUntisAsync(dayInReport)).GetAwaiter().GetResult();
+							if (classesResult.Error != null)
+							{
+								ThemedMessageBox.Info(text: classesResult.Error, "Unable to fetch WebUntis classes");
+								classes = new();
+							}
+							else
+								classes = classesResult.Classes;
 						}
 						catch (Exception ex)
 						{
@@ -495,7 +502,7 @@ namespace BerichtManager
 					}
 					else
 					{
-						schoolText = Client.GetHolidaysForDate(dayInReport);
+						schoolText = Task.Run(async () => await Client.GetHolidaysAsync(dayInReport)).GetAwaiter().GetResult();
 					}
 					EditForm schoolForm = new EditForm(title: "Berufsschule (Unterrichtsthemen)" + "(KW " + weekOfYear + ")", isCreate: true, text: schoolText);
 					if (ExitOnDialogResult(doc, schoolForm, Fields.School))
