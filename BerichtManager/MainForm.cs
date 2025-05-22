@@ -3222,7 +3222,7 @@ namespace BerichtManager
 					break;
 				}
 
-				ReportTransformer.IHKToWord(doc, new Report(kvp.Value.Content) { ReportNr = reportNumber });
+				ReportTransformer.IHKToWord(doc, new Report(kvp.Value.Content) { ReportNr = kvp.Value.Number });
 
 				string newReportName = NamingPatternResolver.ResolveNameWithExtension(kvp.Key.StartDate, kvp.Value.Number);
 				string folder = Path.Combine(ActivePath, GetYearOfReport(kvp.Key.StartDate).ToString());
@@ -3237,7 +3237,7 @@ namespace BerichtManager
 					UploadedReports.UpdateRerport(newPath, kvp.Key);
 				else
 					UploadedReports.AddReport(newPath, kvp.Key);
-				QuickInfos.AddOrUpdateQuickInfo(newPath, new QuickInfo(kvp.Key.StartDate.ToString(DateTimeUtils.DATEFORMAT), reportNumber));
+				QuickInfos.AddOrUpdateQuickInfo(newPath, new QuickInfo(kvp.Key.StartDate.ToString(DateTimeUtils.DATEFORMAT), kvp.Value.Number));
 				progressForm.Status = $"Saved {newPath}";
 			}
 
