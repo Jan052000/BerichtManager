@@ -99,7 +99,7 @@ namespace BerichtManager.HelperClasses.HtmlClasses
 				return content;
 			StringContent save = new StringContent("");
 			save.Headers.Remove("Content-Type");
-			content.Add(save, @"""save""");
+			content.Add(save, $@"{(encapsulateName ? @"""" : "")}{action}{(encapsulateName ? @"""" : "")}");
 			return content;
 		}
 
