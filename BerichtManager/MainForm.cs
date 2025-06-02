@@ -633,7 +633,7 @@ namespace BerichtManager
 		{
 			if (ConfigHandler.LastReportCreateDate is not DateTime lastCreateDate)
 				return;
-			int deltaWeeks = (DateTime.Today - lastCreateDate).Days / 7;
+			int deltaWeeks = DateTime.Today.GetIsoWeekOfYear() - lastCreateDate.GetIsoWeekOfYear();
 
 			for (int i = deltaWeeks - 1; i > 0; i--)
 			{
@@ -644,18 +644,17 @@ namespace BerichtManager
 		private void btCreate_Click(object sender, EventArgs e)
 		{
 			//Check if report for this week was already created
-			string docName = NamingPatternResolver.ResolveNameWithExtension(DateTime.Today, ConfigHandler.ReportNumber - 1);
-			if (File.Exists(Path.Combine(ActivePath, DateTime.Today.Year.ToString(), docName)) || File.Exists(Path.Combine(ActivePath, DateTime.Today.Year.ToString(), PRINTEDFOLDERNAME, docName)))
+			int weekDiff;
+			if (ConfigHandler.LastReportCreateDate == null)
+				weekDiff = 0;
+			else
+				weekDiff = DateTime.Today.GetIsoWeekOfYear() - ConfigHandler.LastReportCreateDate.Value.GetIsoWeekOfYear();
+			switch (weekDiff)
 			{
-				ThemedMessageBox.Show(text: "A report has already been created for this week");
-				return;
-			}
-			//Check if a report was created
-			if (ConfigHandler.LastReportCreateDate != null)
-			{
-				//Check if report for last week was created
-				if ((DateTime.Today - ConfigHandler.LastReportCreateDate.Value).Days / 7 > 1)
-				{
+				case 0:
+					ThemedMessageBox.Show(text: "A report has already been created for this week");
+					return;
+				case int diff when diff > 1:
 					if (ThemedMessageBox.Show(text: "You missed some reports were you on vacation?", title: "Vacation?", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
 						CreateMissing(vacation: true);
@@ -668,7 +667,7 @@ namespace BerichtManager
 					{
 						CreateMissing(empty: true);
 					}
-				}
+					break;
 			}
 
 			CreateDocument(DateTime.Today);
