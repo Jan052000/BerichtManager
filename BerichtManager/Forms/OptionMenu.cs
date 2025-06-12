@@ -471,7 +471,7 @@ namespace BerichtManager.Forms
 			}
 		}
 
-		private void tbUpdate_Click(object sender, EventArgs e)
+		private void BrowseUpdatePathClick(object sender, EventArgs e)
 		{
 			OpenFileDialog openFileDialog = new OpenFileDialog();
 			openFileDialog.Filter = "Executables (*.exe)|*.exe";

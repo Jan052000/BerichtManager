@@ -54,6 +54,7 @@ namespace BerichtManager.Forms
 			tbCustomPrefix = new TextBox();
 			cbLegacyEdit = new CheckBox();
 			tbIHKJobField = new TextBox();
+			cbReportDownloadUseQuickInfo = new CheckBox();
 			ttErrors = new ToolTip(components);
 			cbIHKAutoGetComment = new CheckBox();
 			laIHKBaseUrl = new Label();
@@ -103,12 +104,12 @@ namespace BerichtManager.Forms
 			tpWebUntis = new OwnControls.CustomTabControl.ColoredTabPage();
 			tpIHK = new OwnControls.CustomTabControl.ColoredTabPage();
 			gbIHKMiscellanious = new OwnControls.ColoredGroupBox();
-			cbReportDownloadUseQuickInfo = new CheckBox();
 			laIHKJobField = new Label();
 			gbIHKFields = new OwnControls.ColoredGroupBox();
 			gbIHKFailSaves = new OwnControls.ColoredGroupBox();
 			paButtons = new Panel();
 			paContent = new Panel();
+			btBrowseUpdatePath = new OwnControls.FocusColoredFlatButton();
 			((System.ComponentModel.ISupportInitialize)nudUploadDelay).BeginInit();
 			((System.ComponentModel.ISupportInitialize)nudTabStops).BeginInit();
 			((System.ComponentModel.ISupportInitialize)nudNumber).BeginInit();
@@ -255,10 +256,9 @@ namespace BerichtManager.Forms
 			tbUpdate.Margin = new Padding(4, 3, 4, 3);
 			tbUpdate.Name = "tbUpdate";
 			tbUpdate.ReadOnly = true;
-			tbUpdate.Size = new Size(672, 23);
+			tbUpdate.Size = new Size(572, 23);
 			tbUpdate.TabIndex = 3;
 			toolTip1.SetToolTip(tbUpdate, "Path to check if an update is available");
-			tbUpdate.Click += tbUpdate_Click;
 			// 
 			// btEditTheme
 			// 
@@ -435,6 +435,18 @@ namespace BerichtManager.Forms
 			tbIHKJobField.TabIndex = 5;
 			toolTip1.SetToolTip(tbIHKJobField, "Name of job field");
 			tbIHKJobField.TextChanged += JobFieldTextChanged;
+			// 
+			// cbReportDownloadUseQuickInfo
+			// 
+			cbReportDownloadUseQuickInfo.AutoSize = true;
+			cbReportDownloadUseQuickInfo.Location = new Point(118, 130);
+			cbReportDownloadUseQuickInfo.Name = "cbReportDownloadUseQuickInfo";
+			cbReportDownloadUseQuickInfo.Size = new Size(313, 19);
+			cbReportDownloadUseQuickInfo.TabIndex = 6;
+			cbReportDownloadUseQuickInfo.Text = "Use quick info when downloading reports (if available)";
+			toolTip1.SetToolTip(cbReportDownloadUseQuickInfo, "Use quick infos for idexing reports to keep when downloading from IHK");
+			cbReportDownloadUseQuickInfo.UseVisualStyleBackColor = true;
+			cbReportDownloadUseQuickInfo.CheckedChanged += MarkAsDirty;
 			// 
 			// cbIHKAutoGetComment
 			// 
@@ -823,6 +835,7 @@ namespace BerichtManager.Forms
 			// gbGeneralMisc
 			// 
 			gbGeneralMisc.BorderColor = Color.FromArgb(220, 220, 220);
+			gbGeneralMisc.Controls.Add(btBrowseUpdatePath);
 			gbGeneralMisc.Controls.Add(laReportFolder);
 			gbGeneralMisc.Controls.Add(laUpdate);
 			gbGeneralMisc.Controls.Add(tbFolder);
@@ -1008,18 +1021,6 @@ namespace BerichtManager.Forms
 			gbIHKMiscellanious.TabStop = false;
 			gbIHKMiscellanious.Text = "Miscellanious";
 			// 
-			// cbReportDownloadUseQuickInfo
-			// 
-			cbReportDownloadUseQuickInfo.AutoSize = true;
-			cbReportDownloadUseQuickInfo.Location = new Point(118, 130);
-			cbReportDownloadUseQuickInfo.Name = "cbReportDownloadUseQuickInfo";
-			cbReportDownloadUseQuickInfo.Size = new Size(313, 19);
-			cbReportDownloadUseQuickInfo.TabIndex = 6;
-			cbReportDownloadUseQuickInfo.Text = "Use quick info when downloading reports (if available)";
-			toolTip1.SetToolTip(cbReportDownloadUseQuickInfo, "Use quick infos for idexing reports to keep when downloading from IHK");
-			cbReportDownloadUseQuickInfo.UseVisualStyleBackColor = true;
-			cbReportDownloadUseQuickInfo.CheckedChanged += MarkAsDirty;
-			// 
 			// laIHKJobField
 			// 
 			laIHKJobField.AutoSize = true;
@@ -1074,6 +1075,17 @@ namespace BerichtManager.Forms
 			paContent.Name = "paContent";
 			paContent.Size = new Size(784, 432);
 			paContent.TabIndex = 1;
+			// 
+			// btBrowseUpdatePath
+			// 
+			btBrowseUpdatePath.Anchor = AnchorStyles.Right;
+			btBrowseUpdatePath.Location = new Point(670, 51);
+			btBrowseUpdatePath.Name = "btBrowseUpdatePath";
+			btBrowseUpdatePath.Size = new Size(94, 23);
+			btBrowseUpdatePath.TabIndex = 4;
+			btBrowseUpdatePath.Text = "Browse";
+			btBrowseUpdatePath.UseVisualStyleBackColor = true;
+			btBrowseUpdatePath.Click += BrowseUpdatePathClick;
 			// 
 			// OptionMenu
 			// 
@@ -1208,5 +1220,6 @@ namespace BerichtManager.Forms
 		private TextBox tbIHKJobField;
 		private Label laIHKJobField;
 		private CheckBox cbReportDownloadUseQuickInfo;
+		private OwnControls.FocusColoredFlatButton btBrowseUpdatePath;
 	}
 }
