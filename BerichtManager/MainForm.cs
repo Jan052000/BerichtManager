@@ -19,6 +19,7 @@ using BerichtManager.OwnControls.OwnTreeView;
 using BerichtManager.Extensions;
 using BerichtManager.OwnControls.CustomToolTipControls;
 using BerichtManager.ReportQuickInfo;
+using BerichtManager.Versioning;
 
 namespace BerichtManager
 {
@@ -161,57 +162,9 @@ namespace BerichtManager
 			miIHKOptions.Visible = ConfigHandler.UseIHK;
 			SetComponentPositions();
 			UpdateTabStops(this, ConfigHandler.TabStops);
-			if (File.Exists(ConfigHandler.PublishPath) && CompareVersionNumbers(VersionNumber, FileVersionInfo.GetVersionInfo(ConfigHandler.PublishPath).FileVersion) > 0)
+			if (VersionChecker.IsOlderVersion())
 				VersionString += "*";
 			WordTaskFactory.StartNew(RestartWordIfNeeded);
-		}
-
-		/// <summary>
-		/// Compares two version numbers
-		/// </summary>
-		/// <param name="version1">Version number 1</param>
-		/// <param name="version2">Version number 2</param>
-		/// <returns>0 if versions are equal, positive if version2 is greater and negative if version2 is smaller</returns>
-		private int CompareVersionNumbers(string? version1, string? version2)
-		{
-			if (version1 == null || version2 == null)
-				return string.Compare(version1, version2);
-			string[] splitv1 = version1.Split('.');
-			string[] splitv2 = version2.Split('.');
-			if (splitv1.Length == splitv2.Length)
-			{
-				for (int i = 0; i < splitv1.Length; i++)
-				{
-					if (splitv1[i] == splitv2[i])
-						continue;
-					if (int.TryParse(splitv1[i], out int v1) && int.TryParse(splitv2[i], out int v2))
-					{
-						return v2 - v1;
-					}
-					else
-					{
-						return splitv2[i].CompareTo(splitv1[i]);
-					}
-				}
-			}
-			else
-			{
-				for (int i = 0; i < Math.Min(splitv1.Length, splitv2.Length); i++)
-				{
-					if (splitv1[i] == splitv2[i])
-						continue;
-					if (int.TryParse(splitv1[i], out int v1) && int.TryParse(splitv2[i], out int v2))
-					{
-						return v2 - v1;
-					}
-					else
-					{
-						return splitv2[i].CompareTo(splitv1[i]);
-					}
-				}
-				return splitv2.Length - splitv1.Length;
-			}
-			return 0;
 		}
 
 		/// <summary>

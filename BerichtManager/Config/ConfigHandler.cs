@@ -81,7 +81,7 @@ namespace BerichtManager.Config
 			{"UseLegacyEdit", (BoolType, false)},
 			{"ActiveTheme", (StringType, "Dark Mode")},
 			{"ReportPath", (StringType, Path.GetFullPath(".\\.."))},
-			{"PublishPath", (StringType, "T:\\Azubis\\Berichtmanager\\BerichtManager.exe")},
+			{"PublishPath", (StringType, "https://github.com/Jan052000/BerichtManager/tags")},
 			{"UseWordWrap", (BoolType, false)},
 			{"ShowReportToolTip", (BoolType, false)},
 			{"MaxReportToolTipWidth", (IntType, 200)},
